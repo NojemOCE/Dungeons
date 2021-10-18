@@ -6,5 +6,6 @@ public abstract class CollectableEntities {
     public void collect() {
         this.collected = true;
     };
+    
     public boolean isCollected() {return collected;};
 }
