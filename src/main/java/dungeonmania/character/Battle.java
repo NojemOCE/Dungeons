@@ -1,9 +1,11 @@
 package dungeonmania.character;
 
+import dungeonmania.util.Position;
+
 public class Battle {
     public Player player;
     public Character character;
-
+    public Position position;
 
     public Battle(Player player, Character character) {
         this.player = player;
@@ -15,6 +17,6 @@ public class Battle {
     }
 
     public void endBattle() {
-        
+
     }
 }
