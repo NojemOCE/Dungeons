@@ -1,4 +1,4 @@
-package goal;
+package dungeonmania.goal;
 
 public abstract class Goal {
 

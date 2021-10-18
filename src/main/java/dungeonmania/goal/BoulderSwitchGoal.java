@@ -1,4 +1,4 @@
-package goal;
+package dungeonmania.goal;
 
 public class BoulderSwitchGoal extends Goal {
     int boulderSwitches;
