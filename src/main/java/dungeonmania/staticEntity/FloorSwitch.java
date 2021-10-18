@@ -3,7 +3,7 @@ package dungeonmania.staticEntity;
 import dungeonmania.util.Position;
 
 public class FloorSwitch extends StaticEntity {
-    public boolean isCovered;
+    private boolean isCovered;
 
     public FloorSwitch(Position position) {
         super(position);

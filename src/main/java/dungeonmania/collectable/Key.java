@@ -1,10 +1,10 @@
 package dungeonmania.collectable;
 
-import dungeonmania.Consumable;
+import dungeonmania.staticEntity.Door;
 
-public class Key extends CollectableEntities implements Consumable {
+public class Key extends CollectableEntities {
     // need to change to variable type Door
-    private int door;
+    private Door door;
 
     public void consume() {};
 

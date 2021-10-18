@@ -1,8 +1,8 @@
 package dungeonmania.goal;
 
 public class BoulderSwitchGoal extends Goal {
-    int boulderSwitches;
-    int totalSwitches;
+    private int boulderSwitches;
+    private int totalSwitches;
 
     public BoulderSwitchGoal (int switches) {
         this.totalSwitches = switches;
