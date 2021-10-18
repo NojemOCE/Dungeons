@@ -22,6 +22,4 @@ public class Inventory {
     public boolean isPresent(Buildables item) {
         return true;
     }
-
-
 }
