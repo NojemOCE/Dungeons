@@ -14,7 +14,13 @@ public class BoulderSwitchGoal extends Goal {
         return boulderSwitches == totalSwitches;
     }
 
-    public void incrementBoulderSwitches(){
+    private void incrementBoulderSwitches(){
         boulderSwitches+=1;
+    }
+
+    @Override
+    public void update() {
+        incrementBoulderSwitches();
+        
     }
 }

@@ -14,7 +14,13 @@ public class TreasureGoal extends Goal {
         return treasureCollected == totalTreasure;
     }
 
-    public void incrementTreasureCollected(){
+    private void incrementTreasureCollected(){
         treasureCollected+=1;
+    }
+
+    @Override
+    public void update() {
+        incrementTreasureCollected();
+        
     }
 }

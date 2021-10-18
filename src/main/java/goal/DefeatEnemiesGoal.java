@@ -20,4 +20,10 @@ public class DefeatEnemiesGoal extends Goal {
     public void incrementEnemiesDefeated(){
         enemiesDefeated+=1;
     }
+
+    @Override
+    public void update() {
+        // TODO Auto-generated method stub
+        
+    }
 }
