@@ -1,8 +1,8 @@
 package dungeonmania.goal;
 
 public class TreasureGoal extends Goal {
-    int treasureCollected;
-    int totalTreasure;
+    private int treasureCollected;
+    private int totalTreasure;
 
     public TreasureGoal (int totalTreasure) {
         this.totalTreasure = totalTreasure;

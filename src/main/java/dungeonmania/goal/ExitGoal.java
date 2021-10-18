@@ -2,7 +2,7 @@ package dungeonmania.goal;
 
 public class ExitGoal extends Goal{
 
-    Boolean exitReached;
+    private Boolean exitReached;
 
     /*public ExitGoal () {
         exitReached = false;
