@@ -15,6 +15,11 @@ public abstract class Gamemode {
     
 
 
+    /**
+     * Constructor with 2 arguments
+     * @param enemyAttackEnabled whether or not enemy attack is enabled
+     * @param invincibilityEnabled whether the invicibility potion has an effect
+     */
     public Gamemode(boolean enemyAttackEnabled, boolean invincibilityEnabled) {
         this.spawnRate = STANDARD_SPAWN_RATE;
         this.enemyAttackEnabled = enemyAttackEnabled;
@@ -22,6 +27,13 @@ public abstract class Gamemode {
         this.startingHP = STANDARD_STARTING_HP;
     }
 
+    /**
+     * Constructor with 4 arguments
+     * @param spawnRate rate at which zombie toast spawns (num ticks)
+     * @param enemyAttackEnabled whether or not enemy attack is enabled
+     * @param invincibilityEnabled whether the invicibility potion has an effect
+     * @param startingHP starting HP of the player
+     */
     public Gamemode(int spawnRate, boolean enemyAttackEnabled, boolean invincibilityEnabled, double startingHP) {
         this.spawnRate = spawnRate;
         this.enemyAttackEnabled = enemyAttackEnabled;
