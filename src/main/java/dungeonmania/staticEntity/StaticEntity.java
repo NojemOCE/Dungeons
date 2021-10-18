@@ -4,7 +4,7 @@ import dungeonmania.util.Position;
 
 abstract public class StaticEntity {
     // Do we need a string field for the unique identifier?
-    Position position;
+    private Position position;
     
 
     public StaticEntity(Position position) {
