@@ -4,7 +4,7 @@ import dungeonmania.util.Position;
 
 public class Portal extends StaticEntity {
 
-    Portal twinPortal;
+    private Portal twinPortal;
 
     public Portal(Position position) {
         super(position);

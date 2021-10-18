@@ -1,8 +1,8 @@
 package dungeonmania.goal;
 
 public class DefeatEnemiesGoal extends Goal {
-    int enemiesDefeated;
-    int totalEnemies;
+    private int enemiesDefeated;
+    private int totalEnemies;
 
     public DefeatEnemiesGoal (int enemies) {
         this.totalEnemies = enemies;
