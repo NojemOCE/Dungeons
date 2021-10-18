@@ -1,6 +1,7 @@
 package dungeonmania.collectable;
+import dungeonmania.Consumable;
 
-public class InvincibilityPotion extends CollectableEntities {
+public class InvincibilityPotion extends CollectableEntities implements Consumable {
     private int duration;
 
     public void consume() {};
