@@ -25,7 +25,7 @@ public abstract class Character implements Movement {
     }
 
     @Override
-    public void move(Direction direction) {
+    public void move(Position position) {
         return;
     }
 

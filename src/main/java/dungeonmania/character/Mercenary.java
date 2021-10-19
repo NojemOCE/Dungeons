@@ -10,7 +10,11 @@ public class Mercenary extends Character {
 
 
     @Override
-    public void move(Direction direction) {
+    public void move(Position position) {
         return;
+    }
+
+    private void followPlayer(){
+        
     }
 }

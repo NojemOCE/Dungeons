@@ -12,8 +12,9 @@ public class Player extends Character {
     }
 
 
+  
     @Override
-    public void move(Direction direction) {
+    public void move(Position position) {
         return;
     }
 

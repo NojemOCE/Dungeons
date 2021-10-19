@@ -1,5 +1,7 @@
 package dungeonmania.collectable;
 
-public class OneRing extends CollectableEntities {
+import dungeonmania.Consumable;
+
+public class OneRing extends CollectableEntities implements Consumable {
     public void consume() {};
 }

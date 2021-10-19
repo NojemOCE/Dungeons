@@ -1,7 +1,9 @@
 package dungeonmania.collectable;
 
-public class HealthPotion extends CollectableEntities {
-    private double healingAmount;
+import dungeonmania.Consumable;
 
+public class HealthPotion extends CollectableEntities implements Consumable {
+    private double healingAmount;
+    public void consume() {};
     public void heal() {};
 }
