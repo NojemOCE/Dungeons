@@ -1,6 +1,7 @@
 package dungeonmania.staticEntity;
 
 import dungeonmania.util.Position;
+import dungeonmania.character.Zombie;
 
 public class ZombieToastSpawn extends StaticEntity {
     // spawn rate?
@@ -16,8 +17,9 @@ public class ZombieToastSpawn extends StaticEntity {
         
     }
 
-    public void spawn(){
-        // should this return a zombie instead of returning void
+    public Zombie spawn(){
+        // should this return a zombie in the same position as the spawner
+        return null;
     }
     
 }
