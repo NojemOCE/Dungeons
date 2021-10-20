@@ -6,6 +6,7 @@ public class Zombie extends Character{
 
     public Zombie(HealthPoint healthPoint, double attackDamage, Position position) {
         super(healthPoint, attackDamage, position);
+        setAlly(false);
     }
   
     @Override
