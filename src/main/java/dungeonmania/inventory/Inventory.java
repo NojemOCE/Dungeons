@@ -1,7 +1,13 @@
+package dungeonmania.inventory;
+
+import java.util.List;
+import dungeonmania.collectable.*;
+import dungeonmania.buildable.*;
+
 public class Inventory {
     
     private List<CollectableEntities> collectableItems;
-    private List<Buildables> collectableItems;
+    private List<Buildable> buildableItems;
 
     public void collect(CollectableEntities item) {
         return;
@@ -11,7 +17,7 @@ public class Inventory {
         return;
     }
 
-    public void craft(Buildables item) {
+    public void craft(Buildable item) {
         return;
     }
 
@@ -19,7 +25,7 @@ public class Inventory {
         return true;
     }
 
-    public boolean isPresent(Buildables item) {
+    public boolean isPresent(Buildable item) {
         return true;
     }
 }
