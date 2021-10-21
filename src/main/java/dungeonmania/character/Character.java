@@ -10,6 +10,8 @@ public abstract class Character implements Movement {
     private double attackDamage;
     private Position position;
 
+    private boolean ally;
+
     public Character(HealthPoint healthPoint, double attackDamage, Position position) {
         this.healthPoint = healthPoint;
         this.attackDamage = attackDamage;
@@ -25,7 +27,7 @@ public abstract class Character implements Movement {
     }
 
     @Override
-    public void move(Direction direction) {
+    public void move(Position position) {
         return;
     }
 
@@ -53,5 +55,12 @@ public abstract class Character implements Movement {
         this.position = position;
     }
 
+    public boolean getAlly() {
+        return this.ally;
+    }
+
+    public void setAlly(boolean ally) {
+        this.ally = ally;
+    }
     
 }

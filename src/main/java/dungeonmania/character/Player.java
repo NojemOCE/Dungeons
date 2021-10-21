@@ -10,11 +10,13 @@ public class Player extends Character {
 
     public Player(HealthPoint healthPoint, double attackDamage, Position position) {
         super(healthPoint, attackDamage, position);
+        setAlly(true);
     }
 
 
+  
     @Override
-    public void move(Direction direction) {
+    public void move(Position position) {
         return;
     }
 

@@ -1,9 +1,9 @@
 package dungeonmania.character;
 
-import dungeonmania.util.Direction;
+import dungeonmania.util.*;
 
 public interface Movement {
 
-    public void move(Direction direction);
-    
+    public void move(Position position);
+
 }

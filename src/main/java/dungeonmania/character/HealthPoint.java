@@ -1,6 +1,7 @@
 package dungeonmania.character;
 
 public class HealthPoint {
+    
     private double health;
 
     public HealthPoint(double health) {
