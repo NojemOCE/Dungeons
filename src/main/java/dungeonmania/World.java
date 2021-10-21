@@ -8,6 +8,7 @@ import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import dungeonmania.gamemode.Gamemode;
 import dungeonmania.character.Battle;
+import dungeonmania.character.Character;
 import dungeonmania.character.Player;
 import dungeonmania.collectable.CollectableEntities;
 import dungeonmania.exceptions.InvalidActionException;
