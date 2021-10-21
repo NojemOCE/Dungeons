@@ -23,6 +23,8 @@ public class World {
     private List<Character> characters;
     private int entityCount;
     private List<Battle> battles;
+    private String goalString;
+    private String dungeonName;
     //private Map map; TBC
 
     /**
