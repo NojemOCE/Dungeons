@@ -82,6 +82,11 @@ public class World implements ObserverExitGoal {
      * @return Collectable entity at position p
      */
     public CollectableEntity getCollectableEntity(Position p) {
+        for (CollectableEntity e: collectableEntities) {
+            if (e.getPosition().equals(p)) {
+                
+            }
+        }
         return null;
     }
 
