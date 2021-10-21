@@ -1,6 +1,8 @@
 package dungeonmania.movingEntity;
 
 import dungeonmania.World;
+import dungeonmania.buildable.Buildable;
+import dungeonmania.collectable.CollectableEntity;
 import dungeonmania.util.*;
 import dungeonmania.inventory.Inventory;
 
@@ -38,4 +40,11 @@ public class Player extends MovingEntity {
         return 0;
     }
 
+    public boolean inInventory(CollectableEntity item) {
+        return inventory.isPresent(item);
+    }
+
+    public boolean inInventory(Buildable item) {
+        return inventory.isPresent(item);
+    }
 }  

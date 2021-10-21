@@ -2,12 +2,12 @@ package dungeonmania.goal;
 
 public interface SubjectExitGoal {
 
-    public void attach(ObserverTreasureGoal o);
-	public void detach(ObserverTreasureGoal o);
-	public void notifyObservers();
-
+    public void attach(ObserverExitGoal observer);
+	public void notifyObserver();
+    
+	// public void detach(ObserverExitGoal o);
     // whther exit has been reached
-	public boolean exitReached();
+	// public boolean exitReached();
 
 
     // Boolean exitReached;

@@ -1,24 +1,56 @@
 package dungeonmania.staticEntity;
 
 import dungeonmania.World;
+import dungeonmania.goal.ObserverBoulderSwitchGoal;
+import dungeonmania.goal.SubjectBoulderSwitchGoal;
 import dungeonmania.movingEntity.MovingEntity;
 import dungeonmania.util.Position;
 
-public class FloorSwitch extends StaticEntity {
-    private boolean isCovered;
+public class FloorSwitch extends StaticEntity implements SubjectBoulderSwitchGoal {
+    private boolean isTriggered;
+    private ObserverBoulderSwitchGoal observer;
 
     public FloorSwitch(Position position) {
         super(position);
-        isCovered = false;
+        isTriggered = false;
+    }
+
+    /**
+     * Switches behave like empty squares, so other entities can appear on 
+     * top of them. 
+     */
+    @Override
+    public Position interact(World world, MovingEntity character) {
+        return this.getPosition();
+    }
+
+    /**
+     * When a boulder is pushed onto a floor switch, it is triggered.
+     */
+    public void trigger() {
+        isTriggered = true;
+    }
+
+    /**
+     * Pushing a boulder off the floor switch untriggers it.
+     */
+    public void untrigger() {
+        isTriggered = false;
     }
 
     @Override
-    public Position interact(World world, MovingEntity character) {
-        // TODO Auto-generated method stub
-        return null;
+    public void attach(ObserverBoulderSwitchGoal observer) {
+        this.observer = observer;    
     }
 
-    public void cover() {}
-    public boolean covered() {return false;}
+    @Override
+    public void notifyObservers() {
+        observer.update(this);        
+    }
+
+    @Override
+    public boolean isTriggered() {
+        return isTriggered;
+    }
     
 }
