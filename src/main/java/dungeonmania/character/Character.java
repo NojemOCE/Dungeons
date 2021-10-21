@@ -27,8 +27,8 @@ public abstract class Character implements Movement {
     }
 
     @Override
-    public void move(Position position) {
-        return;
+    public void validMove(Position position) {
+        
     }
 
     public HealthPoint getHealthPoint() {

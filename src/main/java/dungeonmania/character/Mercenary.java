@@ -19,4 +19,6 @@ public class Mercenary extends Character {
     private void followPlayer(){
         
     }
+
+
 }

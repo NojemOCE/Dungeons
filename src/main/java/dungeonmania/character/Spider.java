@@ -15,4 +15,10 @@ public class Spider extends Character {
     public void move(Position position) {
         return;
     }
+
+    @Override
+    public void validMove(Position position) {
+        // TODO Auto-generated method stub
+        
+    }
 }

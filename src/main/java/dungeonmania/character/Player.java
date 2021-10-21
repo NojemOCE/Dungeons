@@ -20,6 +20,12 @@ public class Player extends Character {
     }
 
     @Override
+    public void validMove(Position position) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
     public double attack() {
         // check inventory and mercenary in range
 
