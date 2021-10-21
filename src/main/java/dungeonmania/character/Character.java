@@ -33,6 +33,10 @@ public abstract class Character implements Movement {
         return 0;
     }
 
+    /**
+     * Returns the new position if posible
+     * and the old position (no movement) if not
+     */
     @Override
     public Position validMove(Position position, World world) {
         
