@@ -1,11 +1,14 @@
 package dungeonmania.character;
 
 import dungeonmania.util.*;
+import dungeonmania.*;
 
 public interface Movement {
 
     // happens per tick
-    public void move(Position position);
+    public void move(World world);
 
-    public void validMove(Position position);
+
+    public Position validMove(Position position, World world);
+    // this will be called inside move prior to moving
 }

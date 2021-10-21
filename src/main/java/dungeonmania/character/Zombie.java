@@ -1,6 +1,9 @@
 package dungeonmania.character;
 
+import dungeonmania.World;
 import dungeonmania.util.*;
+
+import java.util.Random;
 
 public class Zombie extends Character{
 
@@ -10,13 +13,35 @@ public class Zombie extends Character{
     }
   
     @Override
-    public void move(Position position) {
-        return;
+    public void move(World world) {
+       randomMovement(world);
     }
 
 
-    private void randomMovement() {
-        
+    private void randomMovement(World world) {
+        Random randomMovement = new Random();
+
+        int upperbound = 4;
+        int random = randomMovement.nextInt(upperbound);
+
+        setPosition(validMove(this.getPosition().translateBy(Direction.UP), world));
+        switch(random) {
+            case 0:
+                setPosition(validMove(this.getPosition().translateBy(Direction.UP), world)); 
+                break;
+            case 1:
+                setPosition(validMove(this.getPosition().translateBy(Direction.DOWN), world));
+                break;
+            case 2:
+                setPosition(validMove(this.getPosition().translateBy(Direction.LEFT), world));
+                break;
+            case 3:
+                setPosition(validMove(this.getPosition().translateBy(Direction.RIGHT), world));
+                break;
+            default:
+                // no change in position
+                setPosition(getPosition());
+        }        
     }
 }
 

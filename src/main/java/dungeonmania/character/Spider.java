@@ -23,9 +23,7 @@ public class Spider extends Character {
         remMovesNext = START_MOVES;
     }
 
-    // To be removed
-    @Override
-    public void move(Direction direction) {}
+
 
 
     // To be uncommented
@@ -136,7 +134,7 @@ public class Spider extends Character {
     }
 
     @Override
-    public void validMove(Position position) {
+    public boolean validMove(Position position, World world) {
         // TODO Auto-generated method stub
         
     }

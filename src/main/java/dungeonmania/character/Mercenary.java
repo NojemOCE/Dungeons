@@ -1,6 +1,8 @@
 package dungeonmania.character;
 
 import dungeonmania.util.*;
+import dungeonmania.World;
+
 
 public class Mercenary extends Character {
 
@@ -12,11 +14,12 @@ public class Mercenary extends Character {
 
 
     @Override
-    public void move(Position position) {
+    public void move(World world) {
+        followPlayer(world.getPlayer());
         return;
     }
 
-    private void followPlayer(){
+    private void followPlayer(Player player){
         
     }
 
