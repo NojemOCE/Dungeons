@@ -94,18 +94,36 @@ public class World implements ObserverExitGoal {
         return null;
     }
 
+    /**
+     * Gets the list of battles that exit currently in the world
+     * @return list of current battles in world
+     */
     public List<Battle> getBattles() {
         return null;
     }
 
+    /**
+     * Gets the Player object of the world
+     * @return Player of the world
+     */
     public Player getPlayer() {
         return null;
     }
 
+    /**
+     * Checks if a given Collectable item is in the players inventory
+     * @param item collectable item to check for in inventory
+     * @return true if the item is in the players inventory, false otherwise
+     */
     public boolean inInventory(CollectableEntity item) {
         return player.inInventory(item);
     }
 
+    /**
+     * Checks if a given Buildable item is in the players inventory
+     * @param item buildable item to check for in inventory
+     * @return true if the item is in the players inventory, false otherwise
+     */
     public boolean inInventory(Buildable item) {
         return player.inInventory(item);
     }
