@@ -23,9 +23,7 @@ public class Spider extends Character {
         remMovesNext = START_MOVES;
     }
 
-
-
-
+  
     // To be uncommented
     //@Override
     /**
