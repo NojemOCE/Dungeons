@@ -16,5 +16,7 @@ public class FloorSwitch extends StaticEntity {
         
     }
 
+    public void cover() {}
+    public boolean covered() {return false;}
     
 }

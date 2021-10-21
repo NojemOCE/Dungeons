@@ -1,5 +1,6 @@
 package dungeonmania.character;
 
+import dungeonmania.inventory.Inventory;
 import dungeonmania.util.*;
 
 
