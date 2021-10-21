@@ -1,7 +1,8 @@
 package dungeonmania.staticEntity;
 
+import dungeonmania.World;
 import dungeonmania.util.Position;
-import dungeonmania.character.Zombie;
+import dungeonmania.movingEntity.*;
 
 public class ZombieToastSpawn extends StaticEntity {
     // spawn rate?
@@ -12,9 +13,9 @@ public class ZombieToastSpawn extends StaticEntity {
     }
 
     @Override
-    public void interact() {
+    public Position interact(World world, MovingEntity character) {
         // TODO Auto-generated method stub
-        
+        return null;
     }
 
     public Zombie spawn(){

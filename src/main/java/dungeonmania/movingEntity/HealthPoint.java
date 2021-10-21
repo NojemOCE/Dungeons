@@ -1,4 +1,4 @@
-package dungeonmania.character;
+package dungeonmania.movingEntity;
 
 public class HealthPoint {
     

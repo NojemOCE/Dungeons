@@ -1,11 +1,11 @@
-package dungeonmania.character;
+package dungeonmania.movingEntity;
 
 import dungeonmania.World;
-import dungeonmania.inventory.Inventory;
 import dungeonmania.util.*;
+import dungeonmania.inventory.Inventory;
 
 
-public class Player extends Character {
+public class Player extends MovingEntity {
 
     private Inventory inventory;
 

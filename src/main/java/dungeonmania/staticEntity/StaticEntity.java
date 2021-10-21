@@ -1,5 +1,7 @@
 package dungeonmania.staticEntity;
 
+import dungeonmania.World;
+import dungeonmania.movingEntity.MovingEntity;
 import dungeonmania.util.Position;
 
 abstract public class StaticEntity {
@@ -12,7 +14,7 @@ abstract public class StaticEntity {
     }
 
 
-    abstract public void interact();
+    abstract public Position interact(World world, MovingEntity character);
 
 
     public Position getPosition() {

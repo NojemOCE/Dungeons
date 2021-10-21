@@ -1,11 +1,11 @@
-package dungeonmania.character;
+package dungeonmania.movingEntity;
 
 import dungeonmania.util.*;
 import dungeonmania.World;
 import java.util.Queue;
 import java.util.ArrayDeque;
 
-public class Mercenary extends Character {
+public class Mercenary extends MovingEntity {
 
     private int BATTLE_RADIUS = 3;
     

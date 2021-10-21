@@ -7,10 +7,8 @@ import dungeonmania.staticEntity.StaticEntity;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import dungeonmania.gamemode.Gamemode;
-import dungeonmania.character.Battle;
-import dungeonmania.character.Character;
-import dungeonmania.character.Player;
-import dungeonmania.collectable.CollectableEntities;
+import dungeonmania.movingEntity.*;
+import dungeonmania.collectable.CollectableEntity;
 import dungeonmania.exceptions.InvalidActionException;
 
 public class World {
@@ -19,7 +17,7 @@ public class World {
     private String id;
     private List<List<Goal>> goals;
     //private HashMap<Entity, String> entities; TBC with implementation of overarching Entity class
-    private List<CollectableEntities> collectableEntities;
+    private List<CollectableEntity> collectableEntities;
     private List<StaticEntity> staticEntity;
     private List<Character> characters;
     private int entityCount;
@@ -80,16 +78,24 @@ public class World {
      * @param p position to check
      * @return Collectable entity at position p
      */
-    public CollectableEntities getCollectableEntity(Position p) {
+    public CollectableEntity getCollectableEntity(Position p) {
         return null;
     }
 
     /**
      * Return the character that exists in the dungeon at position p (if one exists)
      * @param p position to check
-     * @return Character at position p
+     * @return MovingEntity at position p
      */
-    public Character getCharacter(Position p){
+    public MovingEntity getCharacter(Position p){
+        return null;
+    }
+
+    public List<Battle> getBattles() {
+        return null;
+    }
+
+    public Player getPlayer() {
         return null;
     }
 }

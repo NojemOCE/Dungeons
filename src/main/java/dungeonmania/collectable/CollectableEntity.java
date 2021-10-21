@@ -1,6 +1,6 @@
 package dungeonmania.collectable;
 
-public abstract class CollectableEntities {
+public abstract class CollectableEntity {
     private boolean collected;
 
     public void collect() {

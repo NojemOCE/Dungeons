@@ -1,4 +1,4 @@
-package dungeonmania.character;
+package dungeonmania.movingEntity;
 
 import dungeonmania.World;
 import dungeonmania.util.*;
