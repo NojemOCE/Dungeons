@@ -1,6 +1,8 @@
 package dungeonmania;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 import dungeonmania.goal.*;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.staticEntity.StaticEntity;
@@ -21,8 +23,8 @@ public class World implements ObserverExitGoal {
     private List<List<Goal>> goals;
     //private HashMap<Entity, String> entities; TBC with implementation of overarching Entity class
     private List<CollectableEntity> collectableEntities;
-    private List<StaticEntity> staticEntity;
-    private List<Character> characters;
+    private List<StaticEntity> staticEntities;
+    private List<MovingEntity> characters;
     private int entityCount;
     private List<Battle> battles;
     private String goalString;
@@ -73,7 +75,20 @@ public class World implements ObserverExitGoal {
      * @return Static entity at position p
      */
     public StaticEntity getStaticEntity(Position p) {
+        for (StaticEntity s: staticEntities) {
+            if (s.getPosition().equals(p))  {
+                return s;
+            }
+        }
         return null;
+    }
+
+
+    // An alternative method of the above method (getStaticEntity). I think this
+    // might be the better choice as it allows us to consider layers
+    // eg. if a boulder is already on top of a switch
+    public List<StaticEntity> getStaticEntitiesAtPosition(Position p) {
+        return staticEntities.stream().filter(x  -> x.getPosition().equals(p)).collect(Collectors.toList());
     }
 
     /**
@@ -82,9 +97,10 @@ public class World implements ObserverExitGoal {
      * @return Collectable entity at position p
      */
     public CollectableEntity getCollectableEntity(Position p) {
+        // I am not very good at streams, so not sure if there is an elegant way to use them to return only 1 object from a list
         for (CollectableEntity e: collectableEntities) {
             if (e.getPosition().equals(p)) {
-                
+                return e;
             }
         }
         return null;
@@ -96,6 +112,11 @@ public class World implements ObserverExitGoal {
      * @return MovingEntity at position p
      */
     public MovingEntity getCharacter(Position p){
+        for (MovingEntity c: characters) {
+            if (c.getPosition().equals(p)) {
+                return c;
+            }
+        }
         return null;
     }
 
@@ -104,7 +125,7 @@ public class World implements ObserverExitGoal {
      * @return list of current battles in world
      */
     public List<Battle> getBattles() {
-        return null;
+        return battles;
     }
 
     /**
@@ -112,7 +133,7 @@ public class World implements ObserverExitGoal {
      * @return Player of the world
      */
     public Player getPlayer() {
-        return null;
+        return player;
     }
 
     /**
