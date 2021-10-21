@@ -32,9 +32,9 @@ public class Spider extends Character {
     //@Override
     /**
      * Simulates 1 ticks worth of movement for the spider. Note: if the spiders
-     * movement is obstructed, then it's direction will reverse on this tick,
+     * movement is obstructed, then its direction will reverse on this tick,
      * and movement will recommence the following tick
-     * @param world
+     * @param world World in which the spider is a character of
      */
     public void move(World world) {
         
