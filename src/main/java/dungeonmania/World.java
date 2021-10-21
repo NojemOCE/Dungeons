@@ -8,10 +8,13 @@ import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 import dungeonmania.gamemode.Gamemode;
 import dungeonmania.movingEntity.*;
+import dungeonmania.buildable.Buildable;
 import dungeonmania.collectable.CollectableEntity;
 import dungeonmania.exceptions.InvalidActionException;
 
-public class World {
+
+// TODO: remember to implement all the observer interfaces as we go
+public class World implements ObserverExitGoal {
     private Gamemode gamemode;
     private Player player;
     private String id;
@@ -97,5 +100,19 @@ public class World {
 
     public Player getPlayer() {
         return null;
+    }
+
+    public boolean inInventory(CollectableEntity item) {
+        return player.inInventory(item);
+    }
+
+    public boolean inInventory(Buildable item) {
+        return player.inInventory(item);
+    }
+
+    @Override
+    public void update(SubjectExitGoal obj) {
+        // TODO Auto-generated method stub
+        
     }
 }
