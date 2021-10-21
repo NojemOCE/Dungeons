@@ -14,9 +14,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import dungeonmania.character.Character;
-import dungeonmania.character.Mercenary;
-import dungeonmania.collectable.CollectableEntities;
+import dungeonmania.movingEntity.*;
+import dungeonmania.collectable.CollectableEntity;
 import dungeonmania.collectable.Treasure;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.response.models.DungeonResponse;
@@ -110,7 +109,7 @@ public class WorldTest {
 
         // Location of mercenary
         Position p  = new Position(3, 5);
-        Character c = world.getCharacter(p);
+        MovingEntity c = world.getCharacter(p);
         assertNotNull(c);
         assert(c instanceof Mercenary);
         assertEquals(p, c.getPosition());
@@ -118,12 +117,12 @@ public class WorldTest {
 
         // Location of wall
         Position p2  = new Position(9, 2);
-        Character c2 = world.getCharacter(p2);
+        MovingEntity c2 = world.getCharacter(p2);
         assertNull(c2);
 
         // Location of treasure
         Position p3  = new Position(7, 10);
-        Character c3 = world.getCharacter(p3);
+        MovingEntity c3 = world.getCharacter(p3);
         assertNull(c3);
     }
 
@@ -156,7 +155,7 @@ public class WorldTest {
         
         // Location of treasure
         Position p  = new Position(7, 10);
-        CollectableEntities e = world.getCollectableEntity(p);
+        CollectableEntity e = world.getCollectableEntity(p);
         assertNotNull(e);
         assert(e instanceof Treasure);
         //assertEquals(p, e.getPosition());
@@ -164,13 +163,13 @@ public class WorldTest {
 
         // Location of wall
         Position p2  = new Position(9, 2);
-        StaticEntity e2 = world.getStaticEntity(p2);
+        CollectableEntity e2 = world.getCollectableEntity(p2);
         assertNull(e2);
 
 
         // Location of mercenary
         Position p3  = new Position(3, 5);
-        StaticEntity e3 = world.getStaticEntity(p3);
+        CollectableEntity e3 = world.getCollectableEntity(p3);
         assertNull(e3);
     }
 
