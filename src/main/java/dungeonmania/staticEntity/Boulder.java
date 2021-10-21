@@ -1,6 +1,7 @@
 package dungeonmania.staticEntity;
 
 import dungeonmania.util.Position;
+import dungeonmania.util.Direction;
 
 public class Boulder extends StaticEntity{
 
@@ -14,5 +15,5 @@ public class Boulder extends StaticEntity{
         // TODO Auto-generated method stub
         
     }
-    
+    public void move(Direction d){}
 }
