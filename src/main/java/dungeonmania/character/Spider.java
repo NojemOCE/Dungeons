@@ -130,4 +130,10 @@ public class Spider extends Character {
                 return Direction.NONE;
         }
     }
+
+    @Override
+    public boolean validMove(Position position, World world) {
+        // TODO Auto-generated method stub
+        
+    }
 }
