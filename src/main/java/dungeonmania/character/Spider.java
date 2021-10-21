@@ -23,11 +23,7 @@ public class Spider extends Character {
         remMovesNext = START_MOVES;
     }
 
-    // To be removed
-    @Override
-    public void move(Direction direction) {}
-
-
+  
     // To be uncommented
     //@Override
     /**
