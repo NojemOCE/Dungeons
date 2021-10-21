@@ -23,9 +23,8 @@ public class Spider extends Character {
         remMovesNext = START_MOVES;
     }
 
-  
-    // To be uncommented
-    //@Override
+
+    @Override
     /**
      * Simulates 1 ticks worth of movement for the spider. Note: if the spiders
      * movement is obstructed, then its direction will reverse on this tick,
@@ -37,10 +36,17 @@ public class Spider extends Character {
         // First get the planned position of the spider
         Position plannedNextPosition = plannedNextPosition();
 
-        // Next check if the planned position is the current location of a static entity or a character
-        // Null for now but needs to be updated when world method is implemented
-        StaticEntity plannedPositionStaticEntity = null; // getStaticEntity(Position plannedNextPosition)
-        Character plannedPositionCharacter = null; // getCharacter(Position plannedNextPosition)
+        // Determine what the spider's new position should be
+        Position newPosition = validMove(plannedNextPosition, world);
+
+        moveTo(newPosition);
+    }
+
+    @Override
+    public Position validMove(Position position, World world) {
+        // Check if the planned position is the current location of a static entity or a character
+        StaticEntity plannedPositionStaticEntity = world.getStaticEntity(position);
+        Character plannedPositionCharacter = world.getCharacter(position);
 
         // Now check if the StaticEntity Spider is moving into is a boulder, 
         // or if the Spider is moving into the position of another enemy Character
@@ -48,14 +54,16 @@ public class Spider extends Character {
         Boolean movingIntoEnemy = (plannedPositionCharacter != null) && !(plannedPositionCharacter instanceof Player);
 
         // If Spider is moving into a boulder or an enemy, reverse direction
+        // and return the validMove position as the Spider's current position
         if (movingIntoBoulder || movingIntoEnemy) {
             reverseDirection();
+            return getPosition();
         }
-        // Otherwise the Spider should move to its planned position
         else {
-            moveTo(plannedNextPosition);
+            return position;
         }
     }
+
 
     /**
      * Returns the position that the spider would next move to
@@ -130,4 +138,7 @@ public class Spider extends Character {
                 return Direction.NONE;
         }
     }
+
+
+
 }
