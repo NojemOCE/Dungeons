@@ -6,14 +6,14 @@ import dungeonmania.buildable.*;
 
 public class Inventory {
     
-    private List<CollectableEntities> collectableItems;
+    private List<CollectableEntity> collectableItems;
     private List<Buildable> buildableItems;
 
-    public void collect(CollectableEntities item) {
+    public void collect(CollectableEntity item) {
         return;
     }
 
-    public void use(CollectableEntities item) {
+    public void use(CollectableEntity item) {
         return;
     }
 
@@ -21,7 +21,7 @@ public class Inventory {
         return;
     }
 
-    public boolean isPresent(CollectableEntities item) {
+    public boolean isPresent(CollectableEntity item) {
         return true;
     }
 

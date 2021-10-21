@@ -1,13 +1,13 @@
-package dungeonmania.character;
+package dungeonmania.movingEntity;
 
 import dungeonmania.util.Position;
 
 public class Battle {
     private Player player;
-    private Character character;
+    private MovingEntity character;
     private Position position;
 
-    public Battle(Player player, Character character) {
+    public Battle(Player player, MovingEntity character) {
         this.player = player;
         this.character = character;
     }
@@ -20,7 +20,7 @@ public class Battle {
         return player;
     }
 
-    public Character getCharacter() {
+    public MovingEntity getCharacter() {
         return character;
     }
 

@@ -1,4 +1,4 @@
-package dungeonmania.character;
+package dungeonmania.movingEntity;
 
 import dungeonmania.util.Position;
 
@@ -11,14 +11,14 @@ import dungeonmania.staticEntity.StaticEntity;
 
 
 
-public abstract class Character implements Movement {
+public abstract class MovingEntity implements Movement {
     private HealthPoint healthPoint;
     private double attackDamage;
     private Position position;
 
     private boolean ally;
 
-    public Character(HealthPoint healthPoint, double attackDamage, Position position) {
+    public MovingEntity(HealthPoint healthPoint, double attackDamage, Position position) {
         this.healthPoint = healthPoint;
         this.attackDamage = attackDamage;
         this.position = position;
@@ -55,7 +55,7 @@ public abstract class Character implements Movement {
             }
         }
         // also check if another moving entity in the position already
-        Character c = world.getCharacter(position);
+        MovingEntity c = world.getCharacter(position);
         if (!Objects.isNull(c)) {
             // two characters cant be in same place, dont move this object
             return getPosition();

@@ -1,11 +1,11 @@
-package dungeonmania.character;
+package dungeonmania.movingEntity;
 
 import dungeonmania.World;
 import dungeonmania.util.*;
 
 import java.util.Random;
 
-public class Zombie extends Character{
+public class Zombie extends MovingEntity{
 
     public Zombie(HealthPoint healthPoint, double attackDamage, Position position) {
         super(healthPoint, attackDamage, position);

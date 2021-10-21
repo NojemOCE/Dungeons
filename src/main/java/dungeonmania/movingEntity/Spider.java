@@ -1,4 +1,4 @@
-package dungeonmania.character;
+package dungeonmania.movingEntity;
 
 import dungeonmania.World;
 import dungeonmania.staticEntity.Boulder;
@@ -6,7 +6,7 @@ import dungeonmania.staticEntity.StaticEntity;
 import dungeonmania.util.*;
 
 
-public class Spider extends Character {
+public class Spider extends MovingEntity {
     private Direction currentDirection;
     private Direction nextDirection;
     private int remMovesCurr;
@@ -46,7 +46,7 @@ public class Spider extends Character {
     public Position validMove(Position position, World world) {
         // Check if the planned position is the current location of a static entity or a character
         StaticEntity plannedPositionStaticEntity = world.getStaticEntity(position);
-        Character plannedPositionCharacter = world.getCharacter(position);
+        MovingEntity plannedPositionCharacter = world.getCharacter(position);
 
         // Now check if the StaticEntity Spider is moving into is a boulder, 
         // or if the Spider is moving into the position of another enemy Character

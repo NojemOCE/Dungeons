@@ -2,7 +2,7 @@ package dungeonmania.collectable;
 
 import dungeonmania.Consumable;
 
-public class InvisibilityPotion extends CollectableEntities implements Consumable {
+public class InvisibilityPotion extends CollectableEntity implements Consumable {
     private int duration;
 
     public void consume() {};

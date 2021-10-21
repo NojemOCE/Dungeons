@@ -1,5 +1,5 @@
 package dungeonmania.collectable;
 
-public class Arrows extends CollectableEntities {
+public class Arrows extends CollectableEntity {
     
 }
