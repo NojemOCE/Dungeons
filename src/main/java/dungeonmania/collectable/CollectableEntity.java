@@ -6,6 +6,10 @@ public abstract class CollectableEntity {
     private boolean collected;
     private Position position;
 
+    public CollectableEntity() {
+        this.position = null;
+        this.collected = false;
+    }
     
     public CollectableEntity(Position position) {
         this.position = position;
