@@ -2,6 +2,7 @@ package dungeonmania.movingEntity;
 
 import dungeonmania.World;
 import dungeonmania.util.*;
+import dungeonmania.response.models.EntityResponse;
 
 import java.util.Random;
 
@@ -42,6 +43,12 @@ public class Zombie extends MovingEntity{
                 // no change in position
                 setPosition(getPosition());
         }        
+    }
+
+    @Override
+    public EntityResponse getEntityResponse() {
+        // TODO Update for ID
+        return new EntityResponse("not a real ID", "spider", getPosition(), false);
     }
 }
 

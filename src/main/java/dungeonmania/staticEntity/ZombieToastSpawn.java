@@ -3,6 +3,7 @@ package dungeonmania.staticEntity;
 import dungeonmania.World;
 import dungeonmania.util.Position;
 import dungeonmania.movingEntity.*;
+import dungeonmania.response.models.EntityResponse;
 
 public class ZombieToastSpawn extends StaticEntity {
     // spawn rate?
@@ -49,5 +50,9 @@ public class ZombieToastSpawn extends StaticEntity {
 
         return null;
     }
-    
+    @Override
+    public EntityResponse getEntityResponse() {
+        // TODO Update for ID
+        return new EntityResponse("not a real ID", "zombie_toast_spawner", getPosition(), true);
+    }
 }

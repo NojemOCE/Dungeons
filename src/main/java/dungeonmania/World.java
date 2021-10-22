@@ -1,5 +1,6 @@
 package dungeonmania;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,6 +14,8 @@ import dungeonmania.movingEntity.*;
 import dungeonmania.buildable.Buildable;
 import dungeonmania.collectable.CollectableEntity;
 import dungeonmania.exceptions.InvalidActionException;
+import dungeonmania.response.models.ItemResponse;
+import dungeonmania.response.models.EntityResponse;
 
 
 // TODO: remember to implement all the observer interfaces as we go
@@ -66,7 +69,14 @@ public class World implements ObserverExitGoal {
 
     // Return a dungeon response for the current world
     public DungeonResponse worldDungeonResponse(){
-        return null;
+
+        List<String> buildableList = new ArrayList<>();
+        // Here we would need to add a list of all current buildable items
+        // ie. if shield is buildable add "shield" to list
+        // if bow is buildable add "bow" to list
+        buildableList.add("not a real list of buildable strings");
+
+        return new DungeonResponse(id, dungeonName, getEntityResponses(), getInventoryResponse(), buildableList, "not real goals");
     }
 
     /**
@@ -158,5 +168,20 @@ public class World implements ObserverExitGoal {
     public void update(SubjectExitGoal obj) {
         // TODO Auto-generated method stub
         
+    }
+
+    public List<EntityResponse> getEntityResponses() {
+        List<EntityResponse> entityResponses = new ArrayList<>();
+        
+        entityResponses.add(player.getEntityResponse());
+        entityResponses.addAll(characters.stream().map(MovingEntity::getEntityResponse).collect(Collectors.toList()));
+        entityResponses.addAll(staticEntities.stream().map(StaticEntity::getEntityResponse).collect(Collectors.toList()));
+        entityResponses.addAll(collectableEntities.stream().map(CollectableEntity::getEntityResponse).collect(Collectors.toList()));
+        
+        return entityResponses;
+    }
+
+    public List<ItemResponse> getInventoryResponse(){
+        return player.getInventoryResponse();
     }
 }

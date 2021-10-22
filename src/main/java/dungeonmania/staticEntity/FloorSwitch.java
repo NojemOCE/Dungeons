@@ -4,6 +4,7 @@ import dungeonmania.World;
 import dungeonmania.goal.ObserverBoulderSwitchGoal;
 import dungeonmania.goal.SubjectBoulderSwitchGoal;
 import dungeonmania.movingEntity.MovingEntity;
+import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
 
 public class FloorSwitch extends StaticEntity implements SubjectBoulderSwitchGoal {
@@ -51,6 +52,12 @@ public class FloorSwitch extends StaticEntity implements SubjectBoulderSwitchGoa
     @Override
     public boolean isTriggered() {
         return isTriggered;
+    }
+
+    @Override
+    public EntityResponse getEntityResponse() {
+        // TODO Update for ID
+        return new EntityResponse("not a real ID", "switch", getPosition(), false);
     }
     
 }

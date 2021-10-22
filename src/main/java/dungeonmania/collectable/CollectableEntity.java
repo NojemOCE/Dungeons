@@ -1,5 +1,7 @@
 package dungeonmania.collectable;
 
+import dungeonmania.response.models.EntityResponse;
+import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Position;
 
 public abstract class CollectableEntity {
@@ -23,4 +25,8 @@ public abstract class CollectableEntity {
     public Position getPosition(){
         return position;
     }
+
+    
+    abstract public EntityResponse getEntityResponse();
+    abstract public ItemResponse getItemResponse();
 }
