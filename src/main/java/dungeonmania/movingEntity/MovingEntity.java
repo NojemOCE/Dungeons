@@ -44,7 +44,7 @@ public abstract class MovingEntity implements Movement {
         StaticEntity se = world.getStaticEntity(position);
         if (!Objects.isNull(se)) {
             // interact with static entitity
-            return se.interact(world, this); // TODO change this later to align with static entity
+            return se.interact(world, this); 
         } 
         if (!world.getBattles().isEmpty()) {
             // check if this objects position is same as players (for players if there is a battle)
