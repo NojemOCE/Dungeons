@@ -5,6 +5,7 @@ import dungeonmania.util.Position;
 import java.util.Objects;
 
 import dungeonmania.World;
+import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.staticEntity.StaticEntity;
 
@@ -95,5 +96,7 @@ public abstract class MovingEntity implements Movement {
     public void setAlly(boolean ally) {
         this.ally = ally;
     }
+
+    abstract public EntityResponse getEntityResponse();
     
 }

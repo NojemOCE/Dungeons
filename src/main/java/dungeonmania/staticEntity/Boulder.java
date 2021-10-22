@@ -5,6 +5,7 @@ import dungeonmania.goal.ObserverTreasureGoal;
 import dungeonmania.goal.SubjectBoulderSwitchGoal;
 import dungeonmania.movingEntity.MovingEntity;
 import dungeonmania.movingEntity.Player;
+import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
 import dungeonmania.util.Direction;
 
@@ -69,5 +70,9 @@ public class Boulder extends StaticEntity {
 
     }
 
-
+    @Override
+    public EntityResponse getEntityResponse() {
+        // TODO Update for ID
+        return new EntityResponse("not a real ID", "boulder", getPosition(), false);
+    }
 }

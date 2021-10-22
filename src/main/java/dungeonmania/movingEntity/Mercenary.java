@@ -2,6 +2,8 @@ package dungeonmania.movingEntity;
 
 import dungeonmania.util.*;
 import dungeonmania.World;
+import dungeonmania.response.models.EntityResponse;
+
 import java.util.Queue;
 import java.util.ArrayDeque;
 
@@ -30,6 +32,13 @@ public class Mercenary extends MovingEntity {
         // add position to queue
         Queue<Position> queue = new ArrayDeque<>();
         
+    }
+
+
+    @Override
+    public EntityResponse getEntityResponse() {
+        // TODO Update for ID
+        return new EntityResponse("not a real ID", "mercenary", getPosition(), true);
     }
 
 

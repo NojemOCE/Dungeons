@@ -2,6 +2,7 @@ package dungeonmania.staticEntity;
 
 import dungeonmania.World;
 import dungeonmania.movingEntity.MovingEntity;
+import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
 
 public class Wall extends StaticEntity {
@@ -21,6 +22,12 @@ public class Wall extends StaticEntity {
     @Override
     public Position interact(World world, MovingEntity character) {
         return character.getPosition();
+    }
+
+    @Override
+    public EntityResponse getEntityResponse() {
+        // TODO Update for ID
+        return new EntityResponse("not a real ID", "wall", getPosition(), false);
     }
     
 }

@@ -4,6 +4,7 @@ import dungeonmania.World;
 import dungeonmania.collectable.Key;
 import dungeonmania.movingEntity.MovingEntity;
 import dungeonmania.movingEntity.Player;
+import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
 
 public class Door extends StaticEntity {
@@ -40,6 +41,12 @@ public class Door extends StaticEntity {
         }
         
         return character.getPosition();
+    }
+    
+    @Override
+    public EntityResponse getEntityResponse() {
+        // TODO Update for ID
+        return new EntityResponse("not a real ID", "door", getPosition(), false);
     }
     
 }
