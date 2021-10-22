@@ -7,13 +7,17 @@ public class Battle {
     private MovingEntity character;
     private Position position;
 
+    private boolean activeBattle;
+
     public Battle(Player player, MovingEntity character) {
         this.player = player;
         this.character = character;
+        this.activeBattle = true;
     }
 
     public void battleTick() {
-
+        // 
+        endBattle();
     }
 
     public Player getPlayer() {
@@ -28,7 +32,15 @@ public class Battle {
         return position;
     }
 
-    private void endBattle() {
+    public boolean isActiveBattle() {
+        return activeBattle;
+    }
 
+    public void setActiveBattle(boolean activeBattle) {
+        this.activeBattle = activeBattle;
+    }
+
+    private void endBattle() {
+        setActiveBattle(false);
     }
 }
