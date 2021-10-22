@@ -1,7 +1,7 @@
 package dungeonmania.staticEntityTest;
 
 
-import dungeonmania.character.Zombie;
+import dungeonmania.movingEntity.*;
 import dungeonmania.staticEntity.*;
 import dungeonmania.util.Position;
 
