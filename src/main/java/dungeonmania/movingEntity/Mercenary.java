@@ -2,6 +2,8 @@ package dungeonmania.movingEntity;
 
 import dungeonmania.util.*;
 import dungeonmania.World;
+import dungeonmania.response.models.EntityResponse;
+
 import java.util.Queue;
 import java.util.Set;
 import java.util.ArrayDeque;

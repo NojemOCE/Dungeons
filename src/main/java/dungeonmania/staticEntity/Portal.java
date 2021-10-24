@@ -4,6 +4,7 @@ import dungeonmania.World;
 import dungeonmania.movingEntity.Mercenary;
 import dungeonmania.movingEntity.MovingEntity;
 import dungeonmania.movingEntity.Player;
+import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
@@ -77,6 +78,12 @@ public class Portal extends StaticEntity {
 
     public void setTwinPortal(Portal twinPortal) {
         this.twinPortal = twinPortal;
+    }
+
+    @Override
+    public EntityResponse getEntityResponse() {
+        // TODO Update for ID
+        return new EntityResponse("not a real ID", "portal", getPosition(), false);
     }
     
     

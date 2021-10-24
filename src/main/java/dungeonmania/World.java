@@ -1,5 +1,6 @@
 package dungeonmania;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +18,8 @@ import dungeonmania.movingEntity.*;
 import dungeonmania.buildable.Buildable;
 import dungeonmania.collectable.CollectableEntity;
 import dungeonmania.exceptions.InvalidActionException;
+import dungeonmania.response.models.ItemResponse;
+import dungeonmania.response.models.EntityResponse;
 
 
 // TODO: remember to implement all the observer interfaces as we go
@@ -163,7 +166,14 @@ public class World implements ObserverExitGoal {
 
     // Return a dungeon response for the current world
     public DungeonResponse worldDungeonResponse(){
-        return null;
+
+        List<String> buildableList = new ArrayList<>();
+        // Here we would need to add a list of all current buildable items
+        // ie. if shield is buildable add "shield" to list
+        // if bow is buildable add "bow" to list
+        buildableList.add("not a real list of buildable strings");
+
+        return new DungeonResponse(id, dungeonName, getEntityResponses(), getInventoryResponse(), buildableList, "not real goals");
     }
 
     /**
@@ -172,7 +182,20 @@ public class World implements ObserverExitGoal {
      * @return Static entity at position p
      */
     public StaticEntity getStaticEntity(Position p) {
+        for (StaticEntity s: staticEntities) {
+            if (s.getPosition().equals(p))  {
+                return s;
+            }
+        }
         return null;
+    }
+
+
+    // An alternative method of the above method (getStaticEntity). I think this
+    // might be the better choice as it allows us to consider layers
+    // eg. if a boulder is already on top of a switch
+    public List<StaticEntity> getStaticEntitiesAtPosition(Position p) {
+        return staticEntities.stream().filter(x  -> x.getPosition().equals(p)).collect(Collectors.toList());
     }
 
     /**
@@ -181,6 +204,12 @@ public class World implements ObserverExitGoal {
      * @return Collectable entity at position p
      */
     public CollectableEntity getCollectableEntity(Position p) {
+        // I am not very good at streams, so not sure if there is an elegant way to use them to return only 1 object from a list
+        for (CollectableEntity e: collectableEntities) {
+            if (e.getPosition().equals(p)) {
+                return e;
+            }
+        }
         return null;
     }
 
@@ -190,21 +219,44 @@ public class World implements ObserverExitGoal {
      * @return MovingEntity at position p
      */
     public MovingEntity getCharacter(Position p){
+        for (MovingEntity c: characters) {
+            if (c.getPosition().equals(p)) {
+                return c;
+            }
+        }
         return null;
     }
 
+    /**
+     * Gets the list of battles that exit currently in the world
+     * @return list of current battles in world
+     */
     public List<Battle> getBattles() {
-        return null;
+        return battles;
     }
 
+    /**
+     * Gets the Player object of the world
+     * @return Player of the world
+     */
     public Player getPlayer() {
-        return null;
+        return player;
     }
 
+    /**
+     * Checks if a given Collectable item is in the players inventory
+     * @param item collectable item to check for in inventory
+     * @return true if the item is in the players inventory, false otherwise
+     */
     public boolean inInventory(CollectableEntity item) {
         return player.inInventory(item);
     }
 
+    /**
+     * Checks if a given Buildable item is in the players inventory
+     * @param item buildable item to check for in inventory
+     * @return true if the item is in the players inventory, false otherwise
+     */
     public boolean inInventory(Buildable item) {
         return player.inInventory(item);
     }
@@ -234,5 +286,20 @@ public class World implements ObserverExitGoal {
     public void update(SubjectExitGoal obj) {
         // TODO Auto-generated method stub
         
+    }
+
+    public List<EntityResponse> getEntityResponses() {
+        List<EntityResponse> entityResponses = new ArrayList<>();
+        
+        entityResponses.add(player.getEntityResponse());
+        entityResponses.addAll(characters.stream().map(MovingEntity::getEntityResponse).collect(Collectors.toList()));
+        entityResponses.addAll(staticEntities.stream().map(StaticEntity::getEntityResponse).collect(Collectors.toList()));
+        entityResponses.addAll(collectableEntities.stream().map(CollectableEntity::getEntityResponse).collect(Collectors.toList()));
+        
+        return entityResponses;
+    }
+
+    public List<ItemResponse> getInventoryResponse(){
+        return player.getInventoryResponse();
     }
 }

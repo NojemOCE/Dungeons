@@ -5,6 +5,7 @@ import dungeonmania.goal.ObserverExitGoal;
 import dungeonmania.goal.SubjectExitGoal;
 import dungeonmania.movingEntity.MovingEntity;
 import dungeonmania.movingEntity.Player;
+import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
 
 public class Exit extends StaticEntity implements SubjectExitGoal {
@@ -41,5 +42,11 @@ public class Exit extends StaticEntity implements SubjectExitGoal {
     @Override
     public void notifyObserver() {
         observer.update(this);
-    }    
+    }
+
+    @Override
+    public EntityResponse getEntityResponse() {
+        // TODO Update for ID
+        return new EntityResponse("not a real ID", "exit", getPosition(), false);
+    }
 }

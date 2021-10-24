@@ -25,10 +25,10 @@ public class FloorSwitchTest {
         Position floorSwitchPos = new Position(1,1);
         FloorSwitch floorSwitch = new FloorSwitch(floorSwitchPos);
         
-        assertEquals(floorSwitch.covered(), false);
+        assertEquals(floorSwitch.isTriggered(), false);
 
-        floorSwitch.cover();
-        assertEquals(floorSwitch.covered(), true);
+        floorSwitch.trigger();
+        assertEquals(floorSwitch.isTriggered(), true);
 
     }
 

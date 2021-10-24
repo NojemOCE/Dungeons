@@ -1,11 +1,15 @@
 package dungeonmania.movingEntity;
 
+import java.util.List;
+
 import dungeonmania.World;
 import dungeonmania.buildable.Buildable;
 import dungeonmania.collectable.CollectableEntity;
 import dungeonmania.gamemode.Gamemode;
 import dungeonmania.util.*;
 import dungeonmania.inventory.Inventory;
+import dungeonmania.response.models.EntityResponse;
+import dungeonmania.response.models.ItemResponse;
 
 
 public class Player extends MovingEntity {
@@ -47,5 +51,15 @@ public class Player extends MovingEntity {
 
     public boolean inInventory(Buildable item) {
         return inventory.isPresent(item);
+    }
+
+    @Override
+    public EntityResponse getEntityResponse() {
+        // TODO Update for ID
+        return new EntityResponse("not a real ID", "player", getPosition(), true);
+    }
+
+    public List<ItemResponse> getInventoryResponse() {
+        return inventory.getInventoryResponse();
     }
 }  
