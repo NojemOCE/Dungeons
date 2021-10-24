@@ -6,7 +6,7 @@ import dungeonmania.util.Position;
 
 public class Wood extends CollectableEntity implements Consumable {
     public Wood(int x, int y, String id) {
-        super(new Position(x, y, 0), id, "wood");
+        super(new Position(x, y, 1), id, "wood");
     }
 
     public void consume() {};

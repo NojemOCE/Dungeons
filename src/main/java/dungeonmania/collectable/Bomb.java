@@ -7,7 +7,7 @@ import dungeonmania.util.Position;
 
 public class Bomb extends CollectableEntity implements Consumable {
     public Bomb(int x, int y, String id) {
-        super(new Position(x, y, 0), id, "bomb");
+        super(new Position(x, y, 1), id, "bomb");
     }
     public void consume() {};
     public void detonate() {};

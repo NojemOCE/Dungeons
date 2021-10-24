@@ -7,7 +7,7 @@ import dungeonmania.util.Position;
 
 public class HealthPotion extends CollectableEntity implements Consumable {
     public HealthPotion(int x, int y, String id) {
-        super(new Position(x, y, 0), id, "health_potion");
+        super(new Position(x, y, 1), id, "health_potion");
     }
     private double healingAmount;
     public void consume() {};

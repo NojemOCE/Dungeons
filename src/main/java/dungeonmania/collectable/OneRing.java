@@ -7,7 +7,7 @@ import dungeonmania.util.Position;
 
 public class OneRing extends CollectableEntity implements Consumable {
     public OneRing(int x, int y, String id) {
-        super(new Position(x, y, 0), id, "one_ring");
+        super(new Position(x, y, 1), id, "one_ring");
     }
 
     public void consume() {};

@@ -10,7 +10,7 @@ public class Key extends CollectableEntity implements Consumable {
     private String keyColour;
     
     public Key(int x, int y, String id, String keyColour) {
-        super(new Position(x, y, 0), id, "invisibility_potion");
+        super(new Position(x, y, 1), id, "invisibility_potion");
         this.keyColour = keyColour;
     }
 

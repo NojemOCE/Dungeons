@@ -6,7 +6,7 @@ import dungeonmania.util.Position;
 
 public class Armour extends CollectableEntity {
     public Armour(int x, int y, String id) {
-        super(new Position(x, y, 0), id, "armour");
+        super(new Position(x, y, 1), id, "armour");
     }
 
     public void defend() {};

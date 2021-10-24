@@ -7,7 +7,7 @@ import dungeonmania.util.Position;
 
 public class InvisibilityPotion extends CollectableEntity implements Consumable {
     public InvisibilityPotion(int x, int y, String id) {
-        super(new Position(x, y, 0), id, "invisibility_potion");
+        super(new Position(x, y, 1), id, "invisibility_potion");
     }
 
     private int duration;

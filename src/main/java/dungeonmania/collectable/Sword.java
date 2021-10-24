@@ -6,7 +6,7 @@ import dungeonmania.util.Position;
 
 public class Sword extends CollectableEntity implements Consumable{
     public Sword(int x, int y, String id) {
-        super(new Position(x, y, 0), id, "sword");
+        super(new Position(x, y, 1), id, "sword");
     }
 
     private double attackPower;
