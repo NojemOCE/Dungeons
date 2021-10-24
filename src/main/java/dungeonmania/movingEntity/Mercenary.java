@@ -15,9 +15,11 @@ import java.util.Map;
 public class Mercenary extends MovingEntity {
 
     private int BATTLE_RADIUS = 3;
-    
-    public Mercenary(HealthPoint healthPoint, double attackDamage, Position position) {
-        super(healthPoint, attackDamage, position);
+    private Player subject;
+
+    public Mercenary(Position position, String id, String type) {
+        super(position, id, type, new HealthPoint(100), 10);
+
         setAlly(false);
     }
 
@@ -84,4 +86,8 @@ public class Mercenary extends MovingEntity {
         return validNeighbours;
     }
 
+    public void update(Movement movement) {
+        // take in duration left,
+        //after duration is 0 revert back to normal pattern;
+    }
 }

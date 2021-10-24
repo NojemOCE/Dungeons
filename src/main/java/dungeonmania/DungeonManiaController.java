@@ -10,7 +10,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+
+import com.google.gson.JsonParser;
+
+import org.json.*;
+
 public class DungeonManiaController {
+
+    // saved worlds
+    private List<World> savedGames = new ArrayList<>();
+    private World current;
+
     public DungeonManiaController() {
     }
 
@@ -39,7 +49,19 @@ public class DungeonManiaController {
         }
     }
 
-    public DungeonResponse newGame(String dungeonName, String gameMode) throws IllegalArgumentException {
+    public DungeonResponse newGame(String dungeonName, String gameMode) throws IllegalArgumentException, IOException {
+        
+        if (!dungeons().contains(dungeonName)) throw new IllegalArgumentException("No dungeon exists");
+
+        World newGame = new World(dungeonName, gameMode);
+
+        // create JSON object
+
+        String file = FileLoader.loadResourceFile("/dungeons/" + dungeonName);
+        JSONObject game = new JSONObject(file);
+        newGame.buildWorld(game);
+
+        
         return null;
     }
     

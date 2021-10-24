@@ -4,6 +4,7 @@ import dungeonmania.util.Position;
 
 import java.util.Objects;
 
+import dungeonmania.Entity;
 import dungeonmania.World;
 import dungeonmania.util.Direction;
 import dungeonmania.staticEntity.StaticEntity;
@@ -11,18 +12,21 @@ import dungeonmania.staticEntity.StaticEntity;
 
 
 
-public abstract class MovingEntity implements Movement {
+public abstract class MovingEntity extends Entity implements Movement {
     private HealthPoint healthPoint;
     private double attackDamage;
     private Position position;
 
+    private Gamemode gameMode;
+
     private boolean ally;
 
-    public MovingEntity(HealthPoint healthPoint, double attackDamage, Position position) {
+    public MovingEntity(Position position, String id, String type, HealthPoint healthPoint, int attackDamage) {
+        super(position, id, type);
         this.healthPoint = healthPoint;
         this.attackDamage = attackDamage;
-        this.position = position;
     }
+
 
     // Attack and defend will be used to calculate in the battle class
     public double attack() {

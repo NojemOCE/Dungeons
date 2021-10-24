@@ -3,6 +3,7 @@ package dungeonmania.movingEntity;
 import dungeonmania.World;
 import dungeonmania.buildable.Buildable;
 import dungeonmania.collectable.CollectableEntity;
+import dungeonmania.gamemode.Gamemode;
 import dungeonmania.util.*;
 import dungeonmania.inventory.Inventory;
 
