@@ -34,6 +34,7 @@ public abstract class Entity {
         return type;
     }
     
-    abstract public EntityResponse getEntityResponse();
-
+    public EntityResponse getEntityResponse() {
+        return new EntityResponse(id, type, getPosition(), false);
+    }
 }

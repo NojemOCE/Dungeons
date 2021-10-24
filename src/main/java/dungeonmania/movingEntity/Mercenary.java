@@ -2,6 +2,7 @@ package dungeonmania.movingEntity;
 
 import dungeonmania.util.*;
 import dungeonmania.World;
+import dungeonmania.gamemode.Gamemode;
 import dungeonmania.response.models.EntityResponse;
 
 import java.util.Queue;
@@ -19,8 +20,9 @@ public class Mercenary extends MovingEntity {
     private int BATTLE_RADIUS = 3;
     private Player subject;
 
-    public Mercenary(Position position, String id, String type) {
-        super(position, id, type, new HealthPoint(100), 10);
+    public Mercenary(int x, int y, String id, Gamemode gameMode) {
+        //Set layer and attack damage to 1 for now
+        super(new Position(x, y, 1), id, "mercenary", new HealthPoint(gameMode.getStartingHP()), 1, gameMode);
 
         setAlly(false);
     }
@@ -91,5 +93,10 @@ public class Mercenary extends MovingEntity {
     public void update(Movement movement) {
         // take in duration left,
         //after duration is 0 revert back to normal pattern;
+    }
+
+    @Override
+    public EntityResponse getEntityResponse() {
+        return new EntityResponse(getId(), getType(), getPosition(), true);
     }
 }

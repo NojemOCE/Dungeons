@@ -5,22 +5,10 @@ import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Position;
 
 public class Armour extends CollectableEntity {
-    public Armour(Position position) {
-        super(position);
-        //TODO Auto-generated constructor stub
+    public Armour(int x, int y, String id) {
+        super(new Position(x, y, 0), id, "armour");
     }
 
     public void defend() {};
 
-    @Override
-    public EntityResponse getEntityResponse() {
-        // TODO Update for ID
-        return new EntityResponse("not a real ID", "armour", getPosition(), false);
-    }
-
-    @Override
-    public ItemResponse getItemResponse() {
-        // TODO Update for valid ID
-        return new ItemResponse("not a real ID", "armour");
-    }
 }

@@ -5,24 +5,13 @@ import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Position;
 
 public class Sword extends CollectableEntity implements Consumable{
-    public Sword(Position position) {
-        super(position);
-        //TODO Auto-generated constructor stub
+    public Sword(int x, int y, String id) {
+        super(new Position(x, y, 0), id, "sword");
     }
+
     private double attackPower;
 
     public void consume() {};
     public void attack() {};
 
-    @Override
-    public EntityResponse getEntityResponse() {
-        // TODO Update for ID
-        return new EntityResponse("not a real ID", "sword", getPosition(), false);
-    }
-
-    @Override
-    public ItemResponse getItemResponse() {
-        // TODO Update for valid ID
-        return new ItemResponse("not a real ID", "sword");
-    }
 }

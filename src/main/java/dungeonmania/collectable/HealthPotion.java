@@ -6,23 +6,11 @@ import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Position;
 
 public class HealthPotion extends CollectableEntity implements Consumable {
-    public HealthPotion(Position position) {
-        super(position);
-        //TODO Auto-generated constructor stub
+    public HealthPotion(int x, int y, String id) {
+        super(new Position(x, y, 0), id, "health_potion");
     }
     private double healingAmount;
     public void consume() {};
     public void heal() {};
 
-    @Override
-    public EntityResponse getEntityResponse() {
-        // TODO Update for ID
-        return new EntityResponse("not a real ID", "health_potion", getPosition(), false);
-    }
-
-    @Override
-    public ItemResponse getItemResponse() {
-        // TODO Update for valid ID
-        return new ItemResponse("not a real ID", "health_potion");
-    }
 }
