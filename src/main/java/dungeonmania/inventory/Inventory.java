@@ -2,6 +2,7 @@ package dungeonmania.inventory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import dungeonmania.collectable.*;
@@ -32,6 +33,21 @@ public class Inventory {
     public boolean isPresent(Buildable item) {
         return true;
     }
+
+    public Key keyInInventory(String keyColour) {
+        List<Key> keys = collectableItems.stream()
+                                        .filter(x -> x instanceof Key)
+                                        .map(Key.class::cast)
+                                        .filter(x -> x.getKeyColour().equals(keyColour))
+                                        .collect(Collectors.toList());
+
+        if (keys.isEmpty()) {
+            return null;
+        } else {
+            return keys.get(0);
+        }
+    }
+
 
     public List<ItemResponse> getInventoryResponse() {
         List<ItemResponse> itemResponses = new ArrayList<>();

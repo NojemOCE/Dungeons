@@ -5,6 +5,7 @@ import java.util.List;
 import dungeonmania.World;
 import dungeonmania.buildable.Buildable;
 import dungeonmania.collectable.CollectableEntity;
+import dungeonmania.collectable.Key;
 import dungeonmania.gamemode.Gamemode;
 import dungeonmania.util.*;
 import dungeonmania.inventory.Inventory;
@@ -51,6 +52,14 @@ public class Player extends MovingEntity {
 
     public boolean inInventory(Buildable item) {
         return inventory.isPresent(item);
+    }
+
+    public Key keyInInventory(String keyColour) {
+        return inventory.keyInInventory(keyColour);
+    }
+
+    public void use(CollectableEntity item) {
+        inventory.use(item);
     }
 
     @Override
