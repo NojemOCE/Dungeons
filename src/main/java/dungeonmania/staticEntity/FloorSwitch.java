@@ -30,6 +30,7 @@ public class FloorSwitch extends StaticEntity implements SubjectBoulderSwitchGoa
      */
     public void trigger() {
         isTriggered = true;
+        notifyObservers();
     }
 
     /**
@@ -37,6 +38,7 @@ public class FloorSwitch extends StaticEntity implements SubjectBoulderSwitchGoa
      */
     public void untrigger() {
         isTriggered = false;
+        notifyObservers();
     }
 
     @Override

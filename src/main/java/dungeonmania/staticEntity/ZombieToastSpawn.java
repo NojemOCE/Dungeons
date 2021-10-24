@@ -30,6 +30,12 @@ public class ZombieToastSpawn extends StaticEntity {
     }
 
 
+
+    /**
+     *  
+     * The character can destroy a zombie spawner if they have a 
+     * weapon and are cardinally adjacent to the spawner.
+     */
     public void interact(World world) {
         Player player = world.getPlayer();
 

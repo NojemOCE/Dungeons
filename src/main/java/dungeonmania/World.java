@@ -38,7 +38,7 @@ public class World implements ObserverExitGoal {
      * Constructor for world that takes the string of the dungeon name to build 
      * and a string for the gamemode (Standard, Peaceful, Hard)
      */
-    public World(String dugeonName, String gamemode) {
+    public World(String dungeonName, String gamemode) {
         
     }
 
