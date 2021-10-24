@@ -12,12 +12,15 @@ public class Portal extends StaticEntity {
 
     private Portal twinPortal;
 
-    public Portal(Position position) {
-        super(position);
+    private String colour;
+
+    public Portal(int x, int y, String id) {
+        super(new Position(x, y, 1), id, "portal");
+
     }
 
-    public Portal(Position position, Portal twinPortal) {
-        super(position);
+    public Portal(int x, int y, String id, Portal twinPortal) {
+        super(new Position(x, y, 1), id, "portal");
         this.twinPortal = twinPortal;
         twinPortal.setTwinPortal(this);
     }

@@ -8,8 +8,9 @@ import dungeonmania.response.models.EntityResponse;
 public class ZombieToastSpawn extends StaticEntity {
     // spawn rate?
 
-    public ZombieToastSpawn(Position position) {
-        super(position);
+    public ZombieToastSpawn(int x, int y, String id) {
+        super(new Position(x, y), id, "zombie_toast_spawn");
+
     }
 
     /**

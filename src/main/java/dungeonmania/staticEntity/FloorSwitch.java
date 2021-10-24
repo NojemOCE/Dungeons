@@ -11,8 +11,8 @@ public class FloorSwitch extends StaticEntity implements SubjectBoulderSwitchGoa
     private boolean isTriggered;
     private ObserverBoulderSwitchGoal observer;
 
-    public FloorSwitch(Position position) {
-        super(position);
+    public FloorSwitch(int x, int y, String id) {
+        super(new Position(x, y, 0), id, "switch");
         isTriggered = false;
     }
 

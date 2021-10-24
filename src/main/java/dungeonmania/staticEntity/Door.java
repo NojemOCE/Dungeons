@@ -8,12 +8,12 @@ import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
 
 public class Door extends StaticEntity {
-    private Key key;
+    private String keyColour;
     private boolean isOpen = false;
 
-    public Door(Position position, Key key) {
-        super(position);
-        this.key = key;
+    public Door(int x, int y, String id, String keyColour) {
+        super(new Position(x, y), id, "door");
+        this.keyColour = keyColour;
     }
 
     private void open() {
@@ -33,7 +33,7 @@ public class Door extends StaticEntity {
             if (isOpen) {
                 return this.getPosition();
             }
-            if (world.inInventory(key)) {
+            if (world.inInventory(keyColour)) {
                 // open door
                 open();
                 return this.getPosition();

@@ -11,8 +11,9 @@ import dungeonmania.util.Direction;
 
 public class Boulder extends StaticEntity {
     
-    public Boulder(Position position) {
-        super(position);
+    public Boulder(int x, int y, String id) {
+        super(new Position(x, y, 1), id, "boulder");
+
     }
 
     /**

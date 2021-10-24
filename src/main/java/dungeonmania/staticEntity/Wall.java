@@ -7,8 +7,8 @@ import dungeonmania.util.Position;
 
 public class Wall extends StaticEntity {
 
-    public Wall(Position position) {
-        super(position);
+    public Wall(int x, int y, String id) {
+        super(new Position(x, y, 1), id, "wall");
     }
 
     /**

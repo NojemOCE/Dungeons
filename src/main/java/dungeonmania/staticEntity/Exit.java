@@ -11,8 +11,9 @@ import dungeonmania.util.Position;
 public class Exit extends StaticEntity implements SubjectExitGoal {
     ObserverExitGoal observer;
 
-    public Exit(Position position) {
-        super(position);
+    public Exit(int x, int y, String id) {
+        super(new Position(x, y), id, "exit");
+
     }
 
     /**
