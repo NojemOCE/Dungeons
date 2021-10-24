@@ -12,7 +12,7 @@ public class Door extends StaticEntity {
     private boolean isOpen = false;
 
     public Door(int x, int y, String id, String keyColour) {
-        super(new Position(x, y), id, "door");
+        super(new Position(x, y, 1), id, "door");
         this.keyColour = keyColour;
     }
 
@@ -20,6 +20,9 @@ public class Door extends StaticEntity {
         isOpen = true;
     }
     
+    public String getKeyColour() {
+        return keyColour;
+    }
     /**
      * - Players can only walk through doors if they hold the matching key
      *      - If they have the key, the door will open and they will move onto the door
@@ -33,9 +36,14 @@ public class Door extends StaticEntity {
             if (isOpen) {
                 return this.getPosition();
             }
-            if (world.inInventory(keyColour)) {
+
+            // TODO: check that there is a key with this key colour
+            Key key = world.keyInInventory(keyColour);
+            if (!key.equals(null)) {
                 // open door
                 open();
+                // use the key
+                world.use(key);
                 return this.getPosition();
             }
         }

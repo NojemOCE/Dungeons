@@ -3,7 +3,6 @@ package dungeonmania.staticEntity;
 import dungeonmania.Entity;
 import dungeonmania.World;
 import dungeonmania.movingEntity.MovingEntity;
-import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
 
 abstract public class StaticEntity extends Entity {
@@ -23,12 +22,8 @@ abstract public class StaticEntity extends Entity {
         return position;
     }
 
-
-
     public void setPosition(Position position) {
         this.position = position;
     }
 
-    abstract public EntityResponse getEntityResponse();
-    
 }

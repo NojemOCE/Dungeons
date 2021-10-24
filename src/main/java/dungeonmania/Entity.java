@@ -1,5 +1,6 @@
 package dungeonmania;
 
+import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
 
 public abstract class Entity {
@@ -33,4 +34,6 @@ public abstract class Entity {
         return type;
     }
     
+    abstract public EntityResponse getEntityResponse();
+
 }
