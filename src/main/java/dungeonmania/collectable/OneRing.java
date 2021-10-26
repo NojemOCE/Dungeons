@@ -1,29 +1,34 @@
 package dungeonmania.collectable;
 
 import dungeonmania.Consumable;
+import dungeonmania.inventory.Inventory;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Position;
 
 public class OneRing extends CollectableEntity implements Consumable {
-    public OneRing(Position position) {
+
+    private String itemId;
+    private String type = "one_ring";
+    private Inventory inventory;
+
+    public OneRing(Position position, String itemId, Inventory inventory) {
         super(position);
-        //TODO Auto-generated constructor stub
+        this.itemId = itemId;
+        this.inventory = inventory;
     }
 
-public class OneRing extends CollectableEntities implements Consumable {
-    public OneRing() {};
-    public void consume() {};
-
+    public void consume() {
+        inventory.removeItem(itemId);
+    }
+    
     @Override
     public EntityResponse getEntityResponse() {
-        // TODO Update for ID
-        return new EntityResponse("not a real ID", "one_ring", getPosition(), false);
+        return new EntityResponse(itemId, type, getPosition(), false);
     }
 
     @Override
     public ItemResponse getItemResponse() {
-        // TODO Update for valid ID
-        return new ItemResponse("not a real ID", "one_ring");
+        return new ItemResponse(itemId, type);
     }
 }
