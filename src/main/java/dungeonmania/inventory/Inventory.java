@@ -12,6 +12,7 @@ import dungeonmania.response.models.ItemResponse;
 import dungeonmania.buildable.*;
 
 public class Inventory {
+    // Change to hashmap<string, collectableentity> with id as key
     private List<CollectableEntity> collectableItems;
     private List<Buildable> buildableItems;
     private Map<String, Integer> collected;
@@ -29,25 +30,11 @@ public class Inventory {
     }
 
     public void use(String itemType) {
-        collectableItems.removeIf(c -> itemType.equals(c.getClass().getSimpleName()));
+        collectableItems.removeIf(c -> itemType.equalsIgnoreCase(c.getClass().getSimpleName()));
 
         collected.put(itemType, collected.get(itemType) - 1);
     }
 
-    // This signature doesn't make sense - making bow before we know its possible
-    public void craft(Buildable item) {
-        if (item instanceof Bow) {
-            if (numItem("wood") < 1 || numItem("arrow") < 3) {
-                throw new InvalidActionException("Insufficient items");
-            }
-        } else if (item instanceof Shield) {
-            if (numItem("wood") < 2 || numItem("treasure") < 1 || numItem("key") < 1) {
-                throw new InvalidActionException("Insufficient items");
-            }
-        } else {
-            throw new IllegalArgumentException("Wrong buildable type");
-        }
-    }
 
     public void craft(String itemType) {
         if (itemType.equalsIgnoreCase("bow")) {
