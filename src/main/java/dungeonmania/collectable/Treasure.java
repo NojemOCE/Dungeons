@@ -10,6 +10,8 @@ public class Treasure extends CollectableEntity implements Consumable {
         //TODO Auto-generated constructor stub
     }
 
+public class Treasure extends CollectableEntities implements Consumable {
+    public Treasure() {};
     public void consume() {};
 
     @Override

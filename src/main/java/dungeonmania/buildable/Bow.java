@@ -4,6 +4,7 @@ import dungeonmania.Consumable;
 import dungeonmania.response.models.ItemResponse;
 
 public class Bow implements Buildable, Consumable {
+    public Bow() {};
     public void build() {};
     public void attack() {};
     public void consume() {}

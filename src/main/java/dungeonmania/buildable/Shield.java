@@ -3,6 +3,7 @@ package dungeonmania.buildable;
 import dungeonmania.response.models.ItemResponse;
 
 public class Shield implements Buildable {
+    public Shield() {};
     public void build() {};
     public void defend() {};
 

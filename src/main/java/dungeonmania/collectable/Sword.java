@@ -11,6 +11,7 @@ public class Sword extends CollectableEntity implements Consumable{
     }
     private double attackPower;
 
+    public Sword() {};
     public void consume() {};
     public void attack() {};
 

@@ -12,6 +12,8 @@ public class InvincibilityPotion extends CollectableEntity implements Consumable
 
     private int duration;
 
+    public InvincibilityPotion() {};
+
     public void consume() {};
 
     public void tick() {};

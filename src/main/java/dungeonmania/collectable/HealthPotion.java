@@ -11,6 +11,8 @@ public class HealthPotion extends CollectableEntity implements Consumable {
         //TODO Auto-generated constructor stub
     }
     private double healingAmount;
+
+    public HealthPotion() {};
     public void consume() {};
     public void heal() {};
 
