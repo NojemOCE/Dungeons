@@ -10,6 +10,8 @@ public class Wood extends CollectableEntity implements Consumable {
         //TODO Auto-generated constructor stub
     }
 
+public class Wood extends CollectableEntities implements Consumable {
+    public Wood() {};
     public void consume() {};
 
     @Override

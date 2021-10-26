@@ -15,6 +15,8 @@ public class Key extends CollectableEntity implements Consumable {
     // need to change to variable type Door
     private Door door;
 
+    public Key() {};
+
     public void consume() {};
 
     public void craft() {};

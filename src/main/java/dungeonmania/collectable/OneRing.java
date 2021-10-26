@@ -11,6 +11,8 @@ public class OneRing extends CollectableEntity implements Consumable {
         //TODO Auto-generated constructor stub
     }
 
+public class OneRing extends CollectableEntities implements Consumable {
+    public OneRing() {};
     public void consume() {};
 
     @Override

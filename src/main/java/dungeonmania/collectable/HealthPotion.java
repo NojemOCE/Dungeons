@@ -11,8 +11,15 @@ public class HealthPotion extends CollectableEntity {
         //TODO Auto-generated constructor stub
     }
     private double healingAmount;
+<<<<<<< HEAD
     //public void consume() {};
     public double heal() {};
+=======
+
+    public HealthPotion() {};
+    public void consume() {};
+    public void heal() {};
+>>>>>>> master
 
     @Override
     public EntityResponse getEntityResponse() {

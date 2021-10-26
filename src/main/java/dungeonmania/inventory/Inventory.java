@@ -16,7 +16,7 @@ import dungeonmania.util.*;
 public class Inventory {
     // Change to hashmap<string, collectableentity> with id as key
     private Map<String, CollectableEntity> collectableItems;
-    private List<Buildable> buildableItems;
+    private Map<String, Buildable> buildableItems;
     private Map<String, Integer> collected;
     private List<String> useables;
     private Player player;
@@ -109,7 +109,7 @@ public class Inventory {
     public Buildable tick(String itemUsedId) {
         if (!inInventory(itemUsedId)) {
             throw new InvalidActionException("Item not in Inventory");
-        } else if {}
+        } else if {!isUseable(itemUsedId)}
         collectableItems.forEach((id, item) -> {
             item.tick();
         });
