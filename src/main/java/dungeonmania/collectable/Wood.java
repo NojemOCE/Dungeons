@@ -18,7 +18,7 @@ public class Wood extends CollectableEntity implements Consumable {
     }
 
     public void consume() {
-        inventory.removeItem();
+        inventory.removeItem(itemId);
     };
 
     @Override

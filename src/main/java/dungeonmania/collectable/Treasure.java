@@ -1,28 +1,33 @@
 package dungeonmania.collectable;
 import dungeonmania.Consumable;
+import dungeonmania.inventory.Inventory;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Position;
 
 public class Treasure extends CollectableEntity implements Consumable {
-    public Treasure(Position position) {
+
+    private String itemId;
+    private String type = "treasure";
+    private Inventory inventory;
+
+    public Treasure(Position position, String itemId, Inventory inventory) {
         super(position);
-        //TODO Auto-generated constructor stub
+        this.itemId = itemId;
+        this.inventory = inventory;
     }
 
-public class Treasure extends CollectableEntities implements Consumable {
-    public Treasure() {};
-    public void consume() {};
+    public void consume() {
+        inventory.removeItem(itemId);
+    };
 
     @Override
     public EntityResponse getEntityResponse() {
-        // TODO Update for ID
-        return new EntityResponse("not a real ID", "treasure", getPosition(), false);
+        return new EntityResponse(itemId, type, getPosition(), false);
     }
 
     @Override
     public ItemResponse getItemResponse() {
-        // TODO Update for valid ID
-        return new ItemResponse("not a real ID", "treasure");
+        return new ItemResponse(itemId, type);
     }
 }
