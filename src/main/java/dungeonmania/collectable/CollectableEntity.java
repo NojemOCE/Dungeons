@@ -16,11 +16,27 @@ public abstract class CollectableEntity {
         this.position = null;
         this.collected = false;
     }
-    
-    public CollectableEntity(Position position) {
+
+    public CollectableEntity(Position position, String itemId, String type) {
         this.position = position;
         this.collected = false;
+        this.itemId = itemId;
+        this.type = type;
+        this.inventory = null;
     }
+
+    public String getItemId() {
+        return itemId;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public Inventory getInventory() {
+        return inventory;
+    }
+
     public void collect() {
         this.collected = true;
     }
