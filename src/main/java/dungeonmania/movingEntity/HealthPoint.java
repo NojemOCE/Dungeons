@@ -1,6 +1,7 @@
-package dungeonmania.character;
+package dungeonmania.movingEntity;
 
 public class HealthPoint {
+    
     private double health;
 
     public HealthPoint(double health) {
