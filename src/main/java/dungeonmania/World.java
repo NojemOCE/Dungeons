@@ -198,15 +198,15 @@ public class World implements ObserverExitGoal {
             currentBattle.battleTick();
             if (!currentBattle.isActiveBattle()) {
                 if (currentBattle.getPlayerWins()) {
-                    currentBattle.getCharacter().die();
                     movingEntities.remove(currentBattle.getCharacter().getId());
                 } else {
-                    // game over as player has lost
+                    this.player = null; // will end game in dungeon response
+                    // needs to return early
                 }
             }
+        } else  {
+            player.tick(itemUsed, movementDirection, this);
         }
-
-        player.tick(itemUsed, movementDirection, this);
 
         // now move all entities
         for (MovingEntity me: movingEntities.values()) {

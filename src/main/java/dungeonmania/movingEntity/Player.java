@@ -18,7 +18,7 @@ public class Player extends MovingEntity {
     private Inventory inventory;
 
     private List<Mercenary> mercenaryObservers;
-
+    private double allyAttack;
 
     public Player(int x, int y, String id) {
         super(new Position(x, y), id, "player", new HealthPoint(100), 10);
@@ -45,6 +45,8 @@ public class Player extends MovingEntity {
         // check inventory and mercenary in range
         double attackModifier = getAttackDamage() * inventory.attackModifier();
         
+        // then add on mercenary modifier
+        attackModifier += allyAttack;
         return attackModifier;
     }
 
@@ -76,9 +78,17 @@ public class Player extends MovingEntity {
         // we can pass in invincibility state for battle 
         // or invisibility battle wont be created "return null"
         if (!enemy.getAlly()) {
+            notifyObservers(1);
+
             return new Battle(this, enemy);
+            // notify observers of battle
         }
         return null;
+    }
+
+    public void endBattle() {
+        // notify observers of ending battle
+        notifyObservers(0);
     }
 
     @Override
@@ -93,26 +103,22 @@ public class Player extends MovingEntity {
 
     public void registerEntity(Mercenary inRange) {
         mercenaryObservers.add(inRange);
-
+        
+        if (inRange.getAlly()) {
+            allyAttack += inRange.getAttackDamage();
+        }
     }
     
     public void unregisterEntity(Mercenary inRange) {
         if (inRange.getAlly()) {
-            setAttackDamage(getAttackDamage() - inRange.attack());
+            allyAttack -= inRange.getAttackDamage();
         }
         mercenaryObservers.remove(inRange);
     }
 
-    public void notifyObservers() {
+    public void notifyObservers(int speed) { // notify observers for battle
         mercenaryObservers.forEach( mercenary -> {
-            if (mercenary.getAlly()) {
-                // add to attack in battle
-                setAttackDamage(getAttackDamage() + mercenary.getAttackDamage());
-                // mercenary.
-            } else {
-                // mercenaries should move 2 spaces
-                mercenary.setSpeed(1);
-            }
+            mercenary.setSpeed(speed);
         });
     }
 } 

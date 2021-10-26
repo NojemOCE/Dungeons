@@ -51,6 +51,7 @@ public class Battle {
 
     private void endBattle(boolean playerWin) {
         setActiveBattle(false);
+        player.endBattle();
         this.playerWins = playerWin;
     }
 
