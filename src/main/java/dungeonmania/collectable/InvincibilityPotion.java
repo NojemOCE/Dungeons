@@ -1,34 +1,52 @@
 package dungeonmania.collectable;
 import dungeonmania.Consumable;
+import dungeonmania.World;
+import dungeonmania.inventory.Inventory;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Position;
 
 public class InvincibilityPotion extends CollectableEntity implements Consumable {
-    public InvincibilityPotion(Position position) {
+    private String itemId;
+    private String type = "invincibility_potion";
+    private Inventory inventory;
+    private World world;
+    private int duration;
+    private final int DURATION = 10;
+    private boolean active = false;
+
+    public InvincibilityPotion(Position position, String itemId, Inventory inventory, World world) {
         super(position);
-        //TODO Auto-generated constructor stub
+        this.itemId = itemId;
+        this.inventory = inventory;
+        this.world = world;
+        this.duration = DURATION;
     }
 
-    private int duration;
+    public void consume() {
+        this.active = true;
+        // notify the world that the invisibility potion effect is activated
+        world.update(type);
+    };
 
-    public InvincibilityPotion() {};
+    @Override
+    public void tick() {
+        this.duration--;
+        if (this.duration == 0) {
+            inventory.removeItem(itemId);
+            // notify the world that the invisibility potion effect is over
+            world.update(type);
+        }
 
-    public void consume() {};
-
-    public void tick() {};
-
-    public void invincibility() {};
+    };
 
     @Override
     public EntityResponse getEntityResponse() {
-        // TODO Update for ID
-        return new EntityResponse("not a real ID", "invincibility_potion", getPosition(), false);
+        return new EntityResponse(itemId, type, getPosition(), false);
     }
 
     @Override
     public ItemResponse getItemResponse() {
-        // TODO Update for valid ID
-        return new ItemResponse("not a real ID", "invincibility_potion");
+        return new ItemResponse(itemId, type);
     }
 }
