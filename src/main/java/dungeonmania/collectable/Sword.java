@@ -1,29 +1,44 @@
 package dungeonmania.collectable;
 import dungeonmania.Consumable;
+import dungeonmania.inventory.Inventory;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Position;
 
 public class Sword extends CollectableEntity implements Consumable{
-    public Sword(Position position) {
-        super(position);
-        //TODO Auto-generated constructor stub
-    }
-    private double attackPower;
 
-    public Sword() {};
-    public void consume() {};
-    public void attack() {};
+    private String itemId;
+    private String type = "sword";
+    private Inventory inventory;
+    private final double ATTACK_POWER = 10;
+    private int durability;
+    private final int DURABILITY = 10;
+
+    public Sword(Position position, String itemId, Inventory inventory) {
+        super(position);
+        this.itemId = itemId;
+        this.inventory = inventory;
+        this.durability = DURABILITY;
+    }
+
+    public void consume() {
+        this.durability--;
+        if (this.durability == 0) {
+            inventory.removeItem(itemId);
+        }
+    };
+
+    public double attackModifier() {
+        return ATTACK_POWER;
+    };
 
     @Override
     public EntityResponse getEntityResponse() {
-        // TODO Update for ID
-        return new EntityResponse("not a real ID", "sword", getPosition(), false);
+        return new EntityResponse(itemId, type, getPosition(), false);
     }
 
     @Override
     public ItemResponse getItemResponse() {
-        // TODO Update for valid ID
-        return new ItemResponse("not a real ID", "sword");
+        return new ItemResponse(itemId, type);
     }
 }
