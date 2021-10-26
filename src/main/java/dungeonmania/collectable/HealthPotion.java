@@ -1,35 +1,35 @@
 package dungeonmania.collectable;
 
-import dungeonmania.Consumable;
+import dungeonmania.inventory.Inventory;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Position;
 
 public class HealthPotion extends CollectableEntity {
-    public HealthPotion(Position position) {
-        super(position);
-        //TODO Auto-generated constructor stub
-    }
-    private double healingAmount;
-<<<<<<< HEAD
-    //public void consume() {};
-    public double heal() {};
-=======
+    
+    private String itemId;
+    private String type = "health_potion";
+    private Inventory inventory;
+    private final double HEAL_EFFECT = 10;
 
-    public HealthPotion() {};
-    public void consume() {};
-    public void heal() {};
->>>>>>> master
+    public HealthPotion(Position position, String itemId, Inventory inventory) {
+        super(position);
+        this.itemId = itemId;
+        this.inventory = inventory;
+    }
+
+    public double heal() {
+        inventory.removeItem(itemId);
+        return HEAL_EFFECT;
+    };
 
     @Override
     public EntityResponse getEntityResponse() {
-        // TODO Update for ID
-        return new EntityResponse("not a real ID", "health_potion", getPosition(), false);
+        return new EntityResponse(itemId, type, getPosition(), false);
     }
 
     @Override
     public ItemResponse getItemResponse() {
-        // TODO Update for valid ID
-        return new ItemResponse("not a real ID", "health_potion");
+        return new ItemResponse(itemId, type);
     }
 }
