@@ -7,27 +7,12 @@ import dungeonmania.util.Position;
 
 public class Treasure extends CollectableEntity implements Consumable {
 
-    private String itemId;
-    private String type = "treasure";
-    private Inventory inventory;
-
-    public Treasure(Position position, String itemId, Inventory inventory) {
-        super(position);
-        this.itemId = itemId;
-        this.inventory = inventory;
+    public Treasure(Position position, String itemId) {
+        super(position, itemId, "treasure");
     }
 
     public void consume() {
-        inventory.removeItem(itemId);
-    };
-
-    @Override
-    public EntityResponse getEntityResponse() {
-        return new EntityResponse(itemId, type, getPosition(), false);
+        getInventory().removeItem(getItemId());
     }
 
-    @Override
-    public ItemResponse getItemResponse() {
-        return new ItemResponse(itemId, type);
-    }
 }

@@ -1,24 +1,20 @@
 package dungeonmania.collectable;
 
 import dungeonmania.Consumable;
-import dungeonmania.inventory.Inventory;
-import dungeonmania.response.models.EntityResponse;
-import dungeonmania.response.models.ItemResponse;
+import dungeonmania.World;
 import dungeonmania.util.Position;
 
 public class Bomb extends CollectableEntity implements Consumable {
 
-    private String itemId;
-    private String type = "bomb";
-    private Inventory inventory;
+    private World world;
 
-    public Bomb(Position position) {
-        super(position);
-        //TODO Auto-generated constructor stub
+    public Bomb(Position position, String itemId, World world) {
+        super(position, itemId, "bomb");
+        this.world = world;
     }
 
     public void consume() {
-        inventory.removeItem(itemId);
+        getInventory().removeItem(getItemId());
         drop();
     }
 
@@ -32,13 +28,4 @@ public class Bomb extends CollectableEntity implements Consumable {
         }
     }
 
-    @Override
-    public EntityResponse getEntityResponse() {
-        return new EntityResponse(itemId, type, getPosition(), false);
-    }
-
-    @Override
-    public ItemResponse getItemResponse() {
-        return new ItemResponse(itemId, type);
-    }
 }

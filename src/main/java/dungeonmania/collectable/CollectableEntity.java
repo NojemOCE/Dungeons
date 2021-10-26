@@ -56,7 +56,12 @@ public abstract class CollectableEntity {
     public void drop() {
         this.collected = false;
     }
-    
-    abstract public EntityResponse getEntityResponse();
-    abstract public ItemResponse getItemResponse();
+
+    public EntityResponse getEntityResponse() {
+        return new EntityResponse(getItemId(), getType(), getPosition(), !isCollected());
+    }
+
+    public ItemResponse getItemResponse() {
+        return new ItemResponse(getItemId(), getType());
+    }
 }

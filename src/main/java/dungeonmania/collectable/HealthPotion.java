@@ -7,29 +7,15 @@ import dungeonmania.util.Position;
 
 public class HealthPotion extends CollectableEntity {
     
-    private String itemId;
-    private String type = "health_potion";
-    private Inventory inventory;
     private final double HEAL_EFFECT = 10;
 
-    public HealthPotion(Position position, String itemId, Inventory inventory) {
-        super(position);
-        this.itemId = itemId;
-        this.inventory = inventory;
+    public HealthPotion(Position position, String itemId) {
+        super(position, itemId, "health_potion");
     }
 
     public double heal() {
-        inventory.removeItem(itemId);
+        getInventory().removeItem(getItemId());
         return HEAL_EFFECT;
-    };
-
-    @Override
-    public EntityResponse getEntityResponse() {
-        return new EntityResponse(itemId, type, getPosition(), false);
     }
 
-    @Override
-    public ItemResponse getItemResponse() {
-        return new ItemResponse(itemId, type);
-    }
 }

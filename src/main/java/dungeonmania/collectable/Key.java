@@ -1,7 +1,6 @@
 package dungeonmania.collectable;
 
 import dungeonmania.Consumable;
-import dungeonmania.inventory.Inventory;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.staticEntity.Door;
@@ -9,36 +8,23 @@ import dungeonmania.util.Position;
 
 public class Key extends CollectableEntity implements Consumable {
 
-
     private Door door;
 
-    public Key(Position position) {
-        super(position);
-        //TODO Auto-generated constructor stub
+    public Key(Position position, String itemId) {
+        super(position, itemId, "key");
     }
 
-    public Key() {};
-
     public void consume() {
-
+        getInventory().removeItem(getItemId());
     }
 
     public void craft() {
-        inventory.removeItem(itemId);
+        getInventory().removeItem(getItemId());
     }
 
     public void unlock() {
-        inventory.removeItem(itemId);
+        getInventory().removeItem(getItemId());
         door.open();
     }
 
-    @Override
-    public EntityResponse getEntityResponse() {
-        return new EntityResponse(itemId, type, getPosition(), false);
-    }
-
-    @Override
-    public ItemResponse getItemResponse() {
-        return new ItemResponse(itemId, type);
-    }
 }

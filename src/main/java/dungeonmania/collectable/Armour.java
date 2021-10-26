@@ -15,15 +15,6 @@ public class Armour extends CollectableEntity {
 
     public double defenceModifier() {
         return DEFENCE_MULTIPLIER;
-    };
-
-    @Override
-    public EntityResponse getEntityResponse() {
-        return new EntityResponse(getItemId(), getType(), getPosition(), !isCollected());
     }
 
-    @Override
-    public ItemResponse getItemResponse() {
-        return new ItemResponse(this.getItemId(), this.getType());
-    }
 }

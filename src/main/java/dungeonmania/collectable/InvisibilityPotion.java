@@ -9,18 +9,13 @@ import dungeonmania.util.Position;
 
 public class InvisibilityPotion extends CollectableEntity implements Consumable {
 
-    private String itemId;
-    private String type = "invisibility_potion";
-    private Inventory inventory;
     private World world;
     private int duration;
     private final int DURATION = 10;
     private boolean active = false;
 
-    public InvisibilityPotion(Position position, String itemId, Inventory inventory, World world) {
-        super(position);
-        this.itemId = itemId;
-        this.inventory = inventory;
+    public InvisibilityPotion(Position position, String itemId, World world) {
+        super(position, itemId, "invisibility_potion");
         this.world = world;
         this.duration = DURATION;
     }
@@ -40,15 +35,6 @@ public class InvisibilityPotion extends CollectableEntity implements Consumable 
             world.update(type);
         }
 
-    };
-
-    @Override
-    public EntityResponse getEntityResponse() {
-        return new EntityResponse(itemId, type, getPosition(), false);
     }
 
-    @Override
-    public ItemResponse getItemResponse() {
-        return new ItemResponse(itemId, type);
-    }
 }
