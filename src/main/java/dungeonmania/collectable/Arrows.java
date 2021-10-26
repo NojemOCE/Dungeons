@@ -6,20 +6,17 @@ import dungeonmania.util.Position;
 
 public class Arrows extends CollectableEntity {
 
-    public Arrows(Position position) {
-        super(position);
-        //TODO Auto-generated constructor stub
+    public Arrows(Position position, String itemId) {
+        super(position, itemId, "arrow");
     }
-    
+
     @Override
     public EntityResponse getEntityResponse() {
-        // TODO Update for ID
-        return new EntityResponse("not a real ID", "arrow", getPosition(), false);
+        return new EntityResponse(this.getItemId(), this.getType(), getPosition(), !isCollected());
     }
 
     @Override
     public ItemResponse getItemResponse() {
-        // TODO Update for valid ID
-        return new ItemResponse("not a real ID", "arrow");
+        return new ItemResponse(this.getItemId(), this.getType());
     }
 }
