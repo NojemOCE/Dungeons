@@ -136,4 +136,8 @@ public class Inventory {
         return false;
         
     }
+
+    public void removeItem(String collectible) {
+        collectableItems.remove(collectible);
+    }
 }

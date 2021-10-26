@@ -6,7 +6,7 @@ import dungeonmania.util.Position;
 
 public class Bow implements Buildable, Consumable {
 
-    private String type = "Bow";
+    private String type = "bow";
     private String itemId;
     private int durability;
     private boolean built = false;
@@ -39,9 +39,13 @@ public class Bow implements Buildable, Consumable {
         return type;
     }
 
+    public String getItemId() {
+        return itemId;
+    }
+
     @Override
     public ItemResponse getItemResponse() {
-        return new ItemResponse(itemId, "bow");
+        return new ItemResponse(itemId, type);
     };
 
 }
