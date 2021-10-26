@@ -11,7 +11,6 @@ public class HealthPotion extends CollectableEntity implements Consumable {
     }
     private double healingAmount;
 
-    public HealthPotion() {};
     public void consume() {};
     public void heal() {};
 

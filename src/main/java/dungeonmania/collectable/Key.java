@@ -17,7 +17,7 @@ public class Key extends CollectableEntity implements Consumable {
     // Can we remove this variable?
     private Door door;
 
-    public Key() {};
+
 
     public void consume() {};
 

@@ -10,8 +10,7 @@ public class OneRing extends CollectableEntity implements Consumable {
         super(new Position(x, y, 1), id, "one_ring");
     }
 
-public class OneRing extends CollectableEntities implements Consumable {
-    public OneRing() {};
+    //public OneRing() {};
     public void consume() {};
 
 }

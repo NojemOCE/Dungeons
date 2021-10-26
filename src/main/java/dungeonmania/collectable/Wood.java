@@ -9,8 +9,7 @@ public class Wood extends CollectableEntity implements Consumable {
         super(new Position(x, y, 1), id, "wood");
     }
 
-public class Wood extends CollectableEntities implements Consumable {
-    public Wood() {};
+    //public Wood() {};
     public void consume() {};
 
 }

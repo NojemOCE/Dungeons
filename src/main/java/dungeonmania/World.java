@@ -3,6 +3,7 @@ package dungeonmania;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.xml.crypto.AlgorithmMethod;
@@ -11,31 +12,15 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import dungeonmania.goal.*;
-import dungeonmania.response.models.DungeonResponse;
-import dungeonmania.response.models.EntityResponse;
+import dungeonmania.response.models.*;
 import dungeonmania.staticEntity.*;
-import dungeonmania.util.Direction;
-import dungeonmania.util.Position;
+import dungeonmania.util.*;
 import dungeonmania.gamemode.*;
 import dungeonmania.movingEntity.*;
-import dungeonmania.buildable.Bow;
-import dungeonmania.buildable.Buildable;
-import dungeonmania.buildable.Shield;
-import dungeonmania.collectable.Armour;
-import dungeonmania.collectable.Arrows;
-import dungeonmania.collectable.Bomb;
-import dungeonmania.collectable.CollectableEntity;
-import dungeonmania.collectable.HealthPotion;
-import dungeonmania.collectable.InvincibilityPotion;
-import dungeonmania.collectable.InvisibilityPotion;
-import dungeonmania.collectable.Key;
-import dungeonmania.collectable.OneRing;
-import dungeonmania.collectable.Sword;
-import dungeonmania.collectable.Treasure;
-import dungeonmania.collectable.Wood;
+import dungeonmania.buildable.*;
+import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
-import dungeonmania.response.models.ItemResponse;
-import dungeonmania.response.models.EntityResponse;
+
 
 
 // TODO: remember to implement all the observer interfaces as we go
@@ -54,7 +39,7 @@ public class World implements ObserverExitGoal {
     private Map<String, StaticEntity> staticEntities; // Map<entityId, EntityType>
     private Map<String, MovingEntity> movingEntities;
     private int entityCount;
-    private List<Battle> battles;
+    private Battle currentBattle;
     private String goalString;
     private String dungeonName;
 
@@ -255,6 +240,29 @@ public class World implements ObserverExitGoal {
     public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
         // IllegalArgumentException if itemUsed is not a bomb, invincibility_potion or an invisibility_potion
         // InvalidActionException if itemUsed is not in the player's inventory
+        
+        if (!Objects.isNull(currentBattle)) {
+            currentBattle.battleTick();
+            if (!currentBattle.isActiveBattle()) {
+                if (currentBattle.getPlayerWins()) {
+                    movingEntities.remove(currentBattle.getCharacter().getId());
+                } else {
+                    this.player = null; // will end game in dungeon response
+                    // needs to return early
+                }
+            }
+        } else  {
+            player.tick(itemUsed, movementDirection, this);
+        }
+
+        // now move all entities
+        for (MovingEntity me: movingEntities.values()) {
+            me.move(this);
+            if (me.getPosition().equals(player.getPosition())) {
+                currentBattle = player.battle(me); // if invisible it will add null
+                player.notifyObservers();
+            }
+        }
 
         return worldDungeonResponse();
     }
@@ -355,8 +363,8 @@ public class World implements ObserverExitGoal {
      * Gets the list of battles that exit currently in the world
      * @return list of current battles in world
      */
-    public List<Battle> getBattles() {
-        return battles;
+    public Battle getBattle() {
+        return currentBattle;
     }
 
     /**

@@ -12,7 +12,6 @@ public class InvisibilityPotion extends CollectableEntity implements Consumable 
 
     private int duration;
 
-    public InvisibilityPotion() {};
 
     public void consume() {};
 

@@ -9,8 +9,7 @@ public class Treasure extends CollectableEntity implements Consumable {
         super(new Position(x, y, 1), id, "treasure");
     }
 
-public class Treasure extends CollectableEntities implements Consumable {
-    public Treasure() {};
+    //public Treasure() {};
     public void consume() {};
 
 }
