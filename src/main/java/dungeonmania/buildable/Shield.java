@@ -22,7 +22,11 @@ public class Shield implements Buildable, Consumable {
     };
 
     public int defenceModifer() {
-        return DEFENCE;
+        if (built) {
+            consume();
+            return DEFENCE;
+        }
+        return 1;
     };
 
     public void consume() {
