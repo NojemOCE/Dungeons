@@ -7,12 +7,14 @@ import dungeonmania.staticEntity.Door;
 import dungeonmania.util.Position;
 
 public class Key extends CollectableEntity implements Consumable {
-    public Key(Position position) {
-        super(position);
-        //TODO Auto-generated constructor stub
+    private String keyColour;
+    
+    public Key(int x, int y, String id, String keyColour) {
+        super(new Position(x, y, 1), id, "invisibility_potion");
+        this.keyColour = keyColour;
     }
 
-    // need to change to variable type Door
+    // Can we remove this variable?
     private Door door;
 
     public Key() {};
@@ -23,14 +25,8 @@ public class Key extends CollectableEntity implements Consumable {
 
     public void unlock() {};
 
-    @Override
-    public EntityResponse getEntityResponse() {
-        // TODO Update for ID
-        return new EntityResponse("not a real ID", "key", getPosition(), false);
+    public String getKeyColour() {
+        return keyColour;
     }
-    @Override
-    public ItemResponse getItemResponse() {
-        // TODO Update for valid ID
-        return new ItemResponse("not a real ID", "key");
-    }
+
 }

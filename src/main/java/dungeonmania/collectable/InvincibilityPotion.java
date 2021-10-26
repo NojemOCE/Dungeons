@@ -5,9 +5,8 @@ import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Position;
 
 public class InvincibilityPotion extends CollectableEntity implements Consumable {
-    public InvincibilityPotion(Position position) {
-        super(position);
-        //TODO Auto-generated constructor stub
+    public InvincibilityPotion(int x, int y, String id) {
+        super(new Position(x, y, 1), id, "invincibility_potion");
     }
 
     private int duration;
@@ -20,15 +19,4 @@ public class InvincibilityPotion extends CollectableEntity implements Consumable
 
     public void invincibility() {};
 
-    @Override
-    public EntityResponse getEntityResponse() {
-        // TODO Update for ID
-        return new EntityResponse("not a real ID", "invincibility_potion", getPosition(), false);
-    }
-
-    @Override
-    public ItemResponse getItemResponse() {
-        // TODO Update for valid ID
-        return new ItemResponse("not a real ID", "invincibility_potion");
-    }
 }

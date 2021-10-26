@@ -11,7 +11,6 @@ public class Bow implements Buildable, Consumable {
 
     @Override
     public ItemResponse getItemResponse() {
-        // TODO Update for valid ID
         return new ItemResponse("not a valid ID", "bow");
     };
 
