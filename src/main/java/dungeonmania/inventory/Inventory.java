@@ -50,26 +50,17 @@ public class Inventory {
         numCollected.put(itemType, numCollected.get(itemType) - 1);
     }
 
-
     public void craft(String itemType) {
-        if (itemType.equalsIgnoreCase("bow")) {
-            if (numItem("wood") < 1 || numItem("arrow") < 3) {
-                throw new InvalidActionException("Insufficient items");
-            }
-            IntStream.range(0, 1).mapToObj(i -> "wood").forEach(this::use);
+        if (!isBuildable(itemType)) {
+            throw new InvalidActionException("Insufficient items");
+        } else if (itemType.equalsIgnoreCase("bow")) {
+            use("wood");
             IntStream.range(0, 3).mapToObj(i -> "arrow").forEach(this::use);
         } else if (itemType.equalsIgnoreCase("shield")) {
-            if (numItem("wood") < 2 || numItem("treasure") < 1 || numItem("key") < 1) {
-                throw new InvalidActionException("Insufficient items");
-            }
             IntStream.range(0, 2).mapToObj(i -> "wood").forEach(this::use);
             use(numItem("treasure") != 0 ? "treasure" : "key");
-
-        } else {
-            throw new IllegalArgumentException("Wrong buildable type");
         }
 
-        buildableItems.add(BuildableFactory.getBuildable(itemType));
     }
 
     public int numItem(String itemType) {
@@ -142,5 +133,24 @@ public class Inventory {
 
     public void removeItem(String collectible) {
         collectableItems.remove(collectible);
+    }
+
+    public List<String> getBuildable() {
+        ArrayList<String> buildable = new ArrayList<>();
+
+        if (isBuildable("bow")) buildable.add("bow");
+        if (isBuildable("shield")) buildable.add("shield");
+
+        return buildable;
+    }
+
+    public boolean isBuildable(String buildableType) {
+        if (buildableType.equalsIgnoreCase("bow")) {
+            return numItem("wood") >= 1 && numItem("arrow") >= 3;
+        } else if (buildableType.equalsIgnoreCase("shield")) {
+            return numItem("wood") >= 2 && (numItem("treasure") >= 1 || numItem("key") >= 1);
+        } else {
+            throw new IllegalArgumentException("Wrong buildable type");
+        }
     }
 }
