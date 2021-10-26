@@ -10,12 +10,19 @@ import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.buildable.*;
+import dungeonmania.movingEntity.Player;
+import dungeonmania.util.*;
 
 public class Inventory {
     // Change to hashmap<string, collectableentity> with id as key
-    private List<CollectableEntity> collectableItems;
+    private Map<String, CollectableEntity> collectableItems;
     private List<Buildable> buildableItems;
     private Map<String, Integer> collected;
+    private Player player;
+
+    public Inventory(Player player) {
+        this.player = player;
+    }
 
     public void collect(CollectableEntity item) {
         String itemType = item.getClass().getSimpleName();
@@ -92,5 +99,25 @@ public class Inventory {
         itemResponses.addAll(collectableItems.stream().map(CollectableEntity::getItemResponse).collect(Collectors.toList()));
         itemResponses.addAll(buildableItems.stream().map(Buildable::getItemResponse).collect(Collectors.toList()));
         return itemResponses;
+    }
+
+    public Buildable tick(String itemUsedId) {
+        if (!inInventory(itemUsedId)) {
+            throw new InvalidActionException("Item not in Inventory");
+        }
+        collectableItems.forEach((id, item) -> {
+            item.tick();
+        });
+    }
+
+    public Buildable tick(Direction movementDirection) {
+        collectableItems.forEach((id, item) -> {
+            item.updatePosition(player.getPosition());
+            item.tick();
+        });
+    }
+
+    public boolean inInventory(String itemUsedId) {
+        return collectableItems.containsKey(itemUsedId);
     }
 }
