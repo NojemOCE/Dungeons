@@ -7,7 +7,9 @@ public class Battle {
     private MovingEntity character;
     private Position position;
 
+    private boolean playerWins;
     private boolean activeBattle;
+
 
     public Battle(Player player, MovingEntity character) {
         this.player = player;
@@ -16,8 +18,15 @@ public class Battle {
     }
 
     public void battleTick() {
-        // 
-        endBattle();
+        //
+        character.defend(player.attack());
+
+        if (character.getHealthPoint().getHealth() == 0) endBattle(true);
+
+        player.defend(character.attack());
+
+        if (player.getHealthPoint().getHealth() == 0) endBattle(false);
+        // game over
     }
 
     public Player getPlayer() {
@@ -40,7 +49,13 @@ public class Battle {
         this.activeBattle = activeBattle;
     }
 
-    private void endBattle() {
+    private void endBattle(boolean playerWin) {
         setActiveBattle(false);
+        this.playerWins = playerWin;
     }
+
+    public boolean getPlayerWins() {
+        return this.playerWins;
+    }
+
 }

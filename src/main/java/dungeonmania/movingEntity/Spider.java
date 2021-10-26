@@ -16,8 +16,8 @@ public class Spider extends MovingEntity {
     static final int SET_MOVES = 2;
 
 
-    public Spider(HealthPoint healthPoint, double attackDamage, Position position) {
-        super(healthPoint, attackDamage, position);
+    public Spider(int x, int y, String id) {
+        super(new Position(x, y, 3), id, "spider", new HealthPoint(100), 10);
         currentDirection = Direction.UP;
         nextDirection = Direction.RIGHT;
         remMovesCurr = START_MOVES;
