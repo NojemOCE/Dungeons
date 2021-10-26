@@ -17,36 +17,28 @@ public class Inventory {
     private Map<String, CollectableEntity> collectableItems;
     private Map<String, Buildable> buildableItems;
     private Map<String, Integer> numCollected;
-    private List<String> useables;
+    private List<String> usable;
     private Player player;
 
     public Inventory(Player player) {
         this.player = player;
-        this.useables.add("bomb");
-        this.useables.add("health_potion");
-        this.useables.add("invincibility_potion");
-        this.useables.add("invisibility_potion");
+        this.usable.add("bomb");
+        this.usable.add("health_potion");
+        this.usable.add("invincibility_potion");
+        this.usable.add("invisibility_potion");
     }
 
     public void collect(CollectableEntity item) {
-        String itemType = item.getClass().getSimpleName();
+        String itemType = item.getItemId();
+
         numCollected.putIfAbsent(itemType, 0);
         numCollected.put(itemType, numCollected.get(itemType) + 1);
 
-        collectableItems.add(item);
+        collectableItems.put(item.getItemId(), item);
     }
 
-    public void collect(CollectableEntity item) {
-        numCollected.putIfAbsent(item, 0);
-    }
-
-    public void use(CollectableEntity item) {
-        collectableItems.remove(item);
-    }
-
-    public void use(String itemType) {
-        collectableItems.removeIf(c -> itemType.equalsIgnoreCase(c.getClass().getSimpleName()));
-
+    public void use(String itemId) {
+        String itemType = collectableItems.remove(itemId).getItemId();
         numCollected.put(itemType, numCollected.get(itemType) - 1);
     }
 
@@ -68,16 +60,6 @@ public class Inventory {
         return numCollected.get(itemType);
     }
 
-    // Can we combine these two? Lose type safety if we do Object
-    // Can get rid of it all together
-    public boolean isPresent(CollectableEntity item) {
-        return numCollected.get(item.getClass().getSimpleName()) != null;
-    }
-
-    public boolean isPresent(Buildable item) {
-        return numCollected.get(item.getClass().getSimpleName()) != null;
-    }
-
     public Key keyInInventory(String keyColour) {
         List<Key> keys = collectableItems.stream()
                                         .filter(x -> x instanceof Key)
@@ -93,17 +75,16 @@ public class Inventory {
     }
 
     public List<ItemResponse> getInventoryResponse() {
-        List<ItemResponse> itemResponses = new ArrayList<>();
-        
-        itemResponses.addAll(collectableItems.stream().map(CollectableEntity::getItemResponse).collect(Collectors.toList()));
-        itemResponses.addAll(buildableItems.stream().map(Buildable::getItemResponse).collect(Collectors.toList()));
+        List<ItemResponse> itemResponses = collectableItems.values().stream().map(CollectableEntity::getItemResponse).collect(Collectors.toList());
+        buildableItems.values().stream().map(Buildable::getItemResponse).forEach(itemResponses::add);
+
         return itemResponses;
     }
 
     public Buildable tick(String itemUsedId) {
         if (!inInventory(itemUsedId)) {
             throw new InvalidActionException("Item not in Inventory");
-        } else if {!isUseable(itemUsedId)}
+        } else if (!isUsable(itemUsedId))
         collectableItems.forEach((id, item) -> {
             item.tick();
         });
@@ -120,9 +101,9 @@ public class Inventory {
         return collectableItems.containsKey(itemUsedId);
     }
 
-    public boolean isUseable(String itemUsedId) {
+    public boolean isUsable(String itemUsedId) {
         
-        for ( String item : useables) {
+        for ( String item : usable) {
             if (itemUsedId.contains(item)) {
                 return true;
             }

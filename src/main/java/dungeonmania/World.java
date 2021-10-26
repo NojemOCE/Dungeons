@@ -335,7 +335,6 @@ public class World implements ObserverExitGoal {
         return player.inInventory(item);
     }
 
-
     public Key keyInInventory(String keyColour) {
         return player.keyInInventory(keyColour);
     }
