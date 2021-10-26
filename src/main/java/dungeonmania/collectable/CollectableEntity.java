@@ -26,6 +26,12 @@ public abstract class CollectableEntity {
         return position;
     }
 
+    public void tick() {}
+
+    public void updatePosition(Position position) {
+        this.position = position;
+    }
+
     
     abstract public EntityResponse getEntityResponse();
     abstract public ItemResponse getItemResponse();
