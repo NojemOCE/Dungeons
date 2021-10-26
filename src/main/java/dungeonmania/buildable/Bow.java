@@ -2,7 +2,6 @@ package dungeonmania.buildable;
 
 import dungeonmania.Consumable;
 import dungeonmania.response.models.ItemResponse;
-import dungeonmania.util.Position;
 
 public class Bow implements Buildable, Consumable {
 
@@ -13,7 +12,9 @@ public class Bow implements Buildable, Consumable {
     private final int DURABILITY = 10;
     private final int ATTACK_MULTIPLIER = 2;
 
-    public Bow(String itemId) {}
+    public Bow(String itemId) {
+        this.itemId = itemId;
+    }
 
     public void build() {
         this.durability = DURABILITY;
@@ -41,6 +42,10 @@ public class Bow implements Buildable, Consumable {
 
     public String getItemId() {
         return itemId;
+    }
+
+    public boolean isBuilt() {
+        return this.built;
     }
 
     @Override
