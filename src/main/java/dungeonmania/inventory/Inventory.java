@@ -18,10 +18,15 @@ public class Inventory {
     private Map<String, CollectableEntity> collectableItems;
     private List<Buildable> buildableItems;
     private Map<String, Integer> collected;
+    private List<String> useables;
     private Player player;
 
     public Inventory(Player player) {
         this.player = player;
+        this.useables.add("bomb");
+        this.useables.add("health_potion");
+        this.useables.add("invincibility_potion");
+        this.useables.add("invisibility_potion");
     }
 
     public void collect(CollectableEntity item) {
@@ -104,7 +109,7 @@ public class Inventory {
     public Buildable tick(String itemUsedId) {
         if (!inInventory(itemUsedId)) {
             throw new InvalidActionException("Item not in Inventory");
-        }
+        } else if {}
         collectableItems.forEach((id, item) -> {
             item.tick();
         });
@@ -119,5 +124,16 @@ public class Inventory {
 
     public boolean inInventory(String itemUsedId) {
         return collectableItems.containsKey(itemUsedId);
+    }
+
+    public boolean isUseable(String itemUsedId) {
+        
+        for ( String item : useables) {
+            if (itemUsedId.contains(item)) {
+                return true;
+            }
+        }
+        return false;
+        
     }
 }
