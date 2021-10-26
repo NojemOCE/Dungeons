@@ -37,7 +37,8 @@ public abstract class CollectableEntity {
         return inventory;
     }
 
-    public void collect() {
+    public void collect(Inventory inventory) {
+        this.inventory = inventory;
         this.collected = true;
     }
 
