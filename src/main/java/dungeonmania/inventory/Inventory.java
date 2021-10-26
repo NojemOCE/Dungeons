@@ -14,10 +14,9 @@ import dungeonmania.movingEntity.Player;
 import dungeonmania.util.*;
 
 public class Inventory {
-    // Change to hashmap<string, collectableentity> with id as key
     private Map<String, CollectableEntity> collectableItems;
     private Map<String, Buildable> buildableItems;
-    private Map<String, Integer> collected;
+    private Map<String, Integer> numCollected;
     private List<String> useables;
     private Player player;
 
@@ -31,10 +30,14 @@ public class Inventory {
 
     public void collect(CollectableEntity item) {
         String itemType = item.getClass().getSimpleName();
-        collected.putIfAbsent(itemType, 0);
-        collected.put(itemType, collected.get(itemType) + 1);
+        numCollected.putIfAbsent(itemType, 0);
+        numCollected.put(itemType, numCollected.get(itemType) + 1);
 
         collectableItems.add(item);
+    }
+
+    public void collect(CollectableEntity item) {
+        numCollected.putIfAbsent(item, 0);
     }
 
     public void use(CollectableEntity item) {
@@ -44,7 +47,7 @@ public class Inventory {
     public void use(String itemType) {
         collectableItems.removeIf(c -> itemType.equalsIgnoreCase(c.getClass().getSimpleName()));
 
-        collected.put(itemType, collected.get(itemType) - 1);
+        numCollected.put(itemType, numCollected.get(itemType) - 1);
     }
 
 
@@ -70,18 +73,18 @@ public class Inventory {
     }
 
     public int numItem(String itemType) {
-        collected.putIfAbsent(itemType, 0);
-        return collected.get(itemType);
+        numCollected.putIfAbsent(itemType, 0);
+        return numCollected.get(itemType);
     }
 
     // Can we combine these two? Lose type safety if we do Object
     // Can get rid of it all together
     public boolean isPresent(CollectableEntity item) {
-        return collected.get(item.getClass().getSimpleName()) != null;
+        return numCollected.get(item.getClass().getSimpleName()) != null;
     }
 
     public boolean isPresent(Buildable item) {
-        return collected.get(item.getClass().getSimpleName()) != null;
+        return numCollected.get(item.getClass().getSimpleName()) != null;
     }
 
     public Key keyInInventory(String keyColour) {

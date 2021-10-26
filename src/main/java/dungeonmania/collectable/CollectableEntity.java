@@ -1,5 +1,6 @@
 package dungeonmania.collectable;
 
+import dungeonmania.inventory.Inventory;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Position;
@@ -7,6 +8,9 @@ import dungeonmania.util.Position;
 public abstract class CollectableEntity {
     private boolean collected;
     private Position position;
+    private String itemId;
+    private String type;
+    private Inventory inventory;
 
     public CollectableEntity() {
         this.position = null;
@@ -19,7 +23,8 @@ public abstract class CollectableEntity {
     }
     public void collect() {
         this.collected = true;
-    };
+    }
+
     public boolean isCollected() {return collected;}
 
     public Position getPosition(){
@@ -32,6 +37,9 @@ public abstract class CollectableEntity {
         this.position = position;
     }
 
+    public void drop() {
+        this.collected = false;
+    }
     
     abstract public EntityResponse getEntityResponse();
     abstract public ItemResponse getItemResponse();
