@@ -139,7 +139,5 @@ public abstract class MovingEntity extends Entity {
     }
 
     
-
-    //abstract public EntityResponse getEntityResponse();
     
 }
