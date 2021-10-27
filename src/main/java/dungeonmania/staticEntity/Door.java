@@ -1,10 +1,9 @@
 package dungeonmania.staticEntity;
 
+import dungeonmania.Entity;
 import dungeonmania.World;
 import dungeonmania.collectable.Key;
-import dungeonmania.movingEntity.MovingEntity;
 import dungeonmania.movingEntity.Player;
-import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
 
 public class Door extends StaticEntity {
@@ -30,9 +29,9 @@ public class Door extends StaticEntity {
      * - All other characters cannot walk through doors at any point
      */
     @Override
-    public Position interact(World world, MovingEntity character) {
+    public Position interact(World world, Entity entity) {
 
-        if (character instanceof Player) {
+        if (entity instanceof Player) {
             if (isOpen) {
                 return this.getPosition();
             }
@@ -48,13 +47,7 @@ public class Door extends StaticEntity {
             }
         }
         
-        return character.getPosition();
+        return entity.getPosition();
     }
-    
-    @Override
-    public EntityResponse getEntityResponse() {
-        // TODO Update for ID
-        return new EntityResponse("not a real ID", "door", getPosition(), false);
-    }
-    
+   
 }
