@@ -28,7 +28,7 @@ public class Bow implements Buildable, Consumable {
         }
     }
 
-    public int attack() {
+    public int attackModifier() {
         if (built) {
             consume();
             return ATTACK_MULTIPLIER;

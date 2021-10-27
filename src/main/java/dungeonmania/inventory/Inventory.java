@@ -109,7 +109,10 @@ public class Inventory {
     public Buildable tick(String itemUsedId) {
         if (!inInventory(itemUsedId)) {
             throw new InvalidActionException("Item not in Inventory");
-        } else if {!isUseable(itemUsedId)}
+        } else if (!isUseable(itemUsedId)) {
+        
+        }
+
         collectableItems.forEach((id, item) -> {
             item.tick();
         });
@@ -139,5 +142,46 @@ public class Inventory {
 
     public void removeItem(String collectible) {
         collectableItems.remove(collectible);
+    }
+
+    public double attackModifier(double playerAttack) {
+        for (CollectableEntity item : collectableItems.values()) {
+            if (item instanceof Sword ) {
+                playerAttack += ((Sword)item).attackModifier();
+                ((Sword)item).consume();
+            }
+        }
+
+        for (Buildable item : buildableItems.values()) {
+            if (item instanceof Bow ) {
+                playerAttack *= ((Bow)item).attackModifier();
+                ((Bow)item).consume();
+            }
+        }
+
+        return playerAttack;
+    }
+
+    public double defenceModifier(double enemyAttack) {
+
+        for (Buildable item : buildableItems.values()) {
+            if (item instanceof Shield ) {
+                enemyAttack -= ((Shield)item).defenceModifier();
+                ((Shield)item).consume();
+            }
+        }
+
+        if (enemyAttack < 0) {
+            enemyAttack = 0;
+        }
+
+        for (CollectableEntity item : collectableItems.values()) {
+            if (item instanceof Armour ) {
+                enemyAttack *= ((Armour)item).defenceModifier();
+                ((Armour)item).consume();
+            }
+        }
+
+        return enemyAttack;
     }
 }
