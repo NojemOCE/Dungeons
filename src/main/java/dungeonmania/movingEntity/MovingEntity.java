@@ -22,7 +22,7 @@ public abstract class MovingEntity extends Entity {
     private int speed;
 
     protected Movement movementStrategy;
-    
+    protected Movement defaultMovementStrategy;
 
     private boolean ally;
 
@@ -128,6 +128,18 @@ public abstract class MovingEntity extends Entity {
     }
 
 
-    abstract public EntityResponse getEntityResponse();
+
+    public Movement getDefaultMovementStrategy() {
+        return defaultMovementStrategy;
+    }
+
+
+    public void setDefaultMovementStrategy(Movement defaultMovementStrategy) {
+        this.defaultMovementStrategy = defaultMovementStrategy;
+    }
+
+    
+
+    //abstract public EntityResponse getEntityResponse();
     
 }

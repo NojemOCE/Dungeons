@@ -22,6 +22,8 @@ public class Player extends MovingEntity {
         super(new Position(x, y), id, "player", new HealthPoint(100), 10);
         setAlly(true);
     }
+    
+
   
     @Override
     public void move(World world) {

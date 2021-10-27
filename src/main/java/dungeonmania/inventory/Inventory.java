@@ -85,6 +85,8 @@ public class Inventory {
     public List<String> tick(String itemUsedId) {
         if (!inInventory(itemUsedId)) {
             throw new InvalidActionException("Item not in Inventory");
+        
+
         } else if (!isUsable(itemUsedId)) {
             Consumable c = (Consumable) collectableItems.get(itemUsedId);
             c.consume();

@@ -2,6 +2,7 @@ package dungeonmania.movingEntity;
 
 import dungeonmania.util.*;
 import dungeonmania.World;
+import dungeonmania.gamemode.Gamemode;
 import dungeonmania.movingEntity.MovementStrategies.FollowPlayer;
 import dungeonmania.response.models.EntityResponse;
 

@@ -19,6 +19,7 @@ public class InvincibilityPotion extends CollectableEntity implements Consumable
         this.duration = DURATION;
     }
 
+
     public void consume() {
         this.active = true;
         // notify the world that the invisibility potion effect is activated
