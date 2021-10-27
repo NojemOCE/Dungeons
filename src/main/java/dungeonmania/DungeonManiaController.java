@@ -6,6 +6,7 @@ import dungeonmania.util.Direction;
 import dungeonmania.util.FileLoader;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 
 import com.google.gson.JsonParser;
 
+import org.eclipse.jetty.util.IO;
 import org.json.*;
 
 public class DungeonManiaController {
@@ -49,20 +51,24 @@ public class DungeonManiaController {
         }
     }
 
-    public DungeonResponse newGame(String dungeonName, String gameMode) throws IllegalArgumentException, IOException {
+    public DungeonResponse newGame(String dungeonName, String gameMode) throws IllegalArgumentException {
         
         if (!dungeons().contains(dungeonName)) throw new IllegalArgumentException("No dungeon exists");
 
         World newGame = new World(dungeonName, gameMode);
 
         // create JSON object
-
-        String file = FileLoader.loadResourceFile("/dungeons/" + dungeonName);
-        JSONObject game = new JSONObject(file);
-        newGame.buildWorld(game);
-
+        try {
+            String file = FileLoader.loadResourceFile("/dungeons/" + dungeonName);
+            JSONObject game = new JSONObject(file);
+            newGame.buildWorld(game);
+        }
+        catch (Exception e) {
+            // TODO discard world if exception thrown?
+        }
         
-        return null;
+        this.current = newGame;
+        return current.worldDungeonResponse();
     }
     
     public DungeonResponse saveGame(String name) throws IllegalArgumentException {

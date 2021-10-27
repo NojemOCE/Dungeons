@@ -21,13 +21,12 @@ public abstract class MovingEntity extends Entity {
 
     private int speed;
 
-    private Gamemode gameMode;
     protected Movement movementStrategy;
     
 
     private boolean ally;
 
-    public MovingEntity(Position position, String id, String type, HealthPoint healthPoint, int attackDamage) {
+    public MovingEntity(Position position, String id, String type, HealthPoint healthPoint, double attackDamage) {
         super(position, id, type);
         this.healthPoint = healthPoint;
         this.attackDamage = attackDamage;

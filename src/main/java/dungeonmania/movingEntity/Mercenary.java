@@ -53,10 +53,8 @@ public class Mercenary extends MovingEntity {
         //after duration is 0 revert back to normal pattern;
     }
 
-
     @Override
     public EntityResponse getEntityResponse() {
-        // TODO Auto-generated method stub
-        return null;
+        return new EntityResponse(getId(), getType(), getPosition(), true);
     }
 }

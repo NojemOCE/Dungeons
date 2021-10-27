@@ -105,89 +105,132 @@ public class World implements ObserverExitGoal {
 
         String type = obj.getString("type");
 
-
         if (type.equals("wall")) {
-            Wall e = new Wall(x,y,id);
+            Wall e = new Wall(x, y, id);
             staticEntities.put(e.getId(), e);
         } else if (type.equals("exit")) {
             Exit e = new Exit(x,y,id);
             staticEntities.put(e.getId(), e);
-        } else if (type.equals("switch")) {
+        } 
+        
+        else if (type.equals("switch")) {
             FloorSwitch e = new FloorSwitch(x, y, id);
             staticEntities.put(e.getId(), e);
-        } else if (type.equals("boulder")) {
+        } 
+        
+        else if (type.equals("boulder")) {
             Boulder e = new Boulder(x, y, id);
             staticEntities.put(e.getId(), e);
-        } else if (type.equals("door")) {
+        } 
+        
+        else if (type.equals("door")) {
             String key = obj.getString("key");
             Door e = new Door(x, y, id, key);
             staticEntities.put(e.getId(), e);
-        } else if (type.equals("portal")) {
+        } 
+        
+        else if (type.equals("portal")) {
             Portal e;
             String colour = obj.getString("colour");
             if (staticEntities.containsKey(colour)) {
                 e = new Portal(x, y, colour + "2", (Portal) staticEntities.get(colour));
             } else {
-                e = new Portal(x, y , colour);
+                e = new Portal(x, y, colour);
             }
             staticEntities.put(e.getId(), e);
-        } else if (type.equals("zombie_toast_spawner")) {
+        } 
+        
+        else if (type.equals("zombie_toast_spawner")) {
             ZombieToastSpawn e = new ZombieToastSpawn(x, y, id);
             staticEntities.put(e.getId(), e);   
         } else if (type.equals("player")) {
-            Player e = new Player(x, y ,id)
+            Player e = new Player(x, y, id);
             this.player = e;
             movingEntities.put(e.getId(), e);
-        } else if (type.equals("spider")) {
+        } 
+        
+        else if (type.equals("spider")) {
             Spider e = new Spider(x, y, id);
             movingEntities.put(e.getId(), e);
-        } else if (type.equals("zombie")) {
+        } 
+        
+        else if (type.equals("zombie")) {
             Zombie e = new Zombie(x, y, id);
             movingEntities.put(e.getId(), e);
-        } else if (type.equals("mercenary")) {
+        } 
+        
+        else if (type.equals("mercenary")) {
             Mercenary e = new Mercenary(x, y, id);
             movingEntities.put(e.getId(), e);
-        } else if (type.equals("treasure")) {
+        } 
+        
+        else if (type.equals("treasure")) {
             Treasure e = new Treasure(x, y, id);
             collectableEntities.put(e.getId(), e);
-        } else if (type.equals("key")) {
+        } 
+        
+        else if (type.equals("key")) {
             String key = obj.getString("key");
             Key e = new Key(x, y, id, key);
             collectableEntities.put(e.getId(), e);
-        } else if (type.equals("health_potion")) {
+        } 
+        
+        else if (type.equals("health_potion")) {
             HealthPotion e = new HealthPotion(x, y, id);
             collectableEntities.put(e.getId(), e);
-        } else if (type.equals("invincibility_potion")) {
+        } 
+        
+        else if (type.equals("invincibility_potion")) {
             InvincibilityPotion e = new InvincibilityPotion(x, y, id);
             collectableEntities.put(e.getId(), e);
-        } else if (type.equals("invisibility_potion")) {
+        } 
+        
+        else if (type.equals("invisibility_potion")) {
             InvisibilityPotion e = new InvisibilityPotion(x, y, id);
             collectableEntities.put(e.getId(), e);
-        } else if (type.equals("wood")) {
+        } 
+        
+        else if (type.equals("wood")) {
             Wood e = new Wood(x, y, id);
             collectableEntities.put(e.getId(), e);
-        } else if (type.equals("arrows")) {
+        } 
+        
+        else if (type.equals("arrow")) {
             Arrows e = new Arrows(x, y, id);
             collectableEntities.put(e.getId(), e);
-        } else if (type.equals("bomb")) {
+        } 
+        
+        else if (type.equals("bomb")) {
             Bomb e = new Bomb(x, y, id);
             collectableEntities.put(e.getId(), e);
-        } else if (type.equals("sword")) {
+        } 
+        
+        else if (type.equals("sword")) {
             Sword e = new Sword(x, y, id);
             collectableEntities.put(e.getId(), e);
-        } else if (type.equals("armour")) {
+        } 
+        
+        /*else if (type.equals("armour")) {
             Armour e = new Armour(x, y, id);
             collectableEntities.put(e.getId(), e);
-        } else if (type.equals("the_one_ring")) {
+        } 
+        
+        else if (type.equals("one_ring")) {
             OneRing e = new OneRing(x, y, id);
             collectableEntities.put(e.getId(), e);
-        } else if (type.equals("bow")) {
+        } 
+        
+        else if (type.equals("bow")) {
             Bow e = new Bow(id);
             collectableEntities.put(e.getId(), e);
-        } else if (type.equals("shield")) {
+        } 
+        
+        else if (type.equals("shield")) {
             Shield e = new Shield(id);
             collectableEntities.put(e.getId(), e);
-        }
+        }*/
+    }
+
 
     // tick for all characters and then return world dungeon response
     public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
@@ -218,7 +261,7 @@ public class World implements ObserverExitGoal {
             }
         }
 
-        return null;
+        return worldDungeonResponse();
     }
 
 
@@ -229,15 +272,15 @@ public class World implements ObserverExitGoal {
         // * the player is not cardinally adjacent to the given entity,
         // * the player does not have any gold and attempts to bribe a mercenary
         // * the player does not have a weapon and attempts to destroy a spawner
-        if (movingEntities.containsKey(key)) {
+        if (movingEntities.containsKey(entityId)) {
 
         }
 
-        if (staticEntities.containsKey(key)) {
+        if (staticEntities.containsKey(entityId)) {
 
         }
 
-        return null;
+        return worldDungeonResponse();
     }
 
     // Builds the given entity where buildable is one of "bow" or "shield"
@@ -254,6 +297,9 @@ public class World implements ObserverExitGoal {
         // Here we would need to add a list of all current buildable items
         // ie. if shield is buildable add "shield" to list
         // if bow is buildable add "bow" to list
+
+        // TODO implement real buildable list
+        // TODO implement real goals list
         buildableList.add("not a real list of buildable strings");
 
         return new DungeonResponse(id, dungeonName, getEntityResponses(), getInventoryResponse(), buildableList, "not real goals");
@@ -344,7 +390,6 @@ public class World implements ObserverExitGoal {
         return player.inInventory(item);
     }
 
-
     public Key keyInInventory(String keyColour) {
         return player.keyInInventory(keyColour);
     }
@@ -393,5 +438,9 @@ public class World implements ObserverExitGoal {
 
     public List<ItemResponse> getInventoryResponse(){
         return player.getInventoryResponse();
+    }
+
+    public boolean inBounds(int x, int y) {
+        return !(x < 0 || x >= width || y < 0 || y >= height);
     }
 }

@@ -1,26 +1,18 @@
 package dungeonmania.collectable;
 import dungeonmania.Consumable;
+import dungeonmania.inventory.Inventory;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Position;
 
 public class Wood extends CollectableEntity implements Consumable {
-    public Wood(Position position) {
-        super(position);
-        //TODO Auto-generated constructor stub
+
+    public Wood(Position position, String itemId, Inventory inventory) {
+        super(position, itemId, "wood");
     }
 
-    public void consume() {};
-
-    @Override
-    public EntityResponse getEntityResponse() {
-        // TODO Update for ID
-        return new EntityResponse("not a real ID", "wood", getPosition(), false);
+    public void consume() {
+        getInventory().removeItem(getItemId());
     }
 
-    @Override
-    public ItemResponse getItemResponse() {
-        // TODO Update for valid ID
-        return new ItemResponse("not a real ID", "wood");
-    }
 }

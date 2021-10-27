@@ -1,6 +1,7 @@
 package dungeonmania.movingEntity;
 
 import dungeonmania.World;
+import dungeonmania.gamemode.Gamemode;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.staticEntity.Boulder;
 import dungeonmania.staticEntity.StaticEntity;
@@ -140,10 +141,11 @@ public class Spider extends MovingEntity {
         }
     }
 
+
     @Override
     public EntityResponse getEntityResponse() {
-        // TODO Update for ID
-        return new EntityResponse("not a real ID", "spider", getPosition(), false);
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

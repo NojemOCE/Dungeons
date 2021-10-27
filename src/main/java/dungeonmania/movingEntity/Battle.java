@@ -26,7 +26,7 @@ public class Battle {
 
         if (character.getHealthPoint().getHealth() == 0) endBattle(true);
 
-        player.defend(inventory.defenseModifier(character.getAttackDamage()));
+        player.defend(inventory.defenceModifier(character.getAttackDamage()));
 
         if (player.getHealthPoint().getHealth() == 0) endBattle(false);
         // game over

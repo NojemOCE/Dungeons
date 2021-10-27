@@ -1,32 +1,39 @@
 package dungeonmania.collectable;
 import dungeonmania.Consumable;
+import dungeonmania.World;
+import dungeonmania.inventory.Inventory;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Position;
 
 public class InvincibilityPotion extends CollectableEntity implements Consumable {
-    public InvincibilityPotion(Position position) {
-        super(position);
-        //TODO Auto-generated constructor stub
-    }
 
+    private World world;
     private int duration;
+    private final int DURATION = 10;
+    private boolean active = false;
 
-    public void consume() {};
-
-    public void tick() {};
-
-    public void invincibility() {};
-
-    @Override
-    public EntityResponse getEntityResponse() {
-        // TODO Update for ID
-        return new EntityResponse("not a real ID", "invincibility_potion", getPosition(), false);
+    public InvincibilityPotion(Position position, String itemId, World world) {
+        super(position, itemId, "invincibility_potion");
+        this.world = world;
+        this.duration = DURATION;
     }
 
+    public void consume() {
+        this.active = true;
+        // notify the world that the invisibility potion effect is activated
+        world.update(type);
+    };
+
     @Override
-    public ItemResponse getItemResponse() {
-        // TODO Update for valid ID
-        return new ItemResponse("not a real ID", "invincibility_potion");
+    public void tick() {
+        this.duration--;
+        if (this.duration == 0) {
+            inventory.removeItem(itemId);
+            // notify the world that the invisibility potion effect is over
+            world.update(type);
+        }
+
     }
+
 }

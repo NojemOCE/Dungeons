@@ -16,7 +16,7 @@ public class Door extends StaticEntity {
         this.keyColour = keyColour;
     }
 
-    private void open() {
+    public void open() {
         isOpen = true;
     }
     

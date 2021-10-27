@@ -1,26 +1,36 @@
 package dungeonmania.collectable;
 
+import dungeonmania.inventory.Inventory;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Position;
 
 public class Armour extends CollectableEntity {
-    public Armour(Position position) {
-        super(position);
-        //TODO Auto-generated constructor stub
+
+    private String itemId;
+    private String type = "armour";
+    private Inventory inventory;
+    private int durability;
+    private final int DURABILITY = 10;
+
+    private final double DEFENCE_MULTIPLIER = 0.5;
+
+    public Armour(Position position, String itemId, Inventory inventory) {
+        super(position, itemId, "armour");
+        this.itemId = itemId;
+        this.inventory = inventory;
+        this.durability = DURABILITY;
     }
 
-    public void defend() {};
+    public double defenceModifier() {
+        return DEFENCE_MULTIPLIER;
+    };
 
-    @Override
-    public EntityResponse getEntityResponse() {
-        // TODO Update for ID
-        return new EntityResponse("not a real ID", "armour", getPosition(), false);
-    }
+    public void consume() {
+        this.durability--;
+        if (this.durability == 0) {
+            inventory.removeItem(itemId);
+        }
+    };
 
-    @Override
-    public ItemResponse getItemResponse() {
-        // TODO Update for valid ID
-        return new ItemResponse("not a real ID", "armour");
-    }
 }

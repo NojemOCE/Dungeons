@@ -2,6 +2,7 @@ package dungeonmania.movingEntity;
 
 import dungeonmania.World;
 import dungeonmania.movingEntity.MovementStrategies.RandomMovement;
+import dungeonmania.gamemode.Gamemode;
 import dungeonmania.util.*;
 import dungeonmania.response.models.EntityResponse;
 
@@ -15,17 +16,17 @@ public class Zombie extends MovingEntity{
         setAlly(false);
     }
   
-    @Override
     public void move(World world) {
        getMovement().move(this, world);
     }
 
-
-
     @Override
     public EntityResponse getEntityResponse() {
-        // TODO Update for ID
-        return new EntityResponse("not a real ID", "spider", getPosition(), false);
+        // TODO Auto-generated method stub
+        return null;
     }
+
+
+
 }
 
