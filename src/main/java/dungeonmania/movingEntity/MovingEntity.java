@@ -14,37 +14,43 @@ import dungeonmania.staticEntity.StaticEntity;
 
 
 
-public abstract class MovingEntity extends Entity implements Movement {
+public abstract class MovingEntity extends Entity {
     private HealthPoint healthPoint;
     private double attackDamage;
     private Position position;
 
-    private Gamemode gameMode;
+    private int speed;
+
+    protected Movement movementStrategy;
+    
 
     private boolean ally;
 
-    public MovingEntity(Position position, String id, String type, HealthPoint healthPoint, double attackDamage, Gamemode gameMode) {
+    public MovingEntity(Position position, String id, String type, HealthPoint healthPoint, double attackDamage) {
         super(position, id, type);
         this.healthPoint = healthPoint;
         this.attackDamage = attackDamage;
-        this.gameMode = gameMode;
+        this.speed = 0;
     }
 
 
     // Attack and defend will be used to calculate in the battle class
-    public double attack() {
-        return attackDamage;
+    public double attack(double attack) {
+
+        // need to go through caclulators (player may have weapons)
+        return getAttackDamage();
     }
 
-    public double defend() {
-        return 0;
+    public void defend(double attack) {
+        this.healthPoint.loseHealth(attack);
     }
+
+    public abstract void move(World world);
 
     /**
      * Returns the new position if posible
      * and the old position (no movement) if not
      */
-    @Override
     public Position validMove(Position position, World world) {
         
         // check if there is a static entity in the way
@@ -53,11 +59,11 @@ public abstract class MovingEntity extends Entity implements Movement {
             // interact with static entitity
             return se.interact(world, this); 
         } 
-        if (!world.getBattles().isEmpty()) {
+        if (!Objects.isNull(world.getBattle())) {
             // check if this objects position is same as players (for players if there is a battle)
             // they cannot move anyways
-            if (this.getPosition().equals(world.getPlayer().getPosition())) {
-                // cannot move
+            if (getPosition().equals(world.getPlayer().getPosition())) {
+                // cannot move into battle, wait outside
                 return getPosition();
             }
         }
@@ -67,6 +73,7 @@ public abstract class MovingEntity extends Entity implements Movement {
             // two characters cant be in same place, dont move this object
             return getPosition();
         } 
+        
 
         return position;
     }
@@ -83,7 +90,7 @@ public abstract class MovingEntity extends Entity implements Movement {
         return attackDamage;
     }
 
-    public void setAttackDamage(int attackDamage) {
+    public void setAttackDamage(double attackDamage) {
         this.attackDamage = attackDamage;
     }
 
@@ -103,6 +110,24 @@ public abstract class MovingEntity extends Entity implements Movement {
         this.ally = ally;
     }
 
-    //abstract public EntityResponse getEntityResponse();
+    public void setMovement(Movement strategy) {
+        this.movementStrategy = strategy;
+    }
+
+    public Movement getMovement() {
+        return this.movementStrategy;
+    }
+
+    public int getSpeed() {
+        return speed;
+    }
+
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
+
+    abstract public EntityResponse getEntityResponse();
     
 }

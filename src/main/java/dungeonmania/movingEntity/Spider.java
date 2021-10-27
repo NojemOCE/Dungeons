@@ -17,10 +17,8 @@ public class Spider extends MovingEntity {
     static final int SET_MOVES = 2;
 
 
-    public Spider(int x, int y, String id, Gamemode gameMode) {
-        //Attack damage to 1 and layer to 2 for now
-        super(new Position(x,y,2), id, "spider", new HealthPoint(gameMode.getStartingHP()), 1, gameMode);
-
+    public Spider(int x, int y, String id) {
+        super(new Position(x, y, 3), id, "spider", new HealthPoint(100), 10);
         currentDirection = Direction.UP;
         nextDirection = Direction.RIGHT;
         remMovesCurr = START_MOVES;
@@ -141,6 +139,13 @@ public class Spider extends MovingEntity {
             default:
                 return Direction.NONE;
         }
+    }
+
+
+    @Override
+    public EntityResponse getEntityResponse() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

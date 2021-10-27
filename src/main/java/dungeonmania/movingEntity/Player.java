@@ -15,12 +15,11 @@ import dungeonmania.response.models.ItemResponse;
 
 public class Player extends MovingEntity {
 
-    private Inventory inventory;
+    private List<Mercenary> mercenaryObservers;
+    private double allyAttack;
 
-    public Player(int x, int y, String id, Gamemode gameMode) {
-
-        // Attack damage set at 1 for now and layer set at  1
-        super(new Position(x, y, 1), id, "player", new HealthPoint(gameMode.getStartingHP()), 1, gameMode);
+    public Player(int x, int y, String id) {
+        super(new Position(x, y), id, "player", new HealthPoint(100), 10);
         setAlly(true);
     }
   
@@ -29,42 +28,75 @@ public class Player extends MovingEntity {
         return;
     }
 
-    public void move(Direction direction, World world) {
+    public void tick(String itemUsed, Direction movementDirection, World world) {
         // check if the direction we are moving is valid first before setting new position
-        setPosition(validMove(this.getPosition().translateBy(direction), world));
+        if (itemUsed.isEmpty()) {
+            setPosition(validMove(this.getPosition().translateBy(movementDirection), world));
+        } else {
+            // use item
+        }
     }
 
     @Override
-    public double attack() {
+    public double attack(double attack) {
         // check inventory and mercenary in range
-
-        return getAttackDamage();
+        
+        // then add on mercenary modifier
+        attack += allyAttack;
+        return attack;
     }
 
     @Override
-    public double defend() {
+    public void defend(double attack) {
         // check inventory and mercenary in range
+        getHealthPoint().loseHealth(attack);
 
-        return 0;
     }
 
-    public boolean inInventory(CollectableEntity item) {
-        return inventory.isPresent(item);
+
+    public Battle battle(MovingEntity enemy, Inventory inventory) {
+        // we can pass in invincibility state for battle 
+        // or invisibility battle wont be created "return null"
+        if (!enemy.getAlly()) {
+            notifyObservers(1);
+
+            return new Battle(this, enemy, inventory);
+            // notify observers of battle
+        }
+        return null;
     }
 
-    public boolean inInventory(Buildable item) {
-        return inventory.isPresent(item);
+    public void endBattle() {
+        // notify observers of ending battle
+        notifyObservers(0);
     }
 
-    public Key keyInInventory(String keyColour) {
-        return inventory.keyInInventory(keyColour);
+    @Override
+    public EntityResponse getEntityResponse() {
+        // TODO Update for ID
+        return new EntityResponse("not a real ID", "player", getPosition(), true);
     }
 
-    public void use(CollectableEntity item) {
-        inventory.use(item);
+
+    public void registerEntity(Mercenary inRange) {
+        mercenaryObservers.add(inRange);
+        
+        if (inRange.getAlly()) {
+            allyAttack += inRange.getAttackDamage();
+        }
+    }
+    
+    public void unregisterEntity(Mercenary inRange) {
+        if (inRange.getAlly()) {
+            allyAttack -= inRange.getAttackDamage();
+        }
+        mercenaryObservers.remove(inRange);
     }
 
-    public List<ItemResponse> getInventoryResponse() {
-        return inventory.getInventoryResponse();
+    public void notifyObservers(int speed) { // notify observers for battle
+        mercenaryObservers.forEach( mercenary -> {
+            mercenary.setSpeed(speed);
+        });
     }
-}  
+} 
+

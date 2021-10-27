@@ -7,8 +7,8 @@ import dungeonmania.util.Position;
 
 public class Treasure extends CollectableEntity implements Consumable {
 
-    public Treasure(Position position, String itemId) {
-        super(position, itemId, "treasure");
+    public Treasure(Position position, String itemId, Inventory inventory) {
+        super(position, itemId, "treasure", inventory);
     }
 
     public void consume() {
