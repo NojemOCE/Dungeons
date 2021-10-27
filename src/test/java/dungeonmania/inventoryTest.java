@@ -11,6 +11,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class inventoryTest {
 
+    // TODO: use ItemResponse in tests
+
     /**
      * When collecting an item, an item should appear in the inventory
      */

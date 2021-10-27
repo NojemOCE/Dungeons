@@ -7,26 +7,23 @@ import dungeonmania.staticEntity.Door;
 import dungeonmania.util.Position;
 
 public class Key extends CollectableEntity implements Consumable {
-    private String keyColour;
-    
-    public Key(int x, int y, String id, String keyColour) {
-        super(new Position(x, y, 1), id, "invisibility_potion");
-        this.keyColour = keyColour;
-    }
-
-    // Can we remove this variable?
     private Door door;
 
-    public Key() {};
+    public Key(Position position, String itemId) {
+        super(position, itemId, "key");
+    }
 
-    public void consume() {};
+    public void consume() {
+        getInventory().removeItem(getItemId());
+    }
 
-    public void craft() {};
+    public void craft() {
+        getInventory().removeItem(getItemId());
+    }
 
-    public void unlock() {};
-
-    public String getKeyColour() {
-        return keyColour;
+    public void unlock() {
+        getInventory().removeItem(getItemId());
+        door.open();
     }
 
 }

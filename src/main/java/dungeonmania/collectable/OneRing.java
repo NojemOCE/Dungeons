@@ -6,12 +6,13 @@ import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Position;
 
 public class OneRing extends CollectableEntity implements Consumable {
-    public OneRing(int x, int y, String id) {
-        super(new Position(x, y, 1), id, "one_ring");
+
+    public OneRing(Position position, String itemId) {
+        super(position, itemId, "one_ring");
     }
 
-public class OneRing extends CollectableEntities implements Consumable {
-    public OneRing() {};
-    public void consume() {};
+    public void consume() {
+        getInventory().removeItem(getItemId());
+    }
 
 }
