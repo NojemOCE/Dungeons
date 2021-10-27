@@ -14,7 +14,7 @@ public class ZombieToastSpawn extends StaticEntity {
     int spawnRate;
 
     public ZombieToastSpawn(int x, int y, String id, int spawnRate) {
-        super(new Position(x, y, 1), id, "zombie_toast_spawn");
+        super(new Position(x, y, 1), id, "zombie_toast_spawner");
         this.spawnRate = spawnRate;
     }
 

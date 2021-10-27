@@ -167,6 +167,7 @@ public class Inventory {
         }
 
         return enemyAttack;
+    }
     public List<String> getBuildable() {
         ArrayList<String> buildable = new ArrayList<>();
 

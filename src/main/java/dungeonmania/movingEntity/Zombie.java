@@ -11,7 +11,7 @@ import java.util.Random;
 public class Zombie extends MovingEntity{
 
     public Zombie(int x, int y, String id) {
-        super(new Position(x, y), id, "zombie", new HealthPoint(100), 10);
+        super(new Position(x, y), id, "zombie_toast", new HealthPoint(100), 10);
         setMovement(new RandomMovement());
         setDefaultMovementStrategy(new RandomMovement());
         setAlly(false);
