@@ -75,8 +75,7 @@ public class Player extends MovingEntity {
 
     @Override
     public EntityResponse getEntityResponse() {
-        // TODO Update for ID
-        return new EntityResponse("not a real ID", "player", getPosition(), true);
+        return new EntityResponse(getId(), getType(), getPosition(), true);
     }
 
 

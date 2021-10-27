@@ -25,6 +25,7 @@ public class Mercenary extends MovingEntity {
     public Mercenary(int x, int y, String id) {
         super(new Position(x, y), id, "mercenary", new HealthPoint(100), 10);
         setMovement(new FollowPlayer());
+        setDefaultMovementStrategy(new FollowPlayer());
         setAlly(false);
     }
 
