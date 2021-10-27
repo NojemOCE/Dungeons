@@ -142,7 +142,7 @@ public class World implements ObserverExitGoal {
         } 
         
         else if (type.equals("zombie_toast_spawner")) {
-            ZombieToastSpawn e = new ZombieToastSpawn(x, y, id);
+            ZombieToastSpawn e = new ZombieToastSpawn(x, y, id, gamemode.getSpawnRate());
             staticEntities.put(e.getId(), e);   
         } else if (type.equals("player")) {
             Player e = new Player(x, y, id);
@@ -445,5 +445,43 @@ public class World implements ObserverExitGoal {
 
     public boolean inBounds(int x, int y) {
         return !(x < 0 || x >= width || y < 0 || y >= height);
+    }
+
+
+    // Remove all entities from the given positions (except the player)
+    public void detonate(Position position) {
+        
+        List<CollectableEntity> toRemove = new ArrayList<>();
+        for (CollectableEntity e : collectableEntities.values()) {
+            if (e.getPosition().equals(position)) {
+                toRemove.add(e);
+            }
+        }
+        for (CollectableEntity e : toRemove) {
+            collectableEntities.remove(e.getId());
+        }
+
+        List<StaticEntity> toRemoveStatic = new ArrayList<>();
+        for (StaticEntity e : staticEntities.values()) {
+            if (e.getPosition().equals(position)) {
+                toRemoveStatic.add(e);
+            }
+        }
+        for (StaticEntity e : toRemoveStatic) {
+            staticEntities.remove(e.getId());
+        }
+
+        List<MovingEntity> toRemoveMoving = new ArrayList<>();
+        for (MovingEntity e : movingEntities.values()) {
+            if (e instanceof Player) {
+                // don't remove
+            } else if (e.getPosition().equals(position)) {
+                toRemoveMoving.add(e);
+            }
+        }
+        for (MovingEntity e : toRemoveMoving) {
+            movingEntities.remove(e.getId());
+        }
+
     }
 }

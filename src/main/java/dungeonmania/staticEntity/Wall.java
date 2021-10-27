@@ -1,8 +1,7 @@
 package dungeonmania.staticEntity;
 
+import dungeonmania.Entity;
 import dungeonmania.World;
-import dungeonmania.movingEntity.MovingEntity;
-import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
 
 public class Wall extends StaticEntity {
@@ -20,14 +19,8 @@ public class Wall extends StaticEntity {
      */
     // TODO: spider is ignored for now?? Since it implements its own movement
     @Override
-    public Position interact(World world, MovingEntity character) {
-        return character.getPosition();
+    public Position interact(World world, Entity entity) {
+        return entity.getPosition();
     }
 
-    @Override
-    public EntityResponse getEntityResponse() {
-        // TODO Update for ID
-        return new EntityResponse("not a real ID", "wall", getPosition(), false);
-    }
-    
 }

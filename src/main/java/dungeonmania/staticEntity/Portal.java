@@ -1,18 +1,15 @@
 package dungeonmania.staticEntity;
 
+import dungeonmania.Entity;
 import dungeonmania.World;
-import dungeonmania.movingEntity.Mercenary;
-import dungeonmania.movingEntity.MovingEntity;
-import dungeonmania.movingEntity.Player;
-import dungeonmania.response.models.EntityResponse;
+import dungeonmania.movingEntity.Zombie;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
 public class Portal extends StaticEntity {
 
     private Portal twinPortal;
-
-    private String colour;
+    // private String colour;
 
     public Portal(int x, int y, String id) {
         super(new Position(x, y, 1), id, "portal");
@@ -27,17 +24,17 @@ public class Portal extends StaticEntity {
 
     /**
      * Teleports entities to a corresponding portal.
-     * It is assumed that both player and mecernary can travel through portals
-     * Other enemies (zombie and spider) cannot, they just walk over them
+     * All entities but zombies are able to moce through portals
      */
     @Override
-    public Position interact(World world, MovingEntity character) {
-        if (character instanceof Player || character instanceof Mercenary) {
-            travelToTwin(character);
+    public Position interact(World world, Entity entity) {
+        if (!(entity instanceof Zombie)) {
+            travelToTwin(entity);
         }   
         // otherwise they just step on this spot
         return this.getPosition();
     }
+    
     
     /**
      * Returns the location which the character should move to 
@@ -45,7 +42,7 @@ public class Portal extends StaticEntity {
      * @param character the character to move
      * @return the position to move the character to
      */
-    private Position travelToTwin(MovingEntity character) {
+    private Position travelToTwin(Entity character) {
         // we need to end up on the opposite side of the portal
         int charX = character.getPosition().getX();
         int charY = character.getPosition().getY();
@@ -80,11 +77,4 @@ public class Portal extends StaticEntity {
         this.twinPortal = twinPortal;
     }
 
-    @Override
-    public EntityResponse getEntityResponse() {
-        // TODO Update for ID
-        return new EntityResponse("not a real ID", "portal", getPosition(), false);
-    }
-    
-    
 }
