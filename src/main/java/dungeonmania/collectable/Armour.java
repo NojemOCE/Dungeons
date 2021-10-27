@@ -33,9 +33,4 @@ public class Armour extends CollectableEntity {
         }
     };
 
-    @Override
-    public EntityResponse getEntityResponse() {
-        return new EntityResponse(itemId, type, getPosition(), false);
-    }
-
 }

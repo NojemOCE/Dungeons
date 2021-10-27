@@ -6,6 +6,7 @@ import java.util.Objects;
 
 import dungeonmania.Entity;
 import dungeonmania.World;
+import dungeonmania.gamemode.Gamemode;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.staticEntity.StaticEntity;
@@ -22,10 +23,11 @@ public abstract class MovingEntity extends Entity implements Movement {
 
     private boolean ally;
 
-    public MovingEntity(Position position, String id, String type, HealthPoint healthPoint, int attackDamage) {
+    public MovingEntity(Position position, String id, String type, HealthPoint healthPoint, double attackDamage, Gamemode gameMode) {
         super(position, id, type);
         this.healthPoint = healthPoint;
         this.attackDamage = attackDamage;
+        this.gameMode = gameMode;
     }
 
 
@@ -101,6 +103,6 @@ public abstract class MovingEntity extends Entity implements Movement {
         this.ally = ally;
     }
 
-    abstract public EntityResponse getEntityResponse();
+    //abstract public EntityResponse getEntityResponse();
     
 }

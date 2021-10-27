@@ -7,7 +7,6 @@ import dungeonmania.staticEntity.Door;
 import dungeonmania.util.Position;
 
 public class Key extends CollectableEntity implements Consumable {
-
     private Door door;
 
     public Key(Position position, String itemId) {

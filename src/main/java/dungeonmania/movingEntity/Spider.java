@@ -1,6 +1,7 @@
 package dungeonmania.movingEntity;
 
 import dungeonmania.World;
+import dungeonmania.gamemode.Gamemode;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.staticEntity.Boulder;
 import dungeonmania.staticEntity.StaticEntity;
@@ -16,8 +17,10 @@ public class Spider extends MovingEntity {
     static final int SET_MOVES = 2;
 
 
-    public Spider(HealthPoint healthPoint, double attackDamage, Position position) {
-        super(healthPoint, attackDamage, position);
+    public Spider(int x, int y, String id, Gamemode gameMode) {
+        //Attack damage to 1 and layer to 2 for now
+        super(new Position(x,y,2), id, "spider", new HealthPoint(gameMode.getStartingHP()), 1, gameMode);
+
         currentDirection = Direction.UP;
         nextDirection = Direction.RIGHT;
         remMovesCurr = START_MOVES;
@@ -138,12 +141,6 @@ public class Spider extends MovingEntity {
             default:
                 return Direction.NONE;
         }
-    }
-
-    @Override
-    public EntityResponse getEntityResponse() {
-        // TODO Update for ID
-        return new EntityResponse("not a real ID", "spider", getPosition(), false);
     }
 
 }

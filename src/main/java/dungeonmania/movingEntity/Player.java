@@ -17,8 +17,10 @@ public class Player extends MovingEntity {
 
     private Inventory inventory;
 
-    public Player(HealthPoint healthPoint, double attackDamage, Position position) {
-        super(healthPoint, attackDamage, position);
+    public Player(int x, int y, String id, Gamemode gameMode) {
+
+        // Attack damage set at 1 for now and layer set at  1
+        super(new Position(x, y, 1), id, "player", new HealthPoint(gameMode.getStartingHP()), 1, gameMode);
         setAlly(true);
     }
   
@@ -60,12 +62,6 @@ public class Player extends MovingEntity {
 
     public void use(CollectableEntity item) {
         inventory.use(item);
-    }
-
-    @Override
-    public EntityResponse getEntityResponse() {
-        // TODO Update for ID
-        return new EntityResponse("not a real ID", "player", getPosition(), true);
     }
 
     public List<ItemResponse> getInventoryResponse() {
