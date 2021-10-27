@@ -23,6 +23,7 @@ public abstract class MovingEntity extends Entity {
 
     private Gamemode gameMode;
     protected Movement movementStrategy;
+    
 
     private boolean ally;
 
