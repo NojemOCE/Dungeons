@@ -384,7 +384,7 @@ public class World implements ObserverExitGoal {
      * @return true if the item is in the players inventory, false otherwise
      */
     public boolean inInventory(CollectableEntity item) {
-        return player.inInventory(item);
+        return inventory.inInventory(item.getId());
     }
 
     /**
@@ -393,16 +393,13 @@ public class World implements ObserverExitGoal {
      * @return true if the item is in the players inventory, false otherwise
      */
     public boolean inInventory(Buildable item) {
-        return player.inInventory(item);
+        return inventory.inInventory(item.getItemId());
     }
 
     public Key keyInInventory(String keyColour) {
-        return player.keyInInventory(keyColour);
+        return inventory.keyInInventory(keyColour);
     }
 
-    public void use(CollectableEntity item) {
-        player.use(item);
-    }
 
     public int getWidth() {
         return width;
@@ -443,7 +440,7 @@ public class World implements ObserverExitGoal {
     }
 
     public List<ItemResponse> getInventoryResponse(){
-        return player.getInventoryResponse();
+        return inventory.getInventoryResponse();
     }
 
     public boolean inBounds(int x, int y) {

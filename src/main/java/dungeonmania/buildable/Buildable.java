@@ -6,4 +6,5 @@ public interface Buildable {
     public void build();
 
     public ItemResponse getItemResponse();
+    public String getItemId();
 }
