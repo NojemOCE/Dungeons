@@ -85,15 +85,8 @@ public class Inventory {
     public List<String> tick(String itemUsedId) {
         if (!inInventory(itemUsedId)) {
             throw new InvalidActionException("Item not in Inventory");
-<<<<<<< HEAD
-        } else if (!isUseable(itemUsedId)) {
         
-        }
 
-        collectableItems.forEach((id, item) -> {
-            item.tick();
-        });
-=======
         } else if (!isUsable(itemUsedId)) {
             Consumable c = (Consumable) collectableItems.get(itemUsedId);
             c.consume();
@@ -105,7 +98,6 @@ public class Inventory {
         }
 
         return getBuildable();
->>>>>>> 3007d4cff1cdade7250c4e1037883e45e3c22f90
     }
 
     public List<String> tick(Direction movementDirection) {

@@ -16,5 +16,9 @@ public class HealthPoint {
         this.health = health;
     }
     
+    public void loseHealth(double attack) {
+        this.health -= attack;
+        if (this.health <= 0 ) setHealth(0);
+    }
     
 }
