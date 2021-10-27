@@ -122,10 +122,10 @@ public class World implements ObserverExitGoal {
 
 
         if (type.equals("wall")) {
-            Wall e = new Wall(x,y,id);
+            Wall e = new Wall(x, y, id);
             staticEntities.put(e.getId(), e);
         } else if (type.equals("exit")) {
-            Exit e = new Exit(x,y,id);
+            Exit e = new Exit(x, y, id);
             staticEntities.put(e.getId(), e);
         } else if (type.equals("switch")) {
             FloorSwitch e = new FloorSwitch(x, y, id);
@@ -143,14 +143,14 @@ public class World implements ObserverExitGoal {
             if (staticEntities.containsKey(colour)) {
                 e = new Portal(x, y, colour + "2", (Portal) staticEntities.get(colour));
             } else {
-                e = new Portal(x, y , colour);
+                e = new Portal(x, y, colour);
             }
             staticEntities.put(e.getId(), e);
         } else if (type.equals("zombie_toast_spawner")) {
             ZombieToastSpawn e = new ZombieToastSpawn(x, y, id);
-            staticEntities.put(e.getId(), e);   
+            staticEntities.put(e.getId(), e);
         } else if (type.equals("player")) {
-            Player e = new Player(x, y ,id)
+            Player e = new Player(x, y, id)
             this.player = e;
             movingEntities.put(e.getId(), e);
         } else if (type.equals("spider")) {
@@ -203,6 +203,7 @@ public class World implements ObserverExitGoal {
             Shield e = new Shield(id);
             collectableEntities.put(e.getId(), e);
         }
+    }
 
     // tick for all characters and then return world dungeon response
     public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
@@ -335,7 +336,6 @@ public class World implements ObserverExitGoal {
         return player.inInventory(item);
     }
 
-
     public Key keyInInventory(String keyColour) {
         return player.keyInInventory(keyColour);
     }
@@ -384,5 +384,9 @@ public class World implements ObserverExitGoal {
 
     public List<ItemResponse> getInventoryResponse(){
         return player.getInventoryResponse();
+    }
+
+    public boolean inBounds(int x, int y) {
+        return !(x < 0 || x >= width || y < 0 || y >= height);
     }
 }

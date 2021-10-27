@@ -7,30 +7,24 @@ import dungeonmania.staticEntity.Door;
 import dungeonmania.util.Position;
 
 public class Key extends CollectableEntity implements Consumable {
-    public Key(Position position) {
-        super(position);
-        //TODO Auto-generated constructor stub
-    }
 
-    // need to change to variable type Door
     private Door door;
 
-    public Key() {};
-
-    public void consume() {};
-
-    public void craft() {};
-
-    public void unlock() {};
-
-    @Override
-    public EntityResponse getEntityResponse() {
-        // TODO Update for ID
-        return new EntityResponse("not a real ID", "key", getPosition(), false);
+    public Key(Position position, String itemId) {
+        super(position, itemId, "key");
     }
-    @Override
-    public ItemResponse getItemResponse() {
-        // TODO Update for valid ID
-        return new ItemResponse("not a real ID", "key");
+
+    public void consume() {
+        getInventory().removeItem(getItemId());
     }
+
+    public void craft() {
+        getInventory().removeItem(getItemId());
+    }
+
+    public void unlock() {
+        getInventory().removeItem(getItemId());
+        door.open();
+    }
+
 }

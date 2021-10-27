@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import dungeonmania.Consumable;
 import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.response.models.ItemResponse;
@@ -14,74 +15,50 @@ import dungeonmania.movingEntity.Player;
 import dungeonmania.util.*;
 
 public class Inventory {
-    // Change to hashmap<string, collectableentity> with id as key
     private Map<String, CollectableEntity> collectableItems;
     private Map<String, Buildable> buildableItems;
-    private Map<String, Integer> collected;
-    private List<String> useables;
+    private Map<String, Integer> numCollected;
+    private List<String> usable;
     private Player player;
 
     public Inventory(Player player) {
         this.player = player;
-        this.useables.add("bomb");
-        this.useables.add("health_potion");
-        this.useables.add("invincibility_potion");
-        this.useables.add("invisibility_potion");
+        this.usable.add("bomb");
+        this.usable.add("health_potion");
+        this.usable.add("invincibility_potion");
+        this.usable.add("invisibility_potion");
     }
 
     public void collect(CollectableEntity item) {
-        String itemType = item.getClass().getSimpleName();
-        collected.putIfAbsent(itemType, 0);
-        collected.put(itemType, collected.get(itemType) + 1);
+        String itemType = item.getItemId();
 
-        collectableItems.add(item);
+        numCollected.putIfAbsent(itemType, 0);
+        numCollected.put(itemType, numCollected.get(itemType) + 1);
+
+        collectableItems.put(item.getItemId(), item);
     }
 
-    public void use(CollectableEntity item) {
-        collectableItems.remove(item);
+    public void use(String itemId) {
+        String itemType = collectableItems.remove(itemId).getItemId();
+        numCollected.put(itemType, numCollected.get(itemType) - 1);
     }
-
-    public void use(String itemType) {
-        collectableItems.removeIf(c -> itemType.equalsIgnoreCase(c.getClass().getSimpleName()));
-
-        collected.put(itemType, collected.get(itemType) - 1);
-    }
-
 
     public void craft(String itemType) {
-        if (itemType.equalsIgnoreCase("bow")) {
-            if (numItem("wood") < 1 || numItem("arrow") < 3) {
-                throw new InvalidActionException("Insufficient items");
-            }
-            IntStream.range(0, 1).mapToObj(i -> "wood").forEach(this::use);
+        if (!isBuildable(itemType)) {
+            throw new InvalidActionException("Insufficient items");
+        } else if (itemType.equalsIgnoreCase("bow")) {
+            use("wood");
             IntStream.range(0, 3).mapToObj(i -> "arrow").forEach(this::use);
         } else if (itemType.equalsIgnoreCase("shield")) {
-            if (numItem("wood") < 2 || numItem("treasure") < 1 || numItem("key") < 1) {
-                throw new InvalidActionException("Insufficient items");
-            }
             IntStream.range(0, 2).mapToObj(i -> "wood").forEach(this::use);
             use(numItem("treasure") != 0 ? "treasure" : "key");
-
-        } else {
-            throw new IllegalArgumentException("Wrong buildable type");
         }
 
-        buildableItems.add(BuildableFactory.getBuildable(itemType));
     }
 
     public int numItem(String itemType) {
-        collected.putIfAbsent(itemType, 0);
-        return collected.get(itemType);
-    }
-
-    // Can we combine these two? Lose type safety if we do Object
-    // Can get rid of it all together
-    public boolean isPresent(CollectableEntity item) {
-        return collected.get(item.getClass().getSimpleName()) != null;
-    }
-
-    public boolean isPresent(Buildable item) {
-        return collected.get(item.getClass().getSimpleName()) != null;
+        numCollected.putIfAbsent(itemType, 0);
+        return numCollected.get(itemType);
     }
 
     public Key keyInInventory(String keyColour) {
@@ -99,16 +76,16 @@ public class Inventory {
     }
 
     public List<ItemResponse> getInventoryResponse() {
-        List<ItemResponse> itemResponses = new ArrayList<>();
-        
-        itemResponses.addAll(collectableItems.stream().map(CollectableEntity::getItemResponse).collect(Collectors.toList()));
-        itemResponses.addAll(buildableItems.stream().map(Buildable::getItemResponse).collect(Collectors.toList()));
+        List<ItemResponse> itemResponses = collectableItems.values().stream().map(CollectableEntity::getItemResponse).collect(Collectors.toList());
+        buildableItems.values().stream().map(Buildable::getItemResponse).forEach(itemResponses::add);
+
         return itemResponses;
     }
 
-    public Buildable tick(String itemUsedId) {
+    public List<String> tick(String itemUsedId) {
         if (!inInventory(itemUsedId)) {
             throw new InvalidActionException("Item not in Inventory");
+<<<<<<< HEAD
         } else if (!isUseable(itemUsedId)) {
         
         }
@@ -116,22 +93,37 @@ public class Inventory {
         collectableItems.forEach((id, item) -> {
             item.tick();
         });
+=======
+        } else if (!isUsable(itemUsedId)) {
+            Consumable c = (Consumable) collectableItems.get(itemUsedId);
+            c.consume();
+            collectableItems.forEach((id, item) -> {
+                item.tick();
+            });
+        } else {
+            throw new IllegalArgumentException("Wrong usable type");
+        }
+
+        return getBuildable();
+>>>>>>> 3007d4cff1cdade7250c4e1037883e45e3c22f90
     }
 
-    public Buildable tick(Direction movementDirection) {
+    public List<String> tick(Direction movementDirection) {
         collectableItems.forEach((id, item) -> {
             item.updatePosition(player.getPosition());
             item.tick();
         });
+
+        return getBuildable();
     }
 
     public boolean inInventory(String itemUsedId) {
         return collectableItems.containsKey(itemUsedId);
     }
 
-    public boolean isUseable(String itemUsedId) {
+    public boolean isUsable(String itemUsedId) {
         
-        for ( String item : useables) {
+        for ( String item : usable) {
             if (itemUsedId.contains(item)) {
                 return true;
             }
@@ -183,5 +175,22 @@ public class Inventory {
         }
 
         return enemyAttack;
+    public List<String> getBuildable() {
+        ArrayList<String> buildable = new ArrayList<>();
+
+        if (isBuildable("bow")) buildable.add("bow");
+        if (isBuildable("shield")) buildable.add("shield");
+
+        return buildable;
+    }
+
+    public boolean isBuildable(String buildableType) {
+        if (buildableType.equalsIgnoreCase("bow")) {
+            return numItem("wood") >= 1 && numItem("arrow") >= 3;
+        } else if (buildableType.equalsIgnoreCase("shield")) {
+            return numItem("wood") >= 2 && (numItem("treasure") >= 1 || numItem("key") >= 1);
+        } else {
+            throw new IllegalArgumentException("Wrong buildable type");
+        }
     }
 }

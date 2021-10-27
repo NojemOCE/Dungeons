@@ -16,7 +16,7 @@ public class Armour extends CollectableEntity {
     private final double DEFENCE_MULTIPLIER = 0.5;
 
     public Armour(Position position, String itemId, Inventory inventory) {
-        super(position);
+        super(position, itemId, "armour");
         this.itemId = itemId;
         this.inventory = inventory;
         this.durability = DURABILITY;
@@ -38,8 +38,4 @@ public class Armour extends CollectableEntity {
         return new EntityResponse(itemId, type, getPosition(), false);
     }
 
-    @Override
-    public ItemResponse getItemResponse() {
-        return new ItemResponse(itemId, type);
-    }
 }
