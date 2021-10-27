@@ -25,7 +25,8 @@ public class Mercenary extends MovingEntity {
     public Mercenary(int x, int y, String id, Gamemode gameMode) {
         //Set layer and attack damage to 1 for now
         super(new Position(x, y, 1), id, "mercenary", new HealthPoint(gameMode.getStartingHP()), 1, gameMode);
-
+        setMovement(new FollowPlayer());
+        setDefaultMovementStrategy(new FollowPlayer());
         setAlly(false);
     }
 

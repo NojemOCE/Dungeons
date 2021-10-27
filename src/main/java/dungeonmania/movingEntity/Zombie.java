@@ -16,6 +16,7 @@ public class Zombie extends MovingEntity{
         super(new Position(x, y, 1), id, "zombie", new HealthPoint(gameMode.getStartingHP()), 1, gameMode);
 
         setMovement(new RandomMovement());
+        setDefaultMovementStrategy(new RandomMovement());
 
         setAlly(false);
     }
