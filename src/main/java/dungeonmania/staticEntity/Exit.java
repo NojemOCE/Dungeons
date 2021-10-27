@@ -1,11 +1,10 @@
 package dungeonmania.staticEntity;
 
+import dungeonmania.Entity;
 import dungeonmania.World;
 import dungeonmania.goal.ObserverExitGoal;
 import dungeonmania.goal.SubjectExitGoal;
-import dungeonmania.movingEntity.MovingEntity;
 import dungeonmania.movingEntity.Player;
-import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
 
 public class Exit extends StaticEntity implements SubjectExitGoal {
@@ -21,14 +20,14 @@ public class Exit extends StaticEntity implements SubjectExitGoal {
      * No effect otherwise.
      */
     @Override
-    public Position interact(World world, MovingEntity character) {
+    public Position interact(World world, Entity entity) {
         
-        if (character instanceof Player) {
+        if (entity instanceof Player) {
             notifyObserver();
             return this.getPosition();
         }
 
-        return character.getPosition();
+        return entity.getPosition();
     }
 
 
@@ -44,9 +43,4 @@ public class Exit extends StaticEntity implements SubjectExitGoal {
         observer.update(this);
     }
 
-    @Override
-    public EntityResponse getEntityResponse() {
-        // TODO Update for ID
-        return new EntityResponse("not a real ID", "exit", getPosition(), false);
-    }
 }

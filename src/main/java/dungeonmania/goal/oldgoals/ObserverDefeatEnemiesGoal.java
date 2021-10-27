@@ -1,21 +1,16 @@
-package dungeonmania.goal;
+package dungeonmania.goal.oldgoals;
 
-public interface SubjectDefeatEnemiesGoal {
+public interface ObserverDefeatEnemiesGoal {
+    // increment number of enemies defeated
+    public void update(SubjectDefeatEnemiesGoal obj);
 
-    public void attach(ObserverTreasureGoal o);
-    // maybe not needed?
-	public void detach(ObserverTreasureGoal o);
-	public void notifyObservers();
-
-    // whether an enemy is defeated
-	public boolean isDefeated();
-
-    // public 
-
+    // increments num enemies in the world
+    public void update();
+    
     // int enemiesDefeated;
     // int totalEnemies;
 
-    // public DefeatEnemiesGoal (int enemies) {
+    // public ObserverDefeatEnemiesGoal (int enemies) {
     //     this.totalEnemies = enemies;
     //     enemiesDefeated = 0;
     // }
