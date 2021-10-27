@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import dungeonmania.Consumable;
 import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.response.models.ItemResponse;
@@ -81,20 +82,29 @@ public class Inventory {
         return itemResponses;
     }
 
-    public Buildable tick(String itemUsedId) {
+    public List<String> tick(String itemUsedId) {
         if (!inInventory(itemUsedId)) {
             throw new InvalidActionException("Item not in Inventory");
-        } else if (!isUsable(itemUsedId))
-        collectableItems.forEach((id, item) -> {
-            item.tick();
-        });
+        } else if (!isUsable(itemUsedId)) {
+            Consumable c = (Consumable) collectableItems.get(itemUsedId);
+            c.consume();
+            collectableItems.forEach((id, item) -> {
+                item.tick();
+            });
+        } else {
+            throw new IllegalArgumentException("Wrong usable type");
+        }
+
+        return getBuildable();
     }
 
-    public Buildable tick(Direction movementDirection) {
+    public List<String> tick(Direction movementDirection) {
         collectableItems.forEach((id, item) -> {
             item.updatePosition(player.getPosition());
             item.tick();
         });
+
+        return getBuildable();
     }
 
     public boolean inInventory(String itemUsedId) {
