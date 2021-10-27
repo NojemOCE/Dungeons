@@ -172,22 +172,22 @@ public class World implements ObserverExitGoal {
         
         else if (type.equals("key")) {
             String key = obj.getString("key");
-            Key e = new Key(new Position(x,y), id, inventory, key);
+            Key e = new Key(new Position(x,y), id, inventory);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("health_potion")) {
-            HealthPotion e = new HealthPotion(new Position(x,y), id);
+            HealthPotion e = new HealthPotion(new Position(x,y), id, inventory);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("invincibility_potion")) {
-            InvincibilityPotion e = new InvincibilityPotion(new Position(x,y), id, this);
+            InvincibilityPotion e = new InvincibilityPotion(new Position(x,y), id, this, inventory);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("invisibility_potion")) {
-            InvisibilityPotion e = new InvisibilityPotion(new Position(x,y), id, this);
+            InvisibilityPotion e = new InvisibilityPotion(new Position(x,y), id, this, inventory);
             collectableEntities.put(e.getId(), e);
         } 
         
@@ -202,12 +202,12 @@ public class World implements ObserverExitGoal {
         } 
         
         else if (type.equals("bomb")) {
-            Bomb e = new Bomb(new Position(x,y), id, this);
+            Bomb e = new Bomb(new Position(x,y), id, this, inventory);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("sword")) {
-            Sword e = new Sword(new Position(x,y), id);
+            Sword e = new Sword(new Position(x,y), id, inventory);
             collectableEntities.put(e.getId(), e);
         } 
         
