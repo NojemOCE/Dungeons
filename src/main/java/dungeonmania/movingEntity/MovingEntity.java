@@ -35,10 +35,10 @@ public abstract class MovingEntity extends Entity {
 
 
     // Attack and defend will be used to calculate in the battle class
-    public double attack() {
+    public double attack(double attack) {
 
         // need to go through caclulators (player may have weapons)
-        return attackDamage;
+        return getAttackDamage();
     }
 
     public void defend(double attack) {

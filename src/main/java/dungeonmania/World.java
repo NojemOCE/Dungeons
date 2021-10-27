@@ -198,6 +198,7 @@ public class World implements ObserverExitGoal {
             currentBattle.battleTick();
             if (!currentBattle.isActiveBattle()) {
                 if (currentBattle.getPlayerWins()) {
+                    // return a dropped item
                     movingEntities.remove(currentBattle.getCharacter().getId());
                 } else {
                     this.player = null; // will end game in dungeon response
