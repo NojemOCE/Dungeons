@@ -1,8 +1,14 @@
-package dungeonmania.goal;
+package dungeonmania.goal.oldgoals;
 
-public interface ObserverExitGoal {
+public interface SubjectExitGoal {
 
-    public void update(SubjectExitGoal obj);
+    public void attach(ObserverExitGoal observer);
+	public void notifyObserver();
+    
+	// public void detach(ObserverExitGoal o);
+    // whther exit has been reached
+	// public boolean exitReached();
+
 
     // Boolean exitReached;
 
