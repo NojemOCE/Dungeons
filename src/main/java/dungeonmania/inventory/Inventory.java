@@ -62,7 +62,7 @@ public class Inventory {
     }
 
     public Key keyInInventory(String keyColour) {
-        List<Key> keys = collectableItems.stream()
+        List<Key> keys = collectableItems.values().stream()
                                         .filter(x -> x instanceof Key)
                                         .map(Key.class::cast)
                                         .filter(x -> x.getKeyColour().equals(keyColour))

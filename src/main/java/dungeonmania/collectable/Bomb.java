@@ -2,6 +2,7 @@ package dungeonmania.collectable;
 
 import dungeonmania.Consumable;
 import dungeonmania.World;
+import dungeonmania.inventory.Inventory;
 import dungeonmania.util.Position;
 
 import java.util.ArrayList;
@@ -11,8 +12,8 @@ public class Bomb extends CollectableEntity implements Consumable {
 
     private World world;
 
-    public Bomb(Position position, String itemId, World world) {
-        super(position, itemId, "bomb");
+    public Bomb(Position position, String itemId, World world, Inventory inventory) {
+        super(position, itemId, "bomb", inventory);
         this.world = world;
     }
 

@@ -44,4 +44,10 @@ public class Shield implements Buildable, Consumable {
     public ItemResponse getItemResponse() {
         return new ItemResponse(itemId, type);
     }
+
+    @Override
+    public String getItemId() {
+        // TODO Auto-generated method stub
+        return itemId;
+    }
 }

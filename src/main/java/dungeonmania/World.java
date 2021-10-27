@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import dungeonmania.goal.*;
+import dungeonmania.inventory.Inventory;
 import dungeonmania.response.models.*;
 import dungeonmania.staticEntity.*;
 import dungeonmania.util.*;
@@ -29,7 +30,7 @@ public class World implements ObserverExitGoal {
     private int width;
     private int height;
 
-
+    private Inventory inventory;
     private Gamemode gamemode;
     private Player player;
     private String id;
@@ -144,69 +145,69 @@ public class World implements ObserverExitGoal {
             ZombieToastSpawn e = new ZombieToastSpawn(x, y, id);
             staticEntities.put(e.getId(), e);   
         } else if (type.equals("player")) {
-            Player e = new Player(x, y, id, this.gamemode);
+            Player e = new Player(x, y, id);
             this.player = e;
             movingEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("spider")) {
-            Spider e = new Spider(x, y, id, this.gamemode);
+            Spider e = new Spider(x, y, id);
             movingEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("zombie")) {
-            Zombie e = new Zombie(x, y, id, this.gamemode);
+            Zombie e = new Zombie(x, y, id);
             movingEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("mercenary")) {
-            Mercenary e = new Mercenary(x, y, id, this.gamemode);
+            Mercenary e = new Mercenary(x, y, id);
             movingEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("treasure")) {
-            Treasure e = new Treasure(x, y, id);
+            Treasure e = new Treasure(new Position(x,y), id, inventory);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("key")) {
             String key = obj.getString("key");
-            Key e = new Key(x, y, id, key);
+            Key e = new Key(new Position(x,y), id, inventory);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("health_potion")) {
-            HealthPotion e = new HealthPotion(x, y, id);
+            HealthPotion e = new HealthPotion(new Position(x,y), id, inventory);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("invincibility_potion")) {
-            InvincibilityPotion e = new InvincibilityPotion(x, y, id);
+            InvincibilityPotion e = new InvincibilityPotion(new Position(x,y), id, this, inventory);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("invisibility_potion")) {
-            InvisibilityPotion e = new InvisibilityPotion(x, y, id);
+            InvisibilityPotion e = new InvisibilityPotion(new Position(x,y), id, this, inventory);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("wood")) {
-            Wood e = new Wood(x, y, id);
+            Wood e = new Wood(new Position(x,y), id, inventory);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("arrow")) {
-            Arrows e = new Arrows(x, y, id);
+            Arrows e = new Arrows(new Position(x,y), id);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("bomb")) {
-            Bomb e = new Bomb(x, y, id);
+            Bomb e = new Bomb(new Position(x,y), id, this, inventory);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("sword")) {
-            Sword e = new Sword(x, y, id);
+            Sword e = new Sword(new Position(x,y), id, inventory);
             collectableEntities.put(e.getId(), e);
         } 
         
@@ -241,6 +242,7 @@ public class World implements ObserverExitGoal {
             currentBattle.battleTick();
             if (!currentBattle.isActiveBattle()) {
                 if (currentBattle.getPlayerWins()) {
+                    // return a dropped item
                     movingEntities.remove(currentBattle.getCharacter().getId());
                 } else {
                     this.player = null; // will end game in dungeon response
@@ -250,13 +252,18 @@ public class World implements ObserverExitGoal {
         } else  {
             player.tick(itemUsed, movementDirection, this);
         }
+        if (itemUsed.isEmpty()) {
+            inventory.tick(movementDirection);
+        } else {
+            inventory.tick(itemUsed);
+        }
 
         // now move all entities
         for (MovingEntity me: movingEntities.values()) {
             me.move(this);
             if (me.getPosition().equals(player.getPosition())) {
-                currentBattle = player.battle(me); // if invisible it will add null
-                player.notifyObservers();
+                currentBattle = player.battle(me, inventory); // if invisible it will add null
+                player.notifyObservers(1);
             }
         }
 
@@ -377,7 +384,7 @@ public class World implements ObserverExitGoal {
      * @return true if the item is in the players inventory, false otherwise
      */
     public boolean inInventory(CollectableEntity item) {
-        return player.inInventory(item);
+        return inventory.inInventory(item.getId());
     }
 
     /**
@@ -386,16 +393,13 @@ public class World implements ObserverExitGoal {
      * @return true if the item is in the players inventory, false otherwise
      */
     public boolean inInventory(Buildable item) {
-        return player.inInventory(item);
+        return inventory.inInventory(item.getItemId());
     }
 
     public Key keyInInventory(String keyColour) {
-        return player.keyInInventory(keyColour);
+        return inventory.keyInInventory(keyColour);
     }
 
-    public void use(CollectableEntity item) {
-        player.use(item);
-    }
 
     public int getWidth() {
         return width;
@@ -436,7 +440,7 @@ public class World implements ObserverExitGoal {
     }
 
     public List<ItemResponse> getInventoryResponse(){
-        return player.getInventoryResponse();
+        return inventory.getInventoryResponse();
     }
 
     public boolean inBounds(int x, int y) {

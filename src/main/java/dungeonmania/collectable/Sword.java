@@ -11,8 +11,8 @@ public class Sword extends CollectableEntity implements Consumable{
     private int durability;
     private final int DURABILITY = 10;
 
-    public Sword(Position position, String itemId) {
-        super(position, itemId, "sword");
+    public Sword(Position position, String itemId, Inventory inventory) {
+        super(position, itemId, "sword", inventory);
         this.durability = DURABILITY;
     }
 

@@ -21,26 +21,24 @@ public abstract class MovingEntity extends Entity {
 
     private int speed;
 
-    private Gamemode gameMode;
     protected Movement movementStrategy;
     protected Movement defaultMovementStrategy;
 
     private boolean ally;
 
-    public MovingEntity(Position position, String id, String type, HealthPoint healthPoint, double attackDamage, Gamemode gameMode) {
+    public MovingEntity(Position position, String id, String type, HealthPoint healthPoint, double attackDamage) {
         super(position, id, type);
         this.healthPoint = healthPoint;
         this.attackDamage = attackDamage;
-        this.gameMode = gameMode;
         this.speed = 0;
     }
 
 
     // Attack and defend will be used to calculate in the battle class
-    public double attack() {
+    public double attack(double attack) {
 
         // need to go through caclulators (player may have weapons)
-        return attackDamage;
+        return getAttackDamage();
     }
 
     public void defend(double attack) {

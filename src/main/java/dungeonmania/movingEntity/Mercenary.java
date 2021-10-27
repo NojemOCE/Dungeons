@@ -22,11 +22,9 @@ public class Mercenary extends MovingEntity {
     private double BATTLE_RADIUS = 10;
     private Player subject;
 
-    public Mercenary(int x, int y, String id, Gamemode gameMode) {
-        //Set layer and attack damage to 1 for now
-        super(new Position(x, y, 1), id, "mercenary", new HealthPoint(gameMode.getStartingHP()), 1, gameMode);
+    public Mercenary(int x, int y, String id) {
+        super(new Position(x, y), id, "mercenary", new HealthPoint(100), 10);
         setMovement(new FollowPlayer());
-        setDefaultMovementStrategy(new FollowPlayer());
         setAlly(false);
     }
 
