@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import dungeonmania.World;
+
 
 public class AndGoal implements GoalComponent {
     private String operator;
@@ -17,8 +19,8 @@ public class AndGoal implements GoalComponent {
     }
 
     @Override
-    public Boolean evaluate() {
-        if (subGoals.stream().allMatch(x -> x.evaluate().equals(true))) {
+    public Boolean evaluate(World world) {
+        if (subGoals.stream().allMatch(x -> x.evaluate(world).equals(true))) {
             completed = true;
         }
 
