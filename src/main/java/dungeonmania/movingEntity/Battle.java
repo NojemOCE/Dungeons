@@ -21,14 +21,23 @@ public class Battle {
     }
 
     public void battleTick() {
-        //
-        character.defend(player.attack(inventory.attackModifier(player.getAttackDamage())));
 
-        if (character.getHealthPoint().getHealth() == 0) endBattle(true);
+        // Base attack modified by inventory weapons
+        double playerAttack = inventory.attackModifier(player.getAttackDamage());
+        // Character attack modified by players defence weapons
+        double characterAttack = inventory.defenceModifier(character.getAttackDamage());
 
-        player.defend(inventory.defenceModifier(character.getAttackDamage()));
 
-        if (player.getHealthPoint().getHealth() == 0) endBattle(false);
+        character.defend(playerAttack);
+        player.defend(characterAttack);
+
+        if (character.getHealthPoint().getHealth() == 0) {
+            endBattle(true);
+        }
+
+        if (player.getHealthPoint().getHealth() == 0) {
+            endBattle(false);
+        }
         // game over
     }
 
@@ -54,6 +63,7 @@ public class Battle {
 
     private void endBattle(boolean playerWin) {
         setActiveBattle(false);
+        // TODO is this necessary the endBattle call
         player.endBattle();
         this.playerWins = playerWin;
     }

@@ -90,9 +90,6 @@ public abstract class MovingEntity extends Entity {
         return attackDamage;
     }
 
-    public void setAttackDamage(double attackDamage) {
-        this.attackDamage = attackDamage;
-    }
 
     public Position getPosition() {
         return position;
