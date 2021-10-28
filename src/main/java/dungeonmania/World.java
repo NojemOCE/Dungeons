@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import javax.xml.crypto.AlgorithmMethod;
@@ -28,8 +29,8 @@ import dungeonmania.exceptions.InvalidActionException;
 // TODO: remember to implement all the observer interfaces as we go
 public class World {
 
-    private int width;
-    private int height;
+    //private int width;
+    //private int height;
 
     private Inventory inventory;
     private Gamemode gamemode;
@@ -44,7 +45,14 @@ public class World {
     private Battle currentBattle;
     private String dungeonName;
 
+    static final int MAX_SPIDERS = 6;
+    static final int SPIDER_SPAWN = 10;
+    static final double MERCENARY_ARMOUR_DROP = 0.4;
+    static final double ZOMBIE_ARMOUR_DROP = 0.2;
+    static final double ONE_RING_DROP = 0.1;
     private int tickCount = 0;
+    private int highestX = 0;
+    private int highestY = 0;
     //private Map map; TBC
 
     /**
@@ -69,11 +77,11 @@ public class World {
      * @return world dungeon reponse
      */
     public DungeonResponse buildWorld(JSONObject worldData) {
-        String width = worldData.getString("width");
+        /*String width = worldData.getString("width");
         String height = worldData.getString("height");
 
         setHeight((Integer.parseInt(height)));
-        setWidth((Integer.parseInt(width)));
+        setWidth((Integer.parseInt(width)));*/
 
         JSONArray entities = worldData.getJSONArray("entities");
 
@@ -89,11 +97,21 @@ public class World {
         return worldDungeonResponse();
     }
 
+    private void updateBounds(int x, int y)  {
+        if (x > highestX) {
+            highestX = x;
+        }
+        if (y > highestY) {
+            highestY = y;
+        }
+    }
     
 
     private void createEntity(JSONObject obj, String id) {
         int x = Integer.parseInt(obj.getString("x"));
         int y = Integer.parseInt(obj.getString("y"));
+
+        updateBounds(x, y);
 
         String type = obj.getString("type");
 
@@ -201,6 +219,10 @@ public class World {
             Sword e = new Sword(new Position(x,y), id, inventory);
             collectableEntities.put(e.getId(), e);
         }
+        else if (type.equals("one_ring")) {
+            OneRing e = new OneRing(new Position(x,y), id, inventory);
+            collectableEntities.put(e.getId(), e);
+        }
     }
 
     private GoalComponent createGoal(JSONObject goal) {
@@ -249,6 +271,46 @@ public class World {
         this.goals = goals;
     }
 
+    /**
+     * Drops a shield:
+     * 20% of the time if the player has beaten a zombie
+     * 40% of the time if the player has beaten a mercenary
+     * 
+     * Drops the one ring:
+     * 10% of the time
+     * 
+     * If an item is dropped, it is automatically added to the players inventory
+     */
+    private void dropBattleReward(){
+        if (currentBattle.getCharacter() instanceof Mercenary) {
+            Random ran = new Random();
+            int next = ran.nextInt(10);
+            if (10*MERCENARY_ARMOUR_DROP > next)  {
+                // return an armour
+                Armour armour = new Armour(currentBattle.getCharacter().getPosition(), String.valueOf(incrementEntityCount()), inventory);
+                armour.collect();
+            }
+        }
+
+        else if (currentBattle.getCharacter() instanceof Zombie) {
+            Random ran = new Random();
+            int next = ran.nextInt(10);
+            if (10*ZOMBIE_ARMOUR_DROP > next)  {
+                // return an armour
+                Armour armour = new Armour(currentBattle.getCharacter().getPosition(), String.valueOf(incrementEntityCount()), inventory);
+                armour.collect();
+            }
+        }
+
+        Random ran = new Random();
+        int next = ran.nextInt(10);
+        if (10*ONE_RING_DROP > next)  {
+            // return the one ring
+            OneRing oneRing = new OneRing(currentBattle.getCharacter().getPosition(), String.valueOf(incrementEntityCount()), inventory);
+            oneRing.collect();
+        }
+    }
+
 
     // tick for all characters and then return world dungeon response
     public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
@@ -259,14 +321,16 @@ public class World {
             currentBattle.battleTick(inventory);
             if (!currentBattle.isActiveBattle()) {
                 if (currentBattle.getPlayerWins()) {
-                    // return a dropped item
+                    dropBattleReward();
                     movingEntities.remove(currentBattle.getCharacter().getId());
                 } else {
                     this.player = null; // will end game in dungeon response
                     // needs to return early
                 }
             }
-        } else  {
+        }
+        
+        else  {
             player.tick(itemUsed, movementDirection, this);
         }
         if (itemUsed.isEmpty()) {
@@ -279,17 +343,32 @@ public class World {
         for (MovingEntity me: movingEntities.values()) {
             me.move(this);
             if (me.getPosition().equals(player.getPosition())) {
-                currentBattle = player.battle(me, inventory); // if invisible it will add null
+                currentBattle = player.battle(me); // if invisible it will add null
                 player.notifyObservers(1);
             }
         }
+
+        if (tickCount >0 && tickCount%SPIDER_SPAWN == 0) {
+            Random ran1 = new Random();
+            Random ran2 = new Random();
+
+            int x = ran1.nextInt(highestX);
+            int y =  ran2.nextInt(highestY);
+
+            String id = String.valueOf(incrementEntityCount());
+
+            Spider newSpider = new Spider(x, y, id);
+            movingEntities.put(newSpider.getId(), newSpider);
+            
+        }
+
 
         // Now evaluate goals. Goal should never be null, but add a check incase there is an error in the input file
         if (!goals.equals(null)){
             goals.evaluate(this);
         }
         
-
+        tickCount++;
         return worldDungeonResponse();
     }
 
@@ -332,7 +411,6 @@ public class World {
 
     // Return a dungeon response for the current world
     public DungeonResponse worldDungeonResponse(){
-
         return new DungeonResponse(id, dungeonName, getEntityResponses(), getInventoryResponse(), inventory.getBuildable(), getGoalsResponse());
     }
 
@@ -343,7 +421,8 @@ public class World {
      */
     public StaticEntity getStaticEntity(Position p) {
         for (StaticEntity s: staticEntities.values()) {
-            if (s.getPosition().equals(p))  {
+            // TODO returning only if layer is 1
+            if (s.getPosition().equals(p) && s.getPosition().getLayer() == 1)  {
                 return s;
             }
         }
@@ -425,23 +504,6 @@ public class World {
         return inventory.keyInInventory(keyColour);
     }
 
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
     public int incrementEntityCount() {
         this.entityCount++;
         return this.entityCount;
@@ -451,7 +513,9 @@ public class World {
     public List<EntityResponse> getEntityResponses() {
         List<EntityResponse> entityResponses = new ArrayList<>();
         
-        entityResponses.add(player.getEntityResponse());
+        if (!(player  == null)){
+            entityResponses.add(player.getEntityResponse());
+        }
         entityResponses.addAll(movingEntities.values().stream().map(MovingEntity::getEntityResponse).collect(Collectors.toList()));
         entityResponses.addAll(staticEntities.values().stream().map(StaticEntity::getEntityResponse).collect(Collectors.toList()));
         entityResponses.addAll(collectableEntities.values().stream().map(CollectableEntity::getEntityResponse).collect(Collectors.toList()));
@@ -462,9 +526,9 @@ public class World {
     public List<ItemResponse> getInventoryResponse(){
         return inventory.getInventoryResponse();
     }
-
+    
     public boolean inBounds(int x, int y) {
-        return !(x < 0 || x >= width || y < 0 || y >= height);
+        return !(x < 0 || x >= highestX || y < 0 || y >= highestY);
     }
 
 
@@ -532,8 +596,36 @@ public class World {
         return inventory.hasWeapon();
     }
 
+    public int getHighestX() {
+        return highestX;
+    }
+
+    public int getHighestY() {
+        return highestY;
+    }
+
+    
+    
     public String saveGame() {
-        JSONObject saveGame = new JSONObject();
-        saveGame.put(key, value);
+        JSONObject saveState = new JSONObject();
+        saveState.put("tick-count", tickCount);
+        saveState.put("dungeon-name", dungeonName);
+        saveState.put("entity-count", entityCount);
+        saveState.put("inventory", inventory.saveGameJson());
+        saveState.put("player", player.saveGameJson());
+
+        JSONArray entitiesInInventory = new JSONArray();
+        for (MovingEntity e : movingEntities.values()) {
+            entitiesInInventory.put(e.saveGameJson());
+        }
+        for (StaticEntity e : staticEntities.values()) {
+            entitiesInInventory.put(e.saveGameJson());
+        }
+        for (CollectableEntity e : collectableEntities.values()) {
+            entitiesInInventory.put(e.saveGameJson());
+        }
+
+
+        return saveGame().toString();
     }
 }

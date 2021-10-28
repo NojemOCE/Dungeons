@@ -12,6 +12,11 @@ public class RunAway implements Movement {
        runAway(me, world);
     }
 
+    /**
+     * When the player is invincible, this moves the entity such that they are running away from the player
+     * @param me moving entity to move
+     * @param world current game world
+     */
     private void runAway(MovingEntity me, World world) {
         Position player = world.getPlayer().getPosition();
         Position p = me.getPosition();

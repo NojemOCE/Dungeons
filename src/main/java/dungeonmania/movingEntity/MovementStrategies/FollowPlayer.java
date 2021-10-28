@@ -30,6 +30,13 @@ public class FollowPlayer implements Movement {
         }
     }
 
+    /**
+     * BFS method used to follow the player. Returns the shortest path to the player from the given moving entity
+     * @param me moving entity
+     * @param player player to follow
+     * @param world current game world
+     * @return shortest path from moving entity to player
+     */
     private List<Position> bfs(MovingEntity me, Player player, World world) {
         // validmove will keep track of whether we can reach the player (if it returns old position then not a valid path)
         // for each cell, get all adjacent, test for validmove, if position thats not old position returned, add to Queue
@@ -67,6 +74,13 @@ public class FollowPlayer implements Movement {
         return path;
     }
 
+    /**
+     * Returns the set of positions neighbouring a given position that would be a valid move for a given entity
+     * @param me entity
+     * @param position position to check neighbours of
+     * @param world current game world
+     * @return set of valid neighbour positions
+     */
     private Set<Position> getNeighbours(MovingEntity me, Position position, World world) {
         List<Position> neighbours = position.getAdjacentPositions();
 

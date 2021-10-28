@@ -8,6 +8,12 @@ import dungeonmania.util.*;
 public class Spider extends MovingEntity {
 
 
+    /**
+     * Constructor for spider taking an x coordinate, and y coordinate and an id
+     * @param x x coordinate of the spider
+     * @param y y coordinate of the spider
+     * @param id unique entity id of the spider
+     */
     public Spider(int x, int y, String id) {
         //Attack damage to 1 and layer to 2 for now
         super(new Position(x,y,2), id, "spider", new HealthPoint(100), 1);

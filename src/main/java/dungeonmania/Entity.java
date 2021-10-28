@@ -1,5 +1,7 @@
 package dungeonmania;
 
+import org.json.JSONObject;
+
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
 
@@ -37,4 +39,10 @@ public abstract class Entity {
     public EntityResponse getEntityResponse() {
         return new EntityResponse(id, type, getPosition(), false);
     }
+
+    /**
+     * Creates a JSON containing entity state required to save/load game
+     * @return JSON object containing important variables
+     */
+    public abstract JSONObject saveGameJson();
 }

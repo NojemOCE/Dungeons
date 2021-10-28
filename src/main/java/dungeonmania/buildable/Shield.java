@@ -23,7 +23,6 @@ public class Shield implements Buildable, Consumable {
 
     public int defenceModifier() {
         if (built) {
-            consume();
             return DEFENCE;
         }
         return 1;

@@ -24,7 +24,11 @@ public class RandomMovement implements Movement {
        randomMovement(me, world);
     }
 
-
+    /**
+     * Simulates random movement behavior for an entity and moves them 1 square
+     * @param me entity to move
+     * @param world current game world
+     */
     private void randomMovement(MovingEntity me, World world) {
         Random randomMovement = new Random();
 

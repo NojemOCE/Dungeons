@@ -1,8 +1,11 @@
 package dungeonmania.movingEntity.MovementStrategies;
 
+import java.util.List;
+
 import dungeonmania.World;
 import dungeonmania.movingEntity.*;
 import dungeonmania.staticEntity.Boulder;
+import dungeonmania.staticEntity.Door;
 import dungeonmania.staticEntity.StaticEntity;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
@@ -28,6 +31,13 @@ public class CircleMovement implements Movement {
         
     }
 
+    /**
+     * Takes the intended movement position, the world, and the moving entity, and returns the actual position the entity should move to
+     * @param position intended movement position of the entity
+     * @param world current game world
+     * @param me moving entity
+     * @return actual position entity should move to 
+     */
     private Position validMove(Position position, World world, MovingEntity me) {
         // Check if the planned position is the current location of a static entity or a character
         StaticEntity plannedPositionStaticEntity = world.getStaticEntity(position);
@@ -35,12 +45,12 @@ public class CircleMovement implements Movement {
 
         // Now check if the StaticEntity the entity is moving into is a boulder, 
         // or if the entity is moving into the position of another enemy Character
-        Boolean movingIntoBoulder = (plannedPositionStaticEntity != null) && (plannedPositionStaticEntity instanceof Boulder);
+        Boolean movingIntoBoulderDoor = (plannedPositionStaticEntity != null) && ((plannedPositionStaticEntity instanceof Boulder)||(plannedPositionStaticEntity instanceof Door));
         Boolean movingIntoEnemy = (plannedPositionCharacter != null) && !(plannedPositionCharacter instanceof Player);
 
         // If entity is moving into a boulder or an enemy, reverse direction
         // and return the validMove position as the entity's current position
-        if (movingIntoBoulder || movingIntoEnemy) {
+        if (movingIntoBoulderDoor || movingIntoEnemy) {
             reverseDirection();
             return me.getPosition();
         }

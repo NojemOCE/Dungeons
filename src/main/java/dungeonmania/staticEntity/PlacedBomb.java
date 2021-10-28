@@ -35,7 +35,7 @@ public class PlacedBomb extends StaticEntity {
         Position current = getPosition();
         for (int i = current.getX() - BLAST_RADIUS; i <= current.getX() + 1; i++) {
             for (int j = current.getY() - BLAST_RADIUS; j <= current.getY() + 1; j++) {
-                if (i == 0 || i == world.getWidth() || j == 0 || j == world.getHeight()) {
+                if (i == 0 || i == world.getHighestX() || j == 0 || j == world.getHighestY()) {
                     // do not detonate walls
                 } else if (world.inBounds(i,j)) {
                     toDetonate.add(new Position(i, j));
