@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
 
@@ -53,17 +54,20 @@ public class FollowPlayer implements Movement {
                     queue.add(p);
                     visited.add(p);
                     prev.put(p, node);
+                    if (p.equals(player.getPosition())) break; // player is found and added, break
+
                 }
             }
         }
 
         // backtrack through prev getting the reverse path
         List<Position> path = new ArrayList<>();
-        for(Position p = player.getPosition(); p != null; p = prev.get(p)) {
-            path.add(p);
+        if (Objects.isNull(prev.get(player.getPosition()))) {
+            for(Position p = player.getPosition(); p != null; p = prev.get(p)) {
+                path.add(p);
+            }
+            Collections.reverse(path);
         }
-        Collections.reverse(path);
-
         return path;
     }
 

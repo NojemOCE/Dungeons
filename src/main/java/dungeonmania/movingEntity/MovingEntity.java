@@ -53,6 +53,9 @@ public abstract class MovingEntity extends Entity {
      */
     public Position validMove(Position position, World world) {
         
+        // Check for boundaries of the map here
+
+
         // check if there is a static entity in the way
         StaticEntity se = world.getStaticEntity(position);
         if (!Objects.isNull(se)) {
@@ -122,17 +125,13 @@ public abstract class MovingEntity extends Entity {
         return speed;
     }
 
-
     public void setSpeed(int speed) {
         this.speed = speed;
     }
 
-
-
     public Movement getDefaultMovementStrategy() {
         return defaultMovementStrategy;
     }
-
 
     public void setDefaultMovementStrategy(Movement defaultMovementStrategy) {
         this.defaultMovementStrategy = defaultMovementStrategy;
