@@ -35,7 +35,7 @@ public class World {
     private Inventory inventory;
     private Gamemode gamemode;
     private Player player;
-    private String id;
+    private String id; //TODO only ever set if game is saved?
     private GoalComponent goals;
     //private HashMap<String, Entity> entities; TBC with implementation of overarching Entity class
     private Map<String, CollectableEntity> collectableEntities;
@@ -56,9 +56,9 @@ public class World {
     public World(String dungeonName, String gameMode) {
         this.dungeonName = dungeonName;
         this.entityCount = 0;
-        if (gamemode.equals("Hard")) {
+        if (gameMode.equals("Hard")) {
             this.gamemode = new Hard();
-        } else if (gamemode.equals("Standard")) {
+        } else if (gameMode.equals("Standard")) {
             this.gamemode = new Standard();
         } else {
             this.gamemode = new Peaceful();
@@ -90,60 +90,12 @@ public class World {
         JSONObject goals = worldData.getJSONObject("goal-condition");
         GoalComponent goal = createGoal(goals);
         setGoals(goal);
-        // JSONObject goals = worldData.getJSONObject("goal-condition");
-        // String goalCondition = goals.getString("goal");
-        // JSONArray subgoals = goals.getJSONArray("subgoals");
-        // for (int i = 0; i < subgoals.length(); i++) {
-        //     String goal = subgoals.getJSONObject(i).getString("goal");
-        // }​
 
         return worldDungeonResponse();
     }
 
-    private String getGoalsResponse() {
-        return goals.remainingGoalString();
-    }
-    private void setGoals(GoalComponent goals) {
-        this.goals = goals;
-    }
+    
 
-    private GoalComponent createGoal(JSONObject goal) {
-        String currGoal = goal.getString("goal");
-        //Base cases of Enemies, boulder,exit,treasure
-        if (currGoal.equals("exit")) {
-            return new ExitGoal(currGoal);
-        }
-        else if (currGoal.equals("enemies")) {
-            return new EnemiesGoal(currGoal);
-        }
-        else if (currGoal.equals("boulders")) {
-            return new BoulderGoals(currGoal);
-        }
-        else if (currGoal.equals("treasure")) {
-            return new TreasureGoals(currGoal);
-        }
-        else if (currGoal.equals("AND")) {
-            AndGoal andGoal = new AndGoal(currGoal);
-            JSONArray subGoals = goal.getJSONArray("subgoals");
-
-            for (int i = 0; i < subGoals.length(); i++) {
-                GoalComponent subGoal = createGoal(subGoals.getJSONObject(i));
-                andGoal.addSubGoal(subGoal);
-            }
-            return andGoal; 
-        }
-        else if (currGoal.equals("OR")) {
-            OrGoal orGoal = new OrGoal(currGoal);
-            JSONArray subGoals = goal.getJSONArray("subgoals");
-
-            for (int i = 0; i < subGoals.length(); i++) {
-                GoalComponent subGoal = createGoal(subGoals.getJSONObject(i));
-                orGoal.addSubGoal(subGoal);
-            }
-            return orGoal; 
-        }
-
-    }
     private void createEntity(JSONObject obj, String id) {
         int x = Integer.parseInt(obj.getString("x"));
         int y = Integer.parseInt(obj.getString("y"));
@@ -253,27 +205,53 @@ public class World {
         else if (type.equals("sword")) {
             Sword e = new Sword(new Position(x,y), id, inventory);
             collectableEntities.put(e.getId(), e);
-        } 
-        
-        /*else if (type.equals("armour")) {
-            Armour e = new Armour(x, y, id);
-            collectableEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("one_ring")) {
-            OneRing e = new OneRing(x, y, id);
-            collectableEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("bow")) {
-            Bow e = new Bow(id);
-            collectableEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("shield")) {
-            Shield e = new Shield(id);
-            collectableEntities.put(e.getId(), e);
-        }*/
+        }
+    }
+
+    private GoalComponent createGoal(JSONObject goal) {
+        String currGoal = goal.getString("goal");
+        // Will return null if the goal is not exit,enemies,treasure, AND or OR
+        if (currGoal.equals("exit")) {
+            return new ExitGoal(currGoal);
+        }
+        else if (currGoal.equals("enemies")) {
+            return new EnemiesGoal(currGoal);
+        }
+        else if (currGoal.equals("boulders")) {
+            return new BoulderGoals(currGoal);
+        }
+        else if (currGoal.equals("treasure")) {
+            return new TreasureGoals(currGoal);
+        }
+        else if (currGoal.equals("AND")) {
+            AndGoal andGoal = new AndGoal(currGoal);
+            JSONArray subGoals = goal.getJSONArray("subgoals");
+
+            for (int i = 0; i < subGoals.length(); i++) {
+                GoalComponent subGoal = createGoal(subGoals.getJSONObject(i));
+                andGoal.addSubGoal(subGoal);
+            }
+            return andGoal; 
+        }
+        else if (currGoal.equals("OR")) {
+            OrGoal orGoal = new OrGoal(currGoal);
+            JSONArray subGoals = goal.getJSONArray("subgoals");
+
+            for (int i = 0; i < subGoals.length(); i++) {
+                GoalComponent subGoal = createGoal(subGoals.getJSONObject(i));
+                orGoal.addSubGoal(subGoal);
+            }
+            return orGoal; 
+        }
+
+        return null;
+    }
+
+    private String getGoalsResponse() {
+        return goals.remainingGoalString();
+    }
+    private void setGoals(GoalComponent goals) {
+        this.goals = goals;
     }
 
 
@@ -311,8 +289,11 @@ public class World {
             }
         }
 
-        // Now evaluate goals
-        goals.evaluate(this);
+        // Now evaluate goals. Goal should never be null, but add a check incase there is an error in the input file
+        if (!goals.equals(null)){
+            goals.evaluate(this);
+        }
+        
 
         return worldDungeonResponse();
     }
@@ -471,11 +452,6 @@ public class World {
         return this.entityCount;
     }
 
-    @Override
-    public void update(SubjectExitGoal obj) {
-        // TODO Auto-generated method stub
-        
-    }
 
     public List<EntityResponse> getEntityResponses() {
         List<EntityResponse> entityResponses = new ArrayList<>();
