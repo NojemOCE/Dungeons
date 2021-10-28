@@ -481,7 +481,19 @@ public class World implements ObserverExitGoal {
         }
         for (MovingEntity e : toRemoveMoving) {
             movingEntities.remove(e.getId());
-        }
 
+    }
+
+    public Map<String, StaticEntity> getStaticEntities() {
+        return this.staticEntities;
+    }
+
+    public Map<String, MovingEntity> getMovingEntities() {
+        return this.movingEntities;
+    }
+
+
+    public Map<String, CollectableEntity> getCollectibleEntities() {
+        return this.collectableEntities;
     }
 }
