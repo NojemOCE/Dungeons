@@ -13,8 +13,8 @@ public abstract class CollectableEntity extends Entity {
 
 
 
-    public CollectableEntity(Position position, String id, String type, Inventory inventory) {
-        super(position, id, type);
+    public CollectableEntity(int x, int y, String id, String type, Inventory inventory) {
+        super(new Position(x, y, 1), id, type);
         this.collected = false;
         this.type = type;
         this.inventory = inventory;

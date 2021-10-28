@@ -14,8 +14,8 @@ public class InvisibilityPotion extends CollectableEntity implements Consumable 
     private final int DURATION = 10;
     private boolean active = false;
 
-    public InvisibilityPotion(Position position, String itemId, World world, Inventory inventory) {
-        super(position, itemId, "invisibility_potion", inventory);
+    public InvisibilityPotion(int x, int y, String itemId, World world, Inventory inventory) {
+        super(x, y, itemId, "invisibility_potion", inventory);
         this.world = world;
         this.duration = DURATION;
     }

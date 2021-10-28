@@ -3,14 +3,10 @@ package dungeonmania.movingEntity;
 import java.util.List;
 
 import dungeonmania.World;
-import dungeonmania.buildable.Buildable;
 import dungeonmania.collectable.CollectableEntity;
-import dungeonmania.collectable.Key;
-import dungeonmania.gamemode.Gamemode;
 import dungeonmania.util.*;
 import dungeonmania.inventory.Inventory;
 import dungeonmania.response.models.EntityResponse;
-import dungeonmania.response.models.ItemResponse;
 
 
 public class Player extends MovingEntity {
@@ -43,6 +39,10 @@ public class Player extends MovingEntity {
         // check if the direction we are moving is valid first before setting new position
         if (itemUsed.isEmpty()) {
             setPosition(validMove(this.getPosition().translateBy(movementDirection), world));
+            CollectableEntity e = world.getCollectableEntity(this.getPosition());
+            if (!e.equals(null)) {
+                e.collect();
+            }
         } else {
             // use item
         }

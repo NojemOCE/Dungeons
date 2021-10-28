@@ -2,11 +2,8 @@ package dungeonmania.movingEntity;
 
 import dungeonmania.World;
 import dungeonmania.movingEntity.MovementStrategies.RandomMovement;
-import dungeonmania.gamemode.Gamemode;
 import dungeonmania.util.*;
-import dungeonmania.response.models.EntityResponse;
 
-import java.util.Random;
 
 public class Zombie extends MovingEntity{
 

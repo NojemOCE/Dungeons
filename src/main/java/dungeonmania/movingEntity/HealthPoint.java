@@ -22,6 +22,11 @@ public class HealthPoint {
         return health;
     }
 
+    public double getMaxHealth() {
+        return maxHealth;
+    }
+
+
     // TODO can we remove this I don't think we need this. maybe an increase health method
     public void setHealth(double health) {
         this.health = health;
