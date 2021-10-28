@@ -14,7 +14,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import dungeonmania.goal.*;
-import dungeonmania.goal.oldgoals.Goal;
 import dungeonmania.inventory.Inventory;
 import dungeonmania.response.models.*;
 import dungeonmania.staticEntity.*;
@@ -44,7 +43,6 @@ public class World {
     private Map<String, MovingEntity> movingEntities;
     private int entityCount;
     private Battle currentBattle;
-    private String goalString;
     private String dungeonName;
 
     static final int MAX_SPIDERS = 6;
@@ -85,9 +83,6 @@ public class World {
         JSONArray entities = worldData.getJSONArray("entities");
 
         for (int i = 0; i < entities.length(); i++) {
-            String x = entities.getJSONObject(i).getString("x");
-            String y = entities.getJSONObject(i).getString("y");
-            String type = entities.getJSONObject(i).getString("type");
             createEntity(entities.getJSONObject(i), String.valueOf(incrementEntityCount()));
         }
 
@@ -145,18 +140,18 @@ public class World {
             Portal e;
             String colour = obj.getString("colour");
             if (staticEntities.containsKey(colour)) {
-                e = new Portal(x, y, colour + "2", (Portal) staticEntities.get(colour));
+                e = new Portal(x, y, colour + "2", colour, (Portal) staticEntities.get(colour));
             } else {
-                e = new Portal(x, y, colour);
+                e = new Portal(x, y, colour, colour);
             }
             staticEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("zombie_toast_spawner")) {
-            ZombieToastSpawn e = new ZombieToastSpawn(x, y, id, gamemode.getSpawnRate());
+            ZombieToastSpawn e = new ZombieToastSpawn(x, y, id);
             staticEntities.put(e.getId(), e);   
         } else if (type.equals("player")) {
-            Player e = new Player(x, y, id);
+            Player e = new Player(x, y, id, new HealthPoint(gamemode.getStartingHP()));
             this.player = e;
             movingEntities.put(e.getId(), e);
         } 
@@ -276,7 +271,7 @@ public class World {
         // InvalidActionException if itemUsed is not in the player's inventory
         
         if (!Objects.isNull(currentBattle)) {
-            currentBattle.battleTick();
+            currentBattle.battleTick(inventory);
             if (!currentBattle.isActiveBattle()) {
                 if (currentBattle.getPlayerWins()) {
                     // return a dropped item
@@ -535,7 +530,7 @@ public class World {
             }
         }
         for (Entity e : toRemove) {
-            entities.remove(e.getId());
+            entities.remove(e);
         }
     }
 
@@ -565,5 +560,10 @@ public class World {
      */
     public boolean playerHasWeapon(){
         return inventory.hasWeapon();
+    }
+
+    public String saveGame() {
+        JSONObject saveGame = new JSONObject();
+        saveGame.put(key, value);
     }
 }

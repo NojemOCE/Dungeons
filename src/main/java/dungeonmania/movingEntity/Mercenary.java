@@ -2,28 +2,17 @@ package dungeonmania.movingEntity;
 
 import dungeonmania.util.*;
 import dungeonmania.World;
-import dungeonmania.gamemode.Gamemode;
 import dungeonmania.movingEntity.MovementStrategies.FollowPlayer;
 import dungeonmania.response.models.EntityResponse;
 
-import java.util.Queue;
-import java.util.Set;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 public class Mercenary extends MovingEntity {
 
-    private double BATTLE_RADIUS = 10;
+    private double BATTLE_RADIUS = 5;
     private Player subject;
 
     public Mercenary(int x, int y, String id) {
-        super(new Position(x, y), id, "mercenary", new HealthPoint(100), 10);
+        super(new Position(x, y), id, "mercenary", new HealthPoint(9), 10);
         setMovement(new FollowPlayer());
         setDefaultMovementStrategy(new FollowPlayer());
         setAlly(false);

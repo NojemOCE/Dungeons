@@ -13,11 +13,8 @@ import dungeonmania.movingEntity.*;
 import dungeonmania.response.models.EntityResponse;
 
 public class ZombieToastSpawn extends StaticEntity {
-    int spawnRate;
-
-    public ZombieToastSpawn(int x, int y, String id, int spawnRate) {
+    public ZombieToastSpawn(int x, int y, String id) {
         super(new Position(x, y, 1), id, "zombie_toast_spawner");
-        this.spawnRate = spawnRate;
     }
 
     /**
