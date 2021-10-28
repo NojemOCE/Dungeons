@@ -14,7 +14,7 @@ public class HealthPotion extends CollectableEntity {
     }
 
     public double heal() {
-        getInventory().removeItem(getItemId());
+        getInventory().removeItem(getId());
         return HEAL_EFFECT;
     }
     public void consume() {};

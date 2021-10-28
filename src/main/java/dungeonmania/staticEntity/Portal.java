@@ -9,16 +9,17 @@ import dungeonmania.util.Position;
 public class Portal extends StaticEntity {
 
     private Portal twinPortal;
-    // private String colour;
+    private String colour;
 
-    public Portal(int x, int y, String id) {
+    public Portal(int x, int y, String id, String colour) {
         super(new Position(x, y, 1), id, "portal");
-
+        this.colour = colour;
     }
 
-    public Portal(int x, int y, String id, Portal twinPortal) {
+    public Portal(int x, int y, String id, String colour, Portal twinPortal) {
         super(new Position(x, y, 1), id, "portal");
         this.twinPortal = twinPortal;
+        this.colour = colour;
         twinPortal.setTwinPortal(this);
     }
 
@@ -77,4 +78,7 @@ public class Portal extends StaticEntity {
         this.twinPortal = twinPortal;
     }
 
+    public String getColour() {
+        return colour;
+    }
 }

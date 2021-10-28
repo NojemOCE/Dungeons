@@ -5,13 +5,10 @@ import java.util.List;
 
 import dungeonmania.Entity;
 import dungeonmania.World;
-import dungeonmania.goal.ObserverBoulderSwitchGoal;
-import dungeonmania.goal.SubjectBoulderSwitchGoal;
 import dungeonmania.util.Position;
 
-public class FloorSwitch extends StaticEntity implements SubjectBoulderSwitchGoal {
+public class FloorSwitch extends StaticEntity {
     private boolean isTriggered;
-    private ObserverBoulderSwitchGoal observer;
 
     public FloorSwitch(int x, int y, String id) {
         super(new Position(x, y, 0), id, "switch");
@@ -48,7 +45,6 @@ public class FloorSwitch extends StaticEntity implements SubjectBoulderSwitchGoa
             }
         }
         
-        notifyObservers();
     }
 
     /**
@@ -56,23 +52,6 @@ public class FloorSwitch extends StaticEntity implements SubjectBoulderSwitchGoa
      */
     public void untrigger() {
         isTriggered = false;
-        notifyObservers();
     }
-
-    @Override
-    public void attach(ObserverBoulderSwitchGoal observer) {
-        this.observer = observer;    
-    }
-
-    @Override
-    public void notifyObservers() {
-        observer.update(this);        
-    }
-
-    @Override
-    public boolean isTriggered() {
-        return isTriggered;
-    }
-
    
 }

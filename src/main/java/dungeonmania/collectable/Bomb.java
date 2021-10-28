@@ -18,23 +18,23 @@ public class Bomb extends CollectableEntity implements Consumable {
     }
 
     public void consume() {
-        getInventory().removeItem(getItemId());
+        getInventory().removeItem(getId());
         drop();
     }
 
-    public List<Position> detonate() {
-        int bRadius = 1;
-        List<Position> blasted = new ArrayList<>();
-        Position current = getPosition();
-        for (int i = current.getX() - bRadius; i <= current.getX() + 1; i++) {
-            for (int j = current.getY() - bRadius; j <= current.getY() + 1; j++) {
-                if (world.inBounds(i,j)) {
-                    blasted.add(new Position(i, j));
-                }
-            }
-        }
+    // public List<Position> detonate() {
+    //     int bRadius = 1;
+    //     List<Position> blasted = new ArrayList<>();
+    //     Position current = getPosition();
+    //     for (int i = current.getX() - bRadius; i <= current.getX() + 1; i++) {
+    //         for (int j = current.getY() - bRadius; j <= current.getY() + 1; j++) {
+    //             if (world.inBounds(i,j)) {
+    //                 blasted.add(new Position(i, j));
+    //             }
+    //         }
+    //     }
 
-        return blasted;
-    }
+    //     return blasted;
+    // }
 
 }

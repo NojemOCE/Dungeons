@@ -5,9 +5,9 @@ import dungeonmania.response.models.EntityResponse;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Position;
 
-public class Sword extends CollectableEntity implements Consumable{
+public class Sword extends CollectableEntity implements Consumable {
 
-    private final double ATTACK_POWER = 10;
+    private final double ATTACK_POWER = 3;
     private int durability;
     private final int DURABILITY = 10;
 
@@ -19,7 +19,7 @@ public class Sword extends CollectableEntity implements Consumable{
     public void consume() {
         this.durability--;
         if (this.durability == 0) {
-            getInventory().removeItem(getItemId());
+            getInventory().removeItem(getId());
         }
     };
 
