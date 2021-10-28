@@ -6,6 +6,7 @@ import java.util.Random;
 
 import dungeonmania.Entity;
 import dungeonmania.World;
+import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.gamemode.Gamemode;
 import dungeonmania.util.Position;
 import dungeonmania.movingEntity.*;
@@ -32,7 +33,7 @@ public class ZombieToastSpawn extends StaticEntity {
      * The character can destroy a zombie spawner if they have a 
      * weapon and are cardinally adjacent to the spawner.
      */
-    public void interact(World world) {
+    public void interact(World world) throws InvalidActionException {
         Player player = world.getPlayer();
 
         if (Position.isAdjacent(player.getPosition(), this.getPosition())) {
@@ -42,7 +43,12 @@ public class ZombieToastSpawn extends StaticEntity {
                 List<Entity> thisSpawner = new ArrayList<>();
                 thisSpawner.add(this);
                 world.removeEntities(getPosition(), thisSpawner);
+                return;
+            } else {
+                throw new InvalidActionException("Must have a weapon to destroy the spawner!");
             }
+        } else {
+            throw new InvalidActionException("Must be cardinally adjacent to the spawner to destroy it!");
         }
     }
 

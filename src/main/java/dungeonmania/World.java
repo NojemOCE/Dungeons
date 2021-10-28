@@ -280,11 +280,22 @@ public class World implements ObserverExitGoal {
         // * the player does not have any gold and attempts to bribe a mercenary
         // * the player does not have a weapon and attempts to destroy a spawner
         if (movingEntities.containsKey(entityId)) {
-
-        }
-
-        if (staticEntities.containsKey(entityId)) {
-
+            MovingEntity e = movingEntities.get(entityId);
+            if (!(e instanceof Mercenary)) {
+                throw new IllegalArgumentException();
+            } else {
+                // TODO??
+                ((Mercenary) e).interact();
+            }
+        } else if (staticEntities.containsKey(entityId)) {
+            StaticEntity e = staticEntities.get(entityId);
+            if (!(e instanceof ZombieToastSpawn)) {
+                throw new IllegalArgumentException();
+            } else {
+                ((ZombieToastSpawn)e).interact(this);
+            }
+        } else {
+            throw new IllegalArgumentException();
         }
 
         return worldDungeonResponse();
