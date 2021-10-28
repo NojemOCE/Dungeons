@@ -1,5 +1,7 @@
 package dungeonmania.movingEntity.MovementStrategies;
 
+import java.util.List;
+
 import dungeonmania.World;
 import dungeonmania.movingEntity.*;
 import dungeonmania.staticEntity.Boulder;
@@ -30,6 +32,8 @@ public class CircleMovement implements Movement {
 
     private Position validMove(Position position, World world, MovingEntity me) {
         // Check if the planned position is the current location of a static entity or a character
+        List<StaticEntity> plannedPositionStaticEntities = world.getStaticEntitiesAtPosition(position);
+
         StaticEntity plannedPositionStaticEntity = world.getStaticEntity(position);
         MovingEntity plannedPositionCharacter = world.getCharacter(position);
 
