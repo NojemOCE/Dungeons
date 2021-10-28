@@ -13,7 +13,7 @@ public class OneRing extends CollectableEntity implements Consumable {
     }
 
     public void consume() {
-        getInventory().removeItem(getItemId());
+        getInventory().removeItem(getId());
     }
 
 }

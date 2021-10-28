@@ -3,9 +3,11 @@ package dungeonmania.movingEntity;
 public class HealthPoint {
     
     private double health;
+    private double maxHealth;
 
     public HealthPoint(double health) {
         this.health = health;
+        this.maxHealth = health;
     }
 
     public double getHealth() {

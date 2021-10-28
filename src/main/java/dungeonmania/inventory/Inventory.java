@@ -29,17 +29,21 @@ public class Inventory {
         this.usable.add("invisibility_potion");
     }
 
+    /**
+     * Add given item to the inventory
+     * @param item item that is collected and to be added to inventory
+     */
     public void collect(CollectableEntity item) {
-        String itemType = item.getItemId();
+        String itemType = item.getId();
 
         numCollected.putIfAbsent(itemType, 0);
         numCollected.put(itemType, numCollected.get(itemType) + 1);
 
-        collectableItems.put(item.getItemId(), item);
+        collectableItems.put(item.getId(), item);
     }
 
     public void use(String itemId) {
-        String itemType = collectableItems.remove(itemId).getItemId();
+        String itemType = collectableItems.remove(itemId).getId();
         numCollected.put(itemType, numCollected.get(itemType) - 1);
     }
 
@@ -118,7 +122,7 @@ public class Inventory {
 
     public List<String> tick(Direction movementDirection) {
         collectableItems.forEach((id, item) -> {
-            item.updatePosition(player.getPosition());
+            // item.updatePosition(player.getPosition());
             item.tick();
         });
 

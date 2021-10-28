@@ -12,7 +12,7 @@ public class Wood extends CollectableEntity implements Consumable {
     }
 
     public void consume() {
-        getInventory().removeItem(getItemId());
+        getInventory().removeItem(getId());
     }
 
 }

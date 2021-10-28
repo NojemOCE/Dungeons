@@ -18,8 +18,8 @@ public class Player extends MovingEntity {
     private List<Mercenary> mercenaryObservers;
     private double allyAttack;
 
-    public Player(int x, int y, String id) {
-        super(new Position(x, y), id, "player", new HealthPoint(100), 10);
+    public Player(int x, int y, String id, HealthPoint healthPoint) {
+        super(new Position(x, y), id, "player", healthPoint, 3);
         setAlly(true);
     }
     
@@ -62,7 +62,7 @@ public class Player extends MovingEntity {
         if (!enemy.getAlly()) {
             notifyObservers(1);
 
-            return new Battle(this, enemy, inventory);
+            return new Battle(this, enemy);
             // notify observers of battle
         }
         return null;

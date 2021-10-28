@@ -1,0 +1,257 @@
+{
+    "width": 18,
+    "height": 16,
+    "tick-count": 123,
+    "dungeon-name": "hello",
+    "entity-count": 123,
+    "inventory": [
+        {
+            "id": "id",
+            "type": "armour"
+        },
+        {
+            "id": "id",
+            "type": "arrow"
+        },
+        {
+            "id": "id",
+            "type": "bomb"
+        },
+        {
+            "id": "id",
+            "type": "health_potion"
+        },
+        {
+            "id": "id",
+            "type": "invincibility_potion"
+        },
+        {
+            "id": "id",
+            "type": "invisibility_potion"
+        },
+        {
+            "id": "id",
+            "type": "key",
+            "key": "keyColour"
+
+        },
+        {
+            "id": "id",
+            "type": "one_ring"
+        },
+        {
+            "id": "id",
+            "type": "sword",
+            "durability": 1
+        },
+        {
+            "id": "id",
+            "type": "treasure"
+        },
+        {
+            "id": "id",
+            "type": "wood"
+        }
+    ],
+    "player": {
+        "x": 17,
+        "y": 13,
+        "id": "id",
+        "mercenaries": [
+            "id1",
+            "id2"
+        ],
+        "ally-attack": 1.2,
+        "health-point": {
+            "health": 1.2,
+            "max-health": 1.5
+        }
+    },
+    "moving-entities": [
+        {
+            "x": 17,
+            "y": 13,
+            "id": "id",
+            "type": "mercenary",
+            "movement": {
+                "default-strategy": "follow-player",
+                "movement-strategy": "follow-player"
+            },
+            "health-point": {
+                "health": 1.2,
+                "max-health": 1.5
+            }
+        },
+        {
+            "x": 17,
+            "y": 13,
+            "id": "id",
+            "type": "spider",
+            "movement": {
+                "default-strategy": "circle",
+                "movement-strategy": "circle",
+                "current-direction": "UP",
+                "next-direction": "DOWN",
+                "remMovesCurr": 1,
+                "remMovesNext": 3
+            },
+            "health-point": {
+                "health": 1.2,
+                "max-health": 1.5
+            }
+        },
+        {
+            "x": 17,
+            "y": 13,
+            "id": "id",
+            "type": "zombie",
+            "movement": {
+                "default-strategy": "random",
+                "movement-strategy": "random"
+            },
+            "health-point": {
+                "health": 1.2,
+                "max-health": 1.5
+            }
+        }
+    ],
+    "static-entities": [
+        {
+            "x": 17,
+            "y": 13,
+            "id": "id",
+            "type": "boulder"
+        },
+        {
+            "x": 17,
+            "y": 13,
+            "id": "id",
+            "type": "door",
+            "key": "keycolour",
+            "open": true
+        },
+        {
+            "x": 17,
+            "y": 13,
+            "id": "id",
+            "type": "exit"
+        },
+        {
+            "x": 17,
+            "y": 13,
+            "id": "id",
+            "type": "switch",
+            "triggered": true
+        },
+        {
+            "x": 17,
+            "y": 13,
+            "id": "id",
+            "type": "placed-bomb"
+        },
+        {
+            "x": 17,
+            "y": 13,
+            "id": "id",
+            "type": "portal",
+            "colour": "colour",
+            "twin": {
+                "x": 17,
+                "y": 13,
+                "id": "id",
+                "colour": "colour"
+            }
+        },
+        {
+            "x": 17,
+            "y": 15,
+            "id": "id",
+            "type": "wall"
+        },
+        {
+            "x": 17,
+            "y": 15,
+            "id": "id",
+            "type": "zombie-toast-spawner"
+        }
+    ],
+    "collectable-entities": [
+        {
+            "x": 17,
+            "y": 13,
+            "id": "id",
+            "type": "armour"
+        },
+        {
+            "x": 17,
+            "y": 13,
+            "id": "id",
+            "type": "arrow"
+        },
+        {
+            "x": 17,
+            "y": 13,
+            "id": "id",
+            "type": "bomb"
+        },
+        {
+            "x": 17,
+            "y": 13,
+            "id": "id",
+            "type": "health_potion"
+        },
+        {
+            "x": 17,
+            "y": 13,
+            "id": "id",
+            "type": "invincibility_potion"
+        },
+        {
+            "x": 17,
+            "y": 13,
+            "id": "id",
+            "type": "invisibility_potion"
+        },
+        {
+            "x": 17,
+            "y": 13,
+            "id": "id",
+            "type": "key",
+            "key": "keyColour"
+
+        },
+        {
+            "x": 17,
+            "y": 13,
+            "id": "id",
+            "type": "sword",
+            "durability": 1
+        },
+        {
+            "x": 17,
+            "y": 13,
+            "id": "id",
+            "type": "treasure"
+        },
+        {
+            "x": 17,
+            "y": 13,
+            "id": "id",
+            "type": "wood"
+        }
+    ],
+    "current-battle": {
+        "character": "characterId"
+    },
+    "goal-condition": {
+        "goal": "AND",
+        "subgoals": [
+            {
+                "goal": "enemies"
+            },
+            {
+                "goal": "treasure"
+            }
+        ]
+    }
+}

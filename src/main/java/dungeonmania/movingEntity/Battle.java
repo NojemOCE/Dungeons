@@ -7,20 +7,18 @@ public class Battle {
     private Player player;
     private MovingEntity character;
     private Position position;
-    private Inventory inventory;
 
     private boolean playerWins;
     private boolean activeBattle;
 
 
-    public Battle(Player player, MovingEntity character, Inventory inventory) {
+    public Battle(Player player, MovingEntity character) {
         this.player = player;
         this.character = character;
         this.activeBattle = true;
-        this.inventory = inventory;
     }
 
-    public void battleTick() {
+    public void battleTick(Inventory inventory) {
         //
         character.defend(player.attack(inventory.attackModifier(player.getAttackDamage())));
 

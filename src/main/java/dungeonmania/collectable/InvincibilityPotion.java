@@ -30,7 +30,7 @@ public class InvincibilityPotion extends CollectableEntity implements Consumable
     public void tick() {
         this.duration--;
         if (this.duration == 0) {
-            getInventory().removeItem(getItemId());
+            getInventory().removeItem(getId());
             // notify the world that the invisibility potion effect is over
             world.update(getType());
         }
