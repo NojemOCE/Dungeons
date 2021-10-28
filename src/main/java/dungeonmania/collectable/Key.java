@@ -9,9 +9,11 @@ import dungeonmania.util.Position;
 
 public class Key extends CollectableEntity implements Consumable {
     private Door door;
+    private String keyColour;
 
-    public Key(Position position, String itemId, Inventory inventory) {
+    public Key(Position position, String itemId, Inventory inventory, String keyColour) {
         super(position, itemId, "key", inventory);
+        this.keyColour = keyColour;
     }
 
     public void consume() {
@@ -25,6 +27,10 @@ public class Key extends CollectableEntity implements Consumable {
     public void unlock() {
         getInventory().removeItem(getItemId());
         door.open();
+    }
+
+    public String getKeyColour() {
+        return keyColour;
     }
 
 }

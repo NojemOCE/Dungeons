@@ -155,7 +155,7 @@ public class World implements ObserverExitGoal {
             movingEntities.put(e.getId(), e);
         } 
         
-        else if (type.equals("zombie")) {
+        else if (type.equals("zombie_toast")) {
             Zombie e = new Zombie(x, y, id);
             movingEntities.put(e.getId(), e);
         } 
@@ -172,7 +172,7 @@ public class World implements ObserverExitGoal {
         
         else if (type.equals("key")) {
             String key = obj.getString("key");
-            Key e = new Key(new Position(x,y), id, inventory);
+            Key e = new Key(new Position(x,y), id, inventory, key);
             collectableEntities.put(e.getId(), e);
         } 
         
