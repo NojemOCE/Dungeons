@@ -86,14 +86,27 @@ public class DungeonManiaController {
     public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
         current.tick(itemUsed, movementDirection);
         
-        return null;
+        return current.worldDungeonResponse();
     }
 
+    /**
+     * Interacts with a mercenary (where the character bribes the mercenary) 
+     * or a zombie spawner, where the character destroys the spawner.
+     * @param entityId id of the entity to be interacted with
+     * @return DungeonResponse of the game state after interact
+     * @throws IllegalArgumentException
+     * @throws InvalidActionException
+     */
     public DungeonResponse interact(String entityId) throws IllegalArgumentException, InvalidActionException {
-        return null;
+        // check that id is valid
+        current.interact(entityId);
+
+        return current.worldDungeonResponse();
+
     }
 
     public DungeonResponse build(String buildable) throws IllegalArgumentException, InvalidActionException {
-        return null;
+        return current.worldDungeonResponse();
+
     }
 }

@@ -1,6 +1,7 @@
 package dungeonmania;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -279,11 +280,22 @@ public class World implements ObserverExitGoal {
         // * the player does not have any gold and attempts to bribe a mercenary
         // * the player does not have a weapon and attempts to destroy a spawner
         if (movingEntities.containsKey(entityId)) {
-
-        }
-
-        if (staticEntities.containsKey(entityId)) {
-
+            MovingEntity e = movingEntities.get(entityId);
+            if (!(e instanceof Mercenary)) {
+                throw new IllegalArgumentException();
+            } else {
+                // TODO??
+                ((Mercenary) e).interact();
+            }
+        } else if (staticEntities.containsKey(entityId)) {
+            StaticEntity e = staticEntities.get(entityId);
+            if (!(e instanceof ZombieToastSpawn)) {
+                throw new IllegalArgumentException();
+            } else {
+                ((ZombieToastSpawn)e).interact(this);
+            }
+        } else {
+            throw new IllegalArgumentException();
         }
 
         return worldDungeonResponse();
@@ -448,41 +460,43 @@ public class World implements ObserverExitGoal {
     }
 
 
-    // Remove all entities from the given positions (except the player)
+    /**
+     * Remove all entities from the given positions (except the player)
+     * @param position position to remove entities from
+     */
     public void detonate(Position position) {
-        
-        List<CollectableEntity> toRemove = new ArrayList<>();
-        for (CollectableEntity e : collectableEntities.values()) {
+
+        List<Entity> collectable = new ArrayList<>(collectableEntities.values());
+        removeEntities(position, collectable);
+
+        List<Entity> statics = new ArrayList<>(staticEntities.values());
+        removeEntities(position, statics);
+
+        List<Entity> moving = new ArrayList<>(movingEntities.values());
+        // remove player
+        moving.remove(player);
+        removeEntities(position, moving);
+    }
+
+    /**
+     * Remove all entities in given list at given position
+     * @param position position to remove entities from
+     * @param entities list of entities to check
+     */
+    public void removeEntities(Position position, List<Entity> entities) {
+        List<Entity> toRemove = new ArrayList<>();
+
+        for (Entity e : entities) {
             if (e.getPosition().equals(position)) {
                 toRemove.add(e);
             }
         }
-        for (CollectableEntity e : toRemove) {
-            collectableEntities.remove(e.getId());
+        for (Entity e : toRemove) {
+            entities.remove(e.getId());
         }
-
-        List<StaticEntity> toRemoveStatic = new ArrayList<>();
-        for (StaticEntity e : staticEntities.values()) {
-            if (e.getPosition().equals(position)) {
-                toRemoveStatic.add(e);
-            }
-        }
-        for (StaticEntity e : toRemoveStatic) {
-            staticEntities.remove(e.getId());
-        }
-
-        List<MovingEntity> toRemoveMoving = new ArrayList<>();
-        for (MovingEntity e : movingEntities.values()) {
-            if (e instanceof Player) {
-                // don't remove
-            } else if (e.getPosition().equals(position)) {
-                toRemoveMoving.add(e);
-            }
-        }
-        for (MovingEntity e : toRemoveMoving) {
-            movingEntities.remove(e.getId());
-
     }
+
+
 
     public Map<String, StaticEntity> getStaticEntities() {
         return this.staticEntities;
@@ -495,5 +509,18 @@ public class World implements ObserverExitGoal {
 
     public Map<String, CollectableEntity> getCollectibleEntities() {
         return this.collectableEntities;
+    }
+
+
+    public void use(String itemId) {
+        inventory.use(itemId);
+    }
+    
+    /**
+     * Checks if the player has a weapon in inventory
+     * @return true if there is a weapon, otherwise false
+     */
+    public boolean playerHasWeapon(){
+        return inventory.hasWeapon();
     }
 }

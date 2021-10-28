@@ -35,14 +35,12 @@ public class Door extends StaticEntity {
             if (isOpen) {
                 return this.getPosition();
             }
-
-            // TODO: check that there is a key with this key colour
             Key key = world.keyInInventory(keyColour);
             if (!key.equals(null)) {
                 // open door
                 open();
                 // use the key
-                world.use(key);
+                world.use(key.getId());
                 return this.getPosition();
             }
         }

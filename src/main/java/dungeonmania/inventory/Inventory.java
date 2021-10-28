@@ -61,6 +61,11 @@ public class Inventory {
         return numCollected.get(itemType);
     }
 
+    /**
+     * Checks for a key with a specified key colour in the inventory
+     * @param keyColour key colour to search for
+     * @return the Key if found, else null
+     */
     public Key keyInInventory(String keyColour) {
         List<Key> keys = collectableItems.values().stream()
                                         .filter(x -> x instanceof Key)
@@ -73,6 +78,19 @@ public class Inventory {
         } else {
             return keys.get(0);
         }
+    }
+
+    /**
+     * Checks if there is a weapon in the inventory
+     * @return true if there is a weapon, otherwise false
+     */
+    public boolean hasWeapon() {
+        for (CollectableEntity e : collectableItems.values()) {
+            if (e instanceof Sword) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public List<ItemResponse> getInventoryResponse() {
