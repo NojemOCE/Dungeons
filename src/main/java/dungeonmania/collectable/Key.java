@@ -2,13 +2,12 @@ package dungeonmania.collectable;
 
 import dungeonmania.Consumable;
 import dungeonmania.inventory.Inventory;
-import dungeonmania.util.Position;
 
 public class Key extends CollectableEntity implements Consumable {
     private String keyColour;
 
-    public Key(Position position, String itemId, Inventory inventory, String keyColour) {
-        super(position, itemId, "key", inventory);
+    public Key(int x, int y, String itemId, Inventory inventory, String keyColour) {
+        super(x, y, itemId, "key", inventory);
         this.keyColour = keyColour;
     }
 

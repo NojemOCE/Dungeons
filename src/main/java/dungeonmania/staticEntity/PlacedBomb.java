@@ -10,6 +10,12 @@ import dungeonmania.util.Position;
 public class PlacedBomb extends StaticEntity {
     private int BLAST_RADIUS = 1;
 
+    /**
+     * Constructor for placed bomb 
+     * @param x x coordinate of bomb
+     * @param y y coordinate of bomb
+     * @param id id of bomb
+     */
     public PlacedBomb(int x, int y, String id) {
         super(new Position(x, y, 1), id, "bomb");
     }
@@ -20,6 +26,10 @@ public class PlacedBomb extends StaticEntity {
         return entity.getPosition();
     }
 
+    /**
+     * Detonates thee bomb and destroys entities in radius
+     * @param world
+     */
     public void detonate(World world) {
         List<Position> toDetonate = new ArrayList<>();
         Position current = getPosition();

@@ -6,9 +6,6 @@ import java.util.Objects;
 
 import dungeonmania.Entity;
 import dungeonmania.World;
-import dungeonmania.gamemode.Gamemode;
-import dungeonmania.response.models.EntityResponse;
-import dungeonmania.util.Direction;
 import dungeonmania.staticEntity.StaticEntity;
 
 

@@ -13,8 +13,8 @@ public class InvincibilityPotion extends CollectableEntity implements Consumable
     private final int DURATION = 10;
     private boolean active = false;
 
-    public InvincibilityPotion(Position position, String itemId, World world, Inventory inventory) {
-        super(position, itemId, "invincibility_potion", inventory);
+    public InvincibilityPotion(int x, int y, String itemId, World world, Inventory inventory) {
+        super(x, y, itemId, "invincibility_potion", inventory);
         this.world = world;
         this.duration = DURATION;
     }

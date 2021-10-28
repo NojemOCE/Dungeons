@@ -11,6 +11,12 @@ import dungeonmania.util.Direction;
 
 public class Boulder extends StaticEntity {
     
+    /**
+     * Constructor for boulder
+     * @param x x coordinate of the boulder
+     * @param y y coordinate of the boulder
+     * @param id id of the boulder
+     */
     public Boulder(int x, int y, String id) {
         super(new Position(x, y, 1), id, "boulder");
 
@@ -26,14 +32,14 @@ public class Boulder extends StaticEntity {
 
         if (entity instanceof Player) {
             Position toMoveBoulderTo = move(entity);
-            List<StaticEntity> entitiesAtNewPos = world.getStaticEntitiesAtPosition(toMoveBoulderTo);
-            // if anything is on the same layer or higher, can't move
-            if (entitiesAtNewPos.stream().anyMatch(x -> x.getPosition().getLayer() >= this.getPosition().getLayer())) {
+            
+            if (!validMove(world, toMoveBoulderTo)) {
                 return entity.getPosition();
             }
-
+            
             // otherwise move
             List<StaticEntity> entitiesAtThisPos = world.getStaticEntitiesAtPosition(this.getPosition());
+            List<StaticEntity> entitiesAtNewPos = world.getStaticEntitiesAtPosition(toMoveBoulderTo);
             
             // SWITCHES:
             // untrigger any switch in the previous spot
@@ -47,7 +53,6 @@ public class Boulder extends StaticEntity {
                             .filter(x -> x instanceof FloorSwitch)
                             .map(FloorSwitch.class::cast)
                             .forEach(x -> x.trigger(world));
-
 
             // PORTALS:
             Portal portal = entitiesAtNewPos.stream()
@@ -66,6 +71,23 @@ public class Boulder extends StaticEntity {
         
         
         return entity.getPosition();
+    }
+
+    /**
+     * Checks if a move to the given position is valid
+     * - due to design, if there is anything on the same 
+     *   layer or higher, it cannot be moved
+     * @param world current world
+     * @param position position to move to
+     * @return whether the boulder can move to the given position
+     */
+    public boolean validMove(World world, Position position) {
+        List<StaticEntity> entitiesAtNewPos = world.getStaticEntitiesAtPosition(position);
+        // if anything is on the same layer or higher, can't move
+        if (entitiesAtNewPos.stream().anyMatch(x -> x.getPosition().getLayer() >= this.getPosition().getLayer())) {
+            return false;
+        }
+        return true;
     }
     
     
@@ -98,11 +120,6 @@ public class Boulder extends StaticEntity {
                 return this.getPosition().translateBy(Direction.UP);
             }
         }
-    }
-
-    // Not sure this is required
-    public void move(Direction d) {
-
     }
 
 }

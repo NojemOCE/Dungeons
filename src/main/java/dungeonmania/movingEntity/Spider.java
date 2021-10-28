@@ -1,7 +1,6 @@
 package dungeonmania.movingEntity;
 
 import dungeonmania.World;
-import dungeonmania.gamemode.Gamemode;
 import dungeonmania.movingEntity.MovementStrategies.CircleMovement;
 import dungeonmania.util.*;
 

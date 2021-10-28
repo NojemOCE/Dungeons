@@ -14,6 +14,10 @@ public class HealthPoint {
         return health;
     }
 
+    public double getMaxHealth() {
+        return maxHealth;
+    }
+
     public void setHealth(double health) {
         this.health = health;
     }
