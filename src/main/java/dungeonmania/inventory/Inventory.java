@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import org.json.JSONArray;
+
 import dungeonmania.Consumable;
 import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
@@ -205,5 +207,16 @@ public class Inventory {
         } else {
             throw new IllegalArgumentException("Wrong buildable type");
         }
+    }
+
+    public JSONArray saveGameJson() {
+        JSONArray entitiesInInventory = new JSONArray();
+        for (CollectableEntity e : collectableItems.values()) {
+            entitiesInInventory.put(e.saveGameJson());
+        }
+        for (Buildable b : buildableItems.values()) {
+            entitiesInInventory.put(b.saveGameJson());
+        }
+        return entitiesInInventory;
     }
 }

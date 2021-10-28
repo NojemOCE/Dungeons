@@ -72,11 +72,17 @@ public class DungeonManiaController {
     }
     
     public DungeonResponse saveGame(String name) throws IllegalArgumentException {
-        return null;
+        // if no game is loaded then we can't save
+        if (current.equals(null)) {
+            throw new IllegalArgumentException("No game currently loaded");
+        }
+
+        String saveState = current.saveGame();
+        return current.worldDungeonResponse();
     }
 
     public DungeonResponse loadGame(String name) throws IllegalArgumentException {
-        return null;
+        return current.worldDungeonResponse();
     }
 
     public List<String> allGames() {
