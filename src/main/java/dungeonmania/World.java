@@ -606,7 +606,25 @@ public class World {
     
     
     public String saveGame() {
-        JSONObject saveGame = new JSONObject();
-        saveGame.put(key, value);
+        JSONObject saveState = new JSONObject();
+        saveState.put("tick-count", tickCount);
+        saveState.put("dungeon-name", dungeonName);
+        saveState.put("entity-count", entityCount);
+        saveState.put("inventory", inventory.saveGameJson());
+        saveState.put("player", player.saveGameJson());
+
+        JSONArray entitiesInInventory = new JSONArray();
+        for (MovingEntity e : movingEntities.values()) {
+            entitiesInInventory.put(e.saveGameJson());
+        }
+        for (StaticEntity e : staticEntities.values()) {
+            entitiesInInventory.put(e.saveGameJson());
+        }
+        for (CollectableEntity e : collectableEntities.values()) {
+            entitiesInInventory.put(e.saveGameJson());
+        }
+
+
+        return saveGame().toString();
     }
 }
