@@ -343,7 +343,7 @@ public class World {
         for (MovingEntity me: movingEntities.values()) {
             me.move(this);
             if (me.getPosition().equals(player.getPosition())) {
-                currentBattle = player.battle(me, inventory); // if invisible it will add null
+                currentBattle = player.battle(me); // if invisible it will add null
                 player.notifyObservers(1);
             }
         }
@@ -421,7 +421,8 @@ public class World {
      */
     public StaticEntity getStaticEntity(Position p) {
         for (StaticEntity s: staticEntities.values()) {
-            if (s.getPosition().equals(p) && s.getPosition().getLayer() == p.getLayer())  {
+            // TODO returning only if layer is 1
+            if (s.getPosition().equals(p) && s.getPosition().getLayer() == 1)  {
                 return s;
             }
         }
