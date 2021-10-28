@@ -18,6 +18,13 @@ public class Player extends MovingEntity {
     private List<Mercenary> mercenaryObservers;
     private double allyAttack;
 
+    /**
+     * Constructor for player taking an x coordinate, a y coordinate, an id and a HealthPoint
+     * @param x x coordinate of the player
+     * @param y y coordinate of the player
+     * @param id unique entity id of the player
+     * @param healthPoint healthpoint of the player
+     */
     public Player(int x, int y, String id, HealthPoint healthPoint) {
         super(new Position(x, y), id, "player", healthPoint, 3);
         setAlly(true);
@@ -30,6 +37,8 @@ public class Player extends MovingEntity {
         return;
     }
 
+    // TODO shouldn't this be done in move?
+    // TODO implement using item?
     public void tick(String itemUsed, Direction movementDirection, World world) {
         // check if the direction we are moving is valid first before setting new position
         if (itemUsed.isEmpty()) {
@@ -55,8 +64,12 @@ public class Player extends MovingEntity {
 
     }
 
-
-    public Battle battle(MovingEntity enemy, Inventory inventory) {
+    /**
+     * Creates a new battle between a player and an enemy
+     * @param enemy enemy that the player fights in the battle
+     * @return new Battle
+     */
+    public Battle battle(MovingEntity enemy) {
         // we can pass in invincibility state for battle 
         // or invisibility battle wont be created "return null"
         if (!enemy.getAlly()) {
@@ -68,6 +81,9 @@ public class Player extends MovingEntity {
         return null;
     }
 
+    /**
+     * Notifies observers of a battle ending
+     */
     public void endBattle() {
         // notify observers of ending battle
         notifyObservers(0);
@@ -78,7 +94,11 @@ public class Player extends MovingEntity {
         return new EntityResponse(getId(), getType(), getPosition(), true);
     }
 
-
+    //TODO add javadoc comment idk what this method does
+    /**
+     * 
+     * @param inRange
+     */
     public void registerEntity(Mercenary inRange) {
         mercenaryObservers.add(inRange);
         
@@ -87,6 +107,11 @@ public class Player extends MovingEntity {
         }
     }
     
+    //TODO add javadoc comment idk what this method does
+    /**
+     * 
+     * @param inRange
+     */
     public void unregisterEntity(Mercenary inRange) {
         if (inRange.getAlly()) {
             allyAttack -= inRange.getAttackDamage();
@@ -94,6 +119,11 @@ public class Player extends MovingEntity {
         mercenaryObservers.remove(inRange);
     }
 
+    //TODO add javadoc comment idk what this method does
+    /**
+     * 
+     * @param speed
+     */
     public void notifyObservers(int speed) { // notify observers for battle
         mercenaryObservers.forEach( mercenary -> {
             mercenary.setSpeed(speed);
