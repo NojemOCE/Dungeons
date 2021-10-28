@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import javax.xml.crypto.AlgorithmMethod;
@@ -46,7 +47,11 @@ public class World {
     private String goalString;
     private String dungeonName;
 
+    static final int MAX_SPIDERS = 6;
+    static final int SPIDER_SPAWN = 10;
     private int tickCount = 0;
+    private int highestX = 0;
+    private int highestY = 0;
     //private Map map; TBC
 
     /**
@@ -94,11 +99,21 @@ public class World {
         return worldDungeonResponse();
     }
 
+    private void updateBounds(int x, int y)  {
+        if (x > highestX) {
+            highestX = x;
+        }
+        if (y > highestY) {
+            highestY = y;
+        }
+    }
     
 
     private void createEntity(JSONObject obj, String id) {
         int x = Integer.parseInt(obj.getString("x"));
         int y = Integer.parseInt(obj.getString("y"));
+
+        updateBounds(x, y);
 
         String type = obj.getString("type");
 
@@ -289,12 +304,27 @@ public class World {
             }
         }
 
+        if (tickCount >0 && tickCount%SPIDER_SPAWN == 0) {
+            Random ran1 = new Random();
+            Random ran2 = new Random();
+
+            int x = ran1.nextInt(highestX);
+            int y =  ran2.nextInt(highestY);
+
+            String id = String.valueOf(incrementEntityCount());
+
+            Spider newSpider = new Spider(x, y, id);
+            movingEntities.put(newSpider.getId(), newSpider);
+            
+        }
+
+
         // Now evaluate goals. Goal should never be null, but add a check incase there is an error in the input file
         if (!goals.equals(null)){
             goals.evaluate(this);
         }
         
-
+        tickCount++;
         return worldDungeonResponse();
     }
 
@@ -348,7 +378,7 @@ public class World {
      */
     public StaticEntity getStaticEntity(Position p) {
         for (StaticEntity s: staticEntities.values()) {
-            if (s.getPosition().equals(p))  {
+            if (s.getPosition().equals(p) && s.getPosition().getLayer() == p.getLayer())  {
                 return s;
             }
         }
