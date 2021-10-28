@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import dungeonmania.goal.*;
+import dungeonmania.goal.oldgoals.Goal;
 import dungeonmania.inventory.Inventory;
 import dungeonmania.response.models.*;
 import dungeonmania.staticEntity.*;
@@ -26,7 +27,7 @@ import dungeonmania.exceptions.InvalidActionException;
 
 
 // TODO: remember to implement all the observer interfaces as we go
-public class World implements ObserverExitGoal {
+public class World {
 
     private int width;
     private int height;
@@ -35,7 +36,7 @@ public class World implements ObserverExitGoal {
     private Gamemode gamemode;
     private Player player;
     private String id;
-    private List<List<Goal>> goals; // TODO Composite pattern
+    private GoalComponent goals;
     //private HashMap<String, Entity> entities; TBC with implementation of overarching Entity class
     private Map<String, CollectableEntity> collectableEntities;
     private Map<String, StaticEntity> staticEntities; // Map<entityId, EntityType>
@@ -84,10 +85,11 @@ public class World implements ObserverExitGoal {
             String type = entities.getJSONObject(i).getString("type");
             createEntity(entities.getJSONObject(i), String.valueOf(incrementEntityCount()));
         }
-        // read goals
 
-        // TODO: look into composite pattern and try to implement that
 
+        JSONObject goals = worldData.getJSONObject("goal-condition");
+        GoalComponent goal = createGoal(goals);
+        setGoals(goal);
         // JSONObject goals = worldData.getJSONObject("goal-condition");
         // String goalCondition = goals.getString("goal");
         // JSONArray subgoals = goals.getJSONArray("subgoals");
@@ -98,9 +100,50 @@ public class World implements ObserverExitGoal {
         return worldDungeonResponse();
     }
 
-    // private void getGoals() {
+    private String getGoalsResponse() {
+        return goals.remainingGoalString();
+    }
+    private void setGoals(GoalComponent goals) {
+        this.goals = goals;
+    }
 
-    // }
+    private GoalComponent createGoal(JSONObject goal) {
+        String currGoal = goal.getString("goal");
+        //Base cases of Enemies, boulder,exit,treasure
+        if (currGoal.equals("exit")) {
+            return new ExitGoal(currGoal);
+        }
+        else if (currGoal.equals("enemies")) {
+            return new EnemiesGoal(currGoal);
+        }
+        else if (currGoal.equals("boulders")) {
+            return new BoulderGoals(currGoal);
+        }
+        else if (currGoal.equals("treasure")) {
+            return new TreasureGoals(currGoal);
+        }
+        else if (currGoal.equals("AND")) {
+            AndGoal andGoal = new AndGoal(currGoal);
+            JSONArray subGoals = goal.getJSONArray("subgoals");
+
+            for (int i = 0; i < subGoals.length(); i++) {
+                GoalComponent subGoal = createGoal(subGoals.getJSONObject(i));
+                andGoal.addSubGoal(subGoal);
+            }
+            return andGoal; 
+        }
+        else if (currGoal.equals("OR")) {
+            OrGoal orGoal = new OrGoal(currGoal);
+            JSONArray subGoals = goal.getJSONArray("subgoals");
+
+            for (int i = 0; i < subGoals.length(); i++) {
+                GoalComponent subGoal = createGoal(subGoals.getJSONObject(i));
+                orGoal.addSubGoal(subGoal);
+            }
+            return orGoal; 
+        }
+
+    }
     private void createEntity(JSONObject obj, String id) {
         int x = Integer.parseInt(obj.getString("x"));
         int y = Integer.parseInt(obj.getString("y"));
@@ -268,6 +311,9 @@ public class World implements ObserverExitGoal {
             }
         }
 
+        // Now evaluate goals
+        goals.evaluate(this);
+
         return worldDungeonResponse();
     }
 
@@ -311,16 +357,7 @@ public class World implements ObserverExitGoal {
     // Return a dungeon response for the current world
     public DungeonResponse worldDungeonResponse(){
 
-        List<String> buildableList = new ArrayList<>();
-        // Here we would need to add a list of all current buildable items
-        // ie. if shield is buildable add "shield" to list
-        // if bow is buildable add "bow" to list
-
-        // TODO implement real buildable list
-        // TODO implement real goals list
-        buildableList.add("not a real list of buildable strings");
-
-        return new DungeonResponse(id, dungeonName, getEntityResponses(), getInventoryResponse(), buildableList, "not real goals");
+        return new DungeonResponse(id, dungeonName, getEntityResponses(), getInventoryResponse(), inventory.getBuildable(), getGoalsResponse());
     }
 
     /**
