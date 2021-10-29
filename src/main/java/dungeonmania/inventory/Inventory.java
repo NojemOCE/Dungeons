@@ -17,6 +17,7 @@ import dungeonmania.util.*;
 public class Inventory {
     private Map<String, CollectableEntity> collectableItems;
     private Map<String, Buildable> buildableItems;
+    private Map<String, Consumable> consumableItems;
     private Map<String, Integer> numCollected;
     private List<String> usable;
     private Player player;
@@ -39,8 +40,15 @@ public class Inventory {
     }
 
     public void use(String itemId) {
-        String itemType = collectableItems.remove(itemId).getItemId();
-        numCollected.put(itemType, numCollected.get(itemType) - 1);
+        if (consumableItems.containsKey(itemId)) {
+            if (consumableItems.get(itemId).consume()) {
+                consumableItems.remove(itemId);
+                buildableItems.remove(itemId);
+                collectableItems.remove(itemId);
+                String itemType = collectableItems.remove(itemId).getItemId();
+                numCollected.put(itemType, numCollected.get(itemType) - 1);
+            }
+        }
     }
 
     public void craft(String itemType) {
@@ -85,15 +93,6 @@ public class Inventory {
     public List<String> tick(String itemUsedId) {
         if (!inInventory(itemUsedId)) {
             throw new InvalidActionException("Item not in Inventory");
-<<<<<<< HEAD
-        } else if (!isUseable(itemUsedId)) {
-        
-        }
-
-        collectableItems.forEach((id, item) -> {
-            item.tick();
-        });
-=======
         } else if (!isUsable(itemUsedId)) {
             Consumable c = (Consumable) collectableItems.get(itemUsedId);
             c.consume();
@@ -105,7 +104,6 @@ public class Inventory {
         }
 
         return getBuildable();
->>>>>>> 3007d4cff1cdade7250c4e1037883e45e3c22f90
     }
 
     public List<String> tick(Direction movementDirection) {
@@ -175,6 +173,8 @@ public class Inventory {
         }
 
         return enemyAttack;
+    }
+    
     public List<String> getBuildable() {
         ArrayList<String> buildable = new ArrayList<>();
 

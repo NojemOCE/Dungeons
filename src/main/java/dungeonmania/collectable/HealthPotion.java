@@ -1,11 +1,12 @@
 package dungeonmania.collectable;
 
+import dungeonmania.Consumable;
 import dungeonmania.inventory.Inventory;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Position;
 
-public class HealthPotion extends CollectableEntity {
+public class HealthPotion extends CollectableEntity implements Consumable {
     
     private final double HEAL_EFFECT = 10;
 
@@ -14,8 +15,12 @@ public class HealthPotion extends CollectableEntity {
     }
 
     public double heal() {
-        getInventory().removeItem(getItemId());
+        consume();
         return HEAL_EFFECT;
+    }
+
+    public void consume() {
+        getInventory().removeItem(getItemId());
     }
 
 }

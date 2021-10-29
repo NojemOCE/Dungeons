@@ -10,4 +10,8 @@ public class Arrows extends CollectableEntity {
         super(position, itemId, "arrow");
     }
 
+    public void consume() {
+        getInventory().removeItem(getItemId());
+    };
+
 }
