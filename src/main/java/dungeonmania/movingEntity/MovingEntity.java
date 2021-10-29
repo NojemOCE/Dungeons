@@ -4,6 +4,8 @@ import dungeonmania.util.Position;
 
 import java.util.Objects;
 
+import org.json.JSONObject;
+
 import dungeonmania.Entity;
 import dungeonmania.World;
 import dungeonmania.staticEntity.StaticEntity;
@@ -131,6 +133,21 @@ public abstract class MovingEntity extends Entity {
         this.defaultMovementStrategy = defaultMovementStrategy;
     }
 
+    @Override
+    public JSONObject saveGameJson() {
+        JSONObject saveObj = new JSONObject();
+        saveObj.put("x",  getPosition().getX());
+        saveObj.put("y",  getPosition().getY());
+        saveObj.put("id",  getId());
+        
+        JSONObject healthObj = new JSONObject();
+        healthObj.put("health", getHealthPoint().getHealth());
+        healthObj.put("max-health", getHealthPoint().getMaxHealth());
+
+        saveObj.put("health-point", healthObj);
+
+        return saveObj;
+    }
     
     
 }

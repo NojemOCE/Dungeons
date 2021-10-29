@@ -1,6 +1,9 @@
 package dungeonmania.movingEntity;
 
 import dungeonmania.util.*;
+
+import org.json.JSONObject;
+
 import dungeonmania.World;
 import dungeonmania.movingEntity.MovementStrategies.FollowPlayer;
 import dungeonmania.response.models.EntityResponse;
@@ -56,5 +59,18 @@ public class Mercenary extends MovingEntity {
     @Override
     public EntityResponse getEntityResponse() {
         return new EntityResponse(getId(), getType(), getPosition(), true);
+    }
+
+    @Override
+    public JSONObject saveGameJson() {
+        JSONObject mercJSON = super.saveGameJson();
+        JSONObject movement = new JSONObject();
+
+        movement.put("default-movement", defaultMovementStrategy.getMovementType());
+        movement.put("movement-strategy", movementStrategy.getMovementType());
+        
+        mercJSON.put("movement", movement);
+
+        return mercJSON;
     }
 }

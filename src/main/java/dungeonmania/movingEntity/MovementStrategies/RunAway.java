@@ -37,5 +37,8 @@ public class RunAway implements Movement {
         }
         
     }
-    
+    @Override
+    public String getMovementType() {
+        return "runAway";
+    }
 }

@@ -13,5 +13,5 @@ public interface Movement {
      */
     public void move(MovingEntity me, World world);
 
-
+    public String getMovementType();
 }

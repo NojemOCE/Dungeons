@@ -135,5 +135,42 @@ public class CircleMovement implements Movement {
         }
     }
 
+    @Override
+    public String getMovementType() {
+        return "circle";
+    }
+
+    public String getCurrentDirection() {
+        return getDirectionString(currentDirection);
+    }
+    public String getNextDirection() {
+        return getDirectionString(nextDirection);
+    }
+
+
+    private String getDirectionString(Direction d) {
+        switch(d)  {
+            case UP:
+                return "UP";
+            case DOWN:
+                return "DOWN";
+            case LEFT:
+                return "LEFT";
+            case RIGHT:
+                return "RIGHT";
+            default:
+                return "NONE";
+        }
+    }
+
+
+    public int getRemMovesCurr() {
+        return remMovesCurr;
+    }
+
+    public int getRemMovesNext() {
+        return remMovesNext;
+    }
+
     
 }

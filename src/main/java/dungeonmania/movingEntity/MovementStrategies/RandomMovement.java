@@ -54,4 +54,9 @@ public class RandomMovement implements Movement {
                 me.setPosition(me.getPosition());
         }        
     }
+
+    @Override
+    public String getMovementType() {
+        return "randomMovement";
+    }
 }
