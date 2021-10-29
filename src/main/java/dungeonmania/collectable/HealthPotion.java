@@ -16,9 +16,4 @@ public class HealthPotion extends CollectableEntity implements Consumable {
         return HEAL_EFFECT;
     }
     
-
-    public void consume() {
-        decreaseDurability();
-    }
-
 }
