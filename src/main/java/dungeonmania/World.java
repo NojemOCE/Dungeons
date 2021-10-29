@@ -353,9 +353,9 @@ public class World {
         
         else  {
             player.tick(itemUsed, movementDirection, this);
-            if ( !Objects.isNull(getCharacter(player.getPosition()))) { // TODO THIS IS THE TEMPORARY BATTLE 
-                currentBattle = player.battle(getCharacter(player.getPosition()));
-            }
+            //if ( !Objects.isNull(getCharacter(player.getPosition()))) { // TODO THIS IS THE TEMPORARY BATTLE 
+            //    currentBattle = player.battle(getCharacter(player.getPosition()));
+            //}
         }
         if (Objects.isNull(itemUsed)) {
             inventory.tick();
@@ -364,13 +364,13 @@ public class World {
         }
 
         // now move all entities
-        // for (MovingEntity me: movingEntities.values()) {
-        //     me.move(this);
-        //     if (me.getPosition().equals(player.getPosition())) {
-        //         currentBattle = player.battle(me); // if invisible it will add null
-        //         player.notifyObservers(1);
-        //     }
-        // }
+        for (MovingEntity me: movingEntities.values()) {
+            me.move(this);
+            if (me.getPosition().equals(player.getPosition())) {
+                currentBattle = player.battle(me); // if invisible it will add null
+                player.notifyObservers(1);
+            }
+        }
 
         if (tickCount >0 && tickCount%SPIDER_SPAWN == 0) {
             Random ran1 = new Random();
