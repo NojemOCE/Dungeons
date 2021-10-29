@@ -21,7 +21,6 @@ import dungeonmania.staticEntity.*;
 import dungeonmania.util.*;
 import dungeonmania.gamemode.*;
 import dungeonmania.movingEntity.*;
-import dungeonmania.buildable.*;
 import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
 
@@ -344,6 +343,7 @@ public class World {
                 if (currentBattle.getPlayerWins()) {
                     dropBattleReward();
                     movingEntities.remove(currentBattle.getCharacter().getId());
+                    currentBattle = null;
                 } else {
                     this.player = null; // will end game in dungeon response
                     // needs to return early
@@ -353,6 +353,9 @@ public class World {
         
         else  {
             player.tick(itemUsed, movementDirection, this);
+            if ( !Objects.isNull(getCharacter(player.getPosition()))) { // TODO THIS IS THE TEMPORARY BATTLE 
+                currentBattle = player.battle(getCharacter(player.getPosition()));
+            }
         }
         if (Objects.isNull(itemUsed)) {
             inventory.tick();
