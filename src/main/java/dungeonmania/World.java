@@ -406,8 +406,7 @@ public class World {
             if (!(e instanceof Mercenary)) {
                 throw new IllegalArgumentException();
             } else {
-                // TODO??
-                //((Mercenary) e).interact(this);
+                ((Mercenary) e).interact(this);
             }
         } else if (staticEntities.containsKey(entityId)) {
             StaticEntity e = staticEntities.get(entityId);
@@ -645,8 +644,18 @@ public class World {
         for (CollectableEntity e : collectableEntities.values()) {
             entitiesInInventory.put(e.saveGameJson());
         }
-
-
         return saveGame().toString();
+    }
+
+    public int numItemInInventory(String itemType) {
+        return inventory.numItem(itemType);
+    }
+
+    /**
+     * Uses an item in the inventoryof the given type (if it exists)
+     * @param type type of the item we want to use
+     */
+    public void useByType(String type) {
+        inventory.useByType(type);
     }
 }

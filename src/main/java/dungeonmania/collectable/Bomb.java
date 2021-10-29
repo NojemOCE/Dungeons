@@ -6,15 +6,13 @@ import dungeonmania.inventory.Inventory;
 
 public class Bomb extends CollectableEntity implements Consumable {
 
-    private World world;
 
-    public Bomb(int x, int y, String itemId, World world, Inventory inventory) {
-        super(x, y, itemId, "bomb", inventory);
-        this.world = world;
+    public Bomb(int x, int y, String itemId) {
+        super(x, y, itemId, "bomb");
     }
 
     public void consume() {
-        getInventory().removeItem(getId());
+        decreaseDurability();
         drop();
     }
 
