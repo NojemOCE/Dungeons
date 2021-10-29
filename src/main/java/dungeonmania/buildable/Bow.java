@@ -1,5 +1,7 @@
 package dungeonmania.buildable;
 
+import org.json.JSONObject;
+
 import dungeonmania.Consumable;
 import dungeonmania.response.models.ItemResponse;
 
@@ -50,6 +52,16 @@ public class Bow implements Buildable, Consumable {
     @Override
     public ItemResponse getItemResponse() {
         return new ItemResponse(itemId, type);
+    }
+
+    @Override
+    public JSONObject saveGameJson() {
+        JSONObject bowJSON = new JSONObject();
+        bowJSON.put("id", getItemId());
+        bowJSON.put("type", getType());
+        bowJSON.put("durability", durability);
+
+        return bowJSON;
     };
 
 }

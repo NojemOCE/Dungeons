@@ -7,37 +7,45 @@
     "inventory": [
         {
             "id": "id",
-            "type": "armour"
+            "type": "armour",
+            "durability": 1
         },
         {
             "id": "id",
-            "type": "arrow"
+            "type": "arrow",
+            "durability": 1
         },
         {
             "id": "id",
-            "type": "bomb"
+            "type": "bomb",
+            "durability": 1
         },
         {
             "id": "id",
-            "type": "health_potion"
+            "type": "health_potion",
+            "durability": 1
         },
         {
             "id": "id",
-            "type": "invincibility_potion"
+            "type": "invincibility_potion",
+            "durability": 1
         },
         {
             "id": "id",
-            "type": "invisibility_potion"
+            "type": "invisibility_potion",
+            "durability": 1
         },
         {
             "id": "id",
             "type": "key",
-            "key": "keyColour"
+            "key": "keyColour",
+            "durability": 1
 
         },
         {
             "id": "id",
-            "type": "one_ring"
+            "type": "one_ring",
+            "durability": 1
         },
         {
             "id": "id",
@@ -46,11 +54,13 @@
         },
         {
             "id": "id",
-            "type": "treasure"
+            "type": "treasure",
+            "durability": 1
         },
         {
             "id": "id",
-            "type": "wood"
+            "type": "wood",
+            "durability": 1
         }
     ],
     "player": {
@@ -174,44 +184,51 @@
             "x": 17,
             "y": 13,
             "id": "id",
-            "type": "armour"
+            "type": "armour",
+            "durability": 1
         },
         {
             "x": 17,
             "y": 13,
             "id": "id",
-            "type": "arrow"
+            "type": "arrow",
+            "durability": 1
         },
         {
             "x": 17,
             "y": 13,
             "id": "id",
-            "type": "bomb"
+            "type": "bomb",
+            "durability": 1
         },
         {
             "x": 17,
             "y": 13,
             "id": "id",
-            "type": "health_potion"
+            "type": "health_potion",
+            "durability": 1
         },
         {
             "x": 17,
             "y": 13,
             "id": "id",
-            "type": "invincibility_potion"
+            "type": "invincibility_potion",
+            "durability": 1
         },
         {
             "x": 17,
             "y": 13,
             "id": "id",
-            "type": "invisibility_potion"
+            "type": "invisibility_potion",
+            "durability": 1
         },
         {
             "x": 17,
             "y": 13,
             "id": "id",
             "type": "key",
-            "key": "keyColour"
+            "key": "keyColour",
+            "durability": 1
 
         },
         {
@@ -225,13 +242,15 @@
             "x": 17,
             "y": 13,
             "id": "id",
-            "type": "treasure"
+            "type": "treasure",
+            "durability": 1
         },
         {
             "x": 17,
             "y": 13,
             "id": "id",
-            "type": "wood"
+            "type": "wood",
+            "durability": 1
         }
     ],
     "current-battle": {

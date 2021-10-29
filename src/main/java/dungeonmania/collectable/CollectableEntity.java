@@ -1,6 +1,9 @@
 package dungeonmania.collectable;
 
 import dungeonmania.inventory.Inventory;
+
+import org.json.JSONObject;
+
 import dungeonmania.Entity;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.response.models.ItemResponse;
@@ -10,6 +13,7 @@ public abstract class CollectableEntity extends Entity {
     private boolean collected;
     private String type;
     private Inventory inventory;
+    private int durability;
 
 
 
@@ -48,5 +52,17 @@ public abstract class CollectableEntity extends Entity {
 
     public ItemResponse getItemResponse() {
         return new ItemResponse(getId(), getType());
+    }
+
+    @Override
+    public JSONObject saveGameJson() {
+        JSONObject saveObj = new JSONObject();
+        saveObj.put("x", getPosition().getX();
+        saveObj.put("y", getPosition().getY();
+        saveObj.put("id", getId());
+        saveObj.put("type", getType());
+        saveObj.put("durability", durability);
+
+        return saveObj;
     }
 }
