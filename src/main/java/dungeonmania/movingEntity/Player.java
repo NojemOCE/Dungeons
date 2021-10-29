@@ -12,6 +12,7 @@ import dungeonmania.collectable.CollectableEntity;
 import dungeonmania.util.*;
 import dungeonmania.inventory.Inventory;
 import dungeonmania.response.models.EntityResponse;
+import dungeonmania.staticEntity.StaticEntity;
 
 
 public class Player extends MovingEntity {
@@ -37,6 +38,36 @@ public class Player extends MovingEntity {
     @Override
     public void move(World world) {
         return;
+    
+    }
+
+        /**
+     * Returns the new position if posible
+     * and the old position (no movement) if not
+     */
+    @Override
+    public Position validMove(Position position, World world) {
+        
+        // Check for boundaries of the map here
+
+
+        // check if there is a static entity in the way
+        StaticEntity se = world.getStaticEntity(position);
+        if (!Objects.isNull(se)) {
+            // interact with static entitity
+            return se.interact(world, this); 
+        } 
+        if (!Objects.isNull(world.getBattle())) {
+            // check if this objects position is same as players (for players if there is a battle)
+            // they cannot move anyways
+            if (getPosition().equals(world.getPlayer().getPosition())) {
+                // cannot move into battle, wait outside
+                return getPosition();
+            }
+        }
+
+
+        return position;
     }
 
     // TODO shouldn't this be done in move?
@@ -59,8 +90,7 @@ public class Player extends MovingEntity {
         // check inventory and mercenary in range
         
         // then add on mercenary modifier
-        attack += allyAttack;
-        return attack;
+        return allyAttack;
     }
 
     @Override
@@ -121,6 +151,16 @@ public class Player extends MovingEntity {
         mercenaryObservers.remove(inRange);
     }
 
+    public List<MovingEntity> alliesInRange() {
+        
+        List<MovingEntity> allies = new ArrayList<>();
+        for (MovingEntity m : mercenaryObservers) {
+            if (m.getAlly()) allies.add(m);
+        }
+
+        return allies;
+    }
+    
     //TODO add javadoc comment idk what this method does
     /**
      * 

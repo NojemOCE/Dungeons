@@ -27,7 +27,8 @@ public class FollowPlayer implements Movement {
         if (!path.isEmpty() && path.size() >= 1) {
             // still need to use the battle radius, translate by two
             // THE PATH MAY INCLUDE THE START, if MERC NOT MOVING CHANGE me.getSpeed() +1`
-            me.setPosition(me.getPosition().translateBy(Position.calculatePositionBetween(path.get(me.getSpeed()), me.getPosition())));
+            if (!me.getAlly() && path.get(1).equals(world.getPlayer().getPosition())) me.setPosition(path.get(0));
+            me.setPosition(path.get(1));
         }
     }
 
@@ -69,12 +70,18 @@ public class FollowPlayer implements Movement {
 
         // backtrack through prev getting the reverse path
         List<Position> path = new ArrayList<>();
-        if (Objects.isNull(prev.get(player.getPosition()))) {
-            for(Position p = player.getPosition(); p != null; p = prev.get(p)) {
+
+        int x = player.getPosition().getX();
+        int y = player.getPosition().getY();
+        if (!Objects.isNull(prev.get(new Position(x,y)))) {
+            for(Position p = new Position(x, y); p != null; p = prev.get(p)) {
                 path.add(p);
             }
-            Collections.reverse(path);
         }
+
+        
+        Collections.reverse(path);
+
         return path;
     }
 
