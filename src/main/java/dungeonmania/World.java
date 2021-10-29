@@ -426,7 +426,6 @@ public class World {
      */
     public StaticEntity getStaticEntity(Position p) {
         for (StaticEntity s: staticEntities.values()) {
-            // TODO returning only if layer is 1
             if (s.getPosition().equals(p) && s.getPosition().getLayer() == 1)  {
                 return s;
             }
