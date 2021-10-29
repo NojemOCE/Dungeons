@@ -11,7 +11,7 @@ public abstract class Gamemode {
     private double startingHP; 
 
     private final static int STANDARD_SPAWN_RATE = 20;
-    private final static double STANDARD_STARTING_HP = 20;
+    private final static double STANDARD_STARTING_HP = 30;
     
 
 

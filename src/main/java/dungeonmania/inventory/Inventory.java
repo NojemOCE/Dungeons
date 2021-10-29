@@ -1,6 +1,7 @@
 package dungeonmania.inventory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -49,6 +50,26 @@ public class Inventory {
         if (consumableItems.containsKey(itemId)) {
             consumableItems.get(itemId).consume();
         }
+    }
+
+    /**
+     * Uses an item of the given type (if it exists)
+     * @param type type of the item we want to use
+     */
+    public void useByType(String type) {
+        // if it doesn't exist we can't use it
+        if (numCollected.get(type).equals(null)) {
+            return;
+        }
+        numCollected.put(type, numCollected.get(type) - 1);
+        // remove the first instance in collectable and consumable
+        List<CollectableEntity> collectable = collectableItems.values()
+                                                              .stream()
+                                                              .filter(e -> e.getType().equals(type))
+                                                              .collect(Collectors.toList());
+        String idToRemove =collectable.get(0).getId();
+        collectableItems.remove(idToRemove);
+        consumableItems.remove(idToRemove);
     }
     
     public void craft(String itemType) {

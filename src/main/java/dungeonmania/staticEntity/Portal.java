@@ -1,5 +1,7 @@
 package dungeonmania.staticEntity;
 
+import org.json.JSONObject;
+
 import dungeonmania.Entity;
 import dungeonmania.World;
 import dungeonmania.movingEntity.MovingEntity;
@@ -33,7 +35,7 @@ public class Portal extends StaticEntity {
      * @param twinPortal portal that pairs with this portal
      */
     public Portal(int x, int y, String id, String colour, Portal twinPortal) {
-        super(new Position(x, y, 1), id, "portal");
+        super(new Position(x, y, 0), id, "portal");
         this.twinPortal = twinPortal;
         this.colour = colour;
         twinPortal.setTwinPortal(this);
@@ -121,4 +123,11 @@ public class Portal extends StaticEntity {
     public String getColour() {
         return colour;
     }
+
+    @Override
+	public JSONObject saveGameJson() {
+		JSONObject save = super.saveGameJson();
+        save.put("colour", colour);
+		return save;
+	}
 }

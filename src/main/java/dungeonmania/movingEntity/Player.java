@@ -1,6 +1,10 @@
 package dungeonmania.movingEntity;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import org.json.JSONObject;
 
 import dungeonmania.World;
 import dungeonmania.collectable.CollectableEntity;
@@ -11,7 +15,8 @@ import dungeonmania.response.models.EntityResponse;
 
 public class Player extends MovingEntity {
 
-    private List<Mercenary> mercenaryObservers;
+    static final int PLAYER_ATTACK = 3;
+    private List<Mercenary> mercenaryObservers = new ArrayList<>();
     private double allyAttack;
 
     /**
@@ -22,7 +27,7 @@ public class Player extends MovingEntity {
      * @param healthPoint healthpoint of the player
      */
     public Player(int x, int y, String id, HealthPoint healthPoint) {
-        super(new Position(x, y), id, "player", healthPoint, 3);
+        super(new Position(x, y, 1), id, "player", healthPoint, PLAYER_ATTACK);
         setAlly(true);
     }
     
@@ -37,10 +42,10 @@ public class Player extends MovingEntity {
     // TODO implement using item?
     public void tick(String itemUsed, Direction movementDirection, World world) {
         // check if the direction we are moving is valid first before setting new position
-        if (itemUsed.isEmpty()) {
+        if (Objects.isNull(itemUsed)) {
             setPosition(validMove(this.getPosition().translateBy(movementDirection), world));
             CollectableEntity e = world.getCollectableEntity(this.getPosition());
-            if (!e.equals(null)) {
+            if (!Objects.isNull(e)) {
                 e.collect();
             }
         } else {
@@ -89,10 +94,6 @@ public class Player extends MovingEntity {
         notifyObservers(0);
     }
 
-    @Override
-    public EntityResponse getEntityResponse() {
-        return new EntityResponse(getId(), getType(), getPosition(), true);
-    }
 
     //TODO add javadoc comment idk what this method does
     /**
@@ -128,6 +129,14 @@ public class Player extends MovingEntity {
         mercenaryObservers.forEach( mercenary -> {
             mercenary.setSpeed(speed);
         });
+    }
+
+
+
+    @Override
+    public JSONObject saveGameJson() {
+        // TODO Auto-generated method stub
+        return null;
     }
 } 
 

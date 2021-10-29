@@ -1,5 +1,7 @@
 package dungeonmania.staticEntity;
 
+import org.json.JSONObject;
+
 import dungeonmania.Entity;
 import dungeonmania.World;
 import dungeonmania.collectable.Key;
@@ -62,4 +64,11 @@ public class Door extends StaticEntity {
         return entity.getPosition();
     }
    
+    @Override
+	public JSONObject saveGameJson() {
+		JSONObject save = super.saveGameJson();
+        save.put("key", keyColour);
+        save.put("open", isOpen);
+		return save;
+	}
 }

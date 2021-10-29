@@ -1,14 +1,21 @@
 package dungeonmania.movingEntity;
 
 import dungeonmania.util.*;
+
+import org.json.JSONObject;
+
 import dungeonmania.World;
+import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.movingEntity.MovementStrategies.FollowPlayer;
 import dungeonmania.response.models.EntityResponse;
 
 
 public class Mercenary extends MovingEntity {
 
-    private double BATTLE_RADIUS = 5;
+    static final int MERC_ATTACK = 3;
+    static final int MERC_HEALTH = 9;
+    private static final int GOLD_TO_BRIBE = 2;
+    private static final double BATTLE_RADIUS = 5;
     private Player subject;
 
     /**
@@ -18,7 +25,7 @@ public class Mercenary extends MovingEntity {
      * @param id unique entity id of the mercenary
      */
     public Mercenary(int x, int y, String id) {
-        super(new Position(x, y), id, "mercenary", new HealthPoint(9), 10);
+        super(new Position(x, y, 2), id, "mercenary", new HealthPoint(MERC_HEALTH), MERC_ATTACK);
         setMovement(new FollowPlayer());
         setDefaultMovementStrategy(new FollowPlayer());
         setAlly(false);
@@ -50,8 +57,39 @@ public class Mercenary extends MovingEntity {
         //after duration is 0 revert back to normal pattern;
     }
 
+
+    /**
+     *  
+     * The character can bribe a mercenary if they are within 2 cardinal tiles
+     * to the mercenary. Player requires minimum amount of gold to bribe.
+     */
+    public void interact(World world) throws InvalidActionException {
+        Player player = world.getPlayer();
+        Position relativePos = Position.calculatePositionBetween(player.getPosition(), this.getPosition());
+
+        if ((relativePos.getX() + relativePos.getY()) <= 2) {
+            if (world.numItemInInventory("treasure") >= GOLD_TO_BRIBE) {
+                for (int i = 0; i < GOLD_TO_BRIBE; i++) {
+                    world.useByType("treasure");
+                }
+            } else {
+                throw new InvalidActionException("Not enough gold to bribe Mercenary!");
+            }
+        } else {
+            throw new InvalidActionException("Must be within 2 cardinal tiles to bribe Mercenary!");
+        }
+    }
+
     @Override
     public EntityResponse getEntityResponse() {
         return new EntityResponse(getId(), getType(), getPosition(), true);
     }
+
+
+    @Override
+    public JSONObject saveGameJson() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

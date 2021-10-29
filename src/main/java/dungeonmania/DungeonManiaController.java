@@ -56,18 +56,21 @@ public class DungeonManiaController {
         if (!dungeons().contains(dungeonName)) throw new IllegalArgumentException("No dungeon exists");
 
         World newGame = new World(dungeonName, gameMode);
-
         // create JSON object
+
         try {
-            String file = FileLoader.loadResourceFile("/dungeons/" + dungeonName);
+            String file = FileLoader.loadResourceFile("/dungeons/" + dungeonName + ".json");
             JSONObject game = new JSONObject(file);
+
             newGame.buildWorld(game);
         }
         catch (Exception e) {
             // TODO discard world if exception thrown?
         }
-        
+
         this.current = newGame;
+
+
         return current.worldDungeonResponse();
     }
     
@@ -89,9 +92,9 @@ public class DungeonManiaController {
         return new ArrayList<>();
     }
 
-    public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
+    public DungeonResponse tick(String itemUsed, Direction movementDirection) throws InvalidActionException, IllegalArgumentException {
         current.tick(itemUsed, movementDirection);
-        
+
         return current.worldDungeonResponse();
     }
 
