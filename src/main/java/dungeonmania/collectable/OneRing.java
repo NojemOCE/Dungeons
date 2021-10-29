@@ -3,14 +3,12 @@ package dungeonmania.collectable;
 import dungeonmania.Consumable;
 import dungeonmania.inventory.Inventory;
 
-public class OneRing extends CollectableEntity implements Consumable {
+public class OneRing extends CollectableEntity {
 
-    public OneRing(int x, int y, String itemId, Inventory inventory) {
-        super(x, y, itemId, "one_ring", inventory);
+    public OneRing(int x, int y, String itemId) {
+        super(x, y, itemId, "one_ring");
     }
 
-    public void consume() {
-        getInventory().removeItem(getId());
-    }
+    //TODO do we need to do anything to use the one ring or nah
 
 }

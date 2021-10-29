@@ -21,7 +21,6 @@ import dungeonmania.staticEntity.*;
 import dungeonmania.util.*;
 import dungeonmania.gamemode.*;
 import dungeonmania.movingEntity.*;
-import dungeonmania.buildable.*;
 import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
 
@@ -235,7 +234,7 @@ public class World {
             collectableEntities.put(e.getId(), e);
         }
         else if (type.equals("one_ring")) {
-            OneRing e = new OneRing(x, y, id, inventory);
+            OneRing e = new OneRing(x, y, id);
             collectableEntities.put(e.getId(), e);
         }
 
@@ -308,7 +307,7 @@ public class World {
             int next = ran.nextInt(10);
             if (10*MERCENARY_ARMOUR_DROP > next)  {
                 // return an armour
-                Armour armour = new Armour(charX, charY, String.valueOf(incrementEntityCount()));
+                Armour armour = new Armour(charX, charY, "armour" + String.valueOf(incrementEntityCount()));
                 armour.collect();
             }
         }
@@ -318,7 +317,7 @@ public class World {
             int next = ran.nextInt(10);
             if (10*ZOMBIE_ARMOUR_DROP > next)  {
                 // return an armour
-                Armour armour = new Armour(charX, charY, String.valueOf(incrementEntityCount()));
+                Armour armour = new Armour(charX, charY, "armour" + String.valueOf(incrementEntityCount()));
                 armour.collect();
             }
         }
@@ -327,7 +326,7 @@ public class World {
         int next = ran.nextInt(10);
         if (10*ONE_RING_DROP > next)  {
             // return the one ring
-            OneRing oneRing = new OneRing(charX, charY, String.valueOf(incrementEntityCount()), inventory);
+            OneRing oneRing = new OneRing(charX, charY, "one_ring" + String.valueOf(incrementEntityCount()));
             oneRing.collect();
         }
     }
@@ -617,27 +616,54 @@ public class World {
 
     
     
-    public String saveGame() {
-        JSONObject saveState = new JSONObject();
-        saveState.put("tick-count", tickCount);
-        saveState.put("dungeon-name", dungeonName);
-        saveState.put("entity-count", entityCount);
-        saveState.put("inventory", inventory.saveGameJson());
-        saveState.put("player", player.saveGameJson());
+    public JSONObject saveGame() {
+        JSONObject worldJSON = new JSONObject();
 
-        JSONArray entitiesInInventory = new JSONArray();
-        for (MovingEntity e : movingEntities.values()) {
-            entitiesInInventory.put(e.saveGameJson());
+        worldJSON.put("gamemode", gamemode.getGameModeType());
+        worldJSON.put("tick-count", tickCount);
+        worldJSON.put("dungeon-name", dungeonName);
+        worldJSON.put("entity-count", entityCount);
+        worldJSON.put("inventory", inventory.saveGameJson());
+        worldJSON.put("player", player.saveGameJson());
+        worldJSON.put("moving-entities", movingEntitySaveGameJson());
+        worldJSON.put("static-entities", staticEntitySaveGameJson());
+        worldJSON.put("collectable-entities", staticEntitySaveGameJson());
+
+        if (currentBattle.isActiveBattle()) {
+            worldJSON.put("current-battle", currentBattle.getCharacter().getId());
         }
-        for (StaticEntity e : staticEntities.values()) {
-            entitiesInInventory.put(e.saveGameJson());
+        if (!(goals == null)) {
+            worldJSON.put("goal-condition", goals.saveGameJson());
         }
-        for (CollectableEntity e : collectableEntities.values()) {
-            entitiesInInventory.put(e.saveGameJson());
-        }
-        return saveGame().toString();
+
+        return worldJSON;
+    }
+    
+
+    private JSONArray staticEntitySaveGameJson() {
+        JSONArray staticEntitiesJSON = new JSONArray();
+        staticEntities.values().stream()
+                                .map(StaticEntity::saveGameJson)
+                                .forEach(x -> staticEntitiesJSON.put(x));
+        return staticEntitiesJSON;
     }
 
+    private JSONArray movingEntitySaveGameJson() {
+        JSONArray movingEntitiesJSON = new JSONArray();
+        movingEntities.values().stream()
+                                .map(MovingEntity::saveGameJson)
+                                .forEach(x -> movingEntitiesJSON.put(x));
+        return movingEntitiesJSON;
+    }
+
+    private JSONArray collectableEntityGameJson() {
+        JSONArray collectableEntitiesJSON = new JSONArray();
+        collectableEntities.values().stream()
+                                .map(CollectableEntity::saveGameJson)
+                                .forEach(x -> collectableEntitiesJSON.put(x));
+        return collectableEntitiesJSON;
+    }
+    
     public int numItemInInventory(String itemType) {
         return inventory.numItem(itemType);
     }
@@ -649,4 +675,5 @@ public class World {
     public void useByType(String type) {
         inventory.useByType(type);
     }
+
 }

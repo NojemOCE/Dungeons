@@ -1,5 +1,7 @@
 package dungeonmania.goal;
 
+import org.json.JSONObject;
+
 import dungeonmania.World;
 
 public abstract class GoalLeaf implements GoalComponent {
@@ -40,6 +42,12 @@ public abstract class GoalLeaf implements GoalComponent {
         this.goal = goal;
     }
 
-
+    @Override
+    public JSONObject saveGameJson() {
+        JSONObject goalJSON = new JSONObject();
+        goalJSON.put("goal", goal);
+        
+        return goalJSON;
+    }
     
 }

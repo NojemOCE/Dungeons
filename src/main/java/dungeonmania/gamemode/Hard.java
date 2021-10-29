@@ -5,6 +5,6 @@ public class Hard extends Gamemode {
     private final static double HARD_STARTING_HP = 15; 
 
     public Hard() {
-        super(HARD_SPAWN_RATE, true, false, HARD_STARTING_HP);
+        super(HARD_SPAWN_RATE, true, false, HARD_STARTING_HP, "Hard");
     }
 }

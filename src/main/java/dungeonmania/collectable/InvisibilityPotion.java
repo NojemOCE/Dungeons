@@ -7,7 +7,7 @@ import dungeonmania.response.models.EntityResponse;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Position;
 
-public class InvisibilityPotion extends CollectableEntity implements Consumable {
+public class InvisibilityPotion extends CollectableEntity {
 
     private final int DURATION = 10;
     private boolean active = false;

@@ -1,4 +1,6 @@
 package dungeonmania.collectable;
+import org.json.JSONObject;
+
 import dungeonmania.Consumable;
 import dungeonmania.World;
 import dungeonmania.inventory.Inventory;
@@ -32,5 +34,7 @@ public class InvincibilityPotion extends CollectableEntity {
         }
 
     }
+
+
 
 }

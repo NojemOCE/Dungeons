@@ -3,7 +3,7 @@ package dungeonmania.collectable;
 import dungeonmania.Consumable;
 import dungeonmania.inventory.Inventory;
 
-public class HealthPotion extends CollectableEntity implements Consumable {
+public class HealthPotion extends CollectableEntity {
     
     private final double HEAL_EFFECT = 10;
 

@@ -32,8 +32,15 @@ public class Zombie extends MovingEntity{
 
     @Override
     public JSONObject saveGameJson() {
-        // TODO Auto-generated method stub
-        return null;
+        JSONObject zombieJSON = super.saveGameJson();
+        JSONObject movement = new JSONObject();
+
+        movement.put("default-movement", defaultMovementStrategy.getMovementType());
+        movement.put("movement-strategy", movementStrategy.getMovementType());
+        
+        zombieJSON.put("movement", movement);
+
+        return zombieJSON;
     }
 }
 
