@@ -34,8 +34,14 @@ public class Battle {
         double characterAttack = inventory.defenceModifier(character.getAttackDamage());
 
 
-        character.defend(playerAttack);
-        player.defend(characterAttack);
+        character.defend((player.getHealthPoint().getHealth() * playerAttack)/10);
+        player.defend((character.getHealthPoint().getHealth() * characterAttack)/10);
+
+        // ally help
+        player.alliesInRange().forEach(ally -> {
+            character.defend((ally.getHealthPoint().getHealth() * ally.getAttackDamage()) / 10);
+        });
+
 
         if (character.getHealthPoint().getHealth() == 0) {
             endBattle(true);

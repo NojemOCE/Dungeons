@@ -89,8 +89,7 @@ public class Player extends MovingEntity {
         // check inventory and mercenary in range
         
         // then add on mercenary modifier
-        attack += allyAttack;
-        return attack;
+        return allyAttack;
     }
 
     @Override
@@ -151,6 +150,16 @@ public class Player extends MovingEntity {
         mercenaryObservers.remove(inRange);
     }
 
+    public List<MovingEntity> alliesInRange() {
+        
+        List<MovingEntity> allies = new ArrayList<>();
+        for (MovingEntity m : mercenaryObservers) {
+            if (m.getAlly()) allies.add(m);
+        }
+
+        return allies;
+    }
+    
     //TODO add javadoc comment idk what this method does
     /**
      * 
