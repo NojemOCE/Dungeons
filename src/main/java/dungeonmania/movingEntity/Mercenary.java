@@ -1,6 +1,9 @@
 package dungeonmania.movingEntity;
 
 import dungeonmania.util.*;
+
+import org.json.JSONObject;
+
 import dungeonmania.World;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.movingEntity.MovementStrategies.FollowPlayer;
@@ -81,4 +84,12 @@ public class Mercenary extends MovingEntity {
     public EntityResponse getEntityResponse() {
         return new EntityResponse(getId(), getType(), getPosition(), true);
     }
+
+
+    @Override
+    public JSONObject saveGameJson() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

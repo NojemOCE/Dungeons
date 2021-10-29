@@ -1,5 +1,7 @@
 package dungeonmania.movingEntity;
 
+import org.json.JSONObject;
+
 import dungeonmania.World;
 import dungeonmania.movingEntity.MovementStrategies.CircleMovement;
 import dungeonmania.util.*;
@@ -35,6 +37,13 @@ public class Spider extends MovingEntity {
      */
     public void move(World world) {
         getMovement().move(this, world);
+    }
+
+
+    @Override
+    public JSONObject saveGameJson() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 
