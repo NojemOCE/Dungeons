@@ -54,11 +54,11 @@ public class Portal extends StaticEntity {
         return this.getPosition();
     }
     
-    
     /**
      * Returns the location which the character should move to 
      * after travelling through the portal
-     * @param character the character to move
+     * @param world the world of the game
+     * @param entity the entity to move
      * @return the position to move the character to
      */
     private Position travelToTwin(World world, Entity entity) {
