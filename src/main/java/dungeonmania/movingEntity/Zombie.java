@@ -1,5 +1,7 @@
 package dungeonmania.movingEntity;
 
+import org.json.JSONObject;
+
 import dungeonmania.World;
 import dungeonmania.movingEntity.MovementStrategies.RandomMovement;
 import dungeonmania.util.*;
@@ -26,6 +28,12 @@ public class Zombie extends MovingEntity{
     @Override
     public void move(World world) {
        getMovement().move(this, world);
+    }
+
+    @Override
+    public JSONObject saveGameJson() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }
 

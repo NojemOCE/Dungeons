@@ -1,6 +1,7 @@
 package dungeonmania.inventory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -17,14 +18,12 @@ import dungeonmania.movingEntity.Player;
 import dungeonmania.util.*;
 
 public class Inventory {
-    private Map<String, CollectableEntity> collectableItems;
-    private Map<String, Buildable> buildableItems;
-    private Map<String, Integer> numCollected;
-    private List<String> usable;
-    private Player player;
+    private Map<String, CollectableEntity> collectableItems = new HashMap<>();
+    private Map<String, Buildable> buildableItems = new HashMap<>();
+    private Map<String, Integer> numCollected = new HashMap<>();
+    private List<String> usable = new ArrayList<>();
 
-    public Inventory(Player player) {
-        this.player = player;
+    public Inventory() {
         this.usable.add("bomb");
         this.usable.add("health_potion");
         this.usable.add("invincibility_potion");

@@ -1,6 +1,9 @@
 package dungeonmania.movingEntity;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import org.json.JSONObject;
 
 import dungeonmania.World;
 import dungeonmania.collectable.CollectableEntity;
@@ -12,7 +15,7 @@ import dungeonmania.response.models.EntityResponse;
 public class Player extends MovingEntity {
 
     static final int PLAYER_ATTACK = 3;
-    private List<Mercenary> mercenaryObservers;
+    private List<Mercenary> mercenaryObservers = new ArrayList<>();
     private double allyAttack;
 
     /**
@@ -129,6 +132,14 @@ public class Player extends MovingEntity {
         mercenaryObservers.forEach( mercenary -> {
             mercenary.setSpeed(speed);
         });
+    }
+
+
+
+    @Override
+    public JSONObject saveGameJson() {
+        // TODO Auto-generated method stub
+        return null;
     }
 } 
 
