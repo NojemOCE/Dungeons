@@ -56,7 +56,7 @@ public abstract class CollectableEntity extends Entity {
     }
 
     public EntityResponse getEntityResponse() {
-        return new EntityResponse(getId(), getType(), getPosition(), !isCollected());
+        return new EntityResponse(getId(), getType(), getPosition(), false);
     }
 
     public ItemResponse getItemResponse() {
