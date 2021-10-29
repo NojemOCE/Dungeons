@@ -9,20 +9,14 @@ import dungeonmania.util.Position;
 public abstract class CollectableEntity extends Entity {
     private boolean collected;
     private String type;
-    private Inventory inventory;
     private int durability;
 
 
 
-    public CollectableEntity(int x, int y, String id, String type, Inventory inventory) {
+    public CollectableEntity(int x, int y, String id, String type) {
         super(new Position(x, y, 1), id, type);
         this.collected = false;
         this.type = type;
-        this.inventory = inventory;
-    }
-
-    public Inventory getInventory() {
-        return inventory;
     }
 
     /**
@@ -30,7 +24,6 @@ public abstract class CollectableEntity extends Entity {
      */
     public void collect() {
         this.collected = true;
-        inventory.collect(this);
     }
 
     public boolean isCollected() {

@@ -5,7 +5,6 @@ import dungeonmania.inventory.Inventory;
 public class Armour extends CollectableEntity {
 
     private String itemId;
-    private Inventory inventory;
     private final int DURABILITY = 7;
 
     private final double DEFENCE_MULTIPLIER = 0.5;
@@ -22,10 +21,7 @@ public class Armour extends CollectableEntity {
     };
 
     public void consume() {
-        decreaseDurability();;
-        if (getDurability() == 0) {
-            inventory.removeItem(itemId);
-        }
+        decreaseDurability();  
     };
 
 }
