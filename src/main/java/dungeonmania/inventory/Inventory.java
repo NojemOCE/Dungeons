@@ -95,11 +95,11 @@ public class Inventory {
      * @param keyColour key colour to search for
      * @return the Key if found, else null
      */
-    public Key keyInInventory(String keyColour) {
+    public Key keyInInventory(int keyColour) {
         List<Key> keys = collectableItems.values().stream()
                                         .filter(x -> x instanceof Key)
                                         .map(Key.class::cast)
-                                        .filter(x -> x.getKeyColour().equals(keyColour))
+                                        .filter(x -> x.getKeyColour()== keyColour)
                                         .collect(Collectors.toList());
 
         if (keys.isEmpty()) {

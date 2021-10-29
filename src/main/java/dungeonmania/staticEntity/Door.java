@@ -9,7 +9,7 @@ import dungeonmania.movingEntity.Player;
 import dungeonmania.util.Position;
 
 public class Door extends StaticEntity {
-    private String keyColour;
+    private int keyColour;
     private boolean isOpen = false;
 
     /**
@@ -19,7 +19,7 @@ public class Door extends StaticEntity {
      * @param id id of the door
      * @param keyColour unique key pair
      */
-    public Door(int x, int y, String id, String keyColour) {
+    public Door(int x, int y, String id, int keyColour) {
         super(new Position(x, y, 1), id, "door");
         this.keyColour = keyColour;
     }
@@ -32,10 +32,10 @@ public class Door extends StaticEntity {
     }
     
     /**
-     * Getter for the key colour of this door
+     * Getter for the key "colour" (ie. code) of this door
      * @return the key colour of this door
      */
-    public String getKeyColour() {
+    public int getKeyColour() {
         return keyColour;
     }
     /**

@@ -6,14 +6,14 @@ import dungeonmania.Consumable;
 import dungeonmania.inventory.Inventory;
 
 public class Key extends CollectableEntity {
-    private String keyColour;
+    private int keyColour;
 
-    public Key(int x, int y, String itemId, String keyColour) {
+    public Key(int x, int y, String itemId, int keyColour) {
         super(x, y, itemId, "key");
         this.keyColour = keyColour;
     }
 
-    public String getKeyColour() {
+    public int getKeyColour() {
         return keyColour;
     }
 

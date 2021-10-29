@@ -41,7 +41,7 @@ public class OrGoal implements GoalComponent{
                                             .collect(Collectors.joining(" "  + operator + " "));
 
 
-        return unachievedSubGoals;
+        return "(" + unachievedSubGoals + ")";
     }
 
     public void addSubGoal(GoalComponent subGoal) {

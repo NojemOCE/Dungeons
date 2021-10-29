@@ -88,17 +88,23 @@ public class World {
         setWidth((Integer.parseInt(width)));*/
 
         //System.out.println(worldData.toString());
+
         JSONArray entities = worldData.getJSONArray("entities");
 
         for (int i = 0; i < entities.length(); i++) {
             createEntity(entities.getJSONObject(i), String.valueOf(incrementEntityCount()));
         }
-
+        
         
         JSONObject g = worldData.getJSONObject("goal-condition");
-
-        GoalComponent goal = createGoal(g);
-        setGoals(goal);
+        if (!(g == null)) {
+            GoalComponent goal = createGoal(g);
+            setGoals(goal);
+        }
+        else {
+            setGoals(null);
+        }
+        
 
         return worldDungeonResponse();
     }
@@ -147,17 +153,22 @@ public class World {
         } 
         
         else if (type.equals("door")) {
-            String key = obj.getString("key");
+            int key = (int)obj.get("key");
             Door e = new Door(x, y, id, key);
             staticEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("portal")) {
             Portal e;
+            System.out.println("about to make a portal");
+
             String colour = obj.getString("colour");
+
+            System.out.println("colour is " + colour);
             if (staticEntities.containsKey(colour)) {
                 e = new Portal(x, y, colour + "2", colour, (Portal) staticEntities.get(colour));
             } else {
+                System.out.println("No matching colour");
                 e = new Portal(x, y, colour, colour);
             }
             staticEntities.put(e.getId(), e);
@@ -194,7 +205,7 @@ public class World {
         } 
         
         else if (type.equals("key")) {
-            String key = obj.getString("key");
+            int key = (int)obj.get("key");
             Key e = new Key(x, y, id, key);
             collectableEntities.put(e.getId(), e);
         } 
@@ -242,6 +253,7 @@ public class World {
 
     private GoalComponent createGoal(JSONObject goal) {
         String currGoal = goal.getString("goal");
+
         // Will return null if the goal is not exit,enemies,treasure, AND or OR
         if (currGoal.equals("exit")) {
             return new ExitGoal(currGoal);
@@ -280,7 +292,10 @@ public class World {
     }
 
     private String getGoalsResponse() {
-        return goals.remainingGoalString();
+        if (!(goals == null)) {
+            return goals.remainingGoalString();
+        }
+        else return null;
     }
     private void setGoals(GoalComponent goals) {
         this.goals = goals;
@@ -368,16 +383,32 @@ public class World {
         //     }
         // }
 
-        if (tickCount >0 && tickCount%SPIDER_SPAWN == 0) {
+        // TODO this can probably be moved to a spider spawn method but I'm lazy rn so just leaving it here
+        if (tickCount >0 && tickCount%SPIDER_SPAWN == 0 && currentSpiders() < MAX_SPIDERS) {
             Random ran1 = new Random();
             Random ran2 = new Random();
 
             int x = ran1.nextInt(highestX);
-            int y =  ran2.nextInt(highestY);
+            int y = ran2.nextInt(highestY);
+            
+            boolean valid = false;
+            while (!valid) {
+                StaticEntity se = getStaticEntity(new Position(x,y));
+                MovingEntity me = getCharacter(new Position(x,y)); 
 
-            String id = String.valueOf(incrementEntityCount());
+                if ((!(se == null) && (se instanceof Boulder)) || !(me == null) || (player.getPosition().equals(new Position(x, y)))) {
+                    x = ran1.nextInt(highestX);
+                    y = ran2.nextInt(highestY);
+                }
+                else{
+                    valid = true;
+                }
+            }
+            
 
-            Spider newSpider = new Spider(x, y, id);
+            
+
+            Spider newSpider = new Spider(x, y, "spider"+String.valueOf(incrementEntityCount()));
             movingEntities.put(newSpider.getId(), newSpider);
             
         }
@@ -390,6 +421,16 @@ public class World {
         
         tickCount++;
         return worldDungeonResponse();
+    }
+
+    private int currentSpiders() {
+        int currSpiders = 0;
+        for (MovingEntity m : movingEntities.values())  {
+            if (m instanceof Spider) {
+                currSpiders++;
+            }
+        }
+        return currSpiders;
     }
 
 
@@ -510,7 +551,7 @@ public class World {
         return inventory.inInventory(item.getId());
     }
 
-    public Key keyInInventory(String keyColour) {
+    public Key keyInInventory(int keyColour) {
         return inventory.keyInInventory(keyColour);
     }
 

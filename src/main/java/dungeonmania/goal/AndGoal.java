@@ -42,7 +42,7 @@ public class AndGoal implements GoalComponent {
                                             .collect(Collectors.joining(" "  + operator + " "));
 
 
-        return unachievedSubGoals;
+        return "(" + unachievedSubGoals + ")";
     }
     
     public void addSubGoal(GoalComponent subGoal) {
