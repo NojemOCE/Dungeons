@@ -21,7 +21,6 @@ public class Boulder extends StaticEntity {
      */
     public Boulder(int x, int y, String id) {
         super(new Position(x, y, 1), id, "boulder");
-
     }
 
     /**
