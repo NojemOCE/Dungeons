@@ -3,8 +3,6 @@ package dungeonmania.staticEntity;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.json.JSONObject;
-
 import dungeonmania.Entity;
 import dungeonmania.World;
 import dungeonmania.movingEntity.Player;

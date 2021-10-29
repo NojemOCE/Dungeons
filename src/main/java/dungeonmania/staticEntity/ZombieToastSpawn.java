@@ -7,7 +7,6 @@ import java.util.Random;
 import dungeonmania.Entity;
 import dungeonmania.World;
 import dungeonmania.exceptions.InvalidActionException;
-import dungeonmania.gamemode.Gamemode;
 import dungeonmania.util.Position;
 import dungeonmania.movingEntity.*;
 import dungeonmania.response.models.EntityResponse;
@@ -41,7 +40,6 @@ public class ZombieToastSpawn extends StaticEntity {
         Player player = world.getPlayer();
 
         if (Position.isAdjacent(player.getPosition(), this.getPosition())) {
-            // TODO: need to change this according to inventory
             if (world.playerHasWeapon()) {
                 // destroy spawner
                 List<Entity> thisSpawner = new ArrayList<>();
@@ -60,17 +58,10 @@ public class ZombieToastSpawn extends StaticEntity {
      * Spawns zombie toasts in an open square cardinally adjacent to the spawner.
      * @return
      */
-    public Zombie spawn(String id, Gamemode gameMode){
-        // should this return a zombie in the same position as the spawner
-        // ^ doing this for now
+    public Position spawn(){
         Random random = new Random();
-        List<Position> adjPositions = this.getPosition().getAdjacentPositions();
-
-        // need world?
-
-        // Zombie newZombie = new Zombie(, y, id, gameMode);
-
-        return null;
+        List<Position> adjPositions = this.getPosition().getCardinallyAdjacentPositions();
+        return adjPositions.get(random.nextInt(4));
     }
 
     
