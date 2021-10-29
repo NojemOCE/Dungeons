@@ -2,6 +2,7 @@ package dungeonmania.movingEntity;
 
 import dungeonmania.util.*;
 import dungeonmania.World;
+import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.movingEntity.MovementStrategies.FollowPlayer;
 import dungeonmania.response.models.EntityResponse;
 
@@ -10,7 +11,7 @@ public class Mercenary extends MovingEntity {
 
     static final int MERC_ATTACK = 3;
     static final int MERC_HEALTH = 9;
-    private static final int GOLD_TO_BRIBE = 1;
+    private static final int GOLD_TO_BRIBE = 2;
     private static final double BATTLE_RADIUS = 5;
     private Player subject;
 
@@ -51,6 +52,29 @@ public class Mercenary extends MovingEntity {
     public void update(Movement movement) {
         // take in duration left,
         //after duration is 0 revert back to normal pattern;
+    }
+
+
+    /**
+     *  
+     * The character can bribe a mercenary if they are within 2 cardinal tiles
+     * to the mercenary. Player requires minimum amount of gold to bribe.
+     */
+    public void interact(World world) throws InvalidActionException {
+        Player player = world.getPlayer();
+        Position relativePos = Position.calculatePositionBetween(player.getPosition(), this.getPosition());
+
+        if ((relativePos.getX() + relativePos.getY()) <= 2) {
+            if (world.numItemInInventory("treasure") >= GOLD_TO_BRIBE) {
+                for (int i = 0; i < GOLD_TO_BRIBE; i++) {
+                    world.useByType("treasure");
+                }
+            } else {
+                throw new InvalidActionException("Not enough gold to bribe Mercenary!");
+            }
+        } else {
+            throw new InvalidActionException("Must be within 2 cardinal tiles to bribe Mercenary!");
+        }
     }
 
     @Override
