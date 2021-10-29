@@ -190,13 +190,13 @@ public class World {
         } 
         
         else if (type.equals("treasure")) {
-            Treasure e = new Treasure(x, y, id, inventory);
+            Treasure e = new Treasure(x, y, id);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("key")) {
             String key = obj.getString("key");
-            Key e = new Key(x, y, id, inventory, key);
+            Key e = new Key(x, y, id, key);
             collectableEntities.put(e.getId(), e);
         } 
         
@@ -206,17 +206,17 @@ public class World {
         } 
         
         else if (type.equals("invincibility_potion")) {
-            InvincibilityPotion e = new InvincibilityPotion(x, y, id, this, inventory);
+            InvincibilityPotion e = new InvincibilityPotion(x, y, id);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("invisibility_potion")) {
-            InvisibilityPotion e = new InvisibilityPotion(x, y, id, this, inventory);
+            InvisibilityPotion e = new InvisibilityPotion(x, y, id);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("wood")) {
-            Wood e = new Wood(x, y, id, inventory);
+            Wood e = new Wood(x, y, id);
             collectableEntities.put(e.getId(), e);
         } 
         
@@ -226,12 +226,12 @@ public class World {
         } 
         
         else if (type.equals("bomb")) {
-            Bomb e = new Bomb(x, y, id, this, inventory);
+            Bomb e = new Bomb(x, y, id);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("sword")) {
-            Sword e = new Sword(x, y, id, inventory);
+            Sword e = new Sword(x, y, id);
             collectableEntities.put(e.getId(), e);
         }
         else if (type.equals("one_ring")) {
@@ -308,7 +308,7 @@ public class World {
             int next = ran.nextInt(10);
             if (10*MERCENARY_ARMOUR_DROP > next)  {
                 // return an armour
-                Armour armour = new Armour(charX, charY, String.valueOf(incrementEntityCount()), inventory);
+                Armour armour = new Armour(charX, charY, String.valueOf(incrementEntityCount()));
                 armour.collect();
             }
         }
@@ -318,7 +318,7 @@ public class World {
             int next = ran.nextInt(10);
             if (10*ZOMBIE_ARMOUR_DROP > next)  {
                 // return an armour
-                Armour armour = new Armour(charX, charY, String.valueOf(incrementEntityCount()), inventory);
+                Armour armour = new Armour(charX, charY, String.valueOf(incrementEntityCount()));
                 armour.collect();
             }
         }
@@ -355,19 +355,19 @@ public class World {
             player.tick(itemUsed, movementDirection, this);
         }
         if (Objects.isNull(itemUsed)) {
-            inventory.tick(movementDirection);
+            inventory.tick();
         } else {
             inventory.tick(itemUsed);
         }
 
         // now move all entities
-        for (MovingEntity me: movingEntities.values()) {
-            me.move(this);
-            if (me.getPosition().equals(player.getPosition())) {
-                currentBattle = player.battle(me); // if invisible it will add null
-                player.notifyObservers(1);
-            }
-        }
+        // for (MovingEntity me: movingEntities.values()) {
+        //     me.move(this);
+        //     if (me.getPosition().equals(player.getPosition())) {
+        //         currentBattle = player.battle(me); // if invisible it will add null
+        //         player.notifyObservers(1);
+        //     }
+        // }
 
         if (tickCount >0 && tickCount%SPIDER_SPAWN == 0) {
             Random ran1 = new Random();
@@ -509,15 +509,6 @@ public class World {
      */
     public boolean inInventory(CollectableEntity item) {
         return inventory.inInventory(item.getId());
-    }
-
-    /**
-     * Checks if a given Buildable item is in the players inventory
-     * @param item buildable item to check for in inventory
-     * @return true if the item is in the players inventory, false otherwise
-     */
-    public boolean inInventory(Buildable item) {
-        return inventory.inInventory(item.getItemId());
     }
 
     public Key keyInInventory(String keyColour) {
