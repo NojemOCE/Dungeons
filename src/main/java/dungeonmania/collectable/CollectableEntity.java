@@ -1,27 +1,19 @@
 package dungeonmania.collectable;
 
 import dungeonmania.inventory.Inventory;
+import dungeonmania.Consumable;
 import dungeonmania.Entity;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Position;
 
-public abstract class CollectableEntity extends Entity {
+public abstract class CollectableEntity extends Entity implements Consumable {
     private boolean collected;
-    private String type;
-    private Inventory inventory;
+    private int durability = 1;
 
-
-
-    public CollectableEntity(int x, int y, String id, String type, Inventory inventory) {
+    public CollectableEntity(int x, int y, String id, String type) {
         super(new Position(x, y, 1), id, type);
         this.collected = false;
-        this.type = type;
-        this.inventory = inventory;
-    }
-
-    public Inventory getInventory() {
-        return inventory;
     }
 
     /**
@@ -29,11 +21,14 @@ public abstract class CollectableEntity extends Entity {
      */
     public void collect() {
         this.collected = true;
-        inventory.collect(this);
     }
 
     public boolean isCollected() {
         return collected;
+    }
+
+    public void consume() {
+        this.durability--;
     }
     
     public void tick() {}
@@ -42,8 +37,16 @@ public abstract class CollectableEntity extends Entity {
         this.collected = false;
     }
 
+    public void setDurability(int durability) {
+        this.durability = durability;
+    }
+
+    public int getDurability() {
+        return this.durability;
+    }
+
     public EntityResponse getEntityResponse() {
-        return new EntityResponse(getId(), getType(), getPosition(), !isCollected());
+        return new EntityResponse(getId(), getType(), getPosition(), false);
     }
 
     public ItemResponse getItemResponse() {
