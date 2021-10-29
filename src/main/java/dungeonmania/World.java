@@ -612,28 +612,29 @@ public class World {
 
     
     
-    public String saveGame() {
-        JSONObject saveState = new JSONObject();
-        saveState.put("tick-count", tickCount);
-        saveState.put("dungeon-name", dungeonName);
-        saveState.put("entity-count", entityCount);
-        saveState.put("inventory", inventory.saveGameJson());
-        saveState.put("player", player.saveGameJson());
+    public JSONObject saveGame() {
+        JSONObject worldJSON = new JSONObject();
 
-        JSONArray entitiesInInventory = new JSONArray();
-        for (MovingEntity e : movingEntities.values()) {
-            entitiesInInventory.put(e.saveGameJson());
+        worldJSON.put("gamemode", gamemode.getGameModeType());
+        worldJSON.put("tick-count", tickCount);
+        worldJSON.put("dungeon-name", dungeonName);
+        worldJSON.put("entity-count", entityCount);
+        worldJSON.put("inventory", inventory.saveGameJson());
+        worldJSON.put("player", player.saveGameJson());
+        worldJSON.put("moving-entities", movingEntitySaveGameJson());
+        worldJSON.put("static-entities", staticEntitySaveGameJson());
+        worldJSON.put("collectable-entities", staticEntitySaveGameJson());
+
+        if (currentBattle.isActiveBattle()) {
+            worldJSON.put("current-battle", currentBattle.getCharacter().getId());
         }
-        for (StaticEntity e : staticEntities.values()) {
-            entitiesInInventory.put(e.saveGameJson());
-        }
-        for (CollectableEntity e : collectableEntities.values()) {
-            entitiesInInventory.put(e.saveGameJson());
+        if (!(goals == null)) {
+            worldJSON.put("goal-condition", goals.saveGameJson());
         }
 
-
-        return saveGame().toString();
+        return worldJSON;
     }
+    
 
     private JSONArray staticEntitySaveGameJson() {
         JSONArray staticEntitiesJSON = new JSONArray();
@@ -657,29 +658,6 @@ public class World {
                                 .map(CollectableEntity::saveGameJson)
                                 .forEach(x -> collectableEntitiesJSON.put(x));
         return collectableEntitiesJSON;
-    }
-
-    public JSONObject worldSaveJson() {
-        JSONObject worldJSON = new JSONObject();
-
-        worldJSON.put("gamemode", gamemode.getGameModeType());
-        worldJSON.put("tick-count", tickCount);
-        worldJSON.put("dungeon-name", dungeonName);
-        worldJSON.put("entity-count", entityCount);
-        worldJSON.put("inventory", inventory.saveGameJson());
-        worldJSON.put("player", player.saveGameJson());
-        worldJSON.put("moving-entities", movingEntitySaveGameJson());
-        worldJSON.put("static-entities", staticEntitySaveGameJson());
-        worldJSON.put("collectable-entities", staticEntitySaveGameJson());
-
-        if (currentBattle.isActiveBattle()) {
-            worldJSON.put("current-battle", currentBattle.getCharacter().getId());
-        }
-        if (!(goals == null)) {
-            worldJSON.put("goal-condition", goals.saveGameJson());
-        }
-
-        return worldJSON;
     }
 
 }
