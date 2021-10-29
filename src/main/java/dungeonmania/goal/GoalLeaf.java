@@ -23,7 +23,7 @@ public abstract class GoalLeaf implements GoalComponent {
             return "";
         }
 
-        return goal;
+        return ":" + goal;
     }
 
     public Boolean getCompleted() {
