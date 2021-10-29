@@ -34,7 +34,6 @@ public class RandomMovement implements Movement {
 
         int upperbound = 4;
         int random = randomMovement.nextInt(upperbound);
-
         me.setPosition(me.validMove(me.getPosition().translateBy(Direction.UP), world));
         switch(random) {
             case 0:

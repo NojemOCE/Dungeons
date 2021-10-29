@@ -13,10 +13,6 @@ public class Bow extends CollectableEntity implements Consumable {
         setDurability(DURABILITY);
     }
 
-    public void consume() {
-        decreaseDurability();
-    }
-
     public int attackModifier() {    
         return ATTACK_MULTIPLIER; 
     }

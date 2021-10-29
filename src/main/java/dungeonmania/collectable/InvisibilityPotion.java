@@ -9,29 +9,26 @@ import dungeonmania.util.Position;
 
 public class InvisibilityPotion extends CollectableEntity implements Consumable {
 
-    private World world;
-    private int duration;
     private final int DURATION = 10;
     private boolean active = false;
 
-    public InvisibilityPotion(int x, int y, String itemId, World world, Inventory inventory) {
-        super(x, y, itemId, "invisibility_potion", inventory);
-        this.world = world;
-        this.duration = DURATION;
+    public InvisibilityPotion(int x, int y, String itemId) {
+        super(x, y, itemId, "invisibility_potion");
+        setDurability(DURATION);
     }
 
-
+    @Override
     public void consume() {
         this.active = true;
+        decreaseDurability();
         // notify the world that the invisibility potion effect is activated
         world.update(getType());
     };
 
     @Override
     public void tick() {
-        this.duration--;
-        if (this.duration == 0) {
-            getInventory().removeItem(getId());
+        decreaseDurability();
+        if (getDurability() == 0) {
             // notify the world that the invisibility potion effect is over
             world.update(getType());
         }

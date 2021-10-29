@@ -33,12 +33,12 @@ public abstract class CollectableEntity extends Entity implements Consumable {
     
     public void tick() {}
 
-    public void drop() {
-        this.collected = false;
-    }
-
     public void setDurability(int durability) {
         this.durability = durability;
+    }
+
+    public int decreaseDurability() {
+        return this.durability;
     }
 
     public int getDurability() {
