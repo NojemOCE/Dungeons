@@ -1,5 +1,7 @@
 package dungeonmania.staticEntity;
 
+import org.json.JSONObject;
+
 import dungeonmania.Entity;
 import dungeonmania.World;
 import dungeonmania.util.Position;
@@ -22,4 +24,14 @@ abstract public class StaticEntity extends Entity {
      */
     abstract public Position interact(World world, Entity entity);
 
+    
+	@Override
+	public JSONObject saveGameJson() {
+		JSONObject save = new JSONObject();
+        save.put("x", getPosition().getX());
+        save.put("y", getPosition().getY());
+        save.put("id", getId());
+        save.put("type", getType());
+		return save;
+	}
 }

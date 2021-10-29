@@ -154,13 +154,7 @@
             "y": 13,
             "id": "id",
             "type": "portal",
-            "colour": "colour",
-            "twin": {
-                "x": 17,
-                "y": 13,
-                "id": "id",
-                "colour": "colour"
-            }
+            "colour": "colour"
         },
         {
             "x": 17,

@@ -1,5 +1,7 @@
 package dungeonmania.staticEntity;
 
+import org.json.JSONObject;
+
 import dungeonmania.Entity;
 import dungeonmania.World;
 import dungeonmania.movingEntity.MovingEntity;
@@ -121,4 +123,11 @@ public class Portal extends StaticEntity {
     public String getColour() {
         return colour;
     }
+
+    @Override
+	public JSONObject saveGameJson() {
+		JSONObject save = super.saveGameJson();
+        save.put("colour", colour);
+		return save;
+	}
 }
