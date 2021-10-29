@@ -419,7 +419,7 @@ public class World {
 
 
         // Now evaluate goals. Goal should never be null, but add a check incase there is an error in the input file
-        if (!goals.equals(null)){
+        if (!(goals == null)){
             goals.evaluate(this);
         }
         
@@ -485,7 +485,7 @@ public class World {
      */
     public StaticEntity getStaticEntity(Position p) {
         for (StaticEntity s: staticEntities.values()) {
-            if (s.getPosition().equals(p) && s.getPosition().getLayer() == 1)  {
+            if (s.getPosition().equals(p))  {
                 return s;
             }
         }

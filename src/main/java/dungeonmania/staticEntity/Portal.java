@@ -22,7 +22,7 @@ public class Portal extends StaticEntity {
      * @param colour colour of the portal
      */
     public Portal(int x, int y, String id, String colour) {
-        super(new Position(x, y, 1), id, "portal");
+        super(new Position(x, y, 0), id, "portal");
         this.colour = colour;
     }
 
@@ -48,7 +48,7 @@ public class Portal extends StaticEntity {
     @Override
     public Position interact(World world, Entity entity) {
         if (!(entity instanceof Zombie)) {
-            travelToTwin(world, entity);
+            return travelToTwin(world, entity);
         }   
         // otherwise they just step on this spot
         return this.getPosition();
