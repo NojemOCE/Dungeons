@@ -1,12 +1,18 @@
 package dungeonmania.staticEntity;
 
+import dungeonmania.Entity;
 import dungeonmania.World;
-import dungeonmania.movingEntity.MovingEntity;
-import dungeonmania.response.models.EntityResponse;
+import dungeonmania.movingEntity.Spider;
 import dungeonmania.util.Position;
 
 public class Wall extends StaticEntity {
 
+    /**
+     * Constructor for wall
+     * @param x x coordinate of the wall
+     * @param y y coordinate of the wall
+     * @param id id of the wall
+     */
     public Wall(int x, int y, String id) {
         super(new Position(x, y, 1), id, "wall");
     }
@@ -18,16 +24,12 @@ public class Wall extends StaticEntity {
      * 
      * Since characters are unable to walk through walls, they will end up in the same spot
      */
-    // TODO: spider is ignored for now?? Since it implements its own movement
     @Override
-    public Position interact(World world, MovingEntity character) {
-        return character.getPosition();
+    public Position interact(World world, Entity entity) {
+        if (entity instanceof Spider) {
+            return this.getPosition();
+        }
+        return entity.getPosition();
     }
 
-    @Override
-    public EntityResponse getEntityResponse() {
-        // TODO Update for ID
-        return new EntityResponse("not a real ID", "wall", getPosition(), false);
-    }
-    
 }

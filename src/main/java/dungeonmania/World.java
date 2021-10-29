@@ -1,8 +1,11 @@
 package dungeonmania;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import javax.xml.crypto.AlgorithmMethod;
@@ -11,54 +14,45 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import dungeonmania.goal.*;
-import dungeonmania.response.models.DungeonResponse;
-import dungeonmania.response.models.EntityResponse;
+import dungeonmania.inventory.Inventory;
+import dungeonmania.response.models.*;
 import dungeonmania.staticEntity.*;
-import dungeonmania.util.Direction;
-import dungeonmania.util.Position;
+import dungeonmania.util.*;
 import dungeonmania.gamemode.*;
 import dungeonmania.movingEntity.*;
-import dungeonmania.buildable.Bow;
-import dungeonmania.buildable.Buildable;
-import dungeonmania.buildable.Shield;
-import dungeonmania.collectable.Armour;
-import dungeonmania.collectable.Arrows;
-import dungeonmania.collectable.Bomb;
-import dungeonmania.collectable.CollectableEntity;
-import dungeonmania.collectable.HealthPotion;
-import dungeonmania.collectable.InvincibilityPotion;
-import dungeonmania.collectable.InvisibilityPotion;
-import dungeonmania.collectable.Key;
-import dungeonmania.collectable.OneRing;
-import dungeonmania.collectable.Sword;
-import dungeonmania.collectable.Treasure;
-import dungeonmania.collectable.Wood;
+import dungeonmania.buildable.*;
+import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
-import dungeonmania.response.models.ItemResponse;
-import dungeonmania.response.models.EntityResponse;
+
 
 
 // TODO: remember to implement all the observer interfaces as we go
-public class World implements ObserverExitGoal {
+public class World {
 
-    private int width;
-    private int height;
+    //private int width;
+    //private int height;
 
-
+    private Inventory inventory;
     private Gamemode gamemode;
     private Player player;
-    private String id;
-    private List<List<Goal>> goals; // TODO Composite pattern
+    private String id; //TODO only ever set if game is saved?
+    private GoalComponent goals;
     //private HashMap<String, Entity> entities; TBC with implementation of overarching Entity class
     private Map<String, CollectableEntity> collectableEntities;
     private Map<String, StaticEntity> staticEntities; // Map<entityId, EntityType>
     private Map<String, MovingEntity> movingEntities;
     private int entityCount;
-    private List<Battle> battles;
-    private String goalString;
+    private Battle currentBattle;
     private String dungeonName;
 
+    static final int MAX_SPIDERS = 6;
+    static final int SPIDER_SPAWN = 10;
+    static final double MERCENARY_ARMOUR_DROP = 0.4;
+    static final double ZOMBIE_ARMOUR_DROP = 0.2;
+    static final double ONE_RING_DROP = 0.1;
     private int tickCount = 0;
+    private int highestX = 0;
+    private int highestY = 0;
     //private Map map; TBC
 
     /**
@@ -68,9 +62,9 @@ public class World implements ObserverExitGoal {
     public World(String dungeonName, String gameMode) {
         this.dungeonName = dungeonName;
         this.entityCount = 0;
-        if (gamemode.equals("Hard")) {
+        if (gameMode.equals("Hard")) {
             this.gamemode = new Hard();
-        } else if (gamemode.equals("Standard")) {
+        } else if (gameMode.equals("Standard")) {
             this.gamemode = new Standard();
         } else {
             this.gamemode = new Peaceful();
@@ -83,40 +77,41 @@ public class World implements ObserverExitGoal {
      * @return world dungeon reponse
      */
     public DungeonResponse buildWorld(JSONObject worldData) {
-        String width = worldData.getString("width");
+        /*String width = worldData.getString("width");
         String height = worldData.getString("height");
 
         setHeight((Integer.parseInt(height)));
-        setWidth((Integer.parseInt(width)));
+        setWidth((Integer.parseInt(width)));*/
 
         JSONArray entities = worldData.getJSONArray("entities");
 
         for (int i = 0; i < entities.length(); i++) {
-            String x = entities.getJSONObject(i).getString("x");
-            String y = entities.getJSONObject(i).getString("y");
-            String type = entities.getJSONObject(i).getString("type");
             createEntity(entities.getJSONObject(i), String.valueOf(incrementEntityCount()));
         }
-        // read goals
 
-        // TODO: look into composite pattern and try to implement that
 
-        // JSONObject goals = worldData.getJSONObject("goal-condition");
-        // String goalCondition = goals.getString("goal");
-        // JSONArray subgoals = goals.getJSONArray("subgoals");
-        // for (int i = 0; i < subgoals.length(); i++) {
-        //     String goal = subgoals.getJSONObject(i).getString("goal");
-        // }​
+        JSONObject goals = worldData.getJSONObject("goal-condition");
+        GoalComponent goal = createGoal(goals);
+        setGoals(goal);
 
         return worldDungeonResponse();
     }
 
-    // private void getGoals() {
+    private void updateBounds(int x, int y)  {
+        if (x > highestX) {
+            highestX = x;
+        }
+        if (y > highestY) {
+            highestY = y;
+        }
+    }
+    
 
-    // }
     private void createEntity(JSONObject obj, String id) {
         int x = Integer.parseInt(obj.getString("x"));
         int y = Integer.parseInt(obj.getString("y"));
+
+        updateBounds(x, y);
 
         String type = obj.getString("type");
 
@@ -148,9 +143,9 @@ public class World implements ObserverExitGoal {
             Portal e;
             String colour = obj.getString("colour");
             if (staticEntities.containsKey(colour)) {
-                e = new Portal(x, y, colour + "2", (Portal) staticEntities.get(colour));
+                e = new Portal(x, y, colour + "2", colour, (Portal) staticEntities.get(colour));
             } else {
-                e = new Portal(x, y, colour);
+                e = new Portal(x, y, colour, colour);
             }
             staticEntities.put(e.getId(), e);
         } 
@@ -159,91 +154,161 @@ public class World implements ObserverExitGoal {
             ZombieToastSpawn e = new ZombieToastSpawn(x, y, id);
             staticEntities.put(e.getId(), e);   
         } else if (type.equals("player")) {
-            Player e = new Player(x, y, id, this.gamemode);
+            Player e = new Player(x, y, id, new HealthPoint(gamemode.getStartingHP()));
             this.player = e;
             movingEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("spider")) {
-            Spider e = new Spider(x, y, id, this.gamemode);
+            Spider e = new Spider(x, y, id);
             movingEntities.put(e.getId(), e);
         } 
         
-        else if (type.equals("zombie")) {
-            Zombie e = new Zombie(x, y, id, this.gamemode);
+        else if (type.equals("zombie_toast")) {
+            Zombie e = new Zombie(x, y, id);
             movingEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("mercenary")) {
-            Mercenary e = new Mercenary(x, y, id, this.gamemode);
+            Mercenary e = new Mercenary(x, y, id);
             movingEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("treasure")) {
-            Treasure e = new Treasure(x, y, id);
+            Treasure e = new Treasure(new Position(x,y), id, inventory);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("key")) {
             String key = obj.getString("key");
-            Key e = new Key(x, y, id, key);
+            Key e = new Key(new Position(x,y), id, inventory, key);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("health_potion")) {
-            HealthPotion e = new HealthPotion(x, y, id);
+            HealthPotion e = new HealthPotion(new Position(x,y), id, inventory);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("invincibility_potion")) {
-            InvincibilityPotion e = new InvincibilityPotion(x, y, id);
+            InvincibilityPotion e = new InvincibilityPotion(new Position(x,y), id, this, inventory);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("invisibility_potion")) {
-            InvisibilityPotion e = new InvisibilityPotion(x, y, id);
+            InvisibilityPotion e = new InvisibilityPotion(new Position(x,y), id, this, inventory);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("wood")) {
-            Wood e = new Wood(x, y, id);
+            Wood e = new Wood(new Position(x,y), id, inventory);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("arrow")) {
-            Arrows e = new Arrows(x, y, id);
+            Arrows e = new Arrows(new Position(x,y), id);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("bomb")) {
-            Bomb e = new Bomb(x, y, id);
+            Bomb e = new Bomb(new Position(x,y), id, this, inventory);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("sword")) {
-            Sword e = new Sword(x, y, id);
+            Sword e = new Sword(new Position(x,y), id, inventory);
             collectableEntities.put(e.getId(), e);
-        } 
-        
-        /*else if (type.equals("armour")) {
-            Armour e = new Armour(x, y, id);
-            collectableEntities.put(e.getId(), e);
-        } 
-        
+        }
         else if (type.equals("one_ring")) {
-            OneRing e = new OneRing(x, y, id);
+            OneRing e = new OneRing(new Position(x,y), id, inventory);
             collectableEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("bow")) {
-            Bow e = new Bow(id);
-            collectableEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("shield")) {
-            Shield e = new Shield(id);
-            collectableEntities.put(e.getId(), e);
-        }*/
+        }
+    }
+
+    private GoalComponent createGoal(JSONObject goal) {
+        String currGoal = goal.getString("goal");
+        // Will return null if the goal is not exit,enemies,treasure, AND or OR
+        if (currGoal.equals("exit")) {
+            return new ExitGoal(currGoal);
+        }
+        else if (currGoal.equals("enemies")) {
+            return new EnemiesGoal(currGoal);
+        }
+        else if (currGoal.equals("boulders")) {
+            return new BoulderGoals(currGoal);
+        }
+        else if (currGoal.equals("treasure")) {
+            return new TreasureGoals(currGoal);
+        }
+        else if (currGoal.equals("AND")) {
+            AndGoal andGoal = new AndGoal(currGoal);
+            JSONArray subGoals = goal.getJSONArray("subgoals");
+
+            for (int i = 0; i < subGoals.length(); i++) {
+                GoalComponent subGoal = createGoal(subGoals.getJSONObject(i));
+                andGoal.addSubGoal(subGoal);
+            }
+            return andGoal; 
+        }
+        else if (currGoal.equals("OR")) {
+            OrGoal orGoal = new OrGoal(currGoal);
+            JSONArray subGoals = goal.getJSONArray("subgoals");
+
+            for (int i = 0; i < subGoals.length(); i++) {
+                GoalComponent subGoal = createGoal(subGoals.getJSONObject(i));
+                orGoal.addSubGoal(subGoal);
+            }
+            return orGoal; 
+        }
+
+        return null;
+    }
+
+    private String getGoalsResponse() {
+        return goals.remainingGoalString();
+    }
+    private void setGoals(GoalComponent goals) {
+        this.goals = goals;
+    }
+
+    /**
+     * Drops a shield:
+     * 20% of the time if the player has beaten a zombie
+     * 40% of the time if the player has beaten a mercenary
+     * 
+     * Drops the one ring:
+     * 10% of the time
+     * 
+     * If an item is dropped, it is automatically added to the players inventory
+     */
+    private void dropBattleReward(){
+        if (currentBattle.getCharacter() instanceof Mercenary) {
+            Random ran = new Random();
+            int next = ran.nextInt(10);
+            if (10*MERCENARY_ARMOUR_DROP > next)  {
+                // return an armour
+                Armour armour = new Armour(currentBattle.getCharacter().getPosition(), String.valueOf(incrementEntityCount()), inventory);
+                armour.collect();
+            }
+        }
+
+        else if (currentBattle.getCharacter() instanceof Zombie) {
+            Random ran = new Random();
+            int next = ran.nextInt(10);
+            if (10*ZOMBIE_ARMOUR_DROP > next)  {
+                // return an armour
+                Armour armour = new Armour(currentBattle.getCharacter().getPosition(), String.valueOf(incrementEntityCount()), inventory);
+                armour.collect();
+            }
+        }
+
+        Random ran = new Random();
+        int next = ran.nextInt(10);
+        if (10*ONE_RING_DROP > next)  {
+            // return the one ring
+            OneRing oneRing = new OneRing(currentBattle.getCharacter().getPosition(), String.valueOf(incrementEntityCount()), inventory);
+            oneRing.collect();
+        }
     }
 
 
@@ -251,7 +316,59 @@ public class World implements ObserverExitGoal {
     public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
         // IllegalArgumentException if itemUsed is not a bomb, invincibility_potion or an invisibility_potion
         // InvalidActionException if itemUsed is not in the player's inventory
+        
+        if (!Objects.isNull(currentBattle)) {
+            currentBattle.battleTick(inventory);
+            if (!currentBattle.isActiveBattle()) {
+                if (currentBattle.getPlayerWins()) {
+                    dropBattleReward();
+                    movingEntities.remove(currentBattle.getCharacter().getId());
+                } else {
+                    this.player = null; // will end game in dungeon response
+                    // needs to return early
+                }
+            }
+        }
+        
+        else  {
+            player.tick(itemUsed, movementDirection, this);
+        }
+        if (itemUsed.isEmpty()) {
+            inventory.tick(movementDirection);
+        } else {
+            inventory.tick(itemUsed);
+        }
 
+        // now move all entities
+        for (MovingEntity me: movingEntities.values()) {
+            me.move(this);
+            if (me.getPosition().equals(player.getPosition())) {
+                currentBattle = player.battle(me); // if invisible it will add null
+                player.notifyObservers(1);
+            }
+        }
+
+        if (tickCount >0 && tickCount%SPIDER_SPAWN == 0) {
+            Random ran1 = new Random();
+            Random ran2 = new Random();
+
+            int x = ran1.nextInt(highestX);
+            int y =  ran2.nextInt(highestY);
+
+            String id = String.valueOf(incrementEntityCount());
+
+            Spider newSpider = new Spider(x, y, id);
+            movingEntities.put(newSpider.getId(), newSpider);
+            
+        }
+
+
+        // Now evaluate goals. Goal should never be null, but add a check incase there is an error in the input file
+        if (!goals.equals(null)){
+            goals.evaluate(this);
+        }
+        
+        tickCount++;
         return worldDungeonResponse();
     }
 
@@ -264,11 +381,22 @@ public class World implements ObserverExitGoal {
         // * the player does not have any gold and attempts to bribe a mercenary
         // * the player does not have a weapon and attempts to destroy a spawner
         if (movingEntities.containsKey(entityId)) {
-
-        }
-
-        if (staticEntities.containsKey(entityId)) {
-
+            MovingEntity e = movingEntities.get(entityId);
+            if (!(e instanceof Mercenary)) {
+                throw new IllegalArgumentException();
+            } else {
+                // TODO??
+                ((Mercenary) e).interact();
+            }
+        } else if (staticEntities.containsKey(entityId)) {
+            StaticEntity e = staticEntities.get(entityId);
+            if (!(e instanceof ZombieToastSpawn)) {
+                throw new IllegalArgumentException();
+            } else {
+                ((ZombieToastSpawn)e).interact(this);
+            }
+        } else {
+            throw new IllegalArgumentException();
         }
 
         return worldDungeonResponse();
@@ -283,17 +411,7 @@ public class World implements ObserverExitGoal {
 
     // Return a dungeon response for the current world
     public DungeonResponse worldDungeonResponse(){
-
-        List<String> buildableList = new ArrayList<>();
-        // Here we would need to add a list of all current buildable items
-        // ie. if shield is buildable add "shield" to list
-        // if bow is buildable add "bow" to list
-
-        // TODO implement real buildable list
-        // TODO implement real goals list
-        buildableList.add("not a real list of buildable strings");
-
-        return new DungeonResponse(id, dungeonName, getEntityResponses(), getInventoryResponse(), buildableList, "not real goals");
+        return new DungeonResponse(id, dungeonName, getEntityResponses(), getInventoryResponse(), inventory.getBuildable(), getGoalsResponse());
     }
 
     /**
@@ -303,7 +421,8 @@ public class World implements ObserverExitGoal {
      */
     public StaticEntity getStaticEntity(Position p) {
         for (StaticEntity s: staticEntities.values()) {
-            if (s.getPosition().equals(p))  {
+            // TODO returning only if layer is 1
+            if (s.getPosition().equals(p) && s.getPosition().getLayer() == 1)  {
                 return s;
             }
         }
@@ -351,8 +470,8 @@ public class World implements ObserverExitGoal {
      * Gets the list of battles that exit currently in the world
      * @return list of current battles in world
      */
-    public List<Battle> getBattles() {
-        return battles;
+    public Battle getBattle() {
+        return currentBattle;
     }
 
     /**
@@ -369,7 +488,7 @@ public class World implements ObserverExitGoal {
      * @return true if the item is in the players inventory, false otherwise
      */
     public boolean inInventory(CollectableEntity item) {
-        return player.inInventory(item);
+        return inventory.inInventory(item.getId());
     }
 
     /**
@@ -378,31 +497,11 @@ public class World implements ObserverExitGoal {
      * @return true if the item is in the players inventory, false otherwise
      */
     public boolean inInventory(Buildable item) {
-        return player.inInventory(item);
+        return inventory.inInventory(item.getItemId());
     }
 
     public Key keyInInventory(String keyColour) {
-        return player.keyInInventory(keyColour);
-    }
-
-    public void use(CollectableEntity item) {
-        player.use(item);
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
+        return inventory.keyInInventory(keyColour);
     }
 
     public int incrementEntityCount() {
@@ -410,16 +509,13 @@ public class World implements ObserverExitGoal {
         return this.entityCount;
     }
 
-    @Override
-    public void update(SubjectExitGoal obj) {
-        // TODO Auto-generated method stub
-        
-    }
 
     public List<EntityResponse> getEntityResponses() {
         List<EntityResponse> entityResponses = new ArrayList<>();
         
-        entityResponses.add(player.getEntityResponse());
+        if (!(player  == null)){
+            entityResponses.add(player.getEntityResponse());
+        }
         entityResponses.addAll(movingEntities.values().stream().map(MovingEntity::getEntityResponse).collect(Collectors.toList()));
         entityResponses.addAll(staticEntities.values().stream().map(StaticEntity::getEntityResponse).collect(Collectors.toList()));
         entityResponses.addAll(collectableEntities.values().stream().map(CollectableEntity::getEntityResponse).collect(Collectors.toList()));
@@ -428,10 +524,108 @@ public class World implements ObserverExitGoal {
     }
 
     public List<ItemResponse> getInventoryResponse(){
-        return player.getInventoryResponse();
+        return inventory.getInventoryResponse();
+    }
+    
+    public boolean inBounds(int x, int y) {
+        return !(x < 0 || x >= highestX || y < 0 || y >= highestY);
     }
 
-    public boolean inBounds(int x, int y) {
-        return !(x < 0 || x >= width || y < 0 || y >= height);
+
+    /**
+     * Remove all entities from the given positions (except the player)
+     * @param position position to remove entities from
+     */
+    public void detonate(Position position) {
+
+        List<Entity> collectable = new ArrayList<>(collectableEntities.values());
+        removeEntities(position, collectable);
+
+        List<Entity> statics = new ArrayList<>(staticEntities.values());
+        removeEntities(position, statics);
+
+        List<Entity> moving = new ArrayList<>(movingEntities.values());
+        // remove player
+        moving.remove(player);
+        removeEntities(position, moving);
+    }
+
+    /**
+     * Remove all entities in given list at given position
+     * @param position position to remove entities from
+     * @param entities list of entities to check
+     */
+    public void removeEntities(Position position, List<Entity> entities) {
+        List<Entity> toRemove = new ArrayList<>();
+
+        for (Entity e : entities) {
+            if (e.getPosition().equals(position)) {
+                toRemove.add(e);
+            }
+        }
+        for (Entity e : toRemove) {
+            entities.remove(e);
+        }
+    }
+
+
+
+    public Map<String, StaticEntity> getStaticEntities() {
+        return this.staticEntities;
+    }
+
+    public Map<String, MovingEntity> getMovingEntities() {
+        return this.movingEntities;
+    }
+
+
+    public Map<String, CollectableEntity> getCollectibleEntities() {
+        return this.collectableEntities;
+    }
+
+
+    public void use(String itemId) {
+        inventory.use(itemId);
+    }
+    
+    /**
+     * Checks if the player has a weapon in inventory
+     * @return true if there is a weapon, otherwise false
+     */
+    public boolean playerHasWeapon(){
+        return inventory.hasWeapon();
+    }
+
+    public int getHighestX() {
+        return highestX;
+    }
+
+    public int getHighestY() {
+        return highestY;
+    }
+
+    
+    
+    public String saveGame() {
+        JSONObject saveState = new JSONObject();
+        saveState.put("tick-count", tickCount);
+        saveState.put("dungeon-name", dungeonName);
+        saveState.put("entity-count", entityCount);
+        saveState.put("inventory", inventory.saveGameJson());
+        saveState.put("player", player.saveGameJson());
+
+        JSONArray entitiesInInventory = new JSONArray();
+        for (MovingEntity e : movingEntities.values()) {
+            entitiesInInventory.put(e.saveGameJson());
+        }
+        for (StaticEntity e : staticEntities.values()) {
+            entitiesInInventory.put(e.saveGameJson());
+        }
+        for (CollectableEntity e : collectableEntities.values()) {
+            entitiesInInventory.put(e.saveGameJson());
+        }
+
+
+        return saveGame().toString();
     }
 }

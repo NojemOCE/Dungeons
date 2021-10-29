@@ -14,25 +14,26 @@ public class InvisibilityPotion extends CollectableEntity implements Consumable 
     private final int DURATION = 10;
     private boolean active = false;
 
-    public InvisibilityPotion(Position position, String itemId, World world) {
-        super(position, itemId, "invisibility_potion");
+    public InvisibilityPotion(int x, int y, String itemId, World world, Inventory inventory) {
+        super(x, y, itemId, "invisibility_potion", inventory);
         this.world = world;
         this.duration = DURATION;
     }
 
+
     public void consume() {
         this.active = true;
         // notify the world that the invisibility potion effect is activated
-        world.update(type);
+        world.update(getType());
     };
 
     @Override
     public void tick() {
         this.duration--;
         if (this.duration == 0) {
-            inventory.removeItem(itemId);
+            getInventory().removeItem(getId());
             // notify the world that the invisibility potion effect is over
-            world.update(type);
+            world.update(getType());
         }
 
     }

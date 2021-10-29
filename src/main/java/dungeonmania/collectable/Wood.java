@@ -1,18 +1,15 @@
 package dungeonmania.collectable;
 import dungeonmania.Consumable;
 import dungeonmania.inventory.Inventory;
-import dungeonmania.response.models.EntityResponse;
-import dungeonmania.response.models.ItemResponse;
-import dungeonmania.util.Position;
 
 public class Wood extends CollectableEntity implements Consumable {
 
-    public Wood(Position position, String itemId, Inventory inventory) {
-        super(position, itemId, "wood");
+    public Wood(int x, int y, String itemId, Inventory inventory) {
+        super(x, y, itemId, "wood", inventory);
     }
 
     public void consume() {
-        getInventory().removeItem(getItemId());
+        getInventory().removeItem(getId());
     }
 
 }

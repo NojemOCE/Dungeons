@@ -72,11 +72,17 @@ public class DungeonManiaController {
     }
     
     public DungeonResponse saveGame(String name) throws IllegalArgumentException {
-        return null;
+        // if no game is loaded then we can't save
+        if (current.equals(null)) {
+            throw new IllegalArgumentException("No game currently loaded");
+        }
+
+        String saveState = current.saveGame();
+        return current.worldDungeonResponse();
     }
 
     public DungeonResponse loadGame(String name) throws IllegalArgumentException {
-        return null;
+        return current.worldDungeonResponse();
     }
 
     public List<String> allGames() {
@@ -84,14 +90,29 @@ public class DungeonManiaController {
     }
 
     public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
-        return null;
+        current.tick(itemUsed, movementDirection);
+        
+        return current.worldDungeonResponse();
     }
 
+    /**
+     * Interacts with a mercenary (where the character bribes the mercenary) 
+     * or a zombie spawner, where the character destroys the spawner.
+     * @param entityId id of the entity to be interacted with
+     * @return DungeonResponse of the game state after interact
+     * @throws IllegalArgumentException
+     * @throws InvalidActionException
+     */
     public DungeonResponse interact(String entityId) throws IllegalArgumentException, InvalidActionException {
-        return null;
+        // check that id is valid
+        current.interact(entityId);
+
+        return current.worldDungeonResponse();
+
     }
 
     public DungeonResponse build(String buildable) throws IllegalArgumentException, InvalidActionException {
-        return null;
+        return current.worldDungeonResponse();
+
     }
 }

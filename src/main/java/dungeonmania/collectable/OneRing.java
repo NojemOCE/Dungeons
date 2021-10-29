@@ -1,18 +1,16 @@
 package dungeonmania.collectable;
 
 import dungeonmania.Consumable;
-import dungeonmania.response.models.EntityResponse;
-import dungeonmania.response.models.ItemResponse;
-import dungeonmania.util.Position;
+import dungeonmania.inventory.Inventory;
 
 public class OneRing extends CollectableEntity implements Consumable {
 
-    public OneRing(Position position, String itemId) {
-        super(position, itemId, "one_ring");
+    public OneRing(int x, int y, String itemId, Inventory inventory) {
+        super(x, y, itemId, "one_ring", inventory);
     }
 
     public void consume() {
-        getInventory().removeItem(getItemId());
+        getInventory().removeItem(getId());
     }
 
 }

@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import org.json.JSONArray;
+
 import dungeonmania.Consumable;
 import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
@@ -30,16 +32,21 @@ public class Inventory {
         this.usable.add("invisibility_potion");
     }
 
+    /**
+     * Add given item to the inventory
+     * @param item item that is collected and to be added to inventory
+     */
     public void collect(CollectableEntity item) {
-        String itemType = item.getItemId();
+        String itemType = item.getId();
 
         numCollected.putIfAbsent(itemType, 0);
         numCollected.put(itemType, numCollected.get(itemType) + 1);
 
-        collectableItems.put(item.getItemId(), item);
+        collectableItems.put(item.getId(), item);
     }
 
     public void use(String itemId) {
+<<<<<<< HEAD
         if (consumableItems.containsKey(itemId)) {
             if (consumableItems.get(itemId).consume()) {
                 consumableItems.remove(itemId);
@@ -49,6 +56,10 @@ public class Inventory {
                 numCollected.put(itemType, numCollected.get(itemType) - 1);
             }
         }
+=======
+        String itemType = collectableItems.remove(itemId).getId();
+        numCollected.put(itemType, numCollected.get(itemType) - 1);
+>>>>>>> master
     }
 
     public void craft(String itemType) {
@@ -69,8 +80,13 @@ public class Inventory {
         return numCollected.get(itemType);
     }
 
+    /**
+     * Checks for a key with a specified key colour in the inventory
+     * @param keyColour key colour to search for
+     * @return the Key if found, else null
+     */
     public Key keyInInventory(String keyColour) {
-        List<Key> keys = collectableItems.stream()
+        List<Key> keys = collectableItems.values().stream()
                                         .filter(x -> x instanceof Key)
                                         .map(Key.class::cast)
                                         .filter(x -> x.getKeyColour().equals(keyColour))
@@ -81,6 +97,19 @@ public class Inventory {
         } else {
             return keys.get(0);
         }
+    }
+
+    /**
+     * Checks if there is a weapon in the inventory
+     * @return true if there is a weapon, otherwise false
+     */
+    public boolean hasWeapon() {
+        for (CollectableEntity e : collectableItems.values()) {
+            if (e instanceof Sword) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public List<ItemResponse> getInventoryResponse() {
@@ -108,7 +137,7 @@ public class Inventory {
 
     public List<String> tick(Direction movementDirection) {
         collectableItems.forEach((id, item) -> {
-            item.updatePosition(player.getPosition());
+            // item.updatePosition(player.getPosition());
             item.tick();
         });
 
@@ -174,7 +203,10 @@ public class Inventory {
 
         return enemyAttack;
     }
+<<<<<<< HEAD
     
+=======
+>>>>>>> master
     public List<String> getBuildable() {
         ArrayList<String> buildable = new ArrayList<>();
 
@@ -192,5 +224,16 @@ public class Inventory {
         } else {
             throw new IllegalArgumentException("Wrong buildable type");
         }
+    }
+
+    public JSONArray saveGameJson() {
+        JSONArray entitiesInInventory = new JSONArray();
+        for (CollectableEntity e : collectableItems.values()) {
+            entitiesInInventory.put(e.saveGameJson());
+        }
+        for (Buildable b : buildableItems.values()) {
+            entitiesInInventory.put(b.saveGameJson());
+        }
+        return entitiesInInventory;
     }
 }

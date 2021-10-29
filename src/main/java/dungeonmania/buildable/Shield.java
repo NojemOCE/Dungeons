@@ -23,7 +23,6 @@ public class Shield implements Buildable, Consumable {
 
     public int defenceModifier() {
         if (built) {
-            consume();
             return DEFENCE;
         }
         return 1;
@@ -43,5 +42,11 @@ public class Shield implements Buildable, Consumable {
     @Override
     public ItemResponse getItemResponse() {
         return new ItemResponse(itemId, type);
+    }
+
+    @Override
+    public String getItemId() {
+        // TODO Auto-generated method stub
+        return itemId;
     }
 }

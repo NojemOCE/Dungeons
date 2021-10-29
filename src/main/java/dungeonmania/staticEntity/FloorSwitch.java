@@ -1,16 +1,21 @@
 package dungeonmania.staticEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import dungeonmania.Entity;
 import dungeonmania.World;
-import dungeonmania.goal.ObserverBoulderSwitchGoal;
-import dungeonmania.goal.SubjectBoulderSwitchGoal;
-import dungeonmania.movingEntity.MovingEntity;
-import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
 
-public class FloorSwitch extends StaticEntity implements SubjectBoulderSwitchGoal {
+public class FloorSwitch extends StaticEntity {
     private boolean isTriggered;
-    private ObserverBoulderSwitchGoal observer;
 
+    /**
+     * Constructor for floor switch
+     * @param x x coordinate of exit
+     * @param y y coordinate of exit
+     * @param id id of exit
+     */
     public FloorSwitch(int x, int y, String id) {
         super(new Position(x, y, 0), id, "switch");
         isTriggered = false;
@@ -21,16 +26,31 @@ public class FloorSwitch extends StaticEntity implements SubjectBoulderSwitchGoa
      * top of them. 
      */
     @Override
-    public Position interact(World world, MovingEntity character) {
+    public Position interact(World world, Entity entity) {
         return this.getPosition();
     }
 
     /**
      * When a boulder is pushed onto a floor switch, it is triggered.
+     * Also check for adjacent bombs
      */
-    public void trigger() {
+    public void trigger(World world) {
         isTriggered = true;
-        notifyObservers();
+
+        // check if there are any bombs
+        List<Position> cardinallyAdj = this.getPosition().getCardinallyAdjacentPositions();
+
+        List<StaticEntity> adjEntities = new ArrayList<>();
+        for (Position pos : cardinallyAdj) {
+            adjEntities.addAll(world.getStaticEntitiesAtPosition(pos));
+        }
+
+        for (StaticEntity e : adjEntities) {
+            if (e instanceof PlacedBomb) {
+                ((PlacedBomb) e).detonate(world);
+            }
+        }
+        
     }
 
     /**
@@ -38,28 +58,6 @@ public class FloorSwitch extends StaticEntity implements SubjectBoulderSwitchGoa
      */
     public void untrigger() {
         isTriggered = false;
-        notifyObservers();
     }
-
-    @Override
-    public void attach(ObserverBoulderSwitchGoal observer) {
-        this.observer = observer;    
-    }
-
-    @Override
-    public void notifyObservers() {
-        observer.update(this);        
-    }
-
-    @Override
-    public boolean isTriggered() {
-        return isTriggered;
-    }
-
-    @Override
-    public EntityResponse getEntityResponse() {
-        // TODO Update for ID
-        return new EntityResponse("not a real ID", "switch", getPosition(), false);
-    }
-    
+   
 }

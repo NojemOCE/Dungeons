@@ -6,10 +6,12 @@ import dungeonmania.*;
 
 public interface Movement {
 
-    // happens per tick
-    public void move(World world);
+    /**
+     * Takes a moving entity and the current game world, and moves them to their next position
+     * @param me entity to move
+     * @param world current game world
+     */
+    public void move(MovingEntity me, World world);
 
 
-    public Position validMove(Position position, World world);
-    // this will be called inside move prior to moving
 }
