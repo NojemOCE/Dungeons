@@ -17,6 +17,7 @@ public class Mercenary extends MovingEntity {
     private static final int GOLD_TO_BRIBE = 2;
     private static final double BATTLE_RADIUS = 5;
     private Player subject;
+    private boolean interactable = false;
 
     /**
      * Constructor for Mercenary taking an x coordinate, and y coordinate and an id
@@ -49,6 +50,16 @@ public class Mercenary extends MovingEntity {
         }
         
         getMovement().move(this, world);
+        setInteractable(world.getPlayer());
+    }
+
+    private void setInteractable(Player player) {
+        Position relativePos = Position.calculatePositionBetween(player.getPosition(), this.getPosition());
+        if ((relativePos.getX() + relativePos.getY()) <= 2) {
+            interactable = true;
+        } else {
+            interactable = false;
+        }
     }
 
     // TODO this needs to be updated
@@ -64,10 +75,7 @@ public class Mercenary extends MovingEntity {
      * to the mercenary. Player requires minimum amount of gold to bribe.
      */
     public void interact(World world) throws InvalidActionException {
-        Player player = world.getPlayer();
-        Position relativePos = Position.calculatePositionBetween(player.getPosition(), this.getPosition());
-
-        if ((relativePos.getX() + relativePos.getY()) <= 2) {
+        if (interactable) {
             if (world.numItemInInventory("treasure") >= GOLD_TO_BRIBE) {
                 for (int i = 0; i < GOLD_TO_BRIBE; i++) {
                     world.useByType("treasure");
@@ -80,9 +88,10 @@ public class Mercenary extends MovingEntity {
         }
     }
 
+
     @Override
     public EntityResponse getEntityResponse() {
-        return new EntityResponse(getId(), getType(), getPosition(), true);
+        return new EntityResponse(getId(), getType(), getPosition(), interactable);
     }
 
 
