@@ -12,6 +12,7 @@ import dungeonmania.Consumable;
 import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.response.models.ItemResponse;
+import dungeonmania.staticEntity.StaticEntity;
 import dungeonmania.buildable.*;
 import dungeonmania.movingEntity.Player;
 import dungeonmania.util.*;
@@ -46,7 +47,6 @@ public class Inventory {
     }
 
     public void use(String itemId) {
-<<<<<<< HEAD
         if (consumableItems.containsKey(itemId)) {
             if (consumableItems.get(itemId).consume()) {
                 consumableItems.remove(itemId);
@@ -56,12 +56,8 @@ public class Inventory {
                 numCollected.put(itemType, numCollected.get(itemType) - 1);
             }
         }
-=======
-        String itemType = collectableItems.remove(itemId).getId();
-        numCollected.put(itemType, numCollected.get(itemType) - 1);
->>>>>>> master
     }
-
+    
     public void craft(String itemType) {
         if (!isBuildable(itemType)) {
             throw new InvalidActionException("Insufficient items");
@@ -135,7 +131,7 @@ public class Inventory {
         return getBuildable();
     }
 
-    public List<String> tick(Direction movementDirection) {
+    public List<String> tick() {
         collectableItems.forEach((id, item) -> {
             // item.updatePosition(player.getPosition());
             item.tick();
@@ -203,10 +199,7 @@ public class Inventory {
 
         return enemyAttack;
     }
-<<<<<<< HEAD
     
-=======
->>>>>>> master
     public List<String> getBuildable() {
         ArrayList<String> buildable = new ArrayList<>();
 

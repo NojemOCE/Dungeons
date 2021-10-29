@@ -12,14 +12,9 @@ public class HealthPotion extends CollectableEntity implements Consumable {
     }
 
     public double heal() {
-<<<<<<< HEAD
         consume();
-=======
-        getInventory().removeItem(getId());
->>>>>>> master
         return HEAL_EFFECT;
     }
-    public void consume() {};
     
 
     public void consume() {

@@ -6,7 +6,6 @@ public class Armour extends CollectableEntity {
 
     private String itemId;
     private Inventory inventory;
-    private int durability;
     private final int DURABILITY = 7;
 
     private final double DEFENCE_MULTIPLIER = 0.5;
@@ -15,7 +14,7 @@ public class Armour extends CollectableEntity {
         super(x, y, itemId, "armour", inventory);
         this.itemId = itemId;
         this.inventory = inventory;
-        this.durability = DURABILITY;
+        setDurability(DURABILITY);;
     }
 
     public double defenceModifier() {
@@ -23,8 +22,8 @@ public class Armour extends CollectableEntity {
     };
 
     public void consume() {
-        this.durability--;
-        if (this.durability == 0) {
+        decreaseDurability();;
+        if (getDurability() == 0) {
             inventory.removeItem(itemId);
         }
     };

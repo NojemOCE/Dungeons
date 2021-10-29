@@ -1,9 +1,10 @@
-package dungeonmania.buildable;
+package dungeonmania.collectable;
 
 import dungeonmania.Consumable;
+import dungeonmania.buildable.Buildable;
 import dungeonmania.response.models.ItemResponse;
 
-public class Bow implements Buildable, Consumable {
+public class Bow extends CollectableEntity implements Consumable {
 
     private String type = "bow";
     private String itemId;

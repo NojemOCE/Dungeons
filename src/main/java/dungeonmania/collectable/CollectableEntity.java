@@ -10,6 +10,7 @@ public abstract class CollectableEntity extends Entity {
     private boolean collected;
     private String type;
     private Inventory inventory;
+    private int durability;
 
 
 
@@ -40,6 +41,18 @@ public abstract class CollectableEntity extends Entity {
 
     public void drop() {
         this.collected = false;
+    }
+
+    public void setDurability(int durability) {
+        this.durability = durability;
+    }
+
+    public void decreaseDurability() {
+        this.durability--;
+    }
+
+    public int getDurability() {
+        return this.durability;
     }
 
     public EntityResponse getEntityResponse() {

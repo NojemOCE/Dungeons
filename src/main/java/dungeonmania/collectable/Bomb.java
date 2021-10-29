@@ -16,6 +16,7 @@ public class Bomb extends CollectableEntity implements Consumable {
     public void consume() {
         getInventory().removeItem(getId());
         drop();
+
     }
 
 }
