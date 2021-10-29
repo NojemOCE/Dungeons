@@ -630,8 +630,10 @@ public class World {
         for (CollectableEntity e : collectableEntities.values()) {
             entitiesInInventory.put(e.saveGameJson());
         }
-
-
         return saveGame().toString();
+    }
+
+    public int numItemInInventory(String itemType) {
+        return inventory.numItem(itemType);
     }
 }
