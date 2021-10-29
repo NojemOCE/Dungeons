@@ -2,14 +2,9 @@ package dungeonmania.collectable;
 import dungeonmania.Consumable;
 import dungeonmania.inventory.Inventory;
 
-public class Treasure extends CollectableEntity implements Consumable {
+public class Treasure extends CollectableEntity {
 
-    public Treasure(int x, int y, String itemId, Inventory inventory) {
-        super(x, y, itemId, "treasure", inventory);
+    public Treasure(int x, int y, String itemId) {
+        super(x, y, itemId, "treasure");
     }
-
-    public void consume() {
-        getInventory().removeItem(getId());
-    }
-
 }

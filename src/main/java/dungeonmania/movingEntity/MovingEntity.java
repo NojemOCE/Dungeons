@@ -16,7 +16,6 @@ import dungeonmania.staticEntity.StaticEntity;
 public abstract class MovingEntity extends Entity {
     private HealthPoint healthPoint;
     private double attackDamage;
-    private Position position;
 
     private int speed;
 
@@ -92,15 +91,6 @@ public abstract class MovingEntity extends Entity {
         return attackDamage;
     }
 
-
-    public Position getPosition() {
-        return position;
-    }
-
-    public void setPosition(Position position) {
-        this.position = position;
-    }
-
     public boolean getAlly() {
         return this.ally;
     }
@@ -148,6 +138,15 @@ public abstract class MovingEntity extends Entity {
 
         return saveObj;
     }
+
+    @Override
+    public String toString() {
+        return "MovingEntity [ally=" + ally + ", attackDamage=" + attackDamage + ", defaultMovementStrategy="
+                + defaultMovementStrategy + ", healthPoint=" + healthPoint + ", movementStrategy=" + movementStrategy
+                + ", position=" + getPosition()+ ", speed=" + speed + "]";
+    }
+
+    
     
     
 }

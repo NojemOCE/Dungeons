@@ -3,6 +3,8 @@ package dungeonmania.staticEntity;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.json.JSONObject;
+
 import dungeonmania.Entity;
 import dungeonmania.World;
 import dungeonmania.movingEntity.Player;
@@ -55,13 +57,15 @@ public class Boulder extends StaticEntity {
                             .forEach(x -> x.trigger(world));
 
             // PORTALS:
-            Portal portal = entitiesAtNewPos.stream()
-                                            .filter(x -> x instanceof Portal)
-                                            .map(Portal.class::cast)
-                                            .collect(Collectors.toList())
-                                            .get(0);
+            List<Portal> portals = entitiesAtNewPos.stream()
+                                                   .filter(x -> x instanceof Portal)
+                                                   .map(Portal.class::cast)
+                                                   .collect(Collectors.toList());
+            if (!portals.isEmpty()) {
+                Portal portal = portals.get(0);
+                toMoveBoulderTo = portal.interact(world, this);
+            }
 
-            toMoveBoulderTo = portal.interact(world, this);
             Position playertoMoveTo = this.getPosition();
 
             // move boulder then return appropriate position for character to move to
@@ -121,5 +125,6 @@ public class Boulder extends StaticEntity {
             }
         }
     }
+
 
 }
