@@ -80,7 +80,8 @@ public class DungeonManiaController {
             throw new IllegalArgumentException("No game currently loaded");
         }
 
-        String saveState = current.saveGame();
+        JSONObject saveState = current.saveGame();
+        //TODO save game
         return current.worldDungeonResponse();
     }
 
@@ -118,4 +119,5 @@ public class DungeonManiaController {
         return current.worldDungeonResponse();
 
     }
+
 }

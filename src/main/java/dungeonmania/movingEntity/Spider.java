@@ -39,11 +39,25 @@ public class Spider extends MovingEntity {
         getMovement().move(this, world);
     }
 
-
     @Override
     public JSONObject saveGameJson() {
-        // TODO Auto-generated method stub
-        return null;
+        JSONObject spiderJSON = super.saveGameJson();
+        JSONObject movement = new JSONObject();
+
+        movement.put("default-movement", defaultMovementStrategy.getMovementType());
+        movement.put("movement-strategy", movementStrategy.getMovementType());
+
+        if(defaultMovementStrategy instanceof CircleMovement) {
+            CircleMovement moveStrat = (CircleMovement) defaultMovementStrategy;
+            movement.put("current-direction", moveStrat.getCurrentDirection());
+            movement.put("next-direction", moveStrat.getNextDirection());
+            movement.put("remMovesCurr", moveStrat.getRemMovesCurr());
+            movement.put("remMovesNext", moveStrat.getRemMovesNext());
+        }
+        
+        spiderJSON.put("movement", movement);
+
+        return spiderJSON;
     }
 
 

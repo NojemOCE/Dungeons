@@ -11,7 +11,11 @@ public class Environment {
     public synchronized final static String getIPAddress() {
         return (IPAddress == null && (IPAddress = System.getenv(PREFIX + "ADDRESS")) == null)
             ? IPAddress = "localhost" // default to localhost
+<<<<<<< HEAD
             //? IPAddress = "0.0.0.0"
+=======
+            // ? IPAddress = "0.0.0.0" // for WSL
+>>>>>>> master
             : IPAddress;
     }
 

@@ -2,6 +2,7 @@ package dungeonmania.movingEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.Objects;
 
 import org.json.JSONObject;
@@ -131,12 +132,18 @@ public class Player extends MovingEntity {
         });
     }
 
-
-
     @Override
     public JSONObject saveGameJson() {
-        // TODO Auto-generated method stub
-        return null;
+        JSONObject playerJSON = super.saveGameJson();
+        playerJSON.put("ally-attack", allyAttack);
+
+
+        List<String> mercList = new ArrayList<>();
+        mercList = mercenaryObservers.stream().map(MovingEntity::getId).collect(Collectors.toList());
+        
+        playerJSON.put("mercenaries", mercList);
+
+        return playerJSON;
     }
 } 
 

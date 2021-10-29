@@ -1,5 +1,7 @@
 package dungeonmania.collectable;
 
+import org.json.JSONObject;
+
 import dungeonmania.inventory.Inventory;
 
 public class Armour extends CollectableEntity {
@@ -17,6 +19,6 @@ public class Armour extends CollectableEntity {
 
     public double defenceModifier() {
         return DEFENCE_MULTIPLIER;
-    };
+    }
 
 }

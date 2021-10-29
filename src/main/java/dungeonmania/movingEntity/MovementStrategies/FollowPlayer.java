@@ -101,4 +101,8 @@ public class FollowPlayer implements Movement {
 
         return validNeighbours;
     }
+    @Override
+    public String getMovementType() {
+        return "followPlayer";
+    }
 }

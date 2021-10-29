@@ -17,3 +17,5 @@ public class Bow extends CollectableEntity {
         return ATTACK_MULTIPLIER; 
     }
 
+}
+

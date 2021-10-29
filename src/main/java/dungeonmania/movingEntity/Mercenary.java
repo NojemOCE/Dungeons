@@ -85,11 +85,16 @@ public class Mercenary extends MovingEntity {
         return new EntityResponse(getId(), getType(), getPosition(), true);
     }
 
-
     @Override
     public JSONObject saveGameJson() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+        JSONObject mercJSON = super.saveGameJson();
+        JSONObject movement = new JSONObject();
 
+        movement.put("default-movement", defaultMovementStrategy.getMovementType());
+        movement.put("movement-strategy", movementStrategy.getMovementType());
+        
+        mercJSON.put("movement", movement);
+
+        return mercJSON;
+    }
 }

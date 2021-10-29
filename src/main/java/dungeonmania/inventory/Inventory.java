@@ -18,10 +18,10 @@ import dungeonmania.movingEntity.Player;
 import dungeonmania.util.*;
 
 public class Inventory {
-    private Map<String, CollectableEntity> collectableItems;
-    private Map<String, Consumable> consumableItems;
-    private Map<String, Integer> numCollected;
-    private List<String> usable;
+    private Map<String, CollectableEntity> collectableItems = new HashMap<>();
+    private Map<String, Consumable> consumableItems = new HashMap<>();
+    private Map<String, Integer> numCollected = new HashMap<>();
+    private List<String> usable = new ArrayList<>();
 
     public Inventory() {
         this.usable.add("bomb");

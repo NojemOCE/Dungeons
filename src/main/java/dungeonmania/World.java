@@ -21,7 +21,6 @@ import dungeonmania.staticEntity.*;
 import dungeonmania.util.*;
 import dungeonmania.gamemode.*;
 import dungeonmania.movingEntity.*;
-import dungeonmania.buildable.*;
 import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
 
@@ -190,13 +189,13 @@ public class World {
         } 
         
         else if (type.equals("treasure")) {
-            Treasure e = new Treasure(x, y, id, inventory);
+            Treasure e = new Treasure(x, y, id);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("key")) {
             String key = obj.getString("key");
-            Key e = new Key(x, y, id, inventory, key);
+            Key e = new Key(x, y, id, key);
             collectableEntities.put(e.getId(), e);
         } 
         
@@ -206,17 +205,17 @@ public class World {
         } 
         
         else if (type.equals("invincibility_potion")) {
-            InvincibilityPotion e = new InvincibilityPotion(x, y, id, this, inventory);
+            InvincibilityPotion e = new InvincibilityPotion(x, y, id);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("invisibility_potion")) {
-            InvisibilityPotion e = new InvisibilityPotion(x, y, id, this, inventory);
+            InvisibilityPotion e = new InvisibilityPotion(x, y, id);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("wood")) {
-            Wood e = new Wood(x, y, id, inventory);
+            Wood e = new Wood(x, y, id);
             collectableEntities.put(e.getId(), e);
         } 
         
@@ -226,16 +225,16 @@ public class World {
         } 
         
         else if (type.equals("bomb")) {
-            Bomb e = new Bomb(x, y, id, this, inventory);
+            Bomb e = new Bomb(x, y, id);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("sword")) {
-            Sword e = new Sword(x, y, id, inventory);
+            Sword e = new Sword(x, y, id);
             collectableEntities.put(e.getId(), e);
         }
         else if (type.equals("one_ring")) {
-            OneRing e = new OneRing(x, y, id, inventory);
+            OneRing e = new OneRing(x, y, id);
             collectableEntities.put(e.getId(), e);
         }
 
@@ -308,7 +307,7 @@ public class World {
             int next = ran.nextInt(10);
             if (10*MERCENARY_ARMOUR_DROP > next)  {
                 // return an armour
-                Armour armour = new Armour(charX, charY, String.valueOf(incrementEntityCount()), inventory);
+                Armour armour = new Armour(charX, charY, "armour" + String.valueOf(incrementEntityCount()));
                 armour.collect();
             }
         }
@@ -318,7 +317,7 @@ public class World {
             int next = ran.nextInt(10);
             if (10*ZOMBIE_ARMOUR_DROP > next)  {
                 // return an armour
-                Armour armour = new Armour(charX, charY, String.valueOf(incrementEntityCount()), inventory);
+                Armour armour = new Armour(charX, charY, "armour" + String.valueOf(incrementEntityCount()));
                 armour.collect();
             }
         }
@@ -327,7 +326,7 @@ public class World {
         int next = ran.nextInt(10);
         if (10*ONE_RING_DROP > next)  {
             // return the one ring
-            OneRing oneRing = new OneRing(charX, charY, String.valueOf(incrementEntityCount()), inventory);
+            OneRing oneRing = new OneRing(charX, charY, "one_ring" + String.valueOf(incrementEntityCount()));
             oneRing.collect();
         }
     }
@@ -355,19 +354,19 @@ public class World {
             player.tick(itemUsed, movementDirection, this);
         }
         if (Objects.isNull(itemUsed)) {
-            inventory.tick(movementDirection);
+            inventory.tick();
         } else {
             inventory.tick(itemUsed);
         }
 
         // now move all entities
-        for (MovingEntity me: movingEntities.values()) {
-            me.move(this);
-            if (me.getPosition().equals(player.getPosition())) {
-                currentBattle = player.battle(me); // if invisible it will add null
-                player.notifyObservers(1);
-            }
-        }
+        // for (MovingEntity me: movingEntities.values()) {
+        //     me.move(this);
+        //     if (me.getPosition().equals(player.getPosition())) {
+        //         currentBattle = player.battle(me); // if invisible it will add null
+        //         player.notifyObservers(1);
+        //     }
+        // }
 
         if (tickCount >0 && tickCount%SPIDER_SPAWN == 0) {
             Random ran1 = new Random();
@@ -511,15 +510,6 @@ public class World {
         return inventory.inInventory(item.getId());
     }
 
-    /**
-     * Checks if a given Buildable item is in the players inventory
-     * @param item buildable item to check for in inventory
-     * @return true if the item is in the players inventory, false otherwise
-     */
-    public boolean inInventory(Buildable item) {
-        return inventory.inInventory(item.getItemId());
-    }
-
     public Key keyInInventory(String keyColour) {
         return inventory.keyInInventory(keyColour);
     }
@@ -626,27 +616,54 @@ public class World {
 
     
     
-    public String saveGame() {
-        JSONObject saveState = new JSONObject();
-        saveState.put("tick-count", tickCount);
-        saveState.put("dungeon-name", dungeonName);
-        saveState.put("entity-count", entityCount);
-        saveState.put("inventory", inventory.saveGameJson());
-        saveState.put("player", player.saveGameJson());
+    public JSONObject saveGame() {
+        JSONObject worldJSON = new JSONObject();
 
-        JSONArray entitiesInInventory = new JSONArray();
-        for (MovingEntity e : movingEntities.values()) {
-            entitiesInInventory.put(e.saveGameJson());
+        worldJSON.put("gamemode", gamemode.getGameModeType());
+        worldJSON.put("tick-count", tickCount);
+        worldJSON.put("dungeon-name", dungeonName);
+        worldJSON.put("entity-count", entityCount);
+        worldJSON.put("inventory", inventory.saveGameJson());
+        worldJSON.put("player", player.saveGameJson());
+        worldJSON.put("moving-entities", movingEntitySaveGameJson());
+        worldJSON.put("static-entities", staticEntitySaveGameJson());
+        worldJSON.put("collectable-entities", staticEntitySaveGameJson());
+
+        if (currentBattle.isActiveBattle()) {
+            worldJSON.put("current-battle", currentBattle.getCharacter().getId());
         }
-        for (StaticEntity e : staticEntities.values()) {
-            entitiesInInventory.put(e.saveGameJson());
+        if (!(goals == null)) {
+            worldJSON.put("goal-condition", goals.saveGameJson());
         }
-        for (CollectableEntity e : collectableEntities.values()) {
-            entitiesInInventory.put(e.saveGameJson());
-        }
-        return saveGame().toString();
+
+        return worldJSON;
+    }
+    
+
+    private JSONArray staticEntitySaveGameJson() {
+        JSONArray staticEntitiesJSON = new JSONArray();
+        staticEntities.values().stream()
+                                .map(StaticEntity::saveGameJson)
+                                .forEach(x -> staticEntitiesJSON.put(x));
+        return staticEntitiesJSON;
     }
 
+    private JSONArray movingEntitySaveGameJson() {
+        JSONArray movingEntitiesJSON = new JSONArray();
+        movingEntities.values().stream()
+                                .map(MovingEntity::saveGameJson)
+                                .forEach(x -> movingEntitiesJSON.put(x));
+        return movingEntitiesJSON;
+    }
+
+    private JSONArray collectableEntityGameJson() {
+        JSONArray collectableEntitiesJSON = new JSONArray();
+        collectableEntities.values().stream()
+                                .map(CollectableEntity::saveGameJson)
+                                .forEach(x -> collectableEntitiesJSON.put(x));
+        return collectableEntitiesJSON;
+    }
+    
     public int numItemInInventory(String itemType) {
         return inventory.numItem(itemType);
     }
@@ -658,4 +675,5 @@ public class World {
     public void useByType(String type) {
         inventory.useByType(type);
     }
+
 }

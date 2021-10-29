@@ -8,5 +8,10 @@ public class OneRing extends CollectableEntity {
     public OneRing(int x, int y, String itemId) {
         super(x, y, itemId, "one_ring");
     }
+<<<<<<< HEAD
+=======
+
+    //TODO do we need to do anything to use the one ring or nah
+>>>>>>> master
 
 }
