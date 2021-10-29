@@ -47,6 +47,7 @@ public class World {
 
     static final int MAX_SPIDERS = 6;
     static final int SPIDER_SPAWN = 10;
+    static final int MECERNARY_SPAWN = 25;
     static final double MERCENARY_ARMOUR_DROP = 0.4;
     static final double ZOMBIE_ARMOUR_DROP = 0.2;
     static final double ONE_RING_DROP = 0.1;
@@ -175,52 +176,52 @@ public class World {
         } 
         
         else if (type.equals("treasure")) {
-            Treasure e = new Treasure(new Position(x,y), id, inventory);
+            Treasure e = new Treasure(x, y, id, inventory);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("key")) {
             String key = obj.getString("key");
-            Key e = new Key(new Position(x,y), id, inventory, key);
+            Key e = new Key(x, y, id, inventory, key);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("health_potion")) {
-            HealthPotion e = new HealthPotion(new Position(x,y), id, inventory);
+            HealthPotion e = new HealthPotion(x, y, id, inventory);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("invincibility_potion")) {
-            InvincibilityPotion e = new InvincibilityPotion(new Position(x,y), id, this, inventory);
+            InvincibilityPotion e = new InvincibilityPotion(x, y, id, this, inventory);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("invisibility_potion")) {
-            InvisibilityPotion e = new InvisibilityPotion(new Position(x,y), id, this, inventory);
+            InvisibilityPotion e = new InvisibilityPotion(x, y, id, this, inventory);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("wood")) {
-            Wood e = new Wood(new Position(x,y), id, inventory);
+            Wood e = new Wood(x, y, id, inventory);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("arrow")) {
-            Arrows e = new Arrows(new Position(x,y), id);
+            Arrows e = new Arrows(x, y, id);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("bomb")) {
-            Bomb e = new Bomb(new Position(x,y), id, this, inventory);
+            Bomb e = new Bomb(x, y, id, this, inventory);
             collectableEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("sword")) {
-            Sword e = new Sword(new Position(x,y), id, inventory);
+            Sword e = new Sword(x, y, id, inventory);
             collectableEntities.put(e.getId(), e);
         }
         else if (type.equals("one_ring")) {
-            OneRing e = new OneRing(new Position(x,y), id, inventory);
+            OneRing e = new OneRing(x, y, id, inventory);
             collectableEntities.put(e.getId(), e);
         }
     }
@@ -282,12 +283,17 @@ public class World {
      * If an item is dropped, it is automatically added to the players inventory
      */
     private void dropBattleReward(){
+        Position characterPos = currentBattle.getCharacter().getPosition();
+        int charX = characterPos.getX();
+        int charY = characterPos.getY();
+
+
         if (currentBattle.getCharacter() instanceof Mercenary) {
             Random ran = new Random();
             int next = ran.nextInt(10);
             if (10*MERCENARY_ARMOUR_DROP > next)  {
                 // return an armour
-                Armour armour = new Armour(currentBattle.getCharacter().getPosition(), String.valueOf(incrementEntityCount()), inventory);
+                Armour armour = new Armour(charX, charY, String.valueOf(incrementEntityCount()), inventory);
                 armour.collect();
             }
         }
@@ -297,7 +303,7 @@ public class World {
             int next = ran.nextInt(10);
             if (10*ZOMBIE_ARMOUR_DROP > next)  {
                 // return an armour
-                Armour armour = new Armour(currentBattle.getCharacter().getPosition(), String.valueOf(incrementEntityCount()), inventory);
+                Armour armour = new Armour(charX, charY, String.valueOf(incrementEntityCount()), inventory);
                 armour.collect();
             }
         }
@@ -306,7 +312,7 @@ public class World {
         int next = ran.nextInt(10);
         if (10*ONE_RING_DROP > next)  {
             // return the one ring
-            OneRing oneRing = new OneRing(currentBattle.getCharacter().getPosition(), String.valueOf(incrementEntityCount()), inventory);
+            OneRing oneRing = new OneRing(charX, charY, String.valueOf(incrementEntityCount()), inventory);
             oneRing.collect();
         }
     }

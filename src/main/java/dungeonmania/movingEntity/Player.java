@@ -11,6 +11,7 @@ import dungeonmania.response.models.EntityResponse;
 
 public class Player extends MovingEntity {
 
+    static final int PLAYER_ATTACK = 3;
     private List<Mercenary> mercenaryObservers;
     private double allyAttack;
 
@@ -22,7 +23,7 @@ public class Player extends MovingEntity {
      * @param healthPoint healthpoint of the player
      */
     public Player(int x, int y, String id, HealthPoint healthPoint) {
-        super(new Position(x, y), id, "player", healthPoint, 3);
+        super(new Position(x, y), id, "player", healthPoint, PLAYER_ATTACK);
         setAlly(true);
     }
     
