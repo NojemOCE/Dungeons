@@ -8,7 +8,10 @@ import dungeonmania.response.models.EntityResponse;
 
 public class Mercenary extends MovingEntity {
 
-    private double BATTLE_RADIUS = 5;
+    static final int MERC_ATTACK = 3;
+    static final int MERC_HEALTH = 9;
+    private static final int GOLD_TO_BRIBE = 1;
+    private static final double BATTLE_RADIUS = 5;
     private Player subject;
 
     /**
@@ -18,7 +21,7 @@ public class Mercenary extends MovingEntity {
      * @param id unique entity id of the mercenary
      */
     public Mercenary(int x, int y, String id) {
-        super(new Position(x, y), id, "mercenary", new HealthPoint(9), 10);
+        super(new Position(x, y, 2), id, "mercenary", new HealthPoint(MERC_HEALTH), MERC_ATTACK);
         setMovement(new FollowPlayer());
         setDefaultMovementStrategy(new FollowPlayer());
         setAlly(false);
