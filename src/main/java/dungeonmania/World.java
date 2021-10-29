@@ -116,7 +116,6 @@ public class World {
 
     private void createEntity(JSONObject obj, String id) {
 
-
         int x = (int)obj.get("x");
         int y = (int)obj.get("y");
 
@@ -124,6 +123,8 @@ public class World {
         updateBounds(x, y);
 
         String type = obj.getString("type");
+
+        id = type + id;
 
         if (type.equals("wall")) {
 
@@ -168,8 +169,8 @@ public class World {
             staticEntities.put(e.getId(), e);   
         } else if (type.equals("player")) {
             Player e = new Player(x, y, id, new HealthPoint(gamemode.getStartingHP()));
+           
             this.player = e;
-            movingEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("spider")) {
@@ -184,6 +185,7 @@ public class World {
         
         else if (type.equals("mercenary")) {
             Mercenary e = new Mercenary(x, y, id);
+
             movingEntities.put(e.getId(), e);
         } 
         
@@ -352,7 +354,7 @@ public class World {
         else  {
             player.tick(itemUsed, movementDirection, this);
         }
-        if (itemUsed.isEmpty()) {
+        if (Objects.isNull(itemUsed)) {
             inventory.tick(movementDirection);
         } else {
             inventory.tick(itemUsed);

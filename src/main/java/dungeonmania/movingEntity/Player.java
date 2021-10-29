@@ -2,6 +2,7 @@ package dungeonmania.movingEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.json.JSONObject;
 
@@ -41,10 +42,10 @@ public class Player extends MovingEntity {
     // TODO implement using item?
     public void tick(String itemUsed, Direction movementDirection, World world) {
         // check if the direction we are moving is valid first before setting new position
-        if (itemUsed.isEmpty()) {
+        if (Objects.isNull(itemUsed)) {
             setPosition(validMove(this.getPosition().translateBy(movementDirection), world));
             CollectableEntity e = world.getCollectableEntity(this.getPosition());
-            if (!e.equals(null)) {
+            if (!Objects.isNull(e)) {
                 e.collect();
             }
         } else {
@@ -93,10 +94,6 @@ public class Player extends MovingEntity {
         notifyObservers(0);
     }
 
-    @Override
-    public EntityResponse getEntityResponse() {
-        return new EntityResponse(getId(), getType(), getPosition(), true);
-    }
 
     //TODO add javadoc comment idk what this method does
     /**
