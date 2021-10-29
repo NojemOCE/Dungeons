@@ -1,6 +1,5 @@
 {
-    "width": 18,
-    "height": 16,
+    "gamemode": "standard",
     "tick-count": 123,
     "dungeon-name": "hello",
     "entity-count": 123,

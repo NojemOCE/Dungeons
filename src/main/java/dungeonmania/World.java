@@ -634,4 +634,52 @@ public class World {
 
         return saveGame().toString();
     }
+
+    private JSONArray staticEntitySaveGameJson() {
+        JSONArray staticEntitiesJSON = new JSONArray();
+        staticEntities.values().stream()
+                                .map(StaticEntity::saveGameJson)
+                                .forEach(x -> staticEntitiesJSON.put(x));
+        return staticEntitiesJSON;
+    }
+
+    private JSONArray movingEntitySaveGameJson() {
+        JSONArray movingEntitiesJSON = new JSONArray();
+        movingEntities.values().stream()
+                                .map(MovingEntity::saveGameJson)
+                                .forEach(x -> movingEntitiesJSON.put(x));
+        return movingEntitiesJSON;
+    }
+
+    private JSONArray collectableEntityGameJson() {
+        JSONArray collectableEntitiesJSON = new JSONArray();
+        collectableEntities.values().stream()
+                                .map(CollectableEntity::saveGameJson)
+                                .forEach(x -> collectableEntitiesJSON.put(x));
+        return collectableEntitiesJSON;
+    }
+
+    public JSONObject worldSaveJson() {
+        JSONObject worldJSON = new JSONObject();
+
+        worldJSON.put("gamemode", gamemode.getGameModeType());
+        worldJSON.put("tick-count", tickCount);
+        worldJSON.put("dungeon-name", dungeonName);
+        worldJSON.put("entity-count", entityCount);
+        worldJSON.put("inventory", inventory.saveGameJson());
+        worldJSON.put("player", player.saveGameJson());
+        worldJSON.put("moving-entities", movingEntitySaveGameJson());
+        worldJSON.put("static-entities", staticEntitySaveGameJson());
+        worldJSON.put("collectable-entities", staticEntitySaveGameJson());
+
+        if (currentBattle.isActiveBattle()) {
+            worldJSON.put("current-battle", currentBattle.getCharacter().getId());
+        }
+        if (!(goals == null)) {
+            worldJSON.put("goal-condition", goals.saveGameJson());
+        }
+
+        return worldJSON;
+    }
+
 }

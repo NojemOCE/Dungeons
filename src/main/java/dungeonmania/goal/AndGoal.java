@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import dungeonmania.World;
 
 
@@ -44,6 +47,18 @@ public class AndGoal implements GoalComponent {
     
     public void addSubGoal(GoalComponent subGoal) {
         subGoals.add(subGoal);
+    }
+
+    @Override
+    public JSONObject saveGameJson() {
+        JSONObject compositeGoalJSON = new JSONObject();
+        compositeGoalJSON.put("goal", operator);
+
+        JSONArray subGoalsJSON = new JSONArray();
+        subGoals.stream().map(GoalComponent :: saveGameJson).forEach(x -> subGoalsJSON.put(x));
+        
+        compositeGoalJSON.put("subgoals", subGoalsJSON);
+        return compositeGoalJSON;
     }
 
 }
