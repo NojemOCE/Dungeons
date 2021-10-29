@@ -13,20 +13,16 @@ import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.staticEntity.StaticEntity;
-import dungeonmania.buildable.*;
 import dungeonmania.movingEntity.Player;
 import dungeonmania.util.*;
 
 public class Inventory {
     private Map<String, CollectableEntity> collectableItems;
-    private Map<String, Buildable> buildableItems;
     private Map<String, Consumable> consumableItems;
     private Map<String, Integer> numCollected;
     private List<String> usable;
-    private Player player;
 
-    public Inventory(Player player) {
-        this.player = player;
+    public Inventory() {
         this.usable.add("bomb");
         this.usable.add("health_potion");
         this.usable.add("invincibility_potion");
@@ -38,6 +34,9 @@ public class Inventory {
      * @param item item that is collected and to be added to inventory
      */
     public void collect(CollectableEntity item) {
+        if (item instanceof Key && numItem("Key") != 0) {
+            return;
+        }
         String itemType = item.getId();
 
         numCollected.putIfAbsent(itemType, 0);
@@ -48,13 +47,7 @@ public class Inventory {
 
     public void use(String itemId) {
         if (consumableItems.containsKey(itemId)) {
-            if (consumableItems.get(itemId).consume()) {
-                consumableItems.remove(itemId);
-                buildableItems.remove(itemId);
-                collectableItems.remove(itemId);
-                String itemType = collectableItems.remove(itemId).getItemId();
-                numCollected.put(itemType, numCollected.get(itemType) - 1);
-            }
+            consumableItems.get(itemId).consume();
         }
     }
     
@@ -110,8 +103,6 @@ public class Inventory {
 
     public List<ItemResponse> getInventoryResponse() {
         List<ItemResponse> itemResponses = collectableItems.values().stream().map(CollectableEntity::getItemResponse).collect(Collectors.toList());
-        buildableItems.values().stream().map(Buildable::getItemResponse).forEach(itemResponses::add);
-
         return itemResponses;
     }
 
@@ -119,11 +110,8 @@ public class Inventory {
         if (!inInventory(itemUsedId)) {
             throw new InvalidActionException("Item not in Inventory");
         } else if (!isUsable(itemUsedId)) {
-            Consumable c = (Consumable) collectableItems.get(itemUsedId);
-            c.consume();
-            collectableItems.forEach((id, item) -> {
-                item.tick();
-            });
+            collectableItems.get(itemUsedId).consume();
+            tick();
         } else {
             throw new IllegalArgumentException("Wrong usable type");
         }
@@ -132,10 +120,12 @@ public class Inventory {
     }
 
     public List<String> tick() {
-        collectableItems.forEach((id, item) -> {
-            // item.updatePosition(player.getPosition());
+        for (CollectableEntity item : collectableItems.values()) {
             item.tick();
-        });
+            if (item.getDurability() == 0) {
+                removeItem(item);
+            }
+        }
 
         return getBuildable();
     }
@@ -155,8 +145,10 @@ public class Inventory {
         
     }
 
-    public void removeItem(String collectible) {
-        collectableItems.remove(collectible);
+    public void removeItem(CollectableEntity item) {
+        consumableItems.remove(item.getId());
+        collectableItems.remove(item.getId());
+        numCollected.put(item.getType(), numCollected.get(item.getType()) - 1);
     }
 
     public double attackModifier(double playerAttack) {
@@ -167,7 +159,7 @@ public class Inventory {
             }
         }
 
-        for (Buildable item : buildableItems.values()) {
+        for (CollectableEntity item : collectableItems.values()) {
             if (item instanceof Bow ) {
                 playerAttack *= ((Bow)item).attackModifier();
                 ((Bow)item).consume();
@@ -179,7 +171,7 @@ public class Inventory {
 
     public double defenceModifier(double enemyAttack) {
 
-        for (Buildable item : buildableItems.values()) {
+        for (CollectableEntity item : collectableItems.values()) {
             if (item instanceof Shield ) {
                 enemyAttack -= ((Shield)item).defenceModifier();
                 ((Shield)item).consume();
@@ -213,7 +205,7 @@ public class Inventory {
         if (buildableType.equalsIgnoreCase("bow")) {
             return numItem("wood") >= 1 && numItem("arrow") >= 3;
         } else if (buildableType.equalsIgnoreCase("shield")) {
-            return numItem("wood") >= 2 && (numItem("treasure") >= 1 || numItem("key") >= 1);
+            return numItem("wood") >= 2 && (numItem("treasure") >= 1 || numItem("key") == 1);
         } else {
             throw new IllegalArgumentException("Wrong buildable type");
         }
@@ -223,9 +215,6 @@ public class Inventory {
         JSONArray entitiesInInventory = new JSONArray();
         for (CollectableEntity e : collectableItems.values()) {
             entitiesInInventory.put(e.saveGameJson());
-        }
-        for (Buildable b : buildableItems.values()) {
-            entitiesInInventory.put(b.saveGameJson());
         }
         return entitiesInInventory;
     }
