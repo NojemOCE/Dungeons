@@ -8,7 +8,7 @@ public class HealthPotion extends CollectableEntity implements Consumable {
     private final double HEAL_EFFECT = 10;
 
     public HealthPotion(int x, int y, String itemId,Inventory inventory) {
-        super(x, y, itemId, "health_potion", inventory);
+        super(x, y, itemId, "health_potion");
     }
 
     public double heal() {
@@ -18,7 +18,7 @@ public class HealthPotion extends CollectableEntity implements Consumable {
     
 
     public void consume() {
-        getInventory().removeItem(getItemId());
+        decreaseDurability();
     }
 
 }

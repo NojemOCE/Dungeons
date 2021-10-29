@@ -1,12 +1,13 @@
 package dungeonmania.collectable;
 
 import dungeonmania.inventory.Inventory;
+import dungeonmania.Consumable;
 import dungeonmania.Entity;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Position;
 
-public abstract class CollectableEntity extends Entity {
+public abstract class CollectableEntity extends Entity implements Consumable {
     private boolean collected;
     private int durability = 1;
 
@@ -25,6 +26,10 @@ public abstract class CollectableEntity extends Entity {
     public boolean isCollected() {
         return collected;
     }
+
+    public void consume() {
+        this.durability--;
+    }
     
     public void tick() {}
 
@@ -34,10 +39,6 @@ public abstract class CollectableEntity extends Entity {
 
     public void setDurability(int durability) {
         this.durability = durability;
-    }
-
-    public void decreaseDurability() {
-        this.durability--;
     }
 
     public int getDurability() {
