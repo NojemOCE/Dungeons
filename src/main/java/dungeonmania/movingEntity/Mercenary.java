@@ -67,7 +67,7 @@ public class Mercenary extends MovingEntity {
         if ((relativePos.getX() + relativePos.getY()) <= 2) {
             if (world.numItemInInventory("treasure") >= GOLD_TO_BRIBE) {
                 for (int i = 0; i < GOLD_TO_BRIBE; i++) {
-                    
+                    world.useByType("treasure");
                 }
             } else {
                 throw new InvalidActionException("Not enough gold to bribe Mercenary!");
