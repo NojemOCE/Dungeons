@@ -9,9 +9,7 @@ import dungeonmania.util.Position;
 public abstract class CollectableEntity extends Entity {
     private boolean collected;
     private String type;
-    private int durability;
-
-
+    private int durability = 1;
 
     public CollectableEntity(int x, int y, String id, String type) {
         super(new Position(x, y, 1), id, type);
