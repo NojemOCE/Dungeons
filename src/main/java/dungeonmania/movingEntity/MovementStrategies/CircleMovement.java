@@ -18,6 +18,14 @@ public class CircleMovement implements Movement {
     static final int START_MOVES = 1;
     static final int SET_MOVES = 2;
     
+    
+
+    public CircleMovement() {
+        currentDirection = Direction.UP;
+        nextDirection = Direction.RIGHT;
+        remMovesCurr = START_MOVES;
+        remMovesNext = START_MOVES;
+    }
 
     @Override
     public void move(MovingEntity me, World world) {

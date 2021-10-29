@@ -19,8 +19,15 @@ public class TreasureGoals extends GoalLeaf{
         List<CollectableEntity> ce = new ArrayList<>(world.getCollectibleEntities().values());
         // check no more treasure
         ce.removeIf(obj -> !obj.getType().equals("treasure"));
-
-        return ce.isEmpty();
+        
+        if (ce.isEmpty()){
+            setCompleted(true);
+            return true;
+        }
+        else {
+            setCompleted(false);
+            return false;
+        }
     }
     
 }

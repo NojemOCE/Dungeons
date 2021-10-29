@@ -52,8 +52,8 @@ public class World {
     static final double ZOMBIE_ARMOUR_DROP = 0.2;
     static final double ONE_RING_DROP = 0.1;
     private int tickCount = 0;
-    private int highestX = 0;
-    private int highestY = 0;
+    private int highestX = 5;
+    private int highestY = 5;
     //private Map map; TBC
 
     /**
@@ -160,15 +160,12 @@ public class World {
         
         else if (type.equals("portal")) {
             Portal e;
-            System.out.println("about to make a portal");
 
             String colour = obj.getString("colour");
 
-            System.out.println("colour is " + colour);
             if (staticEntities.containsKey(colour)) {
                 e = new Portal(x, y, colour + "2", colour, (Portal) staticEntities.get(colour));
             } else {
-                System.out.println("No matching colour");
                 e = new Portal(x, y, colour, colour);
             }
             staticEntities.put(e.getId(), e);
@@ -419,7 +416,7 @@ public class World {
 
 
         // Now evaluate goals. Goal should never be null, but add a check incase there is an error in the input file
-        if (!goals.equals(null)){
+        if (!(goals == null)){
             goals.evaluate(this);
         }
         
