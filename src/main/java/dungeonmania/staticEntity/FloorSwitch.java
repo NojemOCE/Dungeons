@@ -3,6 +3,8 @@ package dungeonmania.staticEntity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONObject;
+
 import dungeonmania.Entity;
 import dungeonmania.World;
 import dungeonmania.util.Position;
@@ -60,4 +62,10 @@ public class FloorSwitch extends StaticEntity {
         isTriggered = false;
     }
    
+    @Override
+	public JSONObject saveGameJson() {
+		JSONObject save = super.saveGameJson();
+        save.put("triggered", isTriggered);
+		return save;
+	}
 }
