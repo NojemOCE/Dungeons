@@ -27,6 +27,7 @@ public class FollowPlayer implements Movement {
         if (!path.isEmpty() && path.size() >= 1) {
             // still need to use the battle radius, translate by two
             // THE PATH MAY INCLUDE THE START, if MERC NOT MOVING CHANGE me.getSpeed() +1`
+            if (!me.getAlly() && path.get(1).equals(world.getPlayer().getPosition())) me.setPosition(path.get(0));
             me.setPosition(path.get(1));
         }
     }
