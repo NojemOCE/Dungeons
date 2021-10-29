@@ -160,15 +160,11 @@ public class World {
         
         else if (type.equals("portal")) {
             Portal e;
-            System.out.println("about to make a portal");
 
             String colour = obj.getString("colour");
-
-            System.out.println("colour is " + colour);
             if (staticEntities.containsKey(colour)) {
                 e = new Portal(x, y, colour + "2", colour, (Portal) staticEntities.get(colour));
             } else {
-                System.out.println("No matching colour");
                 e = new Portal(x, y, colour, colour);
             }
             staticEntities.put(e.getId(), e);
