@@ -1,5 +1,7 @@
 package dungeonmania.goal;
 
+import java.util.List;
+
 import dungeonmania.World;
 import dungeonmania.staticEntity.Exit;
 import dungeonmania.staticEntity.StaticEntity;
@@ -14,15 +16,16 @@ public class ExitGoal extends GoalLeaf {
     @Override
     public Boolean evaluate(World world) {
         // TODO Auto-generated method stub
-        StaticEntity exitConfirmation = world.getStaticEntity(world.getPlayer().getPosition());
-        if (exitConfirmation instanceof Exit) {
-            setCompleted(true);
-            return true;
+        List<StaticEntity> exitConfirmation = world.getStaticEntitiesAtPosition(world.getPlayer().getPosition());
+        for (StaticEntity e : exitConfirmation) {
+            if (e instanceof Exit) {
+                setCompleted(true);
+                return true;
+            }
         }
-        else {
-            setCompleted(false);
-            return false;
-        }
+        
+        setCompleted(false);
+        return false;
     }
     
 }
