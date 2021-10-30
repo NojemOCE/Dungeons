@@ -383,6 +383,10 @@ public class World {
         if (Objects.isNull(itemUsed)) {
             inventory.tick();
         } else {
+            if (inventory.getType(itemUsed).equals("bomb")) {
+                PlacedBomb newBomb = new PlacedBomb(player.getX(), player.getY(), "bomb" + String.valueOf(incrementEntityCount()));
+                staticEntities.put(newBomb.getId(), newBomb);
+            }
             inventory.tick(itemUsed);
         }
 

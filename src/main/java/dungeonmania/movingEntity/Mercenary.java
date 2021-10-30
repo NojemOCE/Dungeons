@@ -14,7 +14,7 @@ public class Mercenary extends MovingEntity {
 
     static final int MERC_ATTACK = 3;
     static final int MERC_HEALTH = 9;
-    private static final int GOLD_TO_BRIBE = 2;
+    private static final int GOLD_TO_BRIBE = 1;
     private static final double BATTLE_RADIUS = 5;
     private Player subject;
     private boolean interactable = false;
