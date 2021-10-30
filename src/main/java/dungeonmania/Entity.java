@@ -10,9 +10,6 @@ public abstract class Entity {
     private Position position;
     private String id;
     private String type;
-
-    private boolean interactable;
-
     
     public Entity(Position position, String id, String type) {
         this.position = position;
