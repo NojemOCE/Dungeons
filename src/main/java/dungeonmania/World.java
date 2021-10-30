@@ -377,6 +377,14 @@ public class World {
             inventory.tick(itemUsed);
         }
 
+        // collecting the collectable entity if it exists on the current position
+        CollectableEntity collectable = getCollectableEntity(player.getPosition());
+        if(!Objects.isNull(collectable)) {
+            if (inventory.collect(collectable)) {
+                collectableEntities.remove(collectable.getId());
+            }
+        }
+
         // now move all entities
         for (MovingEntity me: movingEntities.values()) {
             me.move(this);

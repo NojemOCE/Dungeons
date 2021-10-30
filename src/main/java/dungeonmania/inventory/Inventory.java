@@ -34,16 +34,22 @@ public class Inventory {
      * Add given item to the inventory
      * @param item item that is collected and to be added to inventory
      */
-    public void collect(CollectableEntity item) {
-        if (item instanceof Key && numItem("Key") != 0) {
-            return;
+    public boolean collect(CollectableEntity item) {
+        if (item instanceof Key && numItem("key") != 0) {
+            //System.out.println("hi");
+            return false;
         }
-        String itemType = item.getId();
+
+        //System.out.println(numItem("key"));
+        item.collect();
+        String itemType = item.getType();
 
         numCollected.putIfAbsent(itemType, 0);
         numCollected.put(itemType, numCollected.get(itemType) + 1);
 
         collectableItems.put(item.getId(), item);
+        consumableItems.put(item.getId(), item);
+        return true;
     }
 
     public void use(String itemId) {
@@ -130,7 +136,7 @@ public class Inventory {
     public List<String> tick(String itemUsedId) {
         if (!inInventory(itemUsedId)) {
             throw new InvalidActionException("Item not in Inventory");
-        } else if (!isUsable(itemUsedId)) {
+        } else if (isUsable(itemUsedId)) {
             collectableItems.get(itemUsedId).consume();
             tick();
         } else {
