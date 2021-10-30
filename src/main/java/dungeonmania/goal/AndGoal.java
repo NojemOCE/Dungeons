@@ -26,7 +26,7 @@ public class AndGoal implements GoalComponent {
         if (subGoals.stream().allMatch(x -> x.evaluate(world).equals(true))) {
             completed = true;
         }
-
+        else completed = false;
         return completed;
         
     }
@@ -41,8 +41,11 @@ public class AndGoal implements GoalComponent {
                                             .filter(x -> !x.equals(""))
                                             .collect(Collectors.joining(" "  + operator + " "));
 
-
-        return "(" + unachievedSubGoals + ")";
+        if (unachievedSubGoals.contains(operator)) {
+            return "(" + unachievedSubGoals + ")";
+        }
+        else return unachievedSubGoals;
+        
     }
     
     public void addSubGoal(GoalComponent subGoal) {

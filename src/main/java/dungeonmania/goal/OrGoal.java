@@ -27,6 +27,7 @@ public class OrGoal implements GoalComponent{
         if (subGoals.stream().anyMatch(x -> x.evaluate(world).equals(true))) {
             completed = true;
         }
+        else completed = false;
 
         return completed;
     }
@@ -41,7 +42,11 @@ public class OrGoal implements GoalComponent{
                                             .collect(Collectors.joining(" "  + operator + " "));
 
 
-        return "(" + unachievedSubGoals + ")";
+        if (unachievedSubGoals.contains(operator)) {
+            return "(" + unachievedSubGoals + ")";
+        }
+        else return unachievedSubGoals;
+                                            
     }
 
     public void addSubGoal(GoalComponent subGoal) {

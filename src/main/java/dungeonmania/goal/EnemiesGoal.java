@@ -21,8 +21,14 @@ public class EnemiesGoal extends GoalLeaf {
         List<StaticEntity> zts = new ArrayList<>(world.getStaticEntities().values());
         zts.removeIf((obj -> !obj.getType().equals("zombie_toast_spawner")));
 
-        if (list.isEmpty() && zts.isEmpty()) return true;
-        else return false;
+        if (list.isEmpty() && zts.isEmpty()) {
+            setCompleted(true);
+            return true;
+        }
+        else {
+            setCompleted(false);
+            return false;
+        }
     }
     
 }

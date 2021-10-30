@@ -21,8 +21,8 @@ public class Spider extends MovingEntity {
     public Spider(int x, int y, String id) {
         //Attack damage to 1 and layer to 2 for now
         super(new Position(x, y, 2), id, "spider", new HealthPoint(SPIDER_HEALTH), SPIDER_ATTACK);
-        setMovement(new RandomMovement());
-        setDefaultMovementStrategy(new RandomMovement());
+        setMovement(new CircleMovement());
+        setDefaultMovementStrategy(new CircleMovement());
         setAlly(false);
         // Then when character is invincible, udate defaultMovement to currentMovement, and set currentMovement to runAway.
         // When character is no longer invincible, set currentMovement = defaultMovement

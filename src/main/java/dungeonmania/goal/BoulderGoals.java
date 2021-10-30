@@ -25,8 +25,14 @@ public class BoulderGoals extends GoalLeaf {
         List<StaticEntity> switches = new ArrayList<>(world.getStaticEntities().values());
         switches.removeIf(obj -> !obj.getType().equals("switch"));
         List<Position> switchPositions = switches.stream().map(s -> s.getPosition()).collect(Collectors.toList());
-
-        return (boulderPositions.containsAll(switchPositions) && switchPositions.containsAll(boulderPositions));
+        if (boulderPositions.containsAll(switchPositions) && switchPositions.containsAll(boulderPositions)){
+            setCompleted(true);
+            return true;
+        }
+        else {
+            setCompleted(false);
+            return false;
+        }
     }
     
 }
