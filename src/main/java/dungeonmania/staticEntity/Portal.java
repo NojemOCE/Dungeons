@@ -43,7 +43,7 @@ public class Portal extends StaticEntity {
 
     /**
      * Teleports entities to a corresponding portal.
-     * All entities but zombies are able to moce through portals
+     * All entities but zombies are able to move through portals
      */
     @Override
     public Position interact(World world, Entity entity) {
@@ -93,7 +93,7 @@ public class Portal extends StaticEntity {
         } else if (entity instanceof Boulder) {
             // if it is not a moving entity, it can only be a boulder
             if (((Boulder) entity).validMove(world, toMoveTo)) {
-                return toMoveTo;
+                return new Position(toMoveTo.getX(), toMoveTo.getY(), entity.getPosition().getLayer());
             }
         }
 

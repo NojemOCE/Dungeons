@@ -24,6 +24,18 @@ public abstract class Entity {
         return position;
     }
 
+    public int getX() {
+        return position.getX();
+    }
+
+    public int getY() {
+        return position.getY();
+    }
+
+    public int getLayer() {
+        return position.getLayer();
+    }
+
     public void setPosition(Position position) {
         this.position = position;
     }
