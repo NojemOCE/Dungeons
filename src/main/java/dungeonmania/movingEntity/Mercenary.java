@@ -55,7 +55,9 @@ public class Mercenary extends MovingEntity {
 
     private void setInteractable(Player player) {
         Position relativePos = Position.calculatePositionBetween(player.getPosition(), this.getPosition());
-        if ((relativePos.getX() + relativePos.getY()) <= 2) {
+        if (getAlly()) {
+            interactable = false;
+        } else if ((relativePos.getX() + relativePos.getY()) <= 2) {
             interactable = true;
         } else {
             interactable = false;
@@ -80,6 +82,7 @@ public class Mercenary extends MovingEntity {
                 for (int i = 0; i < GOLD_TO_BRIBE; i++) {
                     world.useByType("treasure");
                 }
+                setAlly(true);
             } else {
                 throw new InvalidActionException("Not enough gold to bribe Mercenary!");
             }
