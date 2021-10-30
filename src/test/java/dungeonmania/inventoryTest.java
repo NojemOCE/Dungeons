@@ -2,7 +2,6 @@ package dungeonmania;
 
 import dungeonmania.collectable.*;
 import dungeonmania.inventory.Inventory;
-import dungeonmania.util.Position;
 
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +16,6 @@ public class inventoryTest {
     public void testCollectItem() {
 
         Inventory inv = new Inventory();
-        Position p = new Position(1,1);
 
         Armour armour = new Armour(1, 1, "armour1");
         assert inv.numItem("armour") == 0;
