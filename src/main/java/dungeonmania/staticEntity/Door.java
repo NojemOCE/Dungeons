@@ -7,6 +7,7 @@ import dungeonmania.World;
 import dungeonmania.collectable.Key;
 import dungeonmania.movingEntity.Player;
 import dungeonmania.movingEntity.Spider;
+import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
 
 public class Door extends StaticEntity {
@@ -68,6 +69,16 @@ public class Door extends StaticEntity {
         return entity.getPosition();
     }
    
+
+    @Override
+    public EntityResponse getEntityResponse() {
+        if (isOpen) {
+            return new EntityResponse(getId(), "open_door", getPosition(), false);
+        } else {
+            return super.getEntityResponse();
+        }
+    }
+    
     @Override
 	public JSONObject saveGameJson() {
 		JSONObject save = super.saveGameJson();
