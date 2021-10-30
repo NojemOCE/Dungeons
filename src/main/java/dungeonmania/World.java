@@ -46,7 +46,7 @@ public class World {
     private String dungeonName;
 
     static final int MAX_SPIDERS = 6;
-    static final int SPIDER_SPAWN = 10;
+    static final int SPIDER_SPAWN = 20;
     static final int MECERNARY_SPAWN = 25;
     static final double MERCENARY_ARMOUR_DROP = 0.4;
     static final double ZOMBIE_ARMOUR_DROP = 0.2;
@@ -96,14 +96,16 @@ public class World {
         }
         
         
-        JSONObject g = worldData.getJSONObject("goal-condition");
-        if (!(g == null)) {
+        if (worldData.has("goal-condition")) {
+            JSONObject g = worldData.getJSONObject("goal-condition");
             GoalComponent goal = createGoal(g);
             setGoals(goal);
         }
         else {
             setGoals(null);
         }
+        
+        
         
 
         return worldDungeonResponse();

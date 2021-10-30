@@ -51,14 +51,18 @@ public class CircleMovement implements Movement {
         StaticEntity plannedPositionStaticEntity = world.getStaticEntity(position);
         MovingEntity plannedPositionCharacter = world.getCharacter(position);
 
-        // Now check if the StaticEntity the entity is moving into is a boulder, 
-        // or if the entity is moving into the position of another enemy Character
-        Boolean movingIntoBoulderDoor = (plannedPositionStaticEntity != null) && ((plannedPositionStaticEntity instanceof Boulder)||(plannedPositionStaticEntity instanceof Door));
+        // Now interact with the StaticEntity in the intended position 
+        // and check if if the entity is moving into the position of another enemy Character
         Boolean movingIntoEnemy = (plannedPositionCharacter != null) && !(plannedPositionCharacter instanceof Player);
+        
+        if (!(plannedPositionStaticEntity == null))  {
+           position = plannedPositionStaticEntity.interact(world, me); 
+        }
+        
 
         // If entity is moving into a boulder or an enemy, reverse direction
         // and return the validMove position as the entity's current position
-        if (movingIntoBoulderDoor || movingIntoEnemy) {
+        if (position.equals(me.getPosition()) || movingIntoEnemy) {
             reverseDirection();
             return me.getPosition();
         }
