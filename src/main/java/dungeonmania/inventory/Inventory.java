@@ -161,6 +161,17 @@ public class Inventory {
         return getBuildable();
     }
 
+    /**
+     * Get the type of the given item
+     * @param itemStringId the id of the item
+     * @return the type of the item, otherwise null
+     */
+    public String getType(String itemStringId) {
+        if (collectableItems.containsKey(itemStringId)) {
+            return collectableItems.get(itemStringId).getType();
+        }
+        return null;
+    }
     public boolean inInventory(String itemUsedId) {
         return collectableItems.containsKey(itemUsedId);
     }
