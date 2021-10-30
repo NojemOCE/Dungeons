@@ -26,7 +26,7 @@ public class Exit extends StaticEntity {
     public Position interact(World world, Entity entity) {
         
         if (entity instanceof Player) {
-            return this.getPosition();
+            return getPosition();
         }
 
         return entity.getPosition();

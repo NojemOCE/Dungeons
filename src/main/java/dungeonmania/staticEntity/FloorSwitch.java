@@ -29,7 +29,7 @@ public class FloorSwitch extends StaticEntity {
      */
     @Override
     public Position interact(World world, Entity entity) {
-        return this.getPosition();
+        return new Position(getX(), getY(), entity.getLayer());
     }
 
     /**

@@ -687,8 +687,12 @@ public class World {
                 toRemove.add(e);
             }
         }
+
         for (Entity e : toRemove) {
             entities.remove(e);
+            collectableEntities.remove(e.getId());
+            staticEntities.remove(e.getId());
+            movingEntities.remove(e.getId());
         }
     }
 

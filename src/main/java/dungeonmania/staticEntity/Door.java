@@ -57,7 +57,7 @@ public class Door extends StaticEntity {
                 open();
                 // use the key
                 world.use(key.getId());
-                return this.getPosition();
+                return new Position(getX(), getY(), entity.getLayer());
             }
         }
         

@@ -58,16 +58,17 @@ public class Boulder extends StaticEntity {
                                                    .filter(x -> x instanceof Portal)
                                                    .map(Portal.class::cast)
                                                    .collect(Collectors.toList());
-            if (!portals.isEmpty()) {
+            if (!(portals.isEmpty())) {
                 Portal portal = portals.get(0);
                 toMoveBoulderTo = portal.interact(world, this);
             }
 
-            Position playertoMoveTo = this.getPosition();
+            Position entityToMoveTo = new Position(getX(), getY(), entity.getLayer());
 
             // move boulder then return appropriate position for character to move to
             this.setPosition(toMoveBoulderTo);
-            return playertoMoveTo;
+
+            return entityToMoveTo;
         }
         
         
@@ -85,7 +86,7 @@ public class Boulder extends StaticEntity {
     public boolean validMove(World world, Position position) {
         List<StaticEntity> entitiesAtNewPos = world.getStaticEntitiesAtPosition(position);
         // if anything is on the same layer or higher, can't move
-        if (entitiesAtNewPos.stream().anyMatch(x -> x.getPosition().getLayer() >= this.getPosition().getLayer())) {
+        if (entitiesAtNewPos.stream().anyMatch(x -> x.getLayer() >= this.getLayer())) {
             return false;
         }
         return true;
@@ -99,10 +100,10 @@ public class Boulder extends StaticEntity {
      */
     private Position move(Entity character) {
         // get relative position 
-        int charX = character.getPosition().getX();
-        int charY = character.getPosition().getY();
-        int boulderX = this.getPosition().getX();
-        int boulderY = this.getPosition().getY();
+        int charX = character.getX();
+        int charY = character.getY();
+        int boulderX = this.getX();
+        int boulderY = this.getY();
     
         if (charY == boulderY) {
             // if left of
