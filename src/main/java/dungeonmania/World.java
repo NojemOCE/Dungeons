@@ -387,7 +387,10 @@ public class World {
                 PlacedBomb newBomb = new PlacedBomb(player.getX(), player.getY(), "bomb" + String.valueOf(incrementEntityCount()));
                 staticEntities.put(newBomb.getId(), newBomb);
             }
-            inventory.tick(itemUsed);
+            CollectableEntity potion = inventory.tick(itemUsed);
+            if (Objects.isNull(potion)) {
+                player.addPotion(potion);
+            }
         }
 
         // collecting the collectable entity if it exists on the current position
