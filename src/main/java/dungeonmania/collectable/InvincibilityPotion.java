@@ -21,6 +21,7 @@ public class InvincibilityPotion extends CollectableEntity {
     @Override
     public void consume() {
         this.active = true;
+        decreaseDurability();
         // notify the world that the invisibility potion effect is activated
         world.update(getType());
     };

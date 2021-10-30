@@ -34,16 +34,22 @@ public class Inventory {
      * Add given item to the inventory
      * @param item item that is collected and to be added to inventory
      */
-    public void collect(CollectableEntity item) {
-        if (item instanceof Key && numItem("Key") != 0) {
-            return;
+    public boolean collect(CollectableEntity item) {
+        if (item instanceof Key && numItem("key") != 0) {
+            //System.out.println("hi");
+            return false;
         }
-        String itemType = item.getId();
+
+        //System.out.println(numItem("key"));
+        item.collect();
+        String itemType = item.getType();
 
         numCollected.putIfAbsent(itemType, 0);
         numCollected.put(itemType, numCollected.get(itemType) + 1);
 
         collectableItems.put(item.getId(), item);
+        consumableItems.put(item.getId(), item);
+        return true;
     }
 
     public void use(String itemId) {
@@ -73,15 +79,18 @@ public class Inventory {
         consumableItems.remove(idToRemove);
     }
     
-    public void craft(String itemType) {
+    public void craft(String itemType, String itemNum) {
         if (!isBuildable(itemType)) {
             throw new InvalidActionException("Insufficient items");
         } else if (itemType.equalsIgnoreCase("bow")) {
-            use("wood");
-            IntStream.range(0, 3).mapToObj(i -> "arrow").forEach(this::use);
+            System.out.println("x");
+            useByType("wood");
+            IntStream.range(0, 3).mapToObj(i -> "arrow").forEach(this::useByType);
+            collectableItems.put(itemType + itemNum, new Bow(0, 0, itemType + itemNum));
         } else if (itemType.equalsIgnoreCase("shield")) {
-            IntStream.range(0, 2).mapToObj(i -> "wood").forEach(this::use);
-            use(numItem("treasure") != 0 ? "treasure" : "key");
+            IntStream.range(0, 2).mapToObj(i -> "wood").forEach(this::useByType);
+            useByType(numItem("treasure") != 0 ? "treasure" : "key");
+            collectableItems.put(itemType + itemNum, new Shield(0, 0, itemType + itemNum));
         }
 
     }
@@ -131,7 +140,7 @@ public class Inventory {
     public List<String> tick(String itemUsedId) {
         if (!inInventory(itemUsedId)) {
             throw new InvalidActionException("Item not in Inventory");
-        } else if (!isUsable(itemUsedId)) {
+        } else if (isUsable(itemUsedId)) {
             collectableItems.get(itemUsedId).consume();
             tick();
         } else {

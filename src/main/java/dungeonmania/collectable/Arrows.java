@@ -9,8 +9,4 @@ public class Arrows extends CollectableEntity {
 
     }
 
-    public void consume() {
-        decreaseDurability();
-    };
-
 }

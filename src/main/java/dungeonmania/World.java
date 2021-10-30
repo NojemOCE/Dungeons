@@ -386,6 +386,14 @@ public class World {
             inventory.tick(itemUsed);
         }
 
+        // collecting the collectable entity if it exists on the current position
+        CollectableEntity collectable = getCollectableEntity(player.getPosition());
+        if(!Objects.isNull(collectable)) {
+            if (inventory.collect(collectable)) {
+                collectableEntities.remove(collectable.getId());
+            }
+        }
+
         // now move all entities
         for (MovingEntity me: movingEntities.values()) {
             me.move(this);
@@ -544,7 +552,10 @@ public class World {
     public DungeonResponse build(String buildable) throws IllegalArgumentException, InvalidActionException {
         // IllegalArgumentException if buildable is not one of bow or shield
         // InvalidActionException if the player does not have sufficient items to craft the buildable
-        return null;
+        if (inventory.isBuildable(buildable)) {
+            inventory.craft(buildable, String.valueOf(incrementEntityCount()));
+        }
+        return worldDungeonResponse();
     }
 
     // Return a dungeon response for the current world

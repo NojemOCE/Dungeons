@@ -9,6 +9,4 @@ public class OneRing extends CollectableEntity {
         super(x, y, itemId, "one_ring");
     }
 
-    //TODO do we need to do anything to use the one ring or nah
-
 }

@@ -21,8 +21,4 @@ public class Armour extends CollectableEntity {
         return DEFENCE_MULTIPLIER;
     }
 
-    public void consume() {
-        decreaseDurability();  
-    };
-
 }
