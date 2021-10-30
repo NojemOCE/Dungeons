@@ -18,10 +18,13 @@ public class RunAway implements Movement {
      * @param world current game world
      */
     private void runAway(MovingEntity me, World world) {
+
         Position player = world.getPlayer().getPosition();
         Position p = me.getPosition();
         int xOffset = p.getX() - player.getX();
         int yOffset = p.getY() - player.getY();
+
+        
 
         if (xOffset > 0) {
             me.setPosition(me.validMove(p.translateBy(Direction.RIGHT), world));

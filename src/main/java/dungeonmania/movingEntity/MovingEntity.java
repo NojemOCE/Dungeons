@@ -46,8 +46,6 @@ public abstract class MovingEntity extends Entity {
     public Position validMove(Position position, World world) {
         
         // Check for boundaries of the map here
-
-
         // check if there is a static entity in the way
         StaticEntity se = world.getStaticEntity(position);
         if (!Objects.isNull(se)) {
@@ -64,7 +62,7 @@ public abstract class MovingEntity extends Entity {
         }
         // also check if another moving entity in the position already
         MovingEntity c = world.getCharacter(position);
-        if (!Objects.isNull(c)) {
+        if (!this.getType().equals("player") && !Objects.isNull(c)) {
             // two characters cant be in same place, dont move this object
             return getPosition();
         } 

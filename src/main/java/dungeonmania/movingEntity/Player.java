@@ -27,7 +27,7 @@ public class Player extends MovingEntity {
 
     private Set<PlayerPassiveObserver> passiveObservers = new HashSet<>();
     // observer here for passive
-    private Map<String, Passive> activePotions = new HashMap<>();
+    private Passive activePotion;
 
     /**
      * Constructor for player taking an x coordinate, a y coordinate, an id and a HealthPoint
@@ -48,46 +48,20 @@ public class Player extends MovingEntity {
     
     }
 
-     /**
-     * Returns the new position if posible
-     * and the old position (no movement) if not
-     */
-    @Override
-    public Position validMove(Position position, World world) {
-        
-        // Check for boundaries of the map her
-
-        // check if there is a static entity in the way
-        StaticEntity se = world.getStaticEntity(position);
-        if (!Objects.isNull(se)) {
-            // interact with static entitity
-            return se.interact(world, this); 
-        } 
-        if (!Objects.isNull(world.getBattle())) {
-            // check if this objects position is same as players (for players if there is a battle)
-            // they cannot move anyways
-            if (getPosition().equals(world.getPlayer().getPosition())) {
-                // cannot move into battle, wait outside
-                return getPosition();
-            }
-        }
-
-
-        return position;
-    }
-
     // TODO shouldn't this be done in move?
     // TODO implement using item?
     public void tick(Direction movementDirection, World world) {
         // check if the direction we are moving is valid first before setting new position
         // Tick passive
-        for (Passive potion: activePotions.values()) {
-            potion.decreaseDuration();
-            potion.applyPassive(this);
-            if (potion.getDuration() == 0){
-                activePotions.remove(potion.getType());
+        if (!Objects.isNull(activePotion)) {
+            activePotion.decreaseDuration();
+            activePotion.applyPassive(this);
+            if (activePotion.getDuration() == 0){
+                activePotion = null;
             } 
+    
         }
+
 
         if (!Objects.isNull(movementDirection)){
             setPosition(validMove(this.getPosition().translateBy(movementDirection), world));
@@ -101,7 +75,7 @@ public class Player extends MovingEntity {
     @Override
     public void defend(double attack) {
         // check inventory and mercenary in range
-        if (Objects.isNull(activePotions.get("invincibility_potion"))) {
+        if (Objects.isNull(activePotion) || !activePotion.getType().equals("invincibility_potion")) {
             getHealthPoint().loseHealth(attack);
         } // doesnt lose health if invincible
 
@@ -115,10 +89,14 @@ public class Player extends MovingEntity {
     public Battle battle(MovingEntity enemy, Gamemode gamemode) {
         // we can pass in invincibility state for battle 
         // or invisibility battle wont be created "return null"
-        if (!enemy.getAlly() && Objects.isNull(activePotions.get("invisibility_potion"))) {
-            notifyObserversForBattle(1); // mercenary speed
+        if (!enemy.getAlly()) {
 
-            return new Battle(this, enemy, gamemode.isEnemyAttackEnabled());
+            if (Objects.isNull(activePotion) || !activePotion.getType().equals("invisibility_potion")) {
+                notifyObserversForBattle(1); // mercenary speed
+
+                return new Battle(this, enemy, gamemode.isEnemyAttackEnabled());
+            }
+
             // notify observers of battle
         }
         return null;
@@ -193,7 +171,7 @@ public class Player extends MovingEntity {
     }
 
     public void addPotion(CollectableEntity potion) {
-        activePotions.put(potion.getType(), (Passive) potion);
+        activePotion = (Passive) potion;
     }
 
 

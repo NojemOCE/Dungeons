@@ -63,15 +63,4 @@ public class Spider extends MovingEntity implements PlayerPassiveObserver {
     }
 
 
-    @Override
-    public void updateMovement(String passive) {
-        if (passive.equals("invincibility_potion")) {
-            setMovement(new RandomMovement());
-        } else {
-            setMovement(getDefaultMovementStrategy());
-        }
-    }
-
-
-
 }
