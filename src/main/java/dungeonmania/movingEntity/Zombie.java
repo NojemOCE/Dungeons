@@ -9,7 +9,7 @@ import dungeonmania.util.*;
 
 public class Zombie extends MovingEntity{
     static final int ZOMBIE_ATTACK = 2;
-    static final int ZOMBIE_HEALTH = 6;
+    static final int ZOMBIE_HEALTH = 20;
 
 
     /**

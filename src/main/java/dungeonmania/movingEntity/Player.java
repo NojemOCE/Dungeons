@@ -1,24 +1,27 @@
 package dungeonmania.movingEntity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.Objects;
+import java.util.Set;
 
 import org.json.JSONObject;
 
 import dungeonmania.World;
 import dungeonmania.collectable.CollectableEntity;
 import dungeonmania.util.*;
-import dungeonmania.inventory.Inventory;
-import dungeonmania.response.models.EntityResponse;
 import dungeonmania.staticEntity.StaticEntity;
 
 
 public class Player extends MovingEntity {
 
     static final int PLAYER_ATTACK = 3;
-    private List<Mercenary> mercenaryObservers = new ArrayList<>();
+    private Set<Mercenary> mercenaryObservers = new HashSet<>();
+    private Map<String, CollectableEntity> activePotions = new HashMap<>();
     private double allyAttack;
 
     /**
@@ -88,7 +91,6 @@ public class Player extends MovingEntity {
     @Override
     public double attack(double attack) {
         // check inventory and mercenary in range
-        
         // then add on mercenary modifier
         return allyAttack;
     }
@@ -108,8 +110,8 @@ public class Player extends MovingEntity {
     public Battle battle(MovingEntity enemy) {
         // we can pass in invincibility state for battle 
         // or invisibility battle wont be created "return null"
-        if (!enemy.getAlly()) {
-            notifyObservers(1);
+        if (!enemy.getAlly() && Objects.isNull(activePotions.get("invisibility"))) {
+            notifyObserversForBattle(1);
 
             return new Battle(this, enemy);
             // notify observers of battle
@@ -122,7 +124,7 @@ public class Player extends MovingEntity {
      */
     public void endBattle() {
         // notify observers of ending battle
-        notifyObservers(0);
+        notifyObserversForBattle(0);
     }
 
 
@@ -157,7 +159,6 @@ public class Player extends MovingEntity {
         for (MovingEntity m : mercenaryObservers) {
             if (m.getAlly()) allies.add(m);
         }
-
         return allies;
     }
     
@@ -166,9 +167,12 @@ public class Player extends MovingEntity {
      * 
      * @param speed
      */
-    public void notifyObservers(int speed) { // notify observers for battle
+    public void notifyObserversForBattle(int speed) { // notify observers for battle
         mercenaryObservers.forEach( mercenary -> {
+            System.out.println(mercenary.getId());
+
             mercenary.setSpeed(speed);
+
         });
     }
 

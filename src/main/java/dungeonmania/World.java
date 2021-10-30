@@ -399,7 +399,6 @@ public class World {
             me.move(this);
             if (me.getPosition().equals(player.getPosition())) {
                 currentBattle = player.battle(me); // if invisible it will add null
-                player.notifyObservers(1);
             }
         }
 
