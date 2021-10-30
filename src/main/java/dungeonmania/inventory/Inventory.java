@@ -92,7 +92,8 @@ public class Inventory {
             useByType(numItem("treasure") != 0 ? "treasure" : "key");
             collectableItems.put(itemType + itemNum, new Shield(0, 0, itemType + itemNum));
         }
-
+        numCollected.putIfAbsent(itemType, 0);
+        numCollected.put(itemType, numCollected.get(itemType) + 1);
     }
 
     public int numItem(String itemType) {
@@ -109,7 +110,7 @@ public class Inventory {
         List<Key> keys = collectableItems.values().stream()
                                         .filter(x -> x instanceof Key)
                                         .map(Key.class::cast)
-                                        .filter(x -> x.getKeyColour()== keyColour)
+                                        .filter(x -> x.getKeyColour() == keyColour)
                                         .collect(Collectors.toList());
 
         if (keys.isEmpty()) {
@@ -124,12 +125,7 @@ public class Inventory {
      * @return true if there is a weapon, otherwise false
      */
     public boolean hasWeapon() {
-        for (CollectableEntity e : collectableItems.values()) {
-            if (e instanceof Sword) {
-                return true;
-            }
-        }
-        return false;
+        return collectableItems.values().stream().anyMatch(e -> e instanceof Sword);
     }
 
     public List<ItemResponse> getInventoryResponse() {
@@ -161,6 +157,17 @@ public class Inventory {
         return getBuildable();
     }
 
+    /**
+     * Get the type of the given item
+     * @param itemStringId the id of the item
+     * @return the type of the item, otherwise null
+     */
+    public String getType(String itemStringId) {
+        if (collectableItems.containsKey(itemStringId)) {
+            return collectableItems.get(itemStringId).getType();
+        }
+        return null;
+    }
     public boolean inInventory(String itemUsedId) {
         return collectableItems.containsKey(itemUsedId);
     }
