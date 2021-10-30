@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import dungeonmania.Entity;
 import dungeonmania.World;
+import dungeonmania.movingEntity.MovementStrategies.RunAway;
 import dungeonmania.staticEntity.StaticEntity;
 
 
@@ -31,13 +32,6 @@ public abstract class MovingEntity extends Entity {
         this.speed = 0;
     }
 
-
-    // Attack and defend will be used to calculate in the battle class
-    public double attack(double attack) {
-
-        // need to go through caclulators (player may have weapons)
-        return getAttackDamage();
-    }
 
     public void defend(double attack) {
         this.healthPoint.loseHealth(attack);
@@ -83,12 +77,16 @@ public abstract class MovingEntity extends Entity {
         return healthPoint;
     }
 
-    public void setHealthPoint(HealthPoint healthPoint) {
-        this.healthPoint = healthPoint;
+    public void addHealth(double health) {
+        this.healthPoint.gainHealth(health);
     }
 
     public double getAttackDamage() {
         return attackDamage;
+    }
+
+    public void setAttackDamage(double attackDamage) {
+        this.attackDamage = attackDamage;
     }
 
     public boolean getAlly() {
@@ -121,6 +119,14 @@ public abstract class MovingEntity extends Entity {
 
     public void setDefaultMovementStrategy(Movement defaultMovementStrategy) {
         this.defaultMovementStrategy = defaultMovementStrategy;
+    }
+
+    public void notifyPassive(String string) {
+        if (string.equals("invincibility_potion")) {
+            setMovement(new RunAway());
+        } else if (string.equals("N/A")) {
+            setMovement(getDefaultMovementStrategy());
+        }
     }
 
     @Override
