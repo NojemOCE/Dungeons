@@ -437,7 +437,7 @@ public class World {
         MovingEntity me = getCharacter(position); 
 
         // if there is a static entity and its a boulder OR there is already a moving entity OR player is there, NOT VALID
-        if ((!(se == null) && (se instanceof Boulder) || !(me == null) || (player.getPosition().equals(position)))) {
+        if ((!(se == null) && (se instanceof Boulder)) || !(me == null) || (player.getPosition().equals(position))) {
             return false;
         }
         return true;
