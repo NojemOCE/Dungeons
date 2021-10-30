@@ -17,19 +17,24 @@ public class InvincibilityPotion extends CollectableEntity implements Passive {
     private int duration = DURATION;
     private final double PLAYER_ATTACK = 3;
     private final double INVINCIBILITY_ATTACK = 999;
+    private boolean enabled;
 
-    public InvincibilityPotion(int x, int y, String itemId) {
+    public InvincibilityPotion(int x, int y, String itemId, boolean isInvincibilityEnabled) {
         super(x, y, itemId, "invincibility_potion");
+        this.enabled = isInvincibilityEnabled;
     }
 
     public void applyPassive(Player player) {
-        if (this.duration == 0) {
-            player.notifyPassive("N/A");
-            player.setAttackDamage(PLAYER_ATTACK);
-        } else {
-            player.notifyPassive(getType());
-            player.setAttackDamage(INVINCIBILITY_ATTACK);
+        if (enabled) {
+            if (this.duration == 0) {
+                player.notifyPassive("N/A");
+                player.setAttackDamage(PLAYER_ATTACK);
+            } else {
+                player.notifyPassive(getType());
+                player.setAttackDamage(INVINCIBILITY_ATTACK);
+            }
         }
+
     }
 
     public void decreaseDuration() {

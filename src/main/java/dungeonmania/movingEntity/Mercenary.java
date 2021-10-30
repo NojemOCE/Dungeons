@@ -7,10 +7,12 @@ import org.json.JSONObject;
 import dungeonmania.World;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.movingEntity.MovementStrategies.FollowPlayer;
+import dungeonmania.movingEntity.MovementStrategies.RandomMovement;
+import dungeonmania.movingEntity.MovementStrategies.RunAway;
 import dungeonmania.response.models.EntityResponse;
 
 
-public class Mercenary extends MovingEntity {
+public class Mercenary extends MovingEntity implements PlayerPassiveObserver {
 
     static final int MERC_ATTACK = 3;
     static final int MERC_HEALTH = 9;
@@ -42,9 +44,9 @@ public class Mercenary extends MovingEntity {
         
         if ((Math.sqrt(distanceSquared)) <= BATTLE_RADIUS) {
             // mount player as in range
-            world.getPlayer().registerEntity(this);
+            world.getPlayer().addInRange(this);
         } else {
-            world.getPlayer().unregisterEntity(this);
+            world.getPlayer().removeInRange(this);
         }
         
         getMovement().move(this, world);
@@ -106,5 +108,18 @@ public class Mercenary extends MovingEntity {
         mercJSON.put("movement", movement);
 
         return mercJSON;
+    }
+
+
+    @Override
+    public void updateMovement(String passive) {
+        if (passive.equals("invincibility_potion") && !getAlly()) {
+            setMovement(new RunAway());
+        } else if (passive.equals("invisibility_potion") && !getAlly()) {
+            setMovement(new RandomMovement());
+        } else {
+            setMovement(getDefaultMovementStrategy());
+        }
+        
     }
 }

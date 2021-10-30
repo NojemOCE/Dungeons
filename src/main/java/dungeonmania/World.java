@@ -117,6 +117,10 @@ public class World {
             }
         }
 
+        movingEntities.forEach((id, me) -> {
+            player.subscribePassiveObserver((PlayerPassiveObserver)me);
+        });
+
         return worldDungeonResponse();
     }
 
@@ -224,7 +228,7 @@ public class World {
         } 
         
         else if (type.equals("invincibility_potion")) {
-            InvincibilityPotion e = new InvincibilityPotion(x, y, id);
+            InvincibilityPotion e = new InvincibilityPotion(x, y, id, gamemode.isInvincibilityEnabled());
             collectableEntities.put(e.getId(), e);
         } 
         
@@ -380,6 +384,7 @@ public class World {
                 if (currentBattle.getPlayerWins()) {
                     dropBattleReward();
                     movingEntities.remove(currentBattle.getCharacter().getId());
+                    player.unsubscribePassiveObserver((PlayerPassiveObserver)currentBattle.getCharacter());
                     currentBattle = null;
                 } else {
                     this.player = null; // will end game in dungeon response
@@ -405,7 +410,7 @@ public class World {
         for (MovingEntity me: movingEntities.values()) {
             me.move(this);
             if (me.getPosition().equals(player.getPosition())) {
-                currentBattle = player.battle(me); // if invisible it will add null
+                currentBattle = player.battle(me, gamemode); // if invisible it will add null
             }
         }
 
@@ -444,6 +449,8 @@ public class World {
 
         Spider newSpider = new Spider(x, y, "spider" + String.valueOf(incrementEntityCount()));
         movingEntities.put(newSpider.getId(), newSpider);
+        player.subscribePassiveObserver((PlayerPassiveObserver)newSpider);
+
     }
     
     private boolean validSpiderSpawnPosition(Position position) {
@@ -474,6 +481,8 @@ public class World {
                 }
                 Zombie newZombie = new Zombie(newPos.getX(), newPos.getY(), "zombie_toast" + String.valueOf(incrementEntityCount()));
                 movingEntities.put(newZombie.getId(), newZombie);
+                player.subscribePassiveObserver((PlayerPassiveObserver) newZombie);
+
             }
         }
     }
@@ -714,6 +723,9 @@ public class World {
             collectableEntities.remove(e.getId());
             staticEntities.remove(e.getId());
             movingEntities.remove(e.getId());
+            if (e instanceof MovingEntity) {
+                player.unsubscribePassiveObserver((PlayerPassiveObserver)e);
+            }
         }
     }
 
