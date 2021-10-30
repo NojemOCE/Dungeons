@@ -22,13 +22,18 @@ public class FollowPlayer implements Movement {
         List<Position> path = bfs(me, world.getPlayer(), world);
         // maybe check for errors (list is empty or just has 1 etc...)
         // calculate distance inbetween player and mercenary, if in battle radius 
-        // use path.get(1) 
-
-        if (!path.isEmpty() && path.size() > 2) {
+        // use path.get(1)
+        if (!path.isEmpty() && path.size() <= 2) {
 
             // still need to use the battle radius, translate by two
             // THE PATH MAY INCLUDE THE START, if MERC NOT MOVING CHANGE me.getSpeed() +1`
-            if (!Objects.isNull(world.getBattle()) && path.get(me.getSpeed() + 1).equals(world.getPlayer().getPosition())) me.setPosition(path.get(me.getSpeed()));
+            if (!Objects.isNull(world.getBattle()) && path.get(1).equals(world.getPlayer().getPosition())) me.setPosition(path.get(0));
+            else me.setPosition(path.get(1));
+        } else if (!path.isEmpty() && path.size() > 2) {
+
+            // still need to use the battle radius, translate by two
+            // THE PATH MAY INCLUDE THE START, if MERC NOT MOVING CHANGE me.getSpeed() +1`
+            if (!Objects.isNull(world.getBattle()) && path.get(me.getSpeed() + 1).equals(world.getPlayer().getPosition())) me.setPosition(path.get(0));
             else me.setPosition(path.get(me.getSpeed() + 1));
         }
     }

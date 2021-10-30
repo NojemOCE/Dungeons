@@ -4,6 +4,7 @@ import org.json.JSONObject;
 
 import dungeonmania.World;
 import dungeonmania.movingEntity.MovementStrategies.CircleMovement;
+import dungeonmania.movingEntity.MovementStrategies.RandomMovement;
 import dungeonmania.movingEntity.MovementStrategies.RunAway;
 import dungeonmania.util.*;
 
@@ -65,7 +66,7 @@ public class Spider extends MovingEntity implements PlayerPassiveObserver {
     @Override
     public void updateMovement(String passive) {
         if (passive.equals("invincibility_potion")) {
-            setMovement(new RunAway());
+            setMovement(new RandomMovement());
         } else {
             setMovement(getDefaultMovementStrategy());
         }
