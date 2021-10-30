@@ -133,28 +133,31 @@ public class Inventory {
         return itemResponses;
     }
 
+<<<<<<< HEAD
     public List<String> tick(String itemUsedId) throws InvalidActionException, IllegalArgumentException {
+=======
+    public CollectableEntity tick(String itemUsedId) {
+        CollectableEntity collectable = null;
+>>>>>>> master
         if (!inInventory(itemUsedId)) {
             throw new InvalidActionException("Item not in Inventory");
         } else if (isUsable(itemUsedId)) {
-            collectableItems.get(itemUsedId).consume();
+            collectable = collectableItems.get(itemUsedId).consume();
             tick();
         } else {
             throw new IllegalArgumentException("Wrong usable type");
         }
 
-        return getBuildable();
+        return collectable;
     }
 
-    public List<String> tick() {
+    public void tick() {
         for (CollectableEntity item : collectableItems.values()) {
             item.tick();
             if (item.getDurability() == 0) {
                 removeItem(item);
             }
         }
-
-        return getBuildable();
     }
 
     /**

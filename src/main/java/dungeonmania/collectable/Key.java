@@ -2,9 +2,6 @@ package dungeonmania.collectable;
 
 import org.json.JSONObject;
 
-import dungeonmania.Consumable;
-import dungeonmania.inventory.Inventory;
-
 public class Key extends CollectableEntity {
     private int keyColour;
 
