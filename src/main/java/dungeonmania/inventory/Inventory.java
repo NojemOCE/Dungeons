@@ -136,15 +136,12 @@ public class Inventory {
             throw new InvalidActionException("Item not in Inventory");
         } else if (isUsable(itemUsedId)) {
             collectable = collectableItems.get(itemUsedId).consume();
-            collectable.tick();
-            if (collectable.getDurability() == 0) {
-                removeItem(collectable);
-            }
-            //tick();
-            return collectable;
+            tick();
         } else {
             throw new IllegalArgumentException("Wrong usable type");
         }
+
+        return collectable;
     }
 
     public void tick() {

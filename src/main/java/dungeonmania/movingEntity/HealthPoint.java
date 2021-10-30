@@ -31,11 +31,6 @@ public class HealthPoint {
     public void setHealth(double health) {
         this.health = health;
     }
-
-    public void gainHealth(double health) {
-        this.health += health;
-        if (this.health >= this.maxHealth) setHealth(maxHealth);
-    }
     
     /**
      * Decreases the health by a given double
