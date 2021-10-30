@@ -1,6 +1,8 @@
 package dungeonmania.collectable;
 
-public class InvisibilityPotion extends CollectableEntity {
+import dungeonmania.Passive;
+
+public class InvisibilityPotion extends CollectableEntity implements Passive {
 
     private final int DURATION = 10;
     private int duration = DURATION;
