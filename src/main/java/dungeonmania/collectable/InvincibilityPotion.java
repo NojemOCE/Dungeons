@@ -13,7 +13,7 @@ import dungeonmania.movingEntity.Player;
 
 public class InvincibilityPotion extends CollectableEntity implements Passive {
 
-    private final int DURATION = 3;
+    private final int DURATION = 10;
     private int duration = DURATION;
     private final double PLAYER_ATTACK = 3;
     private final double INVINCIBILITY_ATTACK = 999;
