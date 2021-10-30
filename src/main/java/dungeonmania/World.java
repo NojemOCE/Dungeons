@@ -64,6 +64,7 @@ public class World {
      */
     public World(String dungeonName, String gameMode) {
         this.dungeonName = dungeonName;
+        this.id = dungeonName;
         this.entityCount = 0;
         if (gameMode.equals("Hard")) {
             this.gamemode = new Hard();
@@ -389,7 +390,7 @@ public class World {
             }
             CollectableEntity potion = inventory.tick(itemUsed);
             if (Objects.isNull(potion)) {
-                player.addPotion(potion);
+                //player.addPotion(potion);
             }
         }
 
@@ -567,7 +568,7 @@ public class World {
 
     // Return a dungeon response for the current world
     public DungeonResponse worldDungeonResponse(){
-        return new DungeonResponse("1", dungeonName, getEntityResponses(), getInventoryResponse(), inventory.getBuildable(), getGoalsResponse());
+        return new DungeonResponse(id, dungeonName, getEntityResponses(), getInventoryResponse(), inventory.getBuildable(), getGoalsResponse());
     }
 
     /**
@@ -767,9 +768,9 @@ public class World {
         worldJSON.put("player", player.saveGameJson());
         worldJSON.put("moving-entities", movingEntitySaveGameJson());
         worldJSON.put("static-entities", staticEntitySaveGameJson());
-        worldJSON.put("collectable-entities", staticEntitySaveGameJson());
+        worldJSON.put("collectable-entities", collectableEntityGameJson());
 
-        if (currentBattle.isActiveBattle()) {
+        if (!(currentBattle==null) && currentBattle.isActiveBattle()) {
             worldJSON.put("current-battle", currentBattle.getCharacter().getId());
         }
         if (!(goals == null)) {
@@ -820,4 +821,13 @@ public class World {
         return tickCount;
     }
 
+    public String getDungeonName() {
+        return dungeonName;
+    }
+    public void setId(String id) {
+        this.id  = id;
+    }
+    public String getId() {
+        return id;
+    }
 }
