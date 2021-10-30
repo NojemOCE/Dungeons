@@ -78,15 +78,18 @@ public class Inventory {
         consumableItems.remove(idToRemove);
     }
     
-    public void craft(String itemType) {
+    public void craft(String itemType, String itemNum) {
         if (!isBuildable(itemType)) {
             throw new InvalidActionException("Insufficient items");
         } else if (itemType.equalsIgnoreCase("bow")) {
-            use("wood");
-            IntStream.range(0, 3).mapToObj(i -> "arrow").forEach(this::use);
+            System.out.println("x");
+            useByType("wood");
+            IntStream.range(0, 3).mapToObj(i -> "arrow").forEach(this::useByType);
+            collectableItems.put(itemType + itemNum, new Bow(0, 0, itemType + itemNum));
         } else if (itemType.equalsIgnoreCase("shield")) {
-            IntStream.range(0, 2).mapToObj(i -> "wood").forEach(this::use);
-            use(numItem("treasure") != 0 ? "treasure" : "key");
+            IntStream.range(0, 2).mapToObj(i -> "wood").forEach(this::useByType);
+            useByType(numItem("treasure") != 0 ? "treasure" : "key");
+            collectableItems.put(itemType + itemNum, new Shield(0, 0, itemType + itemNum));
         }
 
     }
