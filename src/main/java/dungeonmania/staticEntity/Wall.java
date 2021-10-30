@@ -27,7 +27,7 @@ public class Wall extends StaticEntity {
     @Override
     public Position interact(World world, Entity entity) {
         if (entity instanceof Spider) {
-            return this.getPosition();
+            return new Position(getX(), getY(), entity.getLayer());
         }
         return entity.getPosition();
     }

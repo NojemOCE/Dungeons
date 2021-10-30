@@ -10,9 +10,6 @@ public abstract class Entity {
     private Position position;
     private String id;
     private String type;
-
-    private boolean interactable;
-
     
     public Entity(Position position, String id, String type) {
         this.position = position;
@@ -22,6 +19,18 @@ public abstract class Entity {
 
     public Position getPosition() {
         return position;
+    }
+
+    public int getX() {
+        return position.getX();
+    }
+
+    public int getY() {
+        return position.getY();
+    }
+
+    public int getLayer() {
+        return position.getLayer();
     }
 
     public void setPosition(Position position) {

@@ -60,6 +60,7 @@ public class Inventory {
 
     /**
      * Uses an item of the given type (if it exists)
+     * @precondition must check there is at least 1 of this type (by calling numItem)
      * @param type type of the item we want to use
      */
     public void useByType(String type) {

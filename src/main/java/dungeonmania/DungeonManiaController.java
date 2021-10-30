@@ -53,7 +53,8 @@ public class DungeonManiaController {
 
     public DungeonResponse newGame(String dungeonName, String gameMode) throws IllegalArgumentException {
         
-        if (!dungeons().contains(dungeonName)) throw new IllegalArgumentException("No dungeon exists");
+        if (!dungeons().contains(dungeonName)) throw new IllegalArgumentException(dungeonName  + "is not a dungeon. Please select a valid dungeon.");
+        if (!(getGameModes().contains(gameMode))) throw new IllegalArgumentException(gameMode + " is not a valid game mode.");
 
         World newGame = new World(dungeonName, gameMode);
         // create JSON object

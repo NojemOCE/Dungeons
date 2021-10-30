@@ -22,7 +22,7 @@ public class Portal extends StaticEntity {
      * @param colour colour of the portal
      */
     public Portal(int x, int y, String id, String colour) {
-        super(new Position(x, y, 0), id, "portal");
+        super(new Position(x, y, 1), id, "portal");
         this.colour = colour;
     }
 
@@ -35,7 +35,7 @@ public class Portal extends StaticEntity {
      * @param twinPortal portal that pairs with this portal
      */
     public Portal(int x, int y, String id, String colour, Portal twinPortal) {
-        super(new Position(x, y, 0), id, "portal");
+        super(new Position(x, y, 1), id, "portal");
         this.twinPortal = twinPortal;
         this.colour = colour;
         twinPortal.setTwinPortal(this);
@@ -43,7 +43,7 @@ public class Portal extends StaticEntity {
 
     /**
      * Teleports entities to a corresponding portal.
-     * All entities but zombies are able to moce through portals
+     * All entities but zombies are able to move through portals
      */
     @Override
     public Position interact(World world, Entity entity) {
@@ -51,7 +51,7 @@ public class Portal extends StaticEntity {
             return travelToTwin(world, entity);
         }   
         // otherwise they just step on this spot
-        return this.getPosition();
+        return new Position(getX(), getY(), entity.getLayer());
     }
     
     /**
@@ -93,7 +93,7 @@ public class Portal extends StaticEntity {
         } else if (entity instanceof Boulder) {
             // if it is not a moving entity, it can only be a boulder
             if (((Boulder) entity).validMove(world, toMoveTo)) {
-                return toMoveTo;
+                return new Position(toMoveTo.getX(), toMoveTo.getY(), entity.getPosition().getLayer());
             }
         }
 

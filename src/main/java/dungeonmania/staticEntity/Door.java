@@ -6,6 +6,7 @@ import dungeonmania.Entity;
 import dungeonmania.World;
 import dungeonmania.collectable.Key;
 import dungeonmania.movingEntity.Player;
+import dungeonmania.movingEntity.Spider;
 import dungeonmania.util.Position;
 
 public class Door extends StaticEntity {
@@ -42,6 +43,7 @@ public class Door extends StaticEntity {
      * - Players can only walk through doors if they hold the matching key
      *      - If they have the key, the door will open and they will move onto the door
      *      - Else, they stay in the same spot
+     * - Spiders are able to walk through doors
      * - All other characters cannot walk through doors at any point
      */
     @Override
@@ -57,8 +59,10 @@ public class Door extends StaticEntity {
                 open();
                 // use the key
                 world.use(key.getId());
-                return this.getPosition();
+                return new Position(getX(), getY(), entity.getLayer());
             }
+        } else if (entity instanceof Spider) {
+            return new Position(getX(), getY(), entity.getLayer());
         }
         
         return entity.getPosition();
