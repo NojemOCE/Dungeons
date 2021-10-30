@@ -1,9 +1,4 @@
 package dungeonmania.collectable;
-import dungeonmania.Consumable;
-import dungeonmania.inventory.Inventory;
-import dungeonmania.response.models.EntityResponse;
-import dungeonmania.response.models.ItemResponse;
-import dungeonmania.util.Position;
 
 public class Sword extends CollectableEntity {
 

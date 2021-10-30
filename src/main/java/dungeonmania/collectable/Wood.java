@@ -1,6 +1,4 @@
 package dungeonmania.collectable;
-import dungeonmania.Consumable;
-import dungeonmania.inventory.Inventory;
 
 public class Wood extends CollectableEntity {
 

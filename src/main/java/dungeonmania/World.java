@@ -219,7 +219,7 @@ public class World {
         } 
         
         else if (type.equals("health_potion")) {
-            HealthPotion e = new HealthPotion(x, y, id, inventory);
+            HealthPotion e = new HealthPotion(x, y, id);
             collectableEntities.put(e.getId(), e);
         } 
         
@@ -383,7 +383,22 @@ public class World {
         if (Objects.isNull(itemUsed)) {
             inventory.tick();
         } else {
-            inventory.tick(itemUsed);
+            if (inventory.getType(itemUsed).equals("bomb")) {
+                PlacedBomb newBomb = new PlacedBomb(player.getX(), player.getY(), "bomb" + String.valueOf(incrementEntityCount()));
+                staticEntities.put(newBomb.getId(), newBomb);
+            }
+            CollectableEntity potion = inventory.tick(itemUsed);
+            if (Objects.isNull(potion)) {
+                player.addPotion(potion);
+            }
+        }
+
+        // collecting the collectable entity if it exists on the current position
+        CollectableEntity collectable = getCollectableEntity(player.getPosition());
+        if(!Objects.isNull(collectable)) {
+            if (inventory.collect(collectable)) {
+                collectableEntities.remove(collectable.getId());
+            }
         }
 
         // now move all entities
@@ -544,7 +559,10 @@ public class World {
     public DungeonResponse build(String buildable) throws IllegalArgumentException, InvalidActionException {
         // IllegalArgumentException if buildable is not one of bow or shield
         // InvalidActionException if the player does not have sufficient items to craft the buildable
-        return null;
+        if (inventory.isBuildable(buildable)) {
+            inventory.craft(buildable, String.valueOf(incrementEntityCount()));
+        }
+        return worldDungeonResponse();
     }
 
     // Return a dungeon response for the current world

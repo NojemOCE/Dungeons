@@ -13,9 +13,6 @@ import dungeonmania.Consumable;
 import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.response.models.ItemResponse;
-import dungeonmania.staticEntity.StaticEntity;
-import dungeonmania.movingEntity.Player;
-import dungeonmania.util.*;
 
 public class Inventory {
     private Map<String, CollectableEntity> collectableItems = new HashMap<>();
@@ -34,16 +31,22 @@ public class Inventory {
      * Add given item to the inventory
      * @param item item that is collected and to be added to inventory
      */
-    public void collect(CollectableEntity item) {
-        if (item instanceof Key && numItem("Key") != 0) {
-            return;
+    public boolean collect(CollectableEntity item) {
+        if (item instanceof Key && numItem("key") != 0) {
+            //System.out.println("hi");
+            return false;
         }
-        String itemType = item.getId();
+
+        //System.out.println(numItem("key"));
+        item.collect();
+        String itemType = item.getType();
 
         numCollected.putIfAbsent(itemType, 0);
         numCollected.put(itemType, numCollected.get(itemType) + 1);
 
         collectableItems.put(item.getId(), item);
+        consumableItems.put(item.getId(), item);
+        return true;
     }
 
     public void use(String itemId) {
@@ -73,17 +76,21 @@ public class Inventory {
         consumableItems.remove(idToRemove);
     }
     
-    public void craft(String itemType) {
+    public void craft(String itemType, String itemNum) {
         if (!isBuildable(itemType)) {
             throw new InvalidActionException("Insufficient items");
         } else if (itemType.equalsIgnoreCase("bow")) {
-            use("wood");
-            IntStream.range(0, 3).mapToObj(i -> "arrow").forEach(this::use);
+            System.out.println("x");
+            useByType("wood");
+            IntStream.range(0, 3).mapToObj(i -> "arrow").forEach(this::useByType);
+            collectableItems.put(itemType + itemNum, new Bow(0, 0, itemType + itemNum));
         } else if (itemType.equalsIgnoreCase("shield")) {
-            IntStream.range(0, 2).mapToObj(i -> "wood").forEach(this::use);
-            use(numItem("treasure") != 0 ? "treasure" : "key");
+            IntStream.range(0, 2).mapToObj(i -> "wood").forEach(this::useByType);
+            useByType(numItem("treasure") != 0 ? "treasure" : "key");
+            collectableItems.put(itemType + itemNum, new Shield(0, 0, itemType + itemNum));
         }
-
+        numCollected.putIfAbsent(itemType, 0);
+        numCollected.put(itemType, numCollected.get(itemType) + 1);
     }
 
     public int numItem(String itemType) {
@@ -100,7 +107,7 @@ public class Inventory {
         List<Key> keys = collectableItems.values().stream()
                                         .filter(x -> x instanceof Key)
                                         .map(Key.class::cast)
-                                        .filter(x -> x.getKeyColour()== keyColour)
+                                        .filter(x -> x.getKeyColour() == keyColour)
                                         .collect(Collectors.toList());
 
         if (keys.isEmpty()) {
@@ -115,12 +122,7 @@ public class Inventory {
      * @return true if there is a weapon, otherwise false
      */
     public boolean hasWeapon() {
-        for (CollectableEntity e : collectableItems.values()) {
-            if (e instanceof Sword) {
-                return true;
-            }
-        }
-        return false;
+        return collectableItems.values().stream().anyMatch(e -> e instanceof Sword);
     }
 
     public List<ItemResponse> getInventoryResponse() {
@@ -128,30 +130,40 @@ public class Inventory {
         return itemResponses;
     }
 
-    public List<String> tick(String itemUsedId) {
+    public CollectableEntity tick(String itemUsedId) {
+        CollectableEntity collectable = null;
         if (!inInventory(itemUsedId)) {
             throw new InvalidActionException("Item not in Inventory");
-        } else if (!isUsable(itemUsedId)) {
-            collectableItems.get(itemUsedId).consume();
+        } else if (isUsable(itemUsedId)) {
+            collectable = collectableItems.get(itemUsedId).consume();
             tick();
         } else {
             throw new IllegalArgumentException("Wrong usable type");
         }
 
-        return getBuildable();
+        return collectable;
     }
 
-    public List<String> tick() {
+    public void tick() {
         for (CollectableEntity item : collectableItems.values()) {
             item.tick();
             if (item.getDurability() == 0) {
                 removeItem(item);
             }
         }
-
-        return getBuildable();
     }
 
+    /**
+     * Get the type of the given item
+     * @param itemStringId the id of the item
+     * @return the type of the item, otherwise null
+     */
+    public String getType(String itemStringId) {
+        if (collectableItems.containsKey(itemStringId)) {
+            return collectableItems.get(itemStringId).getType();
+        }
+        return null;
+    }
     public boolean inInventory(String itemUsedId) {
         return collectableItems.containsKey(itemUsedId);
     }

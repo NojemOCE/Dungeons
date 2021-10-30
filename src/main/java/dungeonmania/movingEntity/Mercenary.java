@@ -14,7 +14,7 @@ public class Mercenary extends MovingEntity {
 
     static final int MERC_ATTACK = 3;
     static final int MERC_HEALTH = 9;
-    private static final int GOLD_TO_BRIBE = 2;
+    private static final int GOLD_TO_BRIBE = 1;
     private static final double BATTLE_RADIUS = 5;
     private Player subject;
     private boolean interactable = false;
@@ -55,7 +55,9 @@ public class Mercenary extends MovingEntity {
 
     private void setInteractable(Player player) {
         Position relativePos = Position.calculatePositionBetween(player.getPosition(), this.getPosition());
-        if ((relativePos.getX() + relativePos.getY()) <= 2) {
+        if (getAlly()) {
+            interactable = false;
+        } else if ((relativePos.getX() + relativePos.getY()) <= 2) {
             interactable = true;
         } else {
             interactable = false;
@@ -80,6 +82,7 @@ public class Mercenary extends MovingEntity {
                 for (int i = 0; i < GOLD_TO_BRIBE; i++) {
                     world.useByType("treasure");
                 }
+                setAlly(true);
             } else {
                 throw new InvalidActionException("Not enough gold to bribe Mercenary!");
             }
