@@ -17,11 +17,12 @@ public class EnemiesGoal extends GoalLeaf {
 
     @Override
     public Boolean evaluate(World world) {
-        List<MovingEntity> list = new ArrayList<>(world.getMovingEntities().values());
+        List<MovingEntity> enemiesOnly = new ArrayList<>(world.getMovingEntities().values());
+        enemiesOnly.removeIf(obj -> obj.getAlly());
         List<StaticEntity> zts = new ArrayList<>(world.getStaticEntities().values());
         zts.removeIf((obj -> !obj.getType().equals("zombie_toast_spawner")));
 
-        if (list.isEmpty() && zts.isEmpty()) {
+        if (enemiesOnly.isEmpty() && zts.isEmpty()) {
             setCompleted(true);
             return true;
         }
