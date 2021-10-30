@@ -23,6 +23,8 @@ import dungeonmania.gamemode.*;
 import dungeonmania.movingEntity.*;
 import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
+import dungeonmania.util.Position;
+
 
 
 
@@ -46,7 +48,7 @@ public class World {
     private String dungeonName;
 
     static final int MAX_SPIDERS = 6;
-    static final int SPIDER_SPAWN = 10;
+    static final int SPIDER_SPAWN = 20;
     static final int MECERNARY_SPAWN = 25;
     static final double MERCENARY_ARMOUR_DROP = 0.4;
     static final double ZOMBIE_ARMOUR_DROP = 0.2;
@@ -388,35 +390,39 @@ public class World {
         }
 
         // TODO this can probably be moved to a spider spawn method but I'm lazy rn so just leaving it here
-        if (tickCount >0 && tickCount%SPIDER_SPAWN == 0 && currentSpiders() < MAX_SPIDERS) {
-            Random ran1 = new Random();
-            Random ran2 = new Random();
+        // if (tickCount > 0 && tickCount % SPIDER_SPAWN == 0 && currentSpiders() < MAX_SPIDERS) {
+        //     Random ran1 = new Random();
+        //     Random ran2 = new Random();
 
-            int x = ran1.nextInt(highestX);
-            int y = ran2.nextInt(highestY);
+        //     int x = ran1.nextInt(highestX);
+        //     int y = ran2.nextInt(highestY);
             
-            boolean valid = false;
-            while (!valid) {
-                StaticEntity se = getStaticEntity(new Position(x,y));
-                MovingEntity me = getCharacter(new Position(x,y)); 
+        //     boolean valid = false;
+        //     while (!valid) {
+        //         StaticEntity se = getStaticEntity(new Position(x,y));
+        //         MovingEntity me = getCharacter(new Position(x,y)); 
 
-                if ((!(se == null) && (se instanceof Boulder)) || !(me == null) || (player.getPosition().equals(new Position(x, y)))) {
-                    x = ran1.nextInt(highestX);
-                    y = ran2.nextInt(highestY);
-                }
-                else{
-                    valid = true;
-                }
-            }
-            
-
+        //         if ((!(se == null) && (se instanceof Boulder)) || !(me == null) || (player.getPosition().equals(new Position(x, y)))) {
+        //             x = ran1.nextInt(highestX);
+        //             y = ran2.nextInt(highestY);
+        //         }
+        //         else{
+        //             valid = true;
+        //         }
+        //     }
             
 
-            Spider newSpider = new Spider(x, y, "spider"+String.valueOf(incrementEntityCount()));
-            movingEntities.put(newSpider.getId(), newSpider);
             
-        }
 
+        //     Spider newSpider = new Spider(x, y, "spider" + String.valueOf(incrementEntityCount()));
+        //     movingEntities.put(newSpider.getId(), newSpider);
+            
+        // }
+
+        // TODO: I made ^^ that a function but should probably check all statics? what if the boulder is on a switch?
+        tickSpiderSpawn();
+
+        tickZombieToastSpawn();
 
         // Now evaluate goals. Goal should never be null, but add a check incase there is an error in the input file
         if (!(goals == null)){
@@ -425,6 +431,73 @@ public class World {
         
         tickCount++;
         return worldDungeonResponse();
+    }
+
+
+    /**
+     * Helper function to create a new spider at relevant ticks
+     */
+    private void tickSpiderSpawn() {
+        if (!(tickCount > 0 && tickCount % SPIDER_SPAWN == 0 && currentSpiders() < MAX_SPIDERS)) {
+            return;
+        }
+
+        Random ran1 = new Random();
+        Random ran2 = new Random();
+
+        int x = ran1.nextInt(highestX);
+        int y = ran2.nextInt(highestY);
+        
+        while (!validSpiderSpawnPosition(new Position(x,y))) {
+            x = ran1.nextInt(highestX);
+            y = ran2.nextInt(highestY);
+        }
+
+        Spider newSpider = new Spider(x, y, "spider" + String.valueOf(incrementEntityCount()));
+        movingEntities.put(newSpider.getId(), newSpider);
+    }
+    
+    private boolean validSpiderSpawnPosition(Position position) {
+        StaticEntity se = getStaticEntity(position);
+        MovingEntity me = getCharacter(position); 
+
+        // if there is a static entity and its a boulder OR there is already a moving entity OR player is there, NOT VALID
+        if ((!(se == null) && (se instanceof Boulder) || !(me == null) || (player.getPosition().equals(position)))) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Helper function to create a new zombie at relevant ticks
+     */
+    private void tickZombieToastSpawn() {
+        if (!(tickCount > 0 && tickCount % gamemode.getSpawnRate() == 0)) {
+            return;
+        }
+        for (StaticEntity s : staticEntities.values()) {
+            if (s instanceof ZombieToastSpawn) {
+                Position newPos = ((ZombieToastSpawn) s).spawn();
+                // TODO: edge case: what if all four sides are invalid...infinite loop?!?!
+                while (!validZombieSpawnPosition(newPos)) {
+                    newPos = ((ZombieToastSpawn) s).spawn();
+                }
+                Zombie newZombie = new Zombie(newPos.getX(), newPos.getY(), "zombie_toast" + String.valueOf(incrementEntityCount()));
+                movingEntities.put(newZombie.getId(), newZombie);
+            }
+        }
+    }
+
+
+    private boolean validZombieSpawnPosition(Position position) {
+        StaticEntity se = getStaticEntity(position);
+        MovingEntity me = getCharacter(position); 
+
+        // if there is a static entity higher than layer 0 OR there is already a moving entity OR player is there, NOT VALID
+        if ((!(se == null) && (se.getPosition().getLayer() > 0) || !(me == null) || (player.getPosition().equals(position)))) {
+            return false;
+        }
+        return true;
     }
 
     private int currentSpiders() {
