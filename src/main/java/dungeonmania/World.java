@@ -900,7 +900,67 @@ public class World {
     }
 
     private void createInventoryFromJSON(JSONObject obj, String id) {
-        //TODO implement
+        // TODO update constructors
+        int x = obj.getInt("x");
+        int y = obj.getInt("y");
+
+        updateBounds(x, y);
+
+        String type = obj.getString("type");
+
+        id = type + id;
+
+        
+        if (type.equals("treasure")) {
+            Treasure e = new Treasure(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("key")) {
+            int key = (int)obj.get("key");
+            Key e = new Key(x, y, id, key);
+            collectableEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("health_potion")) {
+            HealthPotion e = new HealthPotion(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("invincibility_potion")) {
+            InvincibilityPotion e = new InvincibilityPotion(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("invisibility_potion")) {
+            InvisibilityPotion e = new InvisibilityPotion(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("wood")) {
+            Wood e = new Wood(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("arrow")) {
+            Arrows e = new Arrows(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("bomb")) {
+            Bomb e = new Bomb(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("sword")) {
+            Sword e = new Sword(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        }
+        else if (type.equals("one_ring")) {
+            OneRing e = new OneRing(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        }
+        //TODO implement, add bow, shield etc
     }
 
     private void createPlayerFromJSON(JSONObject obj, String id) {
@@ -908,15 +968,159 @@ public class World {
     }
 
     private void createMovingEntityFromJSON(JSONObject obj, String id) {
-        //TODO implement
+        //TODO update constructors
+
+        int x = obj.getInt("x");
+        int y = obj.getInt("y");
+
+        updateBounds(x, y);
+
+        String type = obj.getString("type");
+
+        id = type + id;
+
+        
+        if (type.equals("spider")) {
+            Spider e = new Spider(x, y, id);
+            movingEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("zombie_toast")) {
+            Zombie e = new Zombie(x, y, id);
+            movingEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("mercenary")) {
+            Mercenary e = new Mercenary(x, y, id);
+
+            movingEntities.put(e.getId(), e);
+        } 
     }
 
     private void createStaticEntityFromJSON(JSONObject obj, String id) {
-        //TODO implement
+        //TODO update constructors
+        int x = obj.getInt("x");
+        int y = obj.getInt("y");
+
+        updateBounds(x, y);
+
+        String type = obj.getString("type");
+
+        id = type + id;
+
+        if (type.equals("wall")) {
+
+            Wall e = new Wall(x, y, id);
+
+            staticEntities.put(e.getId(), e);
+
+        } else if (type.equals("exit")) {
+            Exit e = new Exit(x,y,id);
+            staticEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("switch")) {
+            FloorSwitch e = new FloorSwitch(x, y, id);
+            staticEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("boulder")) {
+            Boulder e = new Boulder(x, y, id);
+            staticEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("door")) {
+            int key = (int)obj.get("key");
+            Door e = new Door(x, y, id, key);
+            staticEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("portal")) {
+            Portal e;
+
+            String colour = obj.getString("colour");
+
+            if (staticEntities.containsKey(colour)) {
+                e = new Portal(x, y, colour + "2", colour, (Portal) staticEntities.get(colour));
+            } else {
+                e = new Portal(x, y, colour, colour);
+            }
+            staticEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("zombie_toast_spawner")) {
+            ZombieToastSpawn e = new ZombieToastSpawn(x, y, id);
+            staticEntities.put(e.getId(), e);   
+        } else if (type.equals("player")) {
+            Player e = new Player(x, y, id, new HealthPoint(gamemode.getStartingHP()));
+           
+            this.player = e;
+        } 
+
+        //TODO add placed bomb?
     }
 
     private void createCollectableEntityFromJSON(JSONObject obj, String id) {
-        //TODO implement
+        // TODO update constructors
+        int x = obj.getInt("x");
+        int y = obj.getInt("y");
+
+        updateBounds(x, y);
+
+        String type = obj.getString("type");
+
+        id = type + id;
+
+        
+        if (type.equals("treasure")) {
+            Treasure e = new Treasure(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("key")) {
+            int key = (int)obj.get("key");
+            Key e = new Key(x, y, id, key);
+            collectableEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("health_potion")) {
+            HealthPotion e = new HealthPotion(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("invincibility_potion")) {
+            InvincibilityPotion e = new InvincibilityPotion(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("invisibility_potion")) {
+            InvisibilityPotion e = new InvisibilityPotion(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("wood")) {
+            Wood e = new Wood(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("arrow")) {
+            Arrows e = new Arrows(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("bomb")) {
+            Bomb e = new Bomb(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("sword")) {
+            Sword e = new Sword(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        }
+        else if (type.equals("one_ring")) {
+            OneRing e = new OneRing(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        }
     }
 
 
