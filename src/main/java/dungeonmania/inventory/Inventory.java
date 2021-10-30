@@ -109,7 +109,7 @@ public class Inventory {
         List<Key> keys = collectableItems.values().stream()
                                         .filter(x -> x instanceof Key)
                                         .map(Key.class::cast)
-                                        .filter(x -> x.getKeyColour()== keyColour)
+                                        .filter(x -> x.getKeyColour() == keyColour)
                                         .collect(Collectors.toList());
 
         if (keys.isEmpty()) {
