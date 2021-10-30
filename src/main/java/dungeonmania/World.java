@@ -360,6 +360,20 @@ public class World {
         // IllegalArgumentException if itemUsed is not a bomb, invincibility_potion or an invisibility_potion
         // InvalidActionException if itemUsed is not in the player's inventory
         
+        if (Objects.isNull(itemUsed)) {
+            inventory.tick();
+        } else {
+            if (inventory.getType(itemUsed).equals("bomb")) {
+                PlacedBomb newBomb = new PlacedBomb(player.getX(), player.getY(), "bomb" + String.valueOf(incrementEntityCount()));
+                staticEntities.put(newBomb.getId(), newBomb);
+            }
+            CollectableEntity potion = inventory.tick(itemUsed);
+            if (!Objects.isNull(potion)) {
+                player.addPotion(potion);
+            }
+        }
+
+
         if (!Objects.isNull(currentBattle)) {
             currentBattle.battleTick(inventory);
             if (!currentBattle.isActiveBattle()) {
@@ -376,22 +390,8 @@ public class World {
         
         else  {
             player.tick(itemUsed, movementDirection, this);
-            //if ( !Objects.isNull(getCharacter(player.getPosition()))) { // TODO THIS IS THE TEMPORARY BATTLE 
-            //    currentBattle = player.battle(getCharacter(player.getPosition()));
-            //}
         }
-        if (Objects.isNull(itemUsed)) {
-            inventory.tick();
-        } else {
-            if (inventory.getType(itemUsed).equals("bomb")) {
-                PlacedBomb newBomb = new PlacedBomb(player.getX(), player.getY(), "bomb" + String.valueOf(incrementEntityCount()));
-                staticEntities.put(newBomb.getId(), newBomb);
-            }
-            CollectableEntity potion = inventory.tick(itemUsed);
-            if (Objects.isNull(potion)) {
-                player.addPotion(potion);
-            }
-        }
+
 
         // collecting the collectable entity if it exists on the current position
         CollectableEntity collectable = getCollectableEntity(player.getPosition());

@@ -32,13 +32,6 @@ public abstract class MovingEntity extends Entity {
     }
 
 
-    // Attack and defend will be used to calculate in the battle class
-    public double attack(double attack) {
-
-        // need to go through caclulators (player may have weapons)
-        return getAttackDamage();
-    }
-
     public void defend(double attack) {
         this.healthPoint.loseHealth(attack);
     }
@@ -83,10 +76,10 @@ public abstract class MovingEntity extends Entity {
         return healthPoint;
     }
 
-    public void setHealthPoint(HealthPoint healthPoint) {
-        this.healthPoint = healthPoint;
+    public void addHealth(double health) {
+        this.healthPoint.gainHealth(health);
     }
-
+    
     public double getAttackDamage() {
         return attackDamage;
     }

@@ -21,7 +21,7 @@ public class Player extends MovingEntity {
 
     static final int PLAYER_ATTACK = 3;
     private Set<Mercenary> mercenaryObservers = new HashSet<>();
-    private Map<String, CollectableEntity> activePotions = new HashMap<>();
+    private Map<String, Passive> activePotions = new HashMap<>();
     private double allyAttack;
 
     /**
@@ -75,24 +75,24 @@ public class Player extends MovingEntity {
 
     // TODO shouldn't this be done in move?
     // TODO implement using item?
-    public void tick(String itemUsed, Direction movementDirection, World world) {
+    public void tick(Direction movementDirection, World world) {
         // check if the direction we are moving is valid first before setting new position
-        if (Objects.isNull(itemUsed)) {
+        // Tick passive
+        for (Passive potion: activePotions.values()) {
+            potion.decreaseDuration();
+            potion.applyPassive(this);
+            if (potion.getDuration() == 0){
+                activePotions.remove(potion.getType());
+            } 
+        }
+
+        if (!Objects.isNull(movementDirection))
             setPosition(validMove(this.getPosition().translateBy(movementDirection), world));
             CollectableEntity e = world.getCollectableEntity(this.getPosition());
             if (!Objects.isNull(e)) {
                 e.collect();
             }
-        } else {
-            // use item
-        }
-    }
-
-    @Override
-    public double attack(double attack) {
-        // check inventory and mercenary in range
-        // then add on mercenary modifier
-        return allyAttack;
+        } 
     }
 
     @Override
@@ -110,7 +110,7 @@ public class Player extends MovingEntity {
     public Battle battle(MovingEntity enemy) {
         // we can pass in invincibility state for battle 
         // or invisibility battle wont be created "return null"
-        if (!enemy.getAlly() && Objects.isNull(activePotions.get("invisibility"))) {
+        if (!enemy.getAlly() && Objects.isNull(activePotions.get("invisibility_potion"))) {
             notifyObserversForBattle(1);
 
             return new Battle(this, enemy);
@@ -173,6 +173,10 @@ public class Player extends MovingEntity {
             mercenary.setSpeed(speed);
 
         });
+    }
+
+    public void addPotion(CollectableEntity potion) {
+        activePotions.put(potion.getType(), (Passive) potion);
     }
 
     @Override
