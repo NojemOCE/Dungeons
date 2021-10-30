@@ -473,7 +473,10 @@ public class World {
         }
         for (StaticEntity s : staticEntities.values()) {
             if (s instanceof ZombieToastSpawn) {
-                List<Position> possibleSpawnPositions = ((ZombieToastSpawn) s).spawn();
+                ZombieToastSpawn spawner = (ZombieToastSpawn) s;
+                // update interactable state
+                spawner.update(player);
+                List<Position> possibleSpawnPositions = spawner.spawn();
                 Position newPos = getSpawnPositon(possibleSpawnPositions);
                 if (newPos.equals(null)) {
                     // no valid spawn positions

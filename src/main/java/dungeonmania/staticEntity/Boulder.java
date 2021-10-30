@@ -66,7 +66,7 @@ public class Boulder extends StaticEntity {
             Position entityToMoveTo = new Position(getX(), getY(), entity.getLayer());
 
             // move boulder then return appropriate position for character to move to
-            this.setPosition(toMoveBoulderTo);
+            this.setPosition(new Position(toMoveBoulderTo.getX(), toMoveBoulderTo.getY(), getLayer()));
 
             return entityToMoveTo;
         }

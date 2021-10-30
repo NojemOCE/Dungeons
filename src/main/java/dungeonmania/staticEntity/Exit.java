@@ -2,7 +2,6 @@ package dungeonmania.staticEntity;
 
 import dungeonmania.Entity;
 import dungeonmania.World;
-import dungeonmania.movingEntity.Player;
 import dungeonmania.util.Position;
 
 public class Exit extends StaticEntity {
