@@ -134,8 +134,9 @@ public class DungeonManiaController {
             
             JSONObject game = new JSONObject(file);
             
-            //newGame = new World()
-            //newGame.buildWorld(game);
+            newGame = new World(game.getString("dungeon-name"), game.getString("gamemode"), game.getString("id"));
+
+            newGame.buildWorldFromFile(game);
         }
         catch (Exception e) {
             e.printStackTrace();

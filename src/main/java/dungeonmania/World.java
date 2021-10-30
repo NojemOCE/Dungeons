@@ -74,8 +74,11 @@ public class World {
             this.gamemode = new Peaceful();
         }
         this.inventory = new Inventory();
-        
+    }
 
+    public World(String dungeonName, String gameMode, String id) {
+        this(dungeonName, gameMode);
+        this.id = id;
     }
 
     /**
@@ -98,7 +101,7 @@ public class World {
             createEntity(entities.getJSONObject(i), String.valueOf(incrementEntityCount()));
         }
         
-        
+        // TODO can we put this in a shared method
         if (worldData.has("goal-condition")) {
             JSONObject g = worldData.getJSONObject("goal-condition");
             GoalComponent goal = createGoal(g);
@@ -108,6 +111,7 @@ public class World {
             setGoals(null);
         }
 
+        // TODO can we put this in a shared method
         // trigger any switches
         for (StaticEntity se : staticEntities.values()) {
             if (se instanceof FloorSwitch) {
@@ -830,4 +834,90 @@ public class World {
     public String getId() {
         return id;
     }
+
+    public void buildWorldFromFile(JSONObject gameData) {
+        //TODO implement
+
+        int tickNo = gameData.getInt("tick-count");
+        int entityNo = gameData.getInt("entity-count");
+
+        // TODO can we put this in a shared method
+        if (gameData.has("goal-condition")) {
+            JSONObject g = gameData.getJSONObject("goal-condition");
+            GoalComponent goal = createGoal(g);
+            setGoals(goal);
+        }
+        else {
+            setGoals(null);
+        }
+
+        JSONArray inventoryItems = gameData.getJSONArray("inventory");
+        for (int i = 0; i < inventoryItems.length(); i++) {
+            createInventoryFromJSON(inventoryItems.getJSONObject(i), String.valueOf(incrementEntityCount()));
+        }
+
+        JSONObject playerObj = gameData.getJSONObject("player");
+        createPlayerFromJSON(playerObj,String.valueOf(incrementEntityCount()));
+
+        JSONArray movingEntitiesItems = gameData.getJSONArray("inventory");
+        for (int i = 0; i < movingEntitiesItems.length(); i++) {
+            createMovingEntityFromJSON(movingEntitiesItems.getJSONObject(i), String.valueOf(incrementEntityCount()));
+        }
+
+        JSONArray staticEntitiesItems = gameData.getJSONArray("inventory");
+        for (int i = 0; i < staticEntitiesItems.length(); i++) {
+            createStaticEntityFromJSON(staticEntitiesItems.getJSONObject(i), String.valueOf(incrementEntityCount()));
+        }
+
+        JSONArray collectableEntitiesItems = gameData.getJSONArray("inventory");
+        for (int i = 0; i < collectableEntitiesItems.length(); i++) {
+            createCollectableEntityFromJSON(collectableEntitiesItems.getJSONObject(i), String.valueOf(incrementEntityCount()));
+        }
+
+
+
+        if (gameData.has("current-battle")) {
+            JSONObject b = gameData.getJSONObject("current-battle");
+            // TODO need a create battle method here
+        }
+        else {
+            //set battle as null
+        }
+
+        //Make enemies observe player
+        // TODO can we put this in a shared method
+        // trigger any switches
+        for (StaticEntity se : staticEntities.values()) {
+            if (se instanceof FloorSwitch) {
+                StaticEntity entity = getStaticEntity(se.getPosition());
+                if (entity instanceof Boulder) {
+                    ((FloorSwitch) se).trigger(this);
+                }
+            }
+        }
+
+
+    }
+
+    private void createInventoryFromJSON(JSONObject obj, String id) {
+        //TODO implement
+    }
+
+    private void createPlayerFromJSON(JSONObject obj, String id) {
+        //TODO implement
+    }
+
+    private void createMovingEntityFromJSON(JSONObject obj, String id) {
+        //TODO implement
+    }
+
+    private void createStaticEntityFromJSON(JSONObject obj, String id) {
+        //TODO implement
+    }
+
+    private void createCollectableEntityFromJSON(JSONObject obj, String id) {
+        //TODO implement
+    }
+
+
 }
