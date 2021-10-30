@@ -48,7 +48,6 @@ public class inventoryTest {
         potion.consume();
         assert inv.numItem("health_potion1") == 0;
 
-        Position p2 = new Position(1,2);
         Bomb bomb = new Bomb(1, 2, "bomb2");
         assert inv.numItem("bomb") == 0;
         inv.collect(bomb);
