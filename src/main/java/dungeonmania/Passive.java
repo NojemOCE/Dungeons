@@ -1,5 +1,7 @@
 package dungeonmania;
 
+import dungeonmania.movingEntity.Player;
+
 public interface Passive {
     public void decreaseDuration();
 
@@ -7,5 +9,5 @@ public interface Passive {
 
     public String getType();
 
-    public void applyPassive();
+    public void applyPassive(Player player);
 }

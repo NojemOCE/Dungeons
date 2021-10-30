@@ -29,9 +29,9 @@ public class RunAway implements Movement {
             me.setPosition(me.validMove(p.translateBy(Direction.LEFT), world));
         } else { // the x is aligned, shift y instead
             if (yOffset > 0) {
-                me.setPosition(me.validMove(p.translateBy(Direction.UP), world));
-            } else if (yOffset < 0) {
                 me.setPosition(me.validMove(p.translateBy(Direction.DOWN), world));
+            } else if (yOffset < 0) {
+                me.setPosition(me.validMove(p.translateBy(Direction.UP), world));
 
             }
         }
