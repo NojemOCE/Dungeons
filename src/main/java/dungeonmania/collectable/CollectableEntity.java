@@ -1,7 +1,5 @@
 package dungeonmania.collectable;
 
-import dungeonmania.inventory.Inventory;
-
 import org.json.JSONObject;
 
 import dungeonmania.Consumable;
@@ -12,8 +10,6 @@ import dungeonmania.util.Position;
 
 public abstract class CollectableEntity extends Entity implements Consumable {
     private boolean collected;
-    private String type;
-    private Inventory inventory;
     private int durability = 1;
 
     public CollectableEntity(int x, int y, String id, String type) {
@@ -32,8 +28,9 @@ public abstract class CollectableEntity extends Entity implements Consumable {
         return collected;
     }
 
-    public void consume() {
+    public CollectableEntity consume() {
         this.durability--;
+        return null;
     }
     
     public void tick() {}
