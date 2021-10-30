@@ -137,7 +137,7 @@ public class Inventory {
         return itemResponses;
     }
 
-    public List<String> tick(String itemUsedId) {
+    public List<String> tick(String itemUsedId) throws InvalidActionException, IllegalArgumentException {
         if (!inInventory(itemUsedId)) {
             throw new InvalidActionException("Item not in Inventory");
         } else if (isUsable(itemUsedId)) {
