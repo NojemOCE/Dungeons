@@ -14,7 +14,7 @@ public class Exit extends StaticEntity {
      * @param id id of exit
      */
     public Exit(int x, int y, String id) {
-        super(new Position(x, y, 1), id, "exit");
+        super(new Position(x, y, 0), id, "exit");
 
     }
 

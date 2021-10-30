@@ -23,6 +23,8 @@ import dungeonmania.gamemode.*;
 import dungeonmania.movingEntity.*;
 import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
+import dungeonmania.util.Position;
+
 
 
 
@@ -46,14 +48,14 @@ public class World {
     private String dungeonName;
 
     static final int MAX_SPIDERS = 6;
-    static final int SPIDER_SPAWN = 10;
+    static final int SPIDER_SPAWN = 20;
     static final int MECERNARY_SPAWN = 25;
     static final double MERCENARY_ARMOUR_DROP = 0.4;
     static final double ZOMBIE_ARMOUR_DROP = 0.2;
     static final double ONE_RING_DROP = 0.1;
     private int tickCount = 0;
-    private int highestX = 0;
-    private int highestY = 0;
+    private int highestX = 5;
+    private int highestY = 5;
     //private Map map; TBC
 
     /**
@@ -88,17 +90,23 @@ public class World {
         setWidth((Integer.parseInt(width)));*/
 
         //System.out.println(worldData.toString());
+
         JSONArray entities = worldData.getJSONArray("entities");
 
         for (int i = 0; i < entities.length(); i++) {
             createEntity(entities.getJSONObject(i), String.valueOf(incrementEntityCount()));
         }
-
+        
         
         JSONObject g = worldData.getJSONObject("goal-condition");
-
-        GoalComponent goal = createGoal(g);
-        setGoals(goal);
+        if (!(g == null)) {
+            GoalComponent goal = createGoal(g);
+            setGoals(goal);
+        }
+        else {
+            setGoals(null);
+        }
+        
 
         return worldDungeonResponse();
     }
@@ -147,14 +155,16 @@ public class World {
         } 
         
         else if (type.equals("door")) {
-            String key = obj.getString("key");
+            int key = (int)obj.get("key");
             Door e = new Door(x, y, id, key);
             staticEntities.put(e.getId(), e);
         } 
         
         else if (type.equals("portal")) {
             Portal e;
+
             String colour = obj.getString("colour");
+
             if (staticEntities.containsKey(colour)) {
                 e = new Portal(x, y, colour + "2", colour, (Portal) staticEntities.get(colour));
             } else {
@@ -194,7 +204,7 @@ public class World {
         } 
         
         else if (type.equals("key")) {
-            String key = obj.getString("key");
+            int key = (int)obj.get("key");
             Key e = new Key(x, y, id, key);
             collectableEntities.put(e.getId(), e);
         } 
@@ -242,6 +252,7 @@ public class World {
 
     private GoalComponent createGoal(JSONObject goal) {
         String currGoal = goal.getString("goal");
+
         // Will return null if the goal is not exit,enemies,treasure, AND or OR
         if (currGoal.equals("exit")) {
             return new ExitGoal(currGoal);
@@ -280,7 +291,10 @@ public class World {
     }
 
     private String getGoalsResponse() {
-        return goals.remainingGoalString();
+        if (!(goals == null)) {
+            return goals.remainingGoalString();
+        }
+        else return null;
     }
     private void setGoals(GoalComponent goals) {
         this.goals = goals;
@@ -343,6 +357,7 @@ public class World {
                 if (currentBattle.getPlayerWins()) {
                     dropBattleReward();
                     movingEntities.remove(currentBattle.getCharacter().getId());
+                    currentBattle = null;
                 } else {
                     this.player = null; // will end game in dungeon response
                     // needs to return early
@@ -352,6 +367,9 @@ public class World {
         
         else  {
             player.tick(itemUsed, movementDirection, this);
+            //if ( !Objects.isNull(getCharacter(player.getPosition()))) { // TODO THIS IS THE TEMPORARY BATTLE 
+            //    currentBattle = player.battle(getCharacter(player.getPosition()));
+            //}
         }
         if (Objects.isNull(itemUsed)) {
             inventory.tick();
@@ -360,36 +378,133 @@ public class World {
         }
 
         // now move all entities
-        // for (MovingEntity me: movingEntities.values()) {
-        //     me.move(this);
-        //     if (me.getPosition().equals(player.getPosition())) {
-        //         currentBattle = player.battle(me); // if invisible it will add null
-        //         player.notifyObservers(1);
-        //     }
-        // }
-
-        if (tickCount >0 && tickCount%SPIDER_SPAWN == 0) {
-            Random ran1 = new Random();
-            Random ran2 = new Random();
-
-            int x = ran1.nextInt(highestX);
-            int y =  ran2.nextInt(highestY);
-
-            String id = String.valueOf(incrementEntityCount());
-
-            Spider newSpider = new Spider(x, y, id);
-            movingEntities.put(newSpider.getId(), newSpider);
-            
+        for (MovingEntity me: movingEntities.values()) {
+            me.move(this);
+            if (me.getPosition().equals(player.getPosition())) {
+                currentBattle = player.battle(me); // if invisible it will add null
+                player.notifyObservers(1);
+            }
         }
 
+        // TODO this can probably be moved to a spider spawn method but I'm lazy rn so just leaving it here
+        // if (tickCount > 0 && tickCount % SPIDER_SPAWN == 0 && currentSpiders() < MAX_SPIDERS) {
+        //     Random ran1 = new Random();
+        //     Random ran2 = new Random();
+
+        //     int x = ran1.nextInt(highestX);
+        //     int y = ran2.nextInt(highestY);
+            
+        //     boolean valid = false;
+        //     while (!valid) {
+        //         StaticEntity se = getStaticEntity(new Position(x,y));
+        //         MovingEntity me = getCharacter(new Position(x,y)); 
+
+        //         if ((!(se == null) && (se instanceof Boulder)) || !(me == null) || (player.getPosition().equals(new Position(x, y)))) {
+        //             x = ran1.nextInt(highestX);
+        //             y = ran2.nextInt(highestY);
+        //         }
+        //         else{
+        //             valid = true;
+        //         }
+        //     }
+            
+
+            
+
+        //     Spider newSpider = new Spider(x, y, "spider" + String.valueOf(incrementEntityCount()));
+        //     movingEntities.put(newSpider.getId(), newSpider);
+            
+        // }
+
+        // TODO: I made ^^ that a function but should probably check all statics? what if the boulder is on a switch?
+        tickSpiderSpawn();
+
+        tickZombieToastSpawn();
 
         // Now evaluate goals. Goal should never be null, but add a check incase there is an error in the input file
-        if (!goals.equals(null)){
+        if (!(goals == null)){
             goals.evaluate(this);
         }
         
         tickCount++;
         return worldDungeonResponse();
+    }
+
+
+    /**
+     * Helper function to create a new spider at relevant ticks
+     */
+    private void tickSpiderSpawn() {
+        if (!(tickCount > 0 && tickCount % SPIDER_SPAWN == 0 && currentSpiders() < MAX_SPIDERS)) {
+            return;
+        }
+
+        Random ran1 = new Random();
+        Random ran2 = new Random();
+
+        int x = ran1.nextInt(highestX);
+        int y = ran2.nextInt(highestY);
+        
+        while (!validSpiderSpawnPosition(new Position(x,y))) {
+            x = ran1.nextInt(highestX);
+            y = ran2.nextInt(highestY);
+        }
+
+        Spider newSpider = new Spider(x, y, "spider" + String.valueOf(incrementEntityCount()));
+        movingEntities.put(newSpider.getId(), newSpider);
+    }
+    
+    private boolean validSpiderSpawnPosition(Position position) {
+        StaticEntity se = getStaticEntity(position);
+        MovingEntity me = getCharacter(position); 
+
+        // if there is a static entity and its a boulder OR there is already a moving entity OR player is there, NOT VALID
+        if ((!(se == null) && (se instanceof Boulder) || !(me == null) || (player.getPosition().equals(position)))) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Helper function to create a new zombie at relevant ticks
+     */
+    private void tickZombieToastSpawn() {
+        if (!(tickCount > 0 && tickCount % gamemode.getSpawnRate() == 0)) {
+            return;
+        }
+        for (StaticEntity s : staticEntities.values()) {
+            if (s instanceof ZombieToastSpawn) {
+                Position newPos = ((ZombieToastSpawn) s).spawn();
+                // TODO: edge case: what if all four sides are invalid...infinite loop?!?!
+                while (!validZombieSpawnPosition(newPos)) {
+                    newPos = ((ZombieToastSpawn) s).spawn();
+                }
+                Zombie newZombie = new Zombie(newPos.getX(), newPos.getY(), "zombie_toast" + String.valueOf(incrementEntityCount()));
+                movingEntities.put(newZombie.getId(), newZombie);
+            }
+        }
+    }
+
+
+    private boolean validZombieSpawnPosition(Position position) {
+        StaticEntity se = getStaticEntity(position);
+        MovingEntity me = getCharacter(position); 
+
+        // if there is a static entity higher than layer 0 OR there is already a moving entity OR player is there, NOT VALID
+        if ((!(se == null) && (se.getPosition().getLayer() > 0) || !(me == null) || (player.getPosition().equals(position)))) {
+            return false;
+        }
+        return true;
+    }
+
+    private int currentSpiders() {
+        int currSpiders = 0;
+        for (MovingEntity m : movingEntities.values())  {
+            if (m instanceof Spider) {
+                currSpiders++;
+            }
+        }
+        return currSpiders;
     }
 
 
@@ -440,8 +555,7 @@ public class World {
      */
     public StaticEntity getStaticEntity(Position p) {
         for (StaticEntity s: staticEntities.values()) {
-            // TODO returning only if layer is 1
-            if (s.getPosition().equals(p) && s.getPosition().getLayer() == 1)  {
+            if (s.getPosition().equals(p))  {
                 return s;
             }
         }
@@ -510,7 +624,7 @@ public class World {
         return inventory.inInventory(item.getId());
     }
 
-    public Key keyInInventory(String keyColour) {
+    public Key keyInInventory(int keyColour) {
         return inventory.keyInInventory(keyColour);
     }
 
@@ -674,6 +788,10 @@ public class World {
      */
     public void useByType(String type) {
         inventory.useByType(type);
+    }
+
+    public int getTickCount() {
+        return tickCount;
     }
 
 }

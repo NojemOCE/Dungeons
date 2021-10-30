@@ -4,6 +4,7 @@ import org.json.JSONObject;
 
 import dungeonmania.World;
 import dungeonmania.movingEntity.MovementStrategies.CircleMovement;
+import dungeonmania.movingEntity.MovementStrategies.RandomMovement;
 import dungeonmania.util.*;
 
 

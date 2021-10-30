@@ -15,8 +15,14 @@ public class ExitGoal extends GoalLeaf {
     public Boolean evaluate(World world) {
         // TODO Auto-generated method stub
         StaticEntity exitConfirmation = world.getStaticEntity(world.getPlayer().getPosition());
-        if (exitConfirmation instanceof Exit) return true;
-        else return false;
+        if (exitConfirmation instanceof Exit) {
+            setCompleted(true);
+            return true;
+        }
+        else {
+            setCompleted(false);
+            return false;
+        }
     }
     
 }

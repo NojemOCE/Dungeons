@@ -3,8 +3,6 @@ package dungeonmania.staticEntity;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.json.JSONObject;
-
 import dungeonmania.Entity;
 import dungeonmania.World;
 import dungeonmania.movingEntity.Player;
@@ -21,7 +19,6 @@ public class Boulder extends StaticEntity {
      */
     public Boulder(int x, int y, String id) {
         super(new Position(x, y, 1), id, "boulder");
-
     }
 
     /**

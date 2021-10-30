@@ -57,14 +57,15 @@ public class DungeonManiaController {
 
         World newGame = new World(dungeonName, gameMode);
         // create JSON object
-
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + dungeonName + ".json");
+            
             JSONObject game = new JSONObject(file);
-
+            
             newGame.buildWorld(game);
         }
         catch (Exception e) {
+            e.printStackTrace();
             // TODO discard world if exception thrown?
         }
 
