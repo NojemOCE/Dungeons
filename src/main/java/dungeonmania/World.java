@@ -219,7 +219,7 @@ public class World {
         } 
         
         else if (type.equals("health_potion")) {
-            HealthPotion e = new HealthPotion(x, y, id, inventory);
+            HealthPotion e = new HealthPotion(x, y, id);
             collectableEntities.put(e.getId(), e);
         } 
         

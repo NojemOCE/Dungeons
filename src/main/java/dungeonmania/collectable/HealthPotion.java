@@ -7,7 +7,7 @@ public class HealthPotion extends CollectableEntity {
     
     private final double HEAL_EFFECT = 10;
 
-    public HealthPotion(int x, int y, String itemId,Inventory inventory) {
+    public HealthPotion(int x, int y, String itemId) {
         super(x, y, itemId, "health_potion");
     }
 

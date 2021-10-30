@@ -1,6 +1,5 @@
 package dungeonmania;
 
-import dungeonmania.buildable.*;
 import dungeonmania.collectable.*;
 import dungeonmania.inventory.Inventory;
 import dungeonmania.util.Position;
@@ -11,8 +10,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class inventoryTest {
 
-    // TODO: use ItemResponse in tests
-
     /**
      * When collecting an item, an item should appear in the inventory
      */
@@ -21,16 +18,17 @@ public class inventoryTest {
 
         Inventory inv = new Inventory();
         Position p = new Position(1,1);
-        
-        Armour armour = new Armour(p);
-        inv.collect(armour);
-        assertTrue(inv.isPresent(armour));
 
-        Position p2 = new Position(1,2);
-        Sword sword = new Sword(p2);
-        
+        Armour armour = new Armour(1, 1, "armour1");
+        assert inv.numItem("armour") == 0;
+        inv.collect(armour);
+        assert inv.numItem("armour") == 1;
+
+        Sword sword = new Sword(1, 2, "sword2");
+        assert inv.numItem("sword") == 0;
         inv.collect(sword);
-        assertTrue(inv.isPresent(sword));
+        assert inv.numItem("sword") == 1;
+        assertTrue(inv.hasWeapon());
     }
 
     /**
@@ -42,19 +40,21 @@ public class inventoryTest {
         Inventory inv = new Inventory();
 
         Position p = new Position(1,1);
-        HealthPotion potion = new HealthPotion(p);
+        HealthPotion potion = new HealthPotion(1, 1, "health_potion1");
 
+        assert inv.numItem("health_potion1") == 0;
         inv.collect(potion);
-        assertTrue(inv.isPresent(potion));
+        assert inv.numItem("health_potion1") == 1;
         potion.consume();
-        assertFalse(inv.isPresent(potion));
+        assert inv.numItem("health_potion1") == 0;
 
         Position p2 = new Position(1,2);
-        Bomb bomb = new Bomb(p2);
+        Bomb bomb = new Bomb(1, 2, "bomb2");
+        assert inv.numItem("bomb") == 0;
         inv.collect(bomb);
-        assertTrue(inv.isPresent(bomb));
+        assert inv.numItem("bomb") == 1;
         bomb.consume();
-        assertFalse(inv.isPresent(bomb));
+        assert inv.numItem("bomb") == 0;
     }
 
     /**
@@ -65,36 +65,29 @@ public class inventoryTest {
     public void testCraftItem() {
 
         Inventory inv = new Inventory();
+        assert inv.numItem("wood") == 0;
+        assert inv.numItem("arrow") == 0;
 
-        Position p = new Position(1,1);
-        Wood wood = new Wood(p);
+        Wood wood = new Wood(1, 2, "wood1");
         inv.collect(wood);
-        assertTrue(inv.isPresent(wood));
+        assert inv.numItem("wood") == 1;
 
-        Position p2 = new Position(1,2);
-        Arrows arrow1 = new Arrows(p2);
-        inv.collect(arrow1);
-        assertTrue(inv.isPresent(arrow1));
-
-        Position p3 = new Position(1,3);
-        Arrows arrow2 = new Arrows(p3);
+        Arrows arrow2 = new Arrows(1, 2, "arrow2");
         inv.collect(arrow2);
-        assertTrue(inv.isPresent(arrow2));
+        assert inv.numItem("arrow") == 1;
 
-        Position p4 = new Position(1,4);
-        Arrows arrow3 = new Arrows(p4);
+        Arrows arrow3 = new Arrows(1, 3, "arrow3");
         inv.collect(arrow3);
-        assertTrue(inv.isPresent(arrow3));
+        assert inv.numItem("arrow") == 2;
 
-        Bow bow = new Bow();
-        inv.craft(bow);
+        Arrows arrow4 = new Arrows(1, 4, "arrow4");
+        inv.collect(arrow4);
+        assert inv.numItem("arrow") == 3;
 
-        assertFalse(inv.isPresent(wood));
-        assertFalse(inv.isPresent(arrow1));
-        assertFalse(inv.isPresent(arrow2));
-        assertFalse(inv.isPresent(arrow3));
-        assertTrue(inv.isPresent(bow));
+        inv.craft("bow", "5");
 
+        assert inv.numItem("wood") == 0;
+        assert inv.numItem("arrow") == 0;
+        assert inv.numItem("bow") == 1;
     }
-
 }

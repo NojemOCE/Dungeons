@@ -92,7 +92,8 @@ public class Inventory {
             useByType(numItem("treasure") != 0 ? "treasure" : "key");
             collectableItems.put(itemType + itemNum, new Shield(0, 0, itemType + itemNum));
         }
-
+        numCollected.putIfAbsent(itemType, 0);
+        numCollected.put(itemType, numCollected.get(itemType) + 1);
     }
 
     public int numItem(String itemType) {
@@ -124,12 +125,7 @@ public class Inventory {
      * @return true if there is a weapon, otherwise false
      */
     public boolean hasWeapon() {
-        for (CollectableEntity e : collectableItems.values()) {
-            if (e instanceof Sword) {
-                return true;
-            }
-        }
-        return false;
+        return collectableItems.values().stream().anyMatch(e -> e instanceof Sword);
     }
 
     public List<ItemResponse> getInventoryResponse() {
