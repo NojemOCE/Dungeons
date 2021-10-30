@@ -1,38 +1,27 @@
 package dungeonmania.collectable;
 
-import dungeonmania.Consumable;
-import dungeonmania.World;
-import dungeonmania.inventory.Inventory;
-import dungeonmania.response.models.EntityResponse;
-import dungeonmania.response.models.ItemResponse;
-import dungeonmania.util.Position;
-
 public class InvisibilityPotion extends CollectableEntity {
 
     private final int DURATION = 10;
-    private boolean active = false;
+    private int duration = DURATION;
 
     public InvisibilityPotion(int x, int y, String itemId) {
         super(x, y, itemId, "invisibility_potion");
-        setDurability(DURATION);
+    }
+
+    public void decreaseDuration() {
+        duration--;
+    }
+
+    public int getDuration() {
+        return this.duration;
     }
 
     @Override
-    public void consume() {
-        this.active = true;
+    public CollectableEntity consume() {
         decreaseDurability();
-        // notify the world that the invisibility potion effect is activated
-        world.update(getType());
-    };
-
-    @Override
-    public void tick() {
-        decreaseDurability();
-        if (getDurability() == 0) {
-            // notify the world that the invisibility potion effect is over
-            world.update(getType());
-        }
-
+        return this;
     }
+    
 
 }

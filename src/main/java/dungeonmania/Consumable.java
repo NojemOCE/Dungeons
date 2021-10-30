@@ -1,5 +1,7 @@
 package dungeonmania;
 
+import dungeonmania.collectable.CollectableEntity;
+
 public interface Consumable {
-    public void consume();
+    public CollectableEntity consume();
 }
