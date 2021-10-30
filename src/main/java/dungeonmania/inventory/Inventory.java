@@ -13,9 +13,6 @@ import dungeonmania.Consumable;
 import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.response.models.ItemResponse;
-import dungeonmania.staticEntity.StaticEntity;
-import dungeonmania.movingEntity.Player;
-import dungeonmania.util.*;
 
 public class Inventory {
     private Map<String, CollectableEntity> collectableItems = new HashMap<>();
@@ -133,12 +130,8 @@ public class Inventory {
         return itemResponses;
     }
 
-<<<<<<< HEAD
-    public List<String> tick(String itemUsedId) throws InvalidActionException, IllegalArgumentException {
-=======
     public CollectableEntity tick(String itemUsedId) {
         CollectableEntity collectable = null;
->>>>>>> master
         if (!inInventory(itemUsedId)) {
             throw new InvalidActionException("Item not in Inventory");
         } else if (isUsable(itemUsedId)) {
