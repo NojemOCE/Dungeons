@@ -12,12 +12,10 @@ import org.junit.jupiter.api.Test;
 public class DoorTest {
     @Test
     public void constructionTest(){
-
-    Position doorPos = new Position(1, 1);
-        // Using a null key for now
-        Door door = new Door(doorPos, null);
+        Position doorPos = new Position(1, 1);
+        int keyColour = 1;
+        Door door = new Door(doorPos.getX(), doorPos.getX(), "door1", keyColour);
         assertNotNull(door);
         assert(doorPos.equals(door.getPosition()));
-
     }
 }
