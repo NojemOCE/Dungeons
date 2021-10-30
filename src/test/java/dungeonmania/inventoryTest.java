@@ -39,7 +39,6 @@ public class inventoryTest {
 
         Inventory inv = new Inventory();
 
-        Position p = new Position(1,1);
         HealthPotion potion = new HealthPotion(1, 1, "health_potion1");
 
         assert inv.numItem("health_potion1") == 0;
