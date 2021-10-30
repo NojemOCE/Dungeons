@@ -717,4 +717,8 @@ public class World {
         inventory.useByType(type);
     }
 
+    public int getTickCount() {
+        return tickCount;
+    }
+
 }

@@ -88,10 +88,26 @@ public class CircleMovement implements Movement {
      * moves that entity has in its new current direction
      */
     private void reverseDirection(){
-        currentDirection  = oppositeDirection(currentDirection);
+        Direction d;
+        // If a starting move we want to reverse next direction
+        if (remMovesCurr == 0 && remMovesNext  == 1) {
+            d = oppositeDirection(nextDirection);
+            Direction dNext = oppositeDirection(currentDirection);
+            
+            currentDirection = d;
+            nextDirection = dNext;
+
+            remMovesCurr = remMovesNext;
+            remMovesNext = SET_MOVES;
+        }
+        else {
+            currentDirection  = oppositeDirection(currentDirection);
+
             if (remMovesCurr == 0) {
                 remMovesCurr = SET_MOVES;
             }
+        }
+        
     }
 
     /**
@@ -102,8 +118,12 @@ public class CircleMovement implements Movement {
         if (remMovesCurr == 0) {
             updateDirection();
         }
+        if (!(p.equals(me.getPosition()))) {
+            remMovesCurr -= 1;
+        }
+        
         me.setPosition(p);
-        remMovesCurr -= 1;
+        
     }
 
     /**
