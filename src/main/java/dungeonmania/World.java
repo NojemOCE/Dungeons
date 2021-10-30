@@ -474,18 +474,44 @@ public class World {
         }
         for (StaticEntity s : staticEntities.values()) {
             if (s instanceof ZombieToastSpawn) {
-                Position newPos = ((ZombieToastSpawn) s).spawn();
-                // TODO: edge case: what if all four sides are invalid...infinite loop?!?!
-                while (!validZombieSpawnPosition(newPos)) {
-                    newPos = ((ZombieToastSpawn) s).spawn();
+                List<Position> possibleSpawnPositions = ((ZombieToastSpawn) s).spawn();
+                Position newPos = getSpawnPositon(possibleSpawnPositions);
+                if (newPos.equals(null)) {
+                    // no valid spawn positions
+                    return;
                 }
                 Zombie newZombie = new Zombie(newPos.getX(), newPos.getY(), "zombie_toast" + String.valueOf(incrementEntityCount()));
                 movingEntities.put(newZombie.getId(), newZombie);
             }
         }
     }
+    
+    /**
+     * Get a random spawn position for new zombie
+     * @param possibleSpawnPositions List of possible cardinally adjacent positions to a spawner
+     * @return position to spawn, or null if no valid positions
+     */
+    private Position getSpawnPositon(List<Position> possibleSpawnPositions) {
+        Position newPos = null;
+        Random random = new Random();
+        while (!(possibleSpawnPositions.isEmpty())) {
+            int posIndex = random.nextInt(possibleSpawnPositions.size());
+            newPos = possibleSpawnPositions.get(posIndex);
+            if (validZombieSpawnPosition(newPos)) {
+                break;
+            } else {
+                possibleSpawnPositions.remove(posIndex);
+            }
+            newPos = null;
+        }
+        return newPos;
+    }
 
-
+    /**
+     * Checks whether a given position is a valid zombie spawn position
+     * @param position Position to check
+     * @return true if the position giveen is valid, otherwise false
+     */
     private boolean validZombieSpawnPosition(Position position) {
         StaticEntity se = getStaticEntity(position);
         MovingEntity me = getCharacter(position); 

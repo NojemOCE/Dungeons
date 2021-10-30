@@ -55,13 +55,11 @@ public class ZombieToastSpawn extends StaticEntity {
     }
 
     /**
-     * Spawns zombie toasts in an open square cardinally adjacent to the spawner.
-     * @return
+     * Gets possible spawn positions (cells cardinally adjacent to the spawner).
+     * @return returns list of possible spawn positions
      */
-    public Position spawn(){
-        Random random = new Random();
-        List<Position> adjPositions = this.getPosition().getCardinallyAdjacentPositions();
-        return adjPositions.get(random.nextInt(4));
+    public List<Position> spawn(){
+        return getPosition().getCardinallyAdjacentPositions();
     }
 
     
