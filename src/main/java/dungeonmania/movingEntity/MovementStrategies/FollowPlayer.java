@@ -23,8 +23,6 @@ public class FollowPlayer implements Movement {
         // maybe check for errors (list is empty or just has 1 etc...)
         // calculate distance inbetween player and mercenary, if in battle radius 
         // use path.get(1) 
-        System.out.println(path);
-        System.out.println("MERC IS MOVING AT" + me.getSpeed());
 
         if (!path.isEmpty() && path.size() > 2) {
 

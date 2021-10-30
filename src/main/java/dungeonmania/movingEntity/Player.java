@@ -169,7 +169,6 @@ public class Player extends MovingEntity {
      */
     public void notifyObserversForBattle(int speed) { // notify observers for battle
         mercenaryObservers.forEach( mercenary -> {
-            System.out.println(mercenary.getId());
 
             mercenary.setSpeed(speed);
 

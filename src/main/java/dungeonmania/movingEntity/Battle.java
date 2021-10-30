@@ -35,9 +35,9 @@ public class Battle {
 
 
         character.defend((player.getHealthPoint().getHealth() * playerAttack)/10);
-        System.out.println("Player attacks with " + (player.getHealthPoint().getHealth() * playerAttack)/10);
+        //System.out.println("Player attacks with " + (player.getHealthPoint().getHealth() * playerAttack)/10);
         player.defend((character.getHealthPoint().getHealth() * characterAttack)/10);
-        System.out.println("Enemy attacks with " + (character.getHealthPoint().getHealth() * characterAttack)/10);
+        //System.out.println("Enemy attacks with " + (character.getHealthPoint().getHealth() * characterAttack)/10);
 
         // ally help
         player.alliesInRange().forEach(ally -> {
