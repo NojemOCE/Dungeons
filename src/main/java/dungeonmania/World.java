@@ -106,7 +106,16 @@ public class World {
         else {
             setGoals(null);
         }
-        
+
+        // trigger any switches
+        for (StaticEntity se : staticEntities.values()) {
+            if (se instanceof FloorSwitch) {
+                StaticEntity entity = getStaticEntity(se.getPosition());
+                if (entity instanceof Boulder) {
+                    ((FloorSwitch) se).trigger(this);
+                }
+            }
+        }
 
         return worldDungeonResponse();
     }
@@ -386,39 +395,8 @@ public class World {
             }
         }
 
-        // TODO this can probably be moved to a spider spawn method but I'm lazy rn so just leaving it here
-        // if (tickCount > 0 && tickCount % SPIDER_SPAWN == 0 && currentSpiders() < MAX_SPIDERS) {
-        //     Random ran1 = new Random();
-        //     Random ran2 = new Random();
-
-        //     int x = ran1.nextInt(highestX);
-        //     int y = ran2.nextInt(highestY);
-            
-        //     boolean valid = false;
-        //     while (!valid) {
-        //         StaticEntity se = getStaticEntity(new Position(x,y));
-        //         MovingEntity me = getCharacter(new Position(x,y)); 
-
-        //         if ((!(se == null) && (se instanceof Boulder)) || !(me == null) || (player.getPosition().equals(new Position(x, y)))) {
-        //             x = ran1.nextInt(highestX);
-        //             y = ran2.nextInt(highestY);
-        //         }
-        //         else{
-        //             valid = true;
-        //         }
-        //     }
-            
-
-            
-
-        //     Spider newSpider = new Spider(x, y, "spider" + String.valueOf(incrementEntityCount()));
-        //     movingEntities.put(newSpider.getId(), newSpider);
-            
-        // }
-
-        // TODO: I made ^^ that a function but should probably check all statics? what if the boulder is on a switch?
+        // spawn relevant enemies at the specified tick intervals
         tickSpiderSpawn();
-
         tickZombieToastSpawn();
 
         // Now evaluate goals. Goal should never be null, but add a check incase there is an error in the input file
@@ -581,7 +559,7 @@ public class World {
      */
     public StaticEntity getStaticEntity(Position p) {
         for (StaticEntity s: staticEntities.values()) {
-            if (s.getPosition().equals(p))  {
+            if (s.getPosition().equals(p) && s.getLayer() == 1)  {
                 return s;
             }
         }
