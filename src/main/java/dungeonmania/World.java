@@ -98,8 +98,8 @@ public class World {
         }
         
         
-        JSONObject g = worldData.getJSONObject("goal-condition");
-        if (!(g == null)) {
+        if (worldData.has("goal-condition")) {
+            JSONObject g = worldData.getJSONObject("goal-condition");
             GoalComponent goal = createGoal(g);
             setGoals(goal);
         }
