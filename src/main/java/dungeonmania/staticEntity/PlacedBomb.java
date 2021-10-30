@@ -27,7 +27,7 @@ public class PlacedBomb extends StaticEntity {
     }
 
     /**
-     * Detonates thee bomb and destroys entities in radius
+     * Detonates the bomb and destroys entities in radius
      * @param world
      */
     public void detonate(World world) {
