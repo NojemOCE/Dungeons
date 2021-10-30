@@ -8,34 +8,44 @@ import dungeonmania.response.models.EntityResponse;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Position;
 
-public class InvincibilityPotion extends CollectableEntity {
+import dungeonmania.Passive;
+import dungeonmania.movingEntity.Player;
 
-    private final int DURATION = 10;
-    private boolean active = false;
+public class InvincibilityPotion extends CollectableEntity implements Passive {
+
+    private final int DURATION = 3;
+    private int duration = DURATION;
+    private final double PLAYER_ATTACK = 3;
+    private final double INVINCIBILITY_ATTACK = 999;
 
     public InvincibilityPotion(int x, int y, String itemId) {
         super(x, y, itemId, "invincibility_potion");
-        setDurability(DURATION);
     }
 
-    @Override
-    public void consume() {
-        this.active = true;
-        decreaseDurability();
-        // notify the world that the invisibility potion effect is activated
-        world.update(getType());
-    };
-
-    @Override
-    public void tick() {
-        decreaseDurability();
-        if (getDurability() == 0) {
-            // notify the world that the invisibility potion effect is over
-            world.update(getType());
+    public void applyPassive(Player player) {
+        if (this.duration == 0) {
+            player.notifyPassive("N/A");
+            player.setAttackDamage(PLAYER_ATTACK);
+        } else {
+            player.notifyPassive(getType());
+            player.setAttackDamage(INVINCIBILITY_ATTACK);
         }
-
     }
 
+    public void decreaseDuration() {
+        duration--;
+    }
 
+    @Override
+    public CollectableEntity consume() {
+        decreaseDurability();
+        return this;
+    }
+
+    @Override
+    public int getDuration() {
+        // TODO Auto-generated method stub
+        return duration;
+    }
 
 }

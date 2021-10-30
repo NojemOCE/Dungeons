@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import dungeonmania.Entity;
 import dungeonmania.World;
+import dungeonmania.movingEntity.MovementStrategies.RunAway;
 import dungeonmania.staticEntity.StaticEntity;
 
 
@@ -79,9 +80,13 @@ public abstract class MovingEntity extends Entity {
     public void addHealth(double health) {
         this.healthPoint.gainHealth(health);
     }
-    
+
     public double getAttackDamage() {
         return attackDamage;
+    }
+
+    public void setAttackDamage(double attackDamage) {
+        this.attackDamage = attackDamage;
     }
 
     public boolean getAlly() {
@@ -114,6 +119,14 @@ public abstract class MovingEntity extends Entity {
 
     public void setDefaultMovementStrategy(Movement defaultMovementStrategy) {
         this.defaultMovementStrategy = defaultMovementStrategy;
+    }
+
+    public void notifyPassive(String string) {
+        if (string.equals("invincibility_potion")) {
+            setMovement(new RunAway());
+        } else if (string.equals("N/A")) {
+            setMovement(getDefaultMovementStrategy());
+        }
     }
 
     @Override

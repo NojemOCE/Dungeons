@@ -389,7 +389,7 @@ public class World {
         }
         
         else  {
-            player.tick(itemUsed, movementDirection, this);
+            player.tick(movementDirection, this);
         }
 
 

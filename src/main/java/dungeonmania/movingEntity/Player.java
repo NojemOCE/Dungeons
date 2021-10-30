@@ -11,6 +11,7 @@ import java.util.Set;
 
 import org.json.JSONObject;
 
+import dungeonmania.Passive;
 import dungeonmania.World;
 import dungeonmania.collectable.CollectableEntity;
 import dungeonmania.util.*;
@@ -21,6 +22,7 @@ public class Player extends MovingEntity {
 
     static final int PLAYER_ATTACK = 3;
     private Set<Mercenary> mercenaryObservers = new HashSet<>();
+    // observer here for passive
     private Map<String, Passive> activePotions = new HashMap<>();
     private double allyAttack;
 
@@ -86,7 +88,7 @@ public class Player extends MovingEntity {
             } 
         }
 
-        if (!Objects.isNull(movementDirection))
+        if (!Objects.isNull(movementDirection)){
             setPosition(validMove(this.getPosition().translateBy(movementDirection), world));
             CollectableEntity e = world.getCollectableEntity(this.getPosition());
             if (!Objects.isNull(e)) {
@@ -175,9 +177,18 @@ public class Player extends MovingEntity {
         });
     }
 
+    public void notifyPassive(String passive) {
+        mercenaryObservers.forEach( mercenary -> {
+
+            mercenary.notifyPassive(passive);
+
+        });
+    }
+
     public void addPotion(CollectableEntity potion) {
         activePotions.put(potion.getType(), (Passive) potion);
     }
+
 
     @Override
     public JSONObject saveGameJson() {
