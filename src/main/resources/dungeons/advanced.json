@@ -119,11 +119,6 @@
         "type": "wall"
       },
       {
-        "x": 5,
-        "y": 1,
-        "type": "mercenary"
-      },
-      {
         "x": 3,
         "y": 2,
         "type": "wall"
@@ -152,11 +147,6 @@
         "x": 12,
         "y": 2,
         "type": "wall"
-      },
-      {
-        "x": 11,
-        "y": 1,
-        "type": "zombie_toast"
       },
       {
         "x": 13,
@@ -402,11 +392,6 @@
         "x": 11,
         "y": 10,
         "type": "invincibility_potion"
-      },
-      {
-        "x": 11,
-        "y": 11,
-        "type": "invisibility_potion"
       },
       {
         "x": 17,

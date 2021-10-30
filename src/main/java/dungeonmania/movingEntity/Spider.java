@@ -4,11 +4,11 @@ import org.json.JSONObject;
 
 import dungeonmania.World;
 import dungeonmania.movingEntity.MovementStrategies.CircleMovement;
-import dungeonmania.movingEntity.MovementStrategies.RunAway;
+import dungeonmania.movingEntity.MovementStrategies.RandomMovement;
 import dungeonmania.util.*;
 
 
-public class Spider extends MovingEntity implements PlayerPassiveObserver {
+public class Spider extends MovingEntity {
 
     static final int SPIDER_ATTACK = 1;
     static final int SPIDER_HEALTH = 3;
@@ -59,16 +59,6 @@ public class Spider extends MovingEntity implements PlayerPassiveObserver {
         spiderJSON.put("movement", movement);
 
         return spiderJSON;
-    }
-
-
-    @Override
-    public void updateMovement(String passive) {
-        if (passive.equals("invincibility_potion")) {
-            setMovement(new RunAway());
-        } else {
-            setMovement(getDefaultMovementStrategy());
-        }
     }
 
 
