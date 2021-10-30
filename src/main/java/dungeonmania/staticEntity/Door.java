@@ -51,10 +51,10 @@ public class Door extends StaticEntity {
 
         if (entity instanceof Player) {
             if (isOpen) {
-                return this.getPosition();
+                return new Position(getX(), getY(), entity.getLayer());
             }
             Key key = world.keyInInventory(keyColour);
-            if (!key.equals(null)) {
+            if (!(key.equals(null))) {
                 // open door
                 open();
                 // use the key
