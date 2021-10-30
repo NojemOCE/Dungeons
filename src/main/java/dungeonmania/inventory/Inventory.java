@@ -13,9 +13,6 @@ import dungeonmania.Consumable;
 import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.response.models.ItemResponse;
-import dungeonmania.staticEntity.StaticEntity;
-import dungeonmania.movingEntity.Player;
-import dungeonmania.util.*;
 
 public class Inventory {
     private Map<String, CollectableEntity> collectableItems = new HashMap<>();
@@ -92,7 +89,8 @@ public class Inventory {
             useByType(numItem("treasure") != 0 ? "treasure" : "key");
             collectableItems.put(itemType + itemNum, new Shield(0, 0, itemType + itemNum));
         }
-
+        numCollected.putIfAbsent(itemType, 0);
+        numCollected.put(itemType, numCollected.get(itemType) + 1);
     }
 
     public int numItem(String itemType) {
@@ -124,12 +122,7 @@ public class Inventory {
      * @return true if there is a weapon, otherwise false
      */
     public boolean hasWeapon() {
-        for (CollectableEntity e : collectableItems.values()) {
-            if (e instanceof Sword) {
-                return true;
-            }
-        }
-        return false;
+        return collectableItems.values().stream().anyMatch(e -> e instanceof Sword);
     }
 
     public List<ItemResponse> getInventoryResponse() {
@@ -137,30 +130,40 @@ public class Inventory {
         return itemResponses;
     }
 
-    public List<String> tick(String itemUsedId) {
+    public CollectableEntity tick(String itemUsedId) {
+        CollectableEntity collectable = null;
         if (!inInventory(itemUsedId)) {
             throw new InvalidActionException("Item not in Inventory");
         } else if (isUsable(itemUsedId)) {
-            collectableItems.get(itemUsedId).consume();
+            collectable = collectableItems.get(itemUsedId).consume();
             tick();
         } else {
             throw new IllegalArgumentException("Wrong usable type");
         }
 
-        return getBuildable();
+        return collectable;
     }
 
-    public List<String> tick() {
+    public void tick() {
         for (CollectableEntity item : collectableItems.values()) {
             item.tick();
             if (item.getDurability() == 0) {
                 removeItem(item);
             }
         }
-
-        return getBuildable();
     }
 
+    /**
+     * Get the type of the given item
+     * @param itemStringId the id of the item
+     * @return the type of the item, otherwise null
+     */
+    public String getType(String itemStringId) {
+        if (collectableItems.containsKey(itemStringId)) {
+            return collectableItems.get(itemStringId).getType();
+        }
+        return null;
+    }
     public boolean inInventory(String itemUsedId) {
         return collectableItems.containsKey(itemUsedId);
     }

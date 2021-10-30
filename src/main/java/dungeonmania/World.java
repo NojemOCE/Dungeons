@@ -219,7 +219,7 @@ public class World {
         } 
         
         else if (type.equals("health_potion")) {
-            HealthPotion e = new HealthPotion(x, y, id, inventory);
+            HealthPotion e = new HealthPotion(x, y, id);
             collectableEntities.put(e.getId(), e);
         } 
         
@@ -383,7 +383,14 @@ public class World {
         if (Objects.isNull(itemUsed)) {
             inventory.tick();
         } else {
-            inventory.tick(itemUsed);
+            if (inventory.getType(itemUsed).equals("bomb")) {
+                PlacedBomb newBomb = new PlacedBomb(player.getX(), player.getY(), "bomb" + String.valueOf(incrementEntityCount()));
+                staticEntities.put(newBomb.getId(), newBomb);
+            }
+            CollectableEntity potion = inventory.tick(itemUsed);
+            if (Objects.isNull(potion)) {
+                player.addPotion(potion);
+            }
         }
 
         // collecting the collectable entity if it exists on the current position

@@ -1,8 +1,5 @@
 package dungeonmania.collectable;
 
-import dungeonmania.Consumable;
-import dungeonmania.response.models.ItemResponse;
-
 public class Shield extends CollectableEntity {
 
     private final int DURABILITY = 10;
