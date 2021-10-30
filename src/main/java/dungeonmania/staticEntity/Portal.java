@@ -51,7 +51,7 @@ public class Portal extends StaticEntity {
             return travelToTwin(world, entity);
         }   
         // otherwise they just step on this spot
-        return this.getPosition();
+        return new Position(getX(), getY(), entity.getLayer());
     }
     
     /**

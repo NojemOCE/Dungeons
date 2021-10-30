@@ -20,16 +20,11 @@ public class Exit extends StaticEntity {
 
     /**
      * If the player goes through it, the puzzle is complete.
-     * No effect otherwise.
+     * No effect otherwise. All entities can stand on the exit.
      */
     @Override
     public Position interact(World world, Entity entity) {
-        
-        if (entity instanceof Player) {
-            return getPosition();
-        }
-
-        return entity.getPosition();
+        return new Position(getX(), getY(), entity.getLayer());
     }
 
 }
