@@ -5,7 +5,7 @@ import dungeonmania.movingEntity.Player;
 
 public class InvisibilityPotion extends CollectableEntity implements Passive {
 
-    private final int DURATION = 10;
+    private final int DURATION = 20;
     private int duration = DURATION;
 
     public InvisibilityPotion(int x, int y, String itemId) {
