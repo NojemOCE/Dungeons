@@ -54,11 +54,11 @@ public class inventoryTest {
     }
 
     /**
-     * When crafting items, the buildable should appear in the inventory
+     * When crafting a bow, it should appear in the inventory
      * The items used to craft it should not appear in the inventory
      */
     @Test
-    public void testCraftItem() {
+    public void testCraftBow() {
 
         Inventory inv = new Inventory();
         assert inv.numItem("wood") == 0;
@@ -80,10 +80,42 @@ public class inventoryTest {
         inv.collect(arrow4);
         assert inv.numItem("arrow") == 3;
 
+        assert inv.getBuildable().contains("bow");
         inv.craft("bow", "5");
 
         assert inv.numItem("wood") == 0;
         assert inv.numItem("arrow") == 0;
         assert inv.numItem("bow") == 1;
+    }
+
+    /**
+     * When crafting a shield, it should appear in the inventory
+     * The items used to craft it should not appear in the inventory
+     */
+    @Test
+    public void testCraftShield() {
+
+        Inventory inv = new Inventory();
+        assert inv.numItem("wood") == 0;
+        assert inv.numItem("treasure") == 0;
+
+        Wood wood1 = new Wood(1, 2, "wood1");
+        inv.collect(wood1);
+        assert inv.numItem("wood") == 1;
+
+        Wood wood2 = new Wood(1, 3, "wood2");
+        inv.collect(wood2);
+        assert inv.numItem("wood") == 2;
+
+        Treasure treasure = new Treasure(1, 3, "treasure3");
+        inv.collect(treasure);
+        assert inv.numItem("treasure") == 1;
+
+        assert inv.getBuildable().contains("shield");
+        inv.craft("shield", "4");
+
+        assert inv.numItem("wood") == 0;
+        assert inv.numItem("treasure") == 0;
+        assert inv.numItem("shield") == 1;
     }
 }
