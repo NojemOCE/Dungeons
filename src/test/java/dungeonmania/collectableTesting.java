@@ -1,16 +1,8 @@
 package dungeonmania;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 
-import dungeonmania.response.models.DungeonResponse;
-import static dungeonmania.TestHelpers.assertListAreEqualIgnoringOrder;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import dungeonmania.collectable.*;
 
