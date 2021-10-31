@@ -21,6 +21,11 @@ public class InvisibilityPotion extends CollectableEntity implements Passive {
         setDurability(durability);
     }
 
+    public InvisibilityPotion(int duration) {
+        this(0,0, null);
+        this.duration = duration;
+    }
+    
     public void applyPassive(Player player) {
         if (this.duration == 0) {
             player.notifyPassive("N/A");
