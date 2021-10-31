@@ -180,9 +180,6 @@ public class Player extends MovingEntity {
     public JSONObject saveGameJson() {
         JSONObject playerJSON = super.saveGameJson();
 
-
-        List<String> mercList = new ArrayList<>();
-        mercList = mercenariesInRange.stream().map(MovingEntity::getId).collect(Collectors.toList());
         JSONObject activePotionJSON = new JSONObject();
 
         if (!Objects.isNull(activePotion)) {
@@ -191,7 +188,6 @@ public class Player extends MovingEntity {
             playerJSON.put("active-potion", activePotionJSON);
         }
 
-        playerJSON.put("mercenaries", mercList);
 
         return playerJSON;
     }

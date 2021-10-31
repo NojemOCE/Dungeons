@@ -869,7 +869,7 @@ public class World {
 
         JSONObject playerObj = gameData.getJSONObject("player");
         //merc list
-        JSONArray playerObservers = createPlayerFromJSON(playerObj);
+        createPlayerFromJSON(playerObj);
 
         JSONArray movingEntitiesItems = gameData.getJSONArray("moving-entities");
         for (int i = 0; i < movingEntitiesItems.length(); i++) {
@@ -886,17 +886,14 @@ public class World {
             createCollectableEntityFromJSON(collectableEntitiesItems.getJSONObject(i));
         }
 
-
-        //TODO add mercs? playerObservers
+        movingEntities.forEach( (id, me) -> {
+            player.subscribePassiveObserver((PlayerPassiveObserver)me);
+        });        
 
         if (gameData.has("current-battle")) {
-            JSONObject b = gameData.getJSONObject("current-battle");
-            // TODO need a create battle method here
+            JSONObject b = gameData.getJSONObject("current-battle"); 
+            currentBattle = new Battle(player, movingEntities.get(b.get("character")), gamemode.isEnemyAttackEnabled());
         }
-        else {
-            //set battle as null
-        }
-
     }
 
     private void createInventoryFromJSON(JSONObject obj) {
@@ -985,14 +982,12 @@ public class World {
         }
     }
 
-    private JSONArray createPlayerFromJSON(JSONObject obj) {
+    private void createPlayerFromJSON(JSONObject obj) {
         //TODO implement
         int x = obj.getInt("x");
         int y = obj.getInt("y");
 
         updateBounds(x, y);
-
-        String type = "player";
 
         String id = obj.getString("id");
 
@@ -1030,12 +1025,6 @@ public class World {
             this.player = player;
         }
 
-        
-
-        JSONArray enemyIDs = obj.getJSONArray("mercenaries");
-
-        
-        return enemyIDs;
     }
 
     private void createMovingEntityFromJSON(JSONObject obj) {
