@@ -7,8 +7,11 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import dungeonmania.World;
+import dungeonmania.collectable.CollectableEntity;
+import dungeonmania.collectable.InvincibilityPotion;
 import dungeonmania.inventory.Inventory;
 import dungeonmania.movingEntity.*;
+import dungeonmania.movingEntity.MovementStrategies.CircleMovement;
 import dungeonmania.util.Direction;
 import dungeonmania.util.FileLoader;
 import dungeonmania.util.Position;
@@ -66,11 +69,22 @@ public class CharacterTest {
 
         assertEquals(spider.getPosition(), new Position(1, 1));
         spider.move(world);
-        zombie.move(world);
         assertEquals(spider.getPosition(), new Position(1, 0));
         spider.move(world);
         assertEquals(spider.getPosition(), new Position(2, 0));
 
+        Position current = zombie.getPosition();
+        zombie.move(world);
+        assert(Position.isAdjacent(current, zombie.getPosition()));
+        zombie.move(world);
+        zombie.move(world);
+        zombie.move(world);
+        zombie.move(world);
+        zombie.move(world);
+        zombie.move(world);
+        zombie.move(world);
+
+        spider.setMovement(new CircleMovement("Direction.UP", "Direction.DOWN", 1, 1, true));
     }
 
     @Test
@@ -100,6 +114,100 @@ public class CharacterTest {
 
         assertEquals(battle.isActiveBattle(),false);
         assertEquals(battle.getPlayerWins(), true);
+
+    }
+
+    @Test
+    public void testMercenaryBFS() {
+        World world = new World("merc", "Standard");
+        try {
+            String file = FileLoader.loadResourceFile("/dungeons/" + "advanced" + ".json");
+            JSONObject game = new JSONObject(file);
+            world.buildWorld(game);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        Mercenary merc = (Mercenary) world.getCharacter(new Position(3,5));
+        world.tick(null, null);
+        assertEquals(merc.getPosition(), new Position(2, 5));
+        world.tick(null, null);
+        assertEquals(merc.getPosition(), new Position(1, 5));
+        world.tick(null, null);
+        assertEquals(merc.getPosition(), new Position(1, 4));
+
+        world.getPlayer().tick(Direction.RIGHT, world);
+        world.tick(null, null);
+        assertEquals(merc.getPosition(), new Position(1, 3));
+        world.tick(null, null);
+        assertEquals(merc.getPosition(), new Position(1, 2));
+
+        world.tick(null, null);
+        assertEquals(merc.getPosition(), new Position(1, 1));
+        world.tick(null, null);
+
+        assertEquals(merc.getPosition(), new Position(2, 1));
+        world.tick(null, null);
+        assertEquals(merc.getPosition(), new Position(2, 1)); // on top of player
+        assertEquals(world.getBattle().isActiveBattle(), true);
+        // recalculate bfs
+    }
+
+    @Test
+    public void testRunAway() {
+        World world = new World("merc", "Standard");
+        try {
+            String file = FileLoader.loadResourceFile("/dungeons/" + "advanced" + ".json");
+            JSONObject game = new JSONObject(file);
+            world.buildWorld(game);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Mercenary merc = (Mercenary) world.getCharacter(new Position(3,5));
+        CollectableEntity potion = world.getCollectableEntity(new Position(11,10));
+        for (int i = 0; i < 4; i++) {
+            world.tick(null, Direction.RIGHT);
+        }
+        for (int i = 0; i < 4; i++) {
+            world.tick(null, Direction.DOWN);
+        }
+        for (int i = 0; i < 2; i++) {
+            world.tick(null, Direction.RIGHT);
+        }
+        for (int i = 0; i < 2; i++) {
+            world.tick(null, Direction.DOWN);
+        }
+        for (int i = 0; i < 4; i++) {
+            world.tick(null, Direction.RIGHT);
+        }
+        for (int i = 0; i < 4; i++) {
+            world.tick(null, Direction.DOWN);
+        }
+        world.tick(null, Direction.UP);
+
+
+        // Test for mercenary runningaway
+        assertEquals(world.getPlayer().getPosition(), new Position(11, 10));
+        world.tick(potion.getId(), null);
+        assertEquals(world.getPlayer().getAttackDamage(), 999);
+        world.tick(null, Direction.UP);
+        world.tick(null, Direction.UP);
+
+        assertEquals(merc.getMovement().getMovementType(), "runAway");
+        world.tick(null, Direction.LEFT);
+        world.tick(null, Direction.RIGHT);
+        world.tick(null, Direction.UP);
+        world.tick(null, Direction.UP);
+        world.tick(null, Direction.RIGHT);
+        world.tick(null, Direction.RIGHT);
+        world.tick(null, Direction.RIGHT);
+        world.tick(null, Direction.UP);
+        world.tick(null, Direction.RIGHT);
+
+
+        assertEquals(world.getPlayer().getAttackDamage(), 3);
 
     }
 }
