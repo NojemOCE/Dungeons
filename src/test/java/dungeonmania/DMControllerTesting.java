@@ -149,11 +149,11 @@ public class DMControllerTesting {
         d = controller.tick(null, Direction.RIGHT); // arrow
 
         assertDoesNotThrow(() -> controller.build("bow"));
-        List<ItemResponse> inventory = d.getInventoryResponse();
+        List<ItemResponse> inventory = d.getInventory();
 
         boolean bowMade = false;
         for (ItemResponse ir : inventory) {
-            if (ir.getType.equals("bow")) {
+            if (ir.getType().equals("bow")) {
                 bowMade = true;
             }
         }
