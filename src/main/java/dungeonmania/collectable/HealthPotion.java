@@ -1,6 +1,5 @@
 package dungeonmania.collectable;
 
-import dungeonmania.Passive;
 import dungeonmania.movingEntity.Player;
 
 public class HealthPotion extends CollectableEntity implements Passive {
