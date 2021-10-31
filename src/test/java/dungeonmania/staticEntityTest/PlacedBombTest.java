@@ -101,13 +101,5 @@ public class PlacedBombTest {
                 assert(world.getStaticEntitiesAtPosition(new Position(i, j)).size() == 0);
             }
         }
-        // playerPos2 = null;
-        // for (EntityResponse er : entities) {
-        //     if (er.getType().equals("player")) {
-        //         playerPos2 = er.getPosition();
-        //     }
-
-        // }
-        // assertNotNull(playerPos2);
     }
 }

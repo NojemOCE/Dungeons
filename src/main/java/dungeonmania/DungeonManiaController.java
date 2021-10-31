@@ -186,6 +186,13 @@ public class DungeonManiaController {
 
     }
 
+    /**
+     * Builds the given entity, where buildable is one of bow and shield.
+     * @param buildable Item to build (bow or shield)
+     * @return Current world DungeonResponse
+     * @throws IllegalArgumentException If the given buildable is not a valid type
+     * @throws InvalidActionException If the player doesn't have sufficient items to craft the buildable.
+     */
     public DungeonResponse build(String buildable) throws IllegalArgumentException, InvalidActionException {
         current.build(buildable);
         return current.worldDungeonResponse();
