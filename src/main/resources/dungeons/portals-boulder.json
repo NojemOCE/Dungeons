@@ -14,13 +14,13 @@
             "x": 3,
             "y": 0,
             "type": "portal",
-            "colour": "BLUE"
+            "colour": "RED"
         },
         {
             "x": 6,
             "y": 0,
             "type": "portal",
-            "colour": "BLUE"
+            "colour": "RED"
         }
     ]
 }

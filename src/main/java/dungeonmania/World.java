@@ -382,6 +382,14 @@ public class World {
         
         else  {
             player.tick(movementDirection, this);
+            for (MovingEntity me : movingEntities.values()) {
+                if (me.getPosition().equals(player.getPosition())) {
+                    currentBattle = player.battle(me, gamemode); // if invisible it will add null
+                }
+            }
+            // MovingEntity me = getCharacter(player.getPosition());
+            // if (!Objects.isNull(me) && !me.getAlly()) {
+            // }
         }
 
         // collecting the collectable entity if it exists on the current position

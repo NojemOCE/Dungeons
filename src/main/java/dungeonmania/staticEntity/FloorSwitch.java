@@ -1,12 +1,5 @@
 package dungeonmania.staticEntity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONObject;
-
-import dungeonmania.Entity;
-import dungeonmania.World;
 import dungeonmania.util.Position;
 
 public class FloorSwitch extends StaticEntity {
@@ -19,15 +12,6 @@ public class FloorSwitch extends StaticEntity {
      */
     public FloorSwitch(int x, int y, String id) {
         super(new Position(x, y, 0), id, "switch");
-    }
-
-    /**
-     * Switches behave like empty squares, so other entities can appear on 
-     * top of them. 
-     */
-    @Override
-    public Position interact(World world, Entity entity) {
-        return new Position(getX(), getY(), entity.getLayer());
     }
 
 }
