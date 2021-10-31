@@ -8,7 +8,7 @@ import dungeonmania.movingEntity.MovementStrategies.RandomMovement;
 import dungeonmania.util.*;
 
 
-public class Spider extends MovingEntity {
+public class Spider extends MovingEntity implements PlayerPassiveObserver {
 
     static final int SPIDER_ATTACK = 1;
     static final int SPIDER_HEALTH = 3;
@@ -70,6 +70,12 @@ public class Spider extends MovingEntity {
         spiderJSON.put("movement", movement);
 
         return spiderJSON;
+    }
+
+    @Override
+    public void updateMovement(String passive) {
+        // TODO Auto-generated method stub
+        
     }
 
 

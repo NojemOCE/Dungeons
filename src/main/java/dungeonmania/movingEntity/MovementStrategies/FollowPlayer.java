@@ -22,13 +22,20 @@ public class FollowPlayer implements Movement {
         List<Position> path = bfs(me, world.getPlayer(), world);
         // maybe check for errors (list is empty or just has 1 etc...)
         // calculate distance inbetween player and mercenary, if in battle radius 
-        // use path.get(1) 
+        // use path.get(1)
+        if (!path.isEmpty() && path.size() <= 2) {
 
-        if (!path.isEmpty() && path.size() >= 1) {
+            if (path.get(1).equals(world.getPlayer().getPosition())) {
+                if (!Objects.isNull(world.getBattle()) || me.getAlly()) me.setPosition(path.get(0));
+                else me.setPosition(me.validMove(path.get(1), world));
+            } 
+
+        } else if (!path.isEmpty() && path.size() > 2) {
+
             // still need to use the battle radius, translate by two
             // THE PATH MAY INCLUDE THE START, if MERC NOT MOVING CHANGE me.getSpeed() +1`
-            if (me.getAlly() && path.get(1).equals(world.getPlayer().getPosition())) me.setPosition(path.get(0));
-            else me.setPosition(path.get(1));
+            if (!Objects.isNull(world.getBattle()) && path.get(me.getSpeed() + 1).equals(world.getPlayer().getPosition())) me.setPosition(path.get(0));
+            else me.setPosition(path.get(me.getSpeed() + 1));
         }
     }
 
@@ -99,10 +106,12 @@ public class FollowPlayer implements Movement {
         
         // only get valid neighbours
 
-        validNeighbours.add(me.validMove(neighbours.get(1), world));
-        validNeighbours.add(me.validMove(neighbours.get(3), world));
-        validNeighbours.add(me.validMove(neighbours.get(5), world));
-        validNeighbours.add(me.validMove(neighbours.get(7), world));
+        for (int i = 1; i <= 7; i = i + 2) {
+            if (neighbours.get(i).equals(world.getPlayer().getPosition())) validNeighbours.add(neighbours.get(i));
+        }
+        for (int i = 1; i <= 7; i = i + 2) {
+            validNeighbours.add(me.validMove(neighbours.get(i), world));
+        }
 
         validNeighbours.removeIf(filter -> filter.equals(position));
 

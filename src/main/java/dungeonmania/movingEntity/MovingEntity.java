@@ -36,13 +36,6 @@ public abstract class MovingEntity extends Entity {
     }
 
 
-    // Attack and defend will be used to calculate in the battle class
-    public double attack(double attack) {
-
-        // need to go through caclulators (player may have weapons)
-        return getAttackDamage();
-    }
-
     public void defend(double attack) {
         this.healthPoint.loseHealth(attack);
     }
@@ -56,8 +49,6 @@ public abstract class MovingEntity extends Entity {
     public Position validMove(Position position, World world) {
         
         // Check for boundaries of the map here
-
-
         // check if there is a static entity in the way
         StaticEntity se = world.getStaticEntity(position);
         if (!Objects.isNull(se)) {
@@ -74,7 +65,7 @@ public abstract class MovingEntity extends Entity {
         }
         // also check if another moving entity in the position already
         MovingEntity c = world.getCharacter(position);
-        if (!Objects.isNull(c)) {
+        if (!this.getType().equals("player") && !Objects.isNull(c)) {
             // two characters cant be in same place, dont move this object
             return getPosition();
         } 
@@ -87,12 +78,16 @@ public abstract class MovingEntity extends Entity {
         return healthPoint;
     }
 
-    public void setHealthPoint(HealthPoint healthPoint) {
-        this.healthPoint = healthPoint;
+    public void addHealth(double health) {
+        this.healthPoint.gainHealth(health);
     }
 
     public double getAttackDamage() {
         return attackDamage;
+    }
+
+    public void setAttackDamage(double attackDamage) {
+        this.attackDamage = attackDamage;
     }
 
     public boolean getAlly() {
@@ -127,6 +122,14 @@ public abstract class MovingEntity extends Entity {
         this.defaultMovementStrategy = defaultMovementStrategy;
     }
 
+    public void notifyPassive(String string) {
+        if (string.equals("invincibility_potion")) {
+            setMovement(new RunAway());
+        } else if (string.equals("N/A")) {
+            setMovement(getDefaultMovementStrategy());
+        }
+    }
+    
     @Override
     public JSONObject saveGameJson() {
         JSONObject saveObj = new JSONObject();
