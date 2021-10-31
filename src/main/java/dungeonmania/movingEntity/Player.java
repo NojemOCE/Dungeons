@@ -47,7 +47,7 @@ public class Player extends MovingEntity {
 
     // TODO shouldn't this be done in move?
     // TODO implement using item?
-    public void tick(String itemUsed, Direction movementDirection, World world) {
+    public void tick(Direction movementDirection, World world) {
         // check if the direction we are moving is valid first before setting new position
         // Tick passive
         if (!Objects.isNull(activePotion)) {
