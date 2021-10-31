@@ -32,6 +32,7 @@ public class InvincibilityPotion extends CollectableEntity implements Passive {
         this.duration = duration;
     }
 
+    @Override
     public void applyPassive(Player player) {
         if (enabled) {
             if (this.duration == 0) {

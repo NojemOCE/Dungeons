@@ -45,6 +45,9 @@ public class FileLoadTest {
         catch (Exception e) {
             e.printStackTrace();
         }
+
+        controller.tick(null, Direction.UP);
+
         List<String> games = controller.allGames();
 
         assertEquals(1, games.size());
@@ -194,6 +197,9 @@ public class FileLoadTest {
         catch (Exception e) {
             e.printStackTrace();
         }
+
+        controller.tick(null, Direction.UP);
+
         List<String> games = controller.allGames();
 
         assertEquals(1, games.size());
@@ -248,7 +254,7 @@ public class FileLoadTest {
 
         controller.newGame("boulders", "Standard");
         assertDoesNotThrow(()-> controller.saveGame("boulders"));
-        
+
         clearSavedFilesFolder();
     }
 
@@ -259,7 +265,7 @@ public class FileLoadTest {
         DungeonManiaController controller = new DungeonManiaController();
 
         controller.newGame("statics-world", "Standard");
-        
+
         controller.saveGame("statics-world");
 
         try {
@@ -268,6 +274,8 @@ public class FileLoadTest {
         catch (Exception e) {
             e.printStackTrace();
         }
+
+        controller.tick(null, Direction.UP);
 
         List<String> games = controller.allGames();
 
@@ -285,7 +293,7 @@ public class FileLoadTest {
             if (e.getType().equals("player")) {
                 assert(e.getPosition().equals(new Position(1, 1)));
             }
-            else if (e.getType().equals("portal")) {
+            else if (e.getType().contains("portal")) {
                 assert(e.getPosition().equals(new Position(2, 1)) || e.getPosition().equals(new Position(3, 3)));
             }
             else if (e.getType().equals("key")) {
@@ -336,7 +344,6 @@ public class FileLoadTest {
         DungeonManiaController controller = new DungeonManiaController();
 
         controller.newGame("statics-world", "Standard");
-
         
 
         // Move player downwards
@@ -363,6 +370,9 @@ public class FileLoadTest {
         catch (Exception e) {
             e.printStackTrace();
         }
+
+        controller.tick(null, Direction.UP);
+
         List<String> games = controller.allGames();
 
         assertEquals(1, games.size());
@@ -435,6 +445,8 @@ public class FileLoadTest {
         catch (Exception e) {
             e.printStackTrace();
         }
+
+        controller.tick(null, Direction.UP);
 
         List<String> games = controller.allGames();
 
@@ -513,6 +525,8 @@ public class FileLoadTest {
         catch (Exception e) {
             e.printStackTrace();
         }
+
+        controller.tick(null, Direction.UP);
 
         List<String> games = controller.allGames();
 
@@ -600,6 +614,8 @@ public class FileLoadTest {
         catch (Exception e) {
             e.printStackTrace();
         }
+
+        controller.tick(null, Direction.UP);
 
         List<String> games = controller.allGames();
 
