@@ -360,7 +360,7 @@ public class World {
         // InvalidActionException if itemUsed is not in the player's inventory
 
         if (!Objects.isNull(itemUsed)) {
-            if (inventory.getType(itemUsed).equals("bomb")) {
+            if (!(inventory.getType(itemUsed) == null) && inventory.getType(itemUsed).equals("bomb")) {
                 inventory.use(itemUsed);
                 PlacedBomb newBomb = new PlacedBomb(player.getX(), player.getY(), "bomb" + String.valueOf(incrementEntityCount()));
                 staticEntities.put(newBomb.getId(), newBomb);
@@ -486,7 +486,7 @@ public class World {
         }
         List<Position> possibleSpawnPositions = spawner.spawn();
         Position newPos = getSpawnPosition(possibleSpawnPositions);
-        if (newPos.equals(null)) {
+        if (newPos == null) {
             // no valid spawn positions
             return;
         }
