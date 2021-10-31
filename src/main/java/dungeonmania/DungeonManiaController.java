@@ -5,12 +5,20 @@ import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.FileLoader;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
-
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import com.google.gson.JsonParser;
 
@@ -19,8 +27,6 @@ import org.json.*;
 
 public class DungeonManiaController {
 
-    // saved worlds
-    private List<World> savedGames = new ArrayList<>();
     private World current;
 
     public DungeonManiaController() {
@@ -83,16 +89,74 @@ public class DungeonManiaController {
         }
 
         JSONObject saveState = current.saveGame();
-        //TODO save game
+        LocalDateTime now = LocalDateTime.now();
+        String dateStr = now.format(DateTimeFormatter.ofPattern("ddMMyyyyHHmmss"));
+         
+        //Calendar calendar = Calendar.getInstance();
+        //String dateStr = new SimpleDateFormat("ddMMyyyyHHmmss").format(calendar.getTime());
+
+        String dungeonID = current.getDungeonName() + "-"+ dateStr;
+        current.setId(dungeonID);
+
+        //WRITE TO FILE AND ADD to saved games list
+
+        saveState.put("id", dungeonID);
+
+        File saveDirectory = new File("src/main/resources/savedGames");
+        if (!saveDirectory.exists()) {
+            saveDirectory.mkdir();
+        }
+
+        try {   
+            File output = new File(saveDirectory + "/" + dungeonID + ".json");
+            output.createNewFile();
+            FileWriter fileWriter = new FileWriter(output);
+
+            fileWriter.write(saveState.toString());
+            fileWriter.flush();
+            fileWriter.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         return current.worldDungeonResponse();
     }
 
     public DungeonResponse loadGame(String name) throws IllegalArgumentException {
+        if(!allGames().contains(name)) {
+            throw new IllegalArgumentException("Please load a valid game");
+        }
+
+        World newGame = null;
+        try {
+            String file = FileLoader.loadResourceFile("/savedGames/" + name + ".json");
+            
+            JSONObject game = new JSONObject(file);
+            
+            newGame = new World(game.getString("dungeon-name"), game.getString("gamemode"), game.getString("id"));
+
+            newGame.buildWorldFromFile(game);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        current = newGame;
         return current.worldDungeonResponse();
     }
 
     public List<String> allGames() {
-        return new ArrayList<>();
+        // Get all current file names
+        List<String> savedGames =  new ArrayList<>();
+
+        try{
+            savedGames = FileLoader.listFileNamesInResourceDirectory("/savedGames");
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+        return savedGames;
     }
 
     public DungeonResponse tick(String itemUsed, Direction movementDirection) throws InvalidActionException, IllegalArgumentException {
