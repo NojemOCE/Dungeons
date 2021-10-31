@@ -52,6 +52,9 @@ public class Inventory {
     public void use(String itemId) {
         if (consumableItems.containsKey(itemId)) {
             consumableItems.get(itemId).consume();
+            if (collectableItems.get(itemId).getDurability() == 0) {
+                removeItem(collectableItems.get(itemId));
+            }
         }
     }
 
@@ -136,7 +139,10 @@ public class Inventory {
             throw new InvalidActionException("Item not in Inventory");
         } else if (isUsable(itemUsedId)) {
             collectable = collectableItems.get(itemUsedId).consume();
-            tick();
+            if (collectable.getDurability() == 0) {
+                removeItem(collectable);
+            }
+            //tick();
         } else {
             throw new IllegalArgumentException("Wrong usable type");
         }
@@ -144,14 +150,14 @@ public class Inventory {
         return collectable;
     }
 
-    public void tick() {
-        for (CollectableEntity item : collectableItems.values()) {
-            item.tick();
-            if (item.getDurability() == 0) {
-                removeItem(item);
-            }
-        }
-    }
+    // public void tick() {
+    //     for (CollectableEntity item : collectableItems.values()) {
+    //         item.tick();
+    //         if (item.getDurability() == 0) {
+    //             removeItem(item);
+    //         }
+    //     }
+    // }
 
     /**
      * Get the type of the given item
