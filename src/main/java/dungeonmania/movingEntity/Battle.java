@@ -64,14 +64,6 @@ public class Battle {
     }
 
     /**
-     * Gives the player object that is currently in battle
-     * @return player currently in battle
-     */
-    public Player getPlayer() {
-        return player;
-    }
-
-    /**
      * Gives the MovingEntity object that is currently opposing the player in battle
      * @return MovingEntity currently in battle with the player
      */
