@@ -7,16 +7,17 @@ import org.json.JSONObject;
 import dungeonmania.World;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.movingEntity.MovementStrategies.FollowPlayer;
+import dungeonmania.movingEntity.MovementStrategies.RandomMovement;
+import dungeonmania.movingEntity.MovementStrategies.RunAway;
 import dungeonmania.response.models.EntityResponse;
 
 
-public class Mercenary extends MovingEntity {
+public class Mercenary extends MovingEntity implements PlayerPassiveObserver {
 
     static final int MERC_ATTACK = 3;
     static final int MERC_HEALTH = 20;
     private static final int GOLD_TO_BRIBE = 1;
-    private static final double BATTLE_RADIUS = 5;
-    private Player subject;
+    private static final double BATTLE_RADIUS = 15;
     private boolean interactable = false;
 
     /**
@@ -33,13 +34,6 @@ public class Mercenary extends MovingEntity {
     }
 
 
-    public Mercenary(int x, int y, String id, HealthPoint hp, String defaultMovement, String currentMovement, Boolean isAlly) {
-        super(new Position(x, y, 2), id, "mercenary", hp, MERC_ATTACK);
-        setMovement(getMovementFromString(currentMovement));
-        setDefaultMovementStrategy(getMovementFromString(defaultMovement));
-        setAlly(isAlly);
-    }
-
     @Override
     public void move(World world) {
 
@@ -47,13 +41,12 @@ public class Mercenary extends MovingEntity {
         double x = (double)distance.getX();
         double y = (double)distance.getY();
         double distanceSquared = ((x*x) + (y*y));
-        if ((Math.pow(distanceSquared, 1/2)) <= BATTLE_RADIUS) {
+        
+        if ((Math.sqrt(distanceSquared)) <= BATTLE_RADIUS) {
             // mount player as in range
-            world.getPlayer().registerEntity(this);
-            this.subject = world.getPlayer();
+            world.getPlayer().addInRange(this);
         } else {
-            this.subject = null;
-            world.getPlayer().unregisterEntity(this);
+            world.getPlayer().removeInRange(this);
         }
         
         getMovement().move(this, world);
@@ -109,12 +102,24 @@ public class Mercenary extends MovingEntity {
         JSONObject mercJSON = super.saveGameJson();
         JSONObject movement = new JSONObject();
 
-        movement.put("default-strategy", defaultMovementStrategy.getMovementType());
+        movement.put("default-movement", defaultMovementStrategy.getMovementType());
         movement.put("movement-strategy", movementStrategy.getMovementType());
         
         mercJSON.put("movement", movement);
-        mercJSON.put("ally", getAlly());
 
         return mercJSON;
+    }
+
+
+    @Override
+    public void updateMovement(String passive) {
+        if (passive.equals("invincibility_potion") && !getAlly()) {
+            setMovement(new RunAway());
+        } else if (passive.equals("invisibility_potion") && !getAlly()) {
+            setMovement(new RandomMovement());
+        } else {
+            setMovement(getDefaultMovementStrategy());
+        }
+        
     }
 }

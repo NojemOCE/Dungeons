@@ -10,17 +10,6 @@ public class Key extends CollectableEntity {
         this.keyColour = keyColour;
     }
 
-    public Key(String itemId, int keyColour, int durability) {
-        this(0, 0, itemId, keyColour, durability);
-    }
-
-    public Key(int x, int y, String itemId, int keyColour, int durability) {
-        this(x, y, itemId, keyColour);
-        setDurability(durability);
-    }
-
-
-
     public int getKeyColour() {
         return keyColour;
     }

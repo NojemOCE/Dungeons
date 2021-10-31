@@ -10,17 +10,8 @@ public class Sword extends CollectableEntity {
         setDurability(DURABILITY);
     }
 
-    public Sword(String itemId, int durability) {
-        this(0, 0, itemId, durability);
-    }
-
-    public Sword(int x, int y, String itemId, int durability) {
-        this(x, y, itemId);
-        setDurability(durability);
-    }
-
     public double attackModifier() {
         return ATTACK_POWER;
-    }
+    };
 
 }

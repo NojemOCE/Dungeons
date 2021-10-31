@@ -10,15 +10,6 @@ public class Shield extends CollectableEntity {
         setDurability(DURABILITY);
     }
 
-    public Shield(String itemId, int durability) {
-        this(0, 0, itemId, durability);
-    }
-
-    public Shield(int x, int y, String itemId, int durability) {
-        this(x, y, itemId);
-        setDurability(durability);
-    }
-
     public int defenceModifier() { 
         return DEFENCE;
     }

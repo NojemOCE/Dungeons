@@ -2,6 +2,7 @@ package dungeonmania.staticEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import dungeonmania.Entity;
 import dungeonmania.World;
@@ -11,7 +12,6 @@ import dungeonmania.movingEntity.*;
 import dungeonmania.response.models.EntityResponse;
 
 public class ZombieToastSpawn extends StaticEntity {
-    private boolean interactable = false;
 
     /**
      * Constructor for ZombieToastSpawner
@@ -37,7 +37,9 @@ public class ZombieToastSpawn extends StaticEntity {
      * weapon and are cardinally adjacent to the spawner.
      */
     public void interact(World world) throws InvalidActionException {
-        if (interactable) {
+        Player player = world.getPlayer();
+
+        if (Position.isAdjacent(player.getPosition(), this.getPosition())) {
             if (world.playerHasWeapon()) {
                 // destroy spawner
                 List<Entity> thisSpawner = new ArrayList<>();
@@ -53,17 +55,6 @@ public class ZombieToastSpawn extends StaticEntity {
     }
 
     /**
-     * Subscribes to the world to get updates on the player's position
-     */
-    public void update(Player player) {
-        if (Position.isAdjacent(player.getPosition(), getPosition())) {
-            interactable = true;
-        } else {
-            interactable = false;
-        }
-    }
-
-    /**
      * Gets possible spawn positions (cells cardinally adjacent to the spawner).
      * @return returns list of possible spawn positions
      */
@@ -71,8 +62,9 @@ public class ZombieToastSpawn extends StaticEntity {
         return getPosition().getCardinallyAdjacentPositions();
     }
 
+    
     @Override
     public EntityResponse getEntityResponse() {
-        return new EntityResponse(getId(), "zombie_toast_spawner", getPosition(), interactable);
+        return new EntityResponse(getId(), "zombie_toast_spawner", getPosition(), true);
     }
 }

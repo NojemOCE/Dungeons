@@ -1,5 +1,6 @@
 package dungeonmania.collectable;
 
+import dungeonmania.Passive;
 import dungeonmania.movingEntity.Player;
 
 public class HealthPotion extends CollectableEntity implements Passive {
@@ -12,16 +13,8 @@ public class HealthPotion extends CollectableEntity implements Passive {
         super(x, y, itemId, "health_potion");
     }
 
-    public HealthPotion(String itemId, int durability) {
-        this(0, 0, itemId, durability);
-    }
-
-    public HealthPotion(int x, int y, String itemId, int durability) {
-        this(x, y, itemId);
-        setDurability(durability);
-    }
-
     public void applyPassive(Player player) {
+        System.out.println("HEAL!");
         player.addHealth(HEAL_EFFECT);
     }
 

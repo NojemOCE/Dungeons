@@ -40,27 +40,33 @@ public class Boulder extends StaticEntity {
             List<StaticEntity> entitiesAtThisPos = world.getStaticEntitiesAtPosition(this.getPosition());
             List<StaticEntity> entitiesAtNewPos = world.getStaticEntitiesAtPosition(toMoveBoulderTo);
             
+            // SWITCHES:
+            // untrigger any switch in the previous spot
+            entitiesAtThisPos.stream()
+                             .filter(x -> x instanceof FloorSwitch)
+                             .map(FloorSwitch.class::cast)
+                             .forEach(x -> x.untrigger());
+
+            // trigger any switch in the new spot
+            entitiesAtNewPos.stream()
+                            .filter(x -> x instanceof FloorSwitch)
+                            .map(FloorSwitch.class::cast)
+                            .forEach(x -> x.trigger(world));
+
             // PORTALS:
             List<Portal> portals = entitiesAtNewPos.stream()
                                                    .filter(x -> x instanceof Portal)
                                                    .map(Portal.class::cast)
                                                    .collect(Collectors.toList());
-
-            Position entityToMoveTo = new Position(getX(), getY(), entity.getLayer());
-
-            // if there is a portal check if we can move
-            // if we cant then entity also can't move
             if (!(portals.isEmpty())) {
                 Portal portal = portals.get(0);
                 toMoveBoulderTo = portal.interact(world, this);
-                if (toMoveBoulderTo.equals(getPosition())) {
-                    return entity.getPosition();
-                }
             }
 
-            // if we reach here then we move both the boulder and player
+            Position entityToMoveTo = new Position(getX(), getY(), entity.getLayer());
+
             // move boulder then return appropriate position for character to move to
-            this.setPosition(new Position(toMoveBoulderTo.getX(), toMoveBoulderTo.getY(), getLayer()));
+            this.setPosition(toMoveBoulderTo);
 
             return entityToMoveTo;
         }
@@ -79,14 +85,7 @@ public class Boulder extends StaticEntity {
      */
     public boolean validMove(World world, Position position) {
         List<StaticEntity> entitiesAtNewPos = world.getStaticEntitiesAtPosition(position);
-        // if anything is on the same layer or higher, can't move, unless it is a portal
-        List<Portal> portals = entitiesAtNewPos.stream()
-                                               .filter(x -> x instanceof Portal)
-                                               .map(Portal.class::cast)
-                                               .collect(Collectors.toList());
-        if (!(portals.isEmpty())) {
-            return true;
-        }
+        // if anything is on the same layer or higher, can't move
         if (entitiesAtNewPos.stream().anyMatch(x -> x.getLayer() >= this.getLayer())) {
             return false;
         }
