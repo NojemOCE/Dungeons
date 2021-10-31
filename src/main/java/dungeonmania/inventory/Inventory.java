@@ -9,14 +9,13 @@ import java.util.stream.IntStream;
 
 import org.json.JSONArray;
 
-import dungeonmania.Consumable;
 import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.response.models.ItemResponse;
 
 public class Inventory {
     private Map<String, CollectableEntity> collectableItems = new HashMap<>();
-    private Map<String, Consumable> consumableItems = new HashMap<>();
+    //private Map<String, Consumable> consumableItems = new HashMap<>();
     private Map<String, Integer> numCollected = new HashMap<>();
     private List<String> usable = new ArrayList<>();
 
@@ -33,7 +32,6 @@ public class Inventory {
      */
     public boolean collect(CollectableEntity item) {
         if (item instanceof Key && numItem("key") != 0) {
-            //System.out.println("hi");
             return false;
         }
 
@@ -45,13 +43,13 @@ public class Inventory {
         numCollected.put(itemType, numCollected.get(itemType) + 1);
 
         collectableItems.put(item.getId(), item);
-        consumableItems.put(item.getId(), item);
+        //consumableItems.put(item.getId(), item);
         return true;
     }
 
     public void use(String itemId) {
-        if (consumableItems.containsKey(itemId)) {
-            consumableItems.get(itemId).consume();
+        if (collectableItems.containsKey(itemId)) {
+            collectableItems.get(itemId).consume();
             if (collectableItems.get(itemId).getDurability() == 0) {
                 removeItem(collectableItems.get(itemId));
             }
@@ -76,7 +74,7 @@ public class Inventory {
                                                               .collect(Collectors.toList());
         String idToRemove =collectable.get(0).getId();
         collectableItems.remove(idToRemove);
-        consumableItems.remove(idToRemove);
+        //consumableItems.remove(idToRemove);
     }
     
     public void craft(String itemType, String itemNum) {
@@ -187,7 +185,7 @@ public class Inventory {
     }
 
     public void removeItem(CollectableEntity item) {
-        consumableItems.remove(item.getId());
+        //consumableItems.remove(item.getId());
         collectableItems.remove(item.getId());
         numCollected.put(item.getType(), numCollected.get(item.getType()) - 1);
     }
