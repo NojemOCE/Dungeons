@@ -981,7 +981,6 @@ public class World {
 
         String id = obj.getString("id");
 
-        double allyAttack = obj.getDouble("ally-attack");
         JSONObject healthPoint = obj.getJSONObject("health-point");
 
         double health = healthPoint.getDouble("health");

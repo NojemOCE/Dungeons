@@ -30,6 +30,7 @@ public class DungeonManiaController {
     private World current;
 
     public DungeonManiaController() {
+        this.current = null;
     }
 
     public String getSkin() {
@@ -84,7 +85,7 @@ public class DungeonManiaController {
     
     public DungeonResponse saveGame(String name) throws IllegalArgumentException {
         // if no game is loaded then we can't save
-        if (current.equals(null)) {
+        if (current == null) {
             throw new IllegalArgumentException("No game currently loaded");
         }
 

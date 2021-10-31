@@ -13,7 +13,7 @@
         {
             "x": 3,
             "y": 1,
-            "type": "treasure",
+            "type": "key",
             "key": 1
         },
         {
@@ -58,14 +58,9 @@
             "type": "sword"
         },
         {
-            "x": 4,
-            "y": 3,
-            "type": "armour"
-        },
-        {
             "x": 1,
             "y": 4,
-            "type": "one-ring"
+            "type": "one_ring"
         },
         {
             "x": 0,
