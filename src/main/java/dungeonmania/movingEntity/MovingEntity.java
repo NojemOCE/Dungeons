@@ -139,12 +139,12 @@ public abstract class MovingEntity extends Entity {
         return saveObj;
     }
 
-    @Override
-    public String toString() {
-        return "MovingEntity [ally=" + ally + ", attackDamage=" + attackDamage + ", defaultMovementStrategy="
-                + defaultMovementStrategy + ", healthPoint=" + healthPoint + ", movementStrategy=" + movementStrategy
-                + ", position=" + getPosition()+ ", speed=" + speed + "]";
-    }
+    // @Override
+    // public String toString() {
+    //     return "MovingEntity [ally=" + ally + ", attackDamage=" + attackDamage + ", defaultMovementStrategy="
+    //             + defaultMovementStrategy + ", healthPoint=" + healthPoint + ", movementStrategy=" + movementStrategy
+    //             + ", position=" + getPosition()+ ", speed=" + speed + "]";
+    // }
 
     //might be better to move to movement
     protected Movement getMovementFromString(String movement, String currDir, String nextDir, int remMovesCurr, int remMovesNext, boolean avoidPlayer) {
