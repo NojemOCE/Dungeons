@@ -578,6 +578,7 @@ public class World {
 
     /**
      * Returns the static entity that exists in the dungeon at position p (if one exists)
+     * Note, that this only looks at layer 1 (will not return for floor switch, exit)
      * @param p position to check
      * @return Static entity at position p
      */
