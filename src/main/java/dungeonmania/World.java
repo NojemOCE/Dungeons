@@ -1066,8 +1066,7 @@ public class World {
         } 
         
         else if (type.equals("switch")) {
-            boolean triggered  = obj.getBoolean("triggered");
-            FloorSwitch e = new FloorSwitch(x, y, id, triggered);
+            FloorSwitch e = new FloorSwitch(x, y, id);
             staticEntities.put(e.getId(), e);
         } 
         
