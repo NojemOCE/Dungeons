@@ -39,18 +39,18 @@ public class inventoryTest {
 
         HealthPotion potion = new HealthPotion(1, 1, "health_potion1");
 
-        assertEquals(inv.numItem("health_potion"), 0);
+        assertFalse(inv.inInventory("health_potion1"));
         inv.collect(potion);
-        assertEquals(inv.numItem("health_potion"), 1);
+        assertTrue(inv.inInventory("health_potion1"));
         potion.consume();
-        assertEquals(inv.numItem("health_potion"), 0);
+        //assertFalse(inv.inInventory("health_potion1"));
 
         Bomb bomb = new Bomb(1, 2, "bomb2");
-        assertEquals(inv.numItem("bomb"), 0);
+        assertFalse(inv.inInventory("bomb2"));
         inv.collect(bomb);
-        assertEquals(inv.numItem("bomb"), 1);
+        assertTrue(inv.inInventory("bomb2"));
         bomb.consume();
-        assertEquals(inv.numItem("bomb"), 0);
+        //assertFalse(inv.inInventory("bomb2"));
     }
 
     /**
