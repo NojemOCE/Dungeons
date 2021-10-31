@@ -2,8 +2,6 @@ package dungeonmania.staticEntityTest;
 
 
 import dungeonmania.World;
-import dungeonmania.movingEntity.HealthPoint;
-import dungeonmania.movingEntity.Player;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.staticEntity.*;
@@ -381,6 +379,7 @@ public class BoulderTest {
         assert(boulderPos.equals(boulderPos3));
     }
 
+    // test can't move two boulders
     // test trigger and untrigger switches
 
     
