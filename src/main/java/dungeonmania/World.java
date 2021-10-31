@@ -451,29 +451,36 @@ public class World {
     }
 
     /**
-     * Helper function to create a new zombie at relevant ticks
+     * Updates zombie toast spawners
      */
     private void tickZombieToastSpawn() {
-        if (!(tickCount > 0 && tickCount % gamemode.getSpawnRate() == 0)) {
-            return;
-        }
         for (StaticEntity s : staticEntities.values()) {
             if (s instanceof ZombieToastSpawn) {
                 ZombieToastSpawn spawner = (ZombieToastSpawn) s;
                 // update interactable state
                 spawner.update(player);
-                List<Position> possibleSpawnPositions = spawner.spawn();
-                Position newPos = getSpawnPositon(possibleSpawnPositions);
-                if (newPos.equals(null)) {
-                    // no valid spawn positions
-                    return;
-                }
-                Zombie newZombie = new Zombie(newPos.getX(), newPos.getY(), "zombie_toast" + String.valueOf(incrementEntityCount()));
-                movingEntities.put(newZombie.getId(), newZombie);
-                player.subscribePassiveObserver((PlayerPassiveObserver) newZombie);
-
+                spawnZombie(spawner);
             }
         }
+    }
+
+    /**
+     * Helper function to create a new zombie at relevant ticks
+     * @param spawner Zombie spawner to spawn from
+     */
+    private void spawnZombie(ZombieToastSpawn spawner) {
+        if (!(tickCount > 0 && tickCount % gamemode.getSpawnRate() == 0)) {
+            return;
+        }
+        List<Position> possibleSpawnPositions = spawner.spawn();
+        Position newPos = getSpawnPosition(possibleSpawnPositions);
+        if (newPos.equals(null)) {
+            // no valid spawn positions
+            return;
+        }
+        Zombie newZombie = new Zombie(newPos.getX(), newPos.getY(), "zombie_toast" + String.valueOf(incrementEntityCount()));
+        movingEntities.put(newZombie.getId(), newZombie);
+        player.subscribePassiveObserver((PlayerPassiveObserver) newZombie);
     }
     
     /**
@@ -481,7 +488,7 @@ public class World {
      * @param possibleSpawnPositions List of possible cardinally adjacent positions to a spawner
      * @return position to spawn, or null if no valid positions
      */
-    private Position getSpawnPositon(List<Position> possibleSpawnPositions) {
+    private Position getSpawnPosition(List<Position> possibleSpawnPositions) {
         Position newPos = null;
         Random random = new Random();
         while (!(possibleSpawnPositions.isEmpty())) {
@@ -1171,7 +1178,8 @@ public class World {
         } 
         
         else if (type.equals("invisibility_potion")) {
-            InvisibilityPotion e = new InvisibilityPotion(x, y, id, durability);
+            int duration = obj.getInt("duration");
+            InvisibilityPotion e = new InvisibilityPotion(x, y, id, durability, duration);
             collectableEntities.put(e.getId(), e);
         } 
         

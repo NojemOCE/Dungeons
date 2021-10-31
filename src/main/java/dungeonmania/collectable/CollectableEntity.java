@@ -39,8 +39,8 @@ public abstract class CollectableEntity extends Entity implements Consumable {
         this.durability = durability;
     }
 
-    public int decreaseDurability() {
-        return this.durability;
+    public void decreaseDurability() {
+        this.durability--;
     }
 
     public int getDurability() {
@@ -63,7 +63,6 @@ public abstract class CollectableEntity extends Entity implements Consumable {
         saveObj.put("id", getId());
         saveObj.put("type", getType());
         saveObj.put("durability", durability);
-
         return saveObj;
     }
 }
