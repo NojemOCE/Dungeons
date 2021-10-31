@@ -111,17 +111,6 @@ public class World {
             setGoals(null);
         }
 
-        // TODO can we put this in a shared method
-        // trigger any switches
-        for (StaticEntity se : staticEntities.values()) {
-            if (se instanceof FloorSwitch) {
-                StaticEntity entity = getStaticEntity(se.getPosition());
-                if (entity instanceof Boulder) {
-                    ((FloorSwitch) se).trigger(this);
-                }
-            }
-        }
-
         return worldDungeonResponse();
     }
 
@@ -653,6 +642,11 @@ public class World {
         return inventory.inInventory(item.getId());
     }
 
+    /**
+     * Checks if a key exists in inventory and returns object
+     * @param keyColour keyColour of the key to find
+     * @return Key if exists in inventory, else false
+     */
     public Key keyInInventory(int keyColour) {
         return inventory.keyInInventory(keyColour);
     }
@@ -885,19 +879,6 @@ public class World {
         else {
             //set battle as null
         }
-
-        //Make enemies observe player (playerObservers)
-        // TODO can we put this in a shared method
-        // trigger any switches
-        for (StaticEntity se : staticEntities.values()) {
-            if (se instanceof FloorSwitch) {
-                StaticEntity entity = getStaticEntity(se.getPosition());
-                if (entity instanceof Boulder) {
-                    ((FloorSwitch) se).trigger(this);
-                }
-            }
-        }
-
 
     }
 
