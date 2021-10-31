@@ -77,10 +77,16 @@ public final class Position {
         return new Position(b.x - a.x, b.y - a.y);
     }
 
-    public  static final boolean isAdjacent(Position a, Position b) {
+    /**
+     * Checks if two given positions are cardinally adjacent
+     * @param a First position to check
+     * @param b Second position to check
+     * @return whether the positions are cardinally adjacent
+     */
+    public static final boolean isAdjacent(Position a, Position b) {
         int x = a.x - b.x;
         int y = a.y - b.y;
-        return x + y == 1;
+        return ((x + y == 1) || (x + y == - 1));
     }
 
     // (Note: doesn't include z)
@@ -116,11 +122,18 @@ public final class Position {
     // 3 p 1
     //   2
     public List<Position> getCardinallyAdjacentPositions() {
-        List<Position> adjacentPositions = new ArrayList<>();
-        adjacentPositions.add(new Position(x  , y-1));
-        adjacentPositions.add(new Position(x+1, y));
-        adjacentPositions.add(new Position(x  , y+1));
-        adjacentPositions.add(new Position(x-1, y));
-        return adjacentPositions;
+        List<Position> adjacentPositions = getAdjacentPositions();
+        List<Position> cardinalPositions = new ArrayList<>();
+        for (int i = 1; i <= 7; i += 2) {
+            cardinalPositions.add(adjacentPositions.get(i));
+        }
+
+        return cardinalPositions;
+        // List<Position> adjacentPositions = new ArrayList<>();
+        // adjacentPositions.add(new Position(x  , y-1));
+        // adjacentPositions.add(new Position(x+1, y));
+        // adjacentPositions.add(new Position(x  , y+1));
+        // adjacentPositions.add(new Position(x-1, y));
+        // return adjacentPositions;
     }
 }

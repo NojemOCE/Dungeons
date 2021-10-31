@@ -61,6 +61,7 @@ public class ZombieToastSpawn extends StaticEntity {
         } else {
             interactable = false;
         }
+        System.out.println("interactable: " + interactable);
     }
 
     /**
