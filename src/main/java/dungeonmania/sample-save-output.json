@@ -76,6 +76,10 @@
         "health-point": {
             "health": 1.2,
             "max-health": 1.5
+        },
+        "active-potion": {
+            "type": "health_potion",
+            "duration": 5
         }
     },
     "moving-entities": [

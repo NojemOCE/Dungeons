@@ -1151,7 +1151,8 @@ public class World {
         } 
         
         else if (type.equals("invisibility_potion")) {
-            InvisibilityPotion e = new InvisibilityPotion(x, y, id, durability);
+            int duration = obj.getInt("duration");
+            InvisibilityPotion e = new InvisibilityPotion(x, y, id, durability, duration);
             collectableEntities.put(e.getId(), e);
         } 
         
