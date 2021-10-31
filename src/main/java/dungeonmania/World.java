@@ -111,6 +111,8 @@ public class World {
             setGoals(null);
         }
 
+        triggerSwitches();
+        
         return worldDungeonResponse();
     }
 
@@ -304,7 +306,7 @@ public class World {
     }
 
     /**
-     * Drops a shield:
+     * Drops armour:
      * 20% of the time if the player has beaten a zombie
      * 40% of the time if the player has beaten a mercenary
      * 
@@ -322,7 +324,7 @@ public class World {
         if (currentBattle.getCharacter() instanceof Mercenary) {
             Random ran = new Random();
             int next = ran.nextInt(10);
-            if (10*MERCENARY_ARMOUR_DROP > next)  {
+            if (10 * MERCENARY_ARMOUR_DROP > next)  {
                 // return an armour
                 Armour armour = new Armour(charX, charY, "armour" + String.valueOf(incrementEntityCount()));
                 inventory.collect(armour);
@@ -332,7 +334,7 @@ public class World {
         else if (currentBattle.getCharacter() instanceof Zombie) {
             Random ran = new Random();
             int next = ran.nextInt(10);
-            if (10*ZOMBIE_ARMOUR_DROP > next)  {
+            if (10 * ZOMBIE_ARMOUR_DROP > next)  {
                 // return an armour
                 Armour armour = new Armour(charX, charY, "armour" + String.valueOf(incrementEntityCount()));
                 inventory.collect(armour);
@@ -341,7 +343,7 @@ public class World {
 
         Random ran = new Random();
         int next = ran.nextInt(10);
-        if (10*ONE_RING_DROP > next)  {
+        if (10 * ONE_RING_DROP > next)  {
             // return the one ring
             OneRing oneRing = new OneRing(charX, charY, "one_ring" + String.valueOf(incrementEntityCount()));
             inventory.collect(oneRing);
@@ -387,11 +389,8 @@ public class World {
                     currentBattle = player.battle(me, gamemode); // if invisible it will add null
                 }
             }
-            // MovingEntity me = getCharacter(player.getPosition());
-            // if (!Objects.isNull(me) && !me.getAlly()) {
-            // }
         }
-
+        
         // collecting the collectable entity if it exists on the current position
         CollectableEntity collectable = getCollectableEntity(player.getPosition());
         if(!Objects.isNull(collectable)) {
@@ -887,7 +886,8 @@ public class World {
             createCollectableEntityFromJSON(collectableEntitiesItems.getJSONObject(i));
         }
 
-
+        // trigger any switches with a boulder already on top
+        triggerSwitches();
 
         if (gameData.has("current-battle")) {
             JSONObject b = gameData.getJSONObject("current-battle");
@@ -899,6 +899,20 @@ public class World {
 
     }
 
+    /**
+     * Helper function to set switches as triggered when a map is loaded.
+     */
+    private void triggerSwitches() {
+        for (StaticEntity se : staticEntities.values()) {
+            if (se instanceof FloorSwitch) {
+                StaticEntity entity = getStaticEntity(se.getPosition());
+                if (entity instanceof Boulder) {
+                    ((FloorSwitch) se).trigger(this);
+                }
+            }
+        }
+
+    }
     private void createInventoryFromJSON(JSONObject obj) {
         // TODO update constructors
         //int x = obj.getInt("x");

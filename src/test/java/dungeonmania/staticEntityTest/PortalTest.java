@@ -154,4 +154,104 @@ public class PortalTest {
 
         assert(playerPos.equals(playerPos2));
     }
+
+    /**
+     * Test that if the other side of the twin portal is blocked, the player can't go through
+     * MAP:
+     * player B P _ _ P _ B
+     */
+    @Test
+    public void twinTeleportBlock() {
+        // Create a new world
+        World world = new World("portals-two-boulders-v2", "Standard");
+        try {
+            String file = FileLoader.loadResourceFile("/dungeons/" + "portals-two-boulders-v2" + ".json");
+            JSONObject game = new JSONObject(file);
+            world.buildWorld(game);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        // move the boulder through the portal and get the player position
+        DungeonResponse d = world.tick(null, Direction.RIGHT);
+        List<EntityResponse> entities = d.getEntities();
+
+        Position playerPos = null;
+        for (EntityResponse er : entities) {
+            if (er.getType().equals("player")) {
+                playerPos = er.getPosition();
+                break;
+            }
+        }
+        assertNotNull(playerPos);
+
+        // try to move right into portal (should not be able to move)
+        d = world.tick(null, Direction.RIGHT);
+        entities = d.getEntities();
+        
+        // get positions after tick
+        Position playerPos2 = null;
+        for (EntityResponse er : entities) {
+            if (er.getType().equals("player")) {
+                playerPos2 = er.getPosition();
+                break;
+            }
+        }
+
+        // check player can't move
+        assert(playerPos2.equals(playerPos));
+
+    }
+
+    /**
+     * Test that if the other side of the twin portal is blocked, the player can't push a boulder through
+     * MAP:
+     * player B P _ _ P B B
+     */
+    @Test
+    public void twinTeleportBlockBoulder() {
+        // Create a new world
+        World world = new World("portals-three-boulders", "Standard");
+        try {
+            String file = FileLoader.loadResourceFile("/dungeons/" + "portals-three-boulders" + ".json");
+            JSONObject game = new JSONObject(file);
+            world.buildWorld(game);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+
+        // get initial player position
+        DungeonResponse d = world.worldDungeonResponse();
+        List<EntityResponse> entities = d.getEntities();
+
+        Position playerPos = null;
+        for (EntityResponse er : entities) {
+            if (er.getType().equals("player")) {
+                playerPos = er.getPosition();
+                break;
+            }
+        }
+        assertNotNull(playerPos);
+
+        // try to move the boulder (should get stuck)
+        d = world.tick(null, Direction.RIGHT);
+        entities = d.getEntities();
+
+        Position playerPos2 = null;
+        for (EntityResponse er : entities) {
+            if (er.getType().equals("player")) {
+                playerPos2 = er.getPosition();
+                break;
+            }
+        }
+        assertNotNull(playerPos2);
+
+        // check the player couldn't move
+        assert(playerPos2.equals(playerPos));
+
+    }
+
 }
