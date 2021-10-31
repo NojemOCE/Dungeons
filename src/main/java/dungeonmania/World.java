@@ -1173,5 +1173,7 @@ public class World {
         }
     }
 
-
+    public Position getPlayerPosition() {
+        return player.getPosition();
+    }
 }

@@ -74,10 +74,17 @@ public class Spider extends MovingEntity implements PlayerPassiveObserver {
 
     @Override
     public void updateMovement(String passive) {
-        // TODO Auto-generated method stub
-        
-    }
+        if (movementStrategy instanceof CircleMovement) {
+            CircleMovement moveStrat = (CircleMovement) movementStrategy;
 
+            if (passive.equals("invincibility_potion")) {
+                moveStrat.setAvoidPlayer(true);
+            }
+            else {
+                moveStrat.setAvoidPlayer(false);
+            }
+        }
+    }
 
 
 }
