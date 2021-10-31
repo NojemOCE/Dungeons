@@ -101,6 +101,7 @@
 * Bomb
     * We cannot pick these up again
     * Blast radius =  1
+    * Can only be detonated if the boulder triggers the switch AFTER it has been placed (as per spec wording)
 * Sword
     * Durability: 10
     * Attack power: 3
@@ -116,6 +117,8 @@
 ## Buildable Entities
 * Bow
 * Shield
-* Other
-    * Inventory has unlimited space (no item limit)
-    * Weapon and shield stats are stacked
+
+## Other
+* Inventory has unlimited space (no item limit)
+* Weapon and shield stats are stacked
+* A sword is a weapon
