@@ -33,6 +33,13 @@ public class Mercenary extends MovingEntity {
     }
 
 
+    public Mercenary(int x, int y, String id, HealthPoint hp, String defaultMovement, String currentMovement, Boolean isAlly) {
+        super(new Position(x, y, 2), id, "mercenary", hp, MERC_ATTACK);
+        setMovement(getMovementFromString(currentMovement));
+        setDefaultMovementStrategy(getMovementFromString(defaultMovement));
+        setAlly(isAlly);
+    }
+
     @Override
     public void move(World world) {
 
@@ -106,6 +113,7 @@ public class Mercenary extends MovingEntity {
         movement.put("movement-strategy", movementStrategy.getMovementType());
         
         mercJSON.put("movement", movement);
+        mercJSON.put("ally", getAlly());
 
         return mercJSON;
     }

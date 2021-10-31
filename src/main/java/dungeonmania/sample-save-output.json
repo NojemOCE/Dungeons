@@ -84,6 +84,7 @@
             "y": 13,
             "id": "id",
             "type": "mercenary",
+            "ally": true,
             "movement": {
                 "default-strategy": "follow-player",
                 "movement-strategy": "follow-player"

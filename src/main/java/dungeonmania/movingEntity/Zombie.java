@@ -24,7 +24,17 @@ public class Zombie extends MovingEntity{
         setDefaultMovementStrategy(new RandomMovement());
         setAlly(false);
     }
-    
+
+    public Zombie(int x, int y, String id, HealthPoint hp, String defaultMovement, String currentMovement) {
+
+        super(new Position(x, y, 2), id, "zombie_toast", hp, ZOMBIE_ATTACK);
+        //need set movement from string
+        setMovement(getMovementFromString(currentMovement));
+        setDefaultMovementStrategy(getMovementFromString(defaultMovement));
+        setAlly(false);
+    }
+
+
     @Override
     public void move(World world) {
        getMovement().move(this, world);

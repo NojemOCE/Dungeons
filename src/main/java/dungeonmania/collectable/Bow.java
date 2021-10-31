@@ -10,6 +10,15 @@ public class Bow extends CollectableEntity {
         setDurability(DURABILITY);
     }
 
+    public Bow(String itemId, int durability) {
+        this(0, 0, itemId, durability);
+    }
+
+    public Bow(int x, int y, String itemId, int durability) {
+        this(x, y, itemId);
+        setDurability(durability);
+    }
+
     public int attackModifier() {    
         return ATTACK_MULTIPLIER; 
     }
