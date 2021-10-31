@@ -37,7 +37,6 @@ public class Boulder extends StaticEntity {
             }
             
             // otherwise move
-            List<StaticEntity> entitiesAtThisPos = world.getStaticEntitiesAtPosition(this.getPosition());
             List<StaticEntity> entitiesAtNewPos = world.getStaticEntitiesAtPosition(toMoveBoulderTo);
             
             // PORTALS:

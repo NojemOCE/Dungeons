@@ -17,12 +17,12 @@
 //         HealthPoint playerHealth = new HealthPoint(100);
 //         Position start = new Position(0, 0);
 
-//         Player player = new Player(playerHealth, 10, start);
+        Player player = new Player(0, 0, "1", playerHealth);
 
-//         // Ensure attributes are correct
-//         assertEquals(player.getHealthPoint(), new HealthPoint(100));
-//         assertEquals(player.getAttackDamage(), 10);
-//         assertEquals(player.getPosition(), new Position(0, 0));
+        // Ensure attributes are correct
+        assertEquals(player.getHealthPoint(), new HealthPoint(100));
+        assertEquals(player.getId(), 10);
+        assertEquals(player.getPosition(), new Position(0, 0));
 
 //     }
 
@@ -33,7 +33,7 @@
 //         HealthPoint playerHealth = new HealthPoint(100);
 //         Position start = new Position(0, 0);
 
-//         Player player = new Player(playerHealth, 10, start);
+        Player player = new Player(0, 0, "1", playerHealth);
 
 //         //player.move(player.getPosition().translateBy(Direction.UP));
 //         assertEquals(player.getPosition(), new Position(0, 1));
@@ -55,12 +55,12 @@
 //         HealthPoint health = new HealthPoint(100);
 //         Position start = new Position(0, 0);
 
-//         Spider spider = new Spider(health, 10, start);
+        //Spider spider = new Spider(health, 10, start);
         
-//         //spider.move(new Position(0,0)); // argument should not matter
-//         assertEquals(spider.getPosition(), new Position(0, 1));
-//         //spider.move(new Position(0,0)); // argument should not matter
-//         assertEquals(spider.getPosition(), new Position(1, 1));
+        //spider.move(new Position(0,0)); // argument should not matter
+        /*assertEquals(spider.getPosition(), new Position(0, 1));
+        //spider.move(new Position(0,0)); // argument should not matter
+        assertEquals(spider.getPosition(), new Position(1, 1));*/
 
 //     }
 
@@ -70,17 +70,17 @@
 //         HealthPoint health = new HealthPoint(100);
 //         Position start = new Position(0, 0);
 
-//         Spider spider = new Spider(health, 10, start);
-//         Player player = new Player(health, 10, start);
+        //Spider spider = new Spider(health, 10, start);
+        //Player player = new Player(health, 10, start);
 
 //         // on same cell, battle should be created
 
-//         Battle battle = new Battle(player, spider);
-//         battle.battleTick();
-//         assertEquals(spider.getHealthPoint().getHealth(), health.getHealth() - player.attack());
-//         assertEquals(player.getHealthPoint().getHealth(), health.getHealth() - spider.attack());
+        /*Battle battle = new Battle(player, spider);
+        battle.battleTick();
+        assertEquals(spider.getHealthPoint().getHealth(), health.getHealth() - player.attack());
+        assertEquals(player.getHealthPoint().getHealth(), health.getHealth() - spider.attack());
 
-//         assertEquals(battle.getPosition(), start);
+        assertEquals(battle.getPosition(), start);*/
         
 //     }
 // }
