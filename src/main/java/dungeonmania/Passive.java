@@ -3,6 +3,7 @@ package dungeonmania;
 import dungeonmania.movingEntity.Player;
 
 public interface Passive {
+
     public void decreaseDuration();
 
     public int getDuration();

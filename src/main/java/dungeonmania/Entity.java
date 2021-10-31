@@ -17,6 +17,10 @@ public abstract class Entity {
         this.type = type;
     }
 
+    /**
+     * Get entity position
+     * @return position
+     */
     public Position getPosition() {
         return position;
     }
