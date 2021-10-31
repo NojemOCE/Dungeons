@@ -308,7 +308,7 @@ public class World {
     }
 
     /**
-     * Drops a shield:
+     * Drops a armour:
      * 20% of the time if the player has beaten a zombie
      * 40% of the time if the player has beaten a mercenary
      * 

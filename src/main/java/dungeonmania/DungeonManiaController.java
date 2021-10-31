@@ -89,21 +89,11 @@ public class DungeonManiaController {
             throw new IllegalArgumentException("No game currently loaded");
         }
 
-        if (!current.getId().equals(name)) {
-            throw new IllegalArgumentException("You cannot save a game that is not currently loaded.");
-        }
-
         JSONObject saveState = current.saveGame();
-        LocalDateTime now = LocalDateTime.now();
-        String dateStr = now.format(DateTimeFormatter.ofPattern("ddMMyyyyHHmmss"));
-         
-        //Calendar calendar = Calendar.getInstance();
-        //String dateStr = new SimpleDateFormat("ddMMyyyyHHmmss").format(calendar.getTime());
 
-        String dungeonID = current.getDungeonName() + "-"+ dateStr;
+        String dungeonID = name;
         current.setId(dungeonID);
 
-        //WRITE TO FILE AND ADD to saved games list
 
         saveState.put("id", dungeonID);
 
@@ -158,7 +148,7 @@ public class DungeonManiaController {
         try{
             savedGames = FileLoader.listFileNamesInResourceDirectory("/savedGames");
         }
-        catch(IOException e) {
+        catch(Exception e) {
             e.printStackTrace();
         }
         return savedGames;
