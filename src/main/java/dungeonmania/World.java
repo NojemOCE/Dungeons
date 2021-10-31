@@ -28,11 +28,7 @@ import dungeonmania.util.Position;
 
 
 
-// TODO: remember to implement all the observer interfaces as we go
 public class World {
-
-    //private int width;
-    //private int height;
 
     private Inventory inventory;
     private Gamemode gamemode;
@@ -56,7 +52,6 @@ public class World {
     private int tickCount = 0;
     private int highestX = 5;
     private int highestY = 5;
-    //private Map map; TBC
 
     /**
      * Constructor for world that takes the string of the dungeon name to build 

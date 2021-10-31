@@ -37,7 +37,7 @@ public class Door extends StaticEntity {
     /**
      * Opens the door
      */
-    public void open() {
+    private void open() {
         isOpen = true;
     }
     

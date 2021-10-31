@@ -8,7 +8,7 @@ import dungeonmania.World;
 import dungeonmania.util.Position;
 
 public class PlacedBomb extends StaticEntity {
-    private int BLAST_RADIUS = 1;
+    private static final int BLAST_RADIUS = 1;
 
     /**
      * Constructor for placed bomb 

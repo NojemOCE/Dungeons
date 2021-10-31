@@ -112,7 +112,7 @@ public class Portal extends StaticEntity {
      * Set given portal as the pair for this portal
      * @param twinPortal portal to set as twin portal
      */
-    public void setTwinPortal(Portal twinPortal) {
+    private void setTwinPortal(Portal twinPortal) {
         this.twinPortal = twinPortal;
     }
 
