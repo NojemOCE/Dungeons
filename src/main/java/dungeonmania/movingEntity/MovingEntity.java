@@ -130,6 +130,7 @@ public abstract class MovingEntity extends Entity {
     @Override
     public JSONObject saveGameJson() {
         JSONObject saveObj = new JSONObject();
+        saveObj.put("type", getType());
         saveObj.put("x",  getPosition().getX());
         saveObj.put("y",  getPosition().getY());
         saveObj.put("id",  getId());

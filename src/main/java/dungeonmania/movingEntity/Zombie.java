@@ -45,7 +45,7 @@ public class Zombie extends MovingEntity{
         JSONObject zombieJSON = super.saveGameJson();
         JSONObject movement = new JSONObject();
 
-        movement.put("default-movement", defaultMovementStrategy.getMovementType());
+        movement.put("default-strategy", defaultMovementStrategy.getMovementType());
         movement.put("movement-strategy", movementStrategy.getMovementType());
         
         zombieJSON.put("movement", movement);

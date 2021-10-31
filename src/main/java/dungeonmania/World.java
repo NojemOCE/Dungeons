@@ -859,17 +859,17 @@ public class World {
         JSONObject playerObj = gameData.getJSONObject("player");
         List<String> playerObservers = createPlayerFromJSON(playerObj);
 
-        JSONArray movingEntitiesItems = gameData.getJSONArray("inventory");
+        JSONArray movingEntitiesItems = gameData.getJSONArray("moving-entities");
         for (int i = 0; i < movingEntitiesItems.length(); i++) {
             createMovingEntityFromJSON(movingEntitiesItems.getJSONObject(i));
         }
 
-        JSONArray staticEntitiesItems = gameData.getJSONArray("inventory");
+        JSONArray staticEntitiesItems = gameData.getJSONArray("static-entities");
         for (int i = 0; i < staticEntitiesItems.length(); i++) {
             createStaticEntityFromJSON(staticEntitiesItems.getJSONObject(i));
         }
 
-        JSONArray collectableEntitiesItems = gameData.getJSONArray("inventory");
+        JSONArray collectableEntitiesItems = gameData.getJSONArray("collectable-entities");
         for (int i = 0; i < collectableEntitiesItems.length(); i++) {
             createCollectableEntityFromJSON(collectableEntitiesItems.getJSONObject(i));
         }
@@ -992,7 +992,7 @@ public class World {
 
         updateBounds(x, y);
 
-        String type = obj.getString("type");
+        String type = "player";
 
         String id = obj.getString("id");
 
@@ -1006,9 +1006,10 @@ public class World {
 
         Player player = new Player(x, y, id, playerHP, allyAttack);
 
-        List<String> enemyIDs = (List<String>)obj.get("mercenaries");
+        //List<String> enemyIDs = (List<String>)obj.get("mercenaries");
 
-        return enemyIDs;
+        this.player = player;
+        return new ArrayList<>();
     }
 
     private void createMovingEntityFromJSON(JSONObject obj) {

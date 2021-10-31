@@ -125,7 +125,7 @@ public class DungeonManiaController {
 
     public DungeonResponse loadGame(String name) throws IllegalArgumentException {
         if(!allGames().contains(name)) {
-            throw new IllegalArgumentException("Please load a valid game");
+            throw new IllegalArgumentException("Please load a valid game.");
         }
 
         World newGame = null;

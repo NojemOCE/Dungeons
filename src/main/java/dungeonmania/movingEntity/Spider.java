@@ -54,7 +54,7 @@ public class Spider extends MovingEntity {
         JSONObject spiderJSON = super.saveGameJson();
         JSONObject movement = new JSONObject();
 
-        movement.put("default-movement", defaultMovementStrategy.getMovementType());
+        movement.put("default-strategy", defaultMovementStrategy.getMovementType());
         movement.put("movement-strategy", movementStrategy.getMovementType());
 
         if(movementStrategy instanceof CircleMovement) {

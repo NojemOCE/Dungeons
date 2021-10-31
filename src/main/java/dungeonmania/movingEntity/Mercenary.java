@@ -109,7 +109,7 @@ public class Mercenary extends MovingEntity {
         JSONObject mercJSON = super.saveGameJson();
         JSONObject movement = new JSONObject();
 
-        movement.put("default-movement", defaultMovementStrategy.getMovementType());
+        movement.put("default-strategy", defaultMovementStrategy.getMovementType());
         movement.put("movement-strategy", movementStrategy.getMovementType());
         
         mercJSON.put("movement", movement);
