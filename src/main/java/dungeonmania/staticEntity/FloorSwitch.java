@@ -30,10 +30,4 @@ public class FloorSwitch extends StaticEntity {
         return new Position(getX(), getY(), entity.getLayer());
     }
 
-   
-    @Override
-	public JSONObject saveGameJson() {
-		JSONObject save = super.saveGameJson();
-		return save;
-	}
 }
