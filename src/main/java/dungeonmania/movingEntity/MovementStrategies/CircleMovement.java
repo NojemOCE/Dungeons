@@ -9,7 +9,7 @@ import dungeonmania.staticEntity.StaticEntity;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
-public class CircleMovement implements Movement {
+public class CircleMovement implements MovementStrategy {
     private Direction currentDirection;
     private Direction nextDirection;
     private int remMovesCurr;

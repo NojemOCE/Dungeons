@@ -4,7 +4,7 @@ import dungeonmania.World;
 import dungeonmania.util.*;
 import dungeonmania.*;
 
-public interface Movement {
+public interface MovementStrategy {
 
     /**
      * Takes a moving entity and the current game world, and moves them to their next position

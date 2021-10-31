@@ -23,8 +23,8 @@ public abstract class MovingEntity extends Entity {
 
     private int speed;
 
-    protected Movement movementStrategy;
-    protected Movement defaultMovementStrategy;
+    protected MovementStrategy movementStrategy;
+    protected MovementStrategy defaultMovementStrategy;
 
     private boolean ally;
 
@@ -100,11 +100,11 @@ public abstract class MovingEntity extends Entity {
         this.ally = ally;
     }
 
-    public void setMovement(Movement strategy) {
+    public void setMovement(MovementStrategy strategy) {
         this.movementStrategy = strategy;
     }
 
-    public Movement getMovement() {
+    public MovementStrategy getMovement() {
         return this.movementStrategy;
     }
 
@@ -116,11 +116,11 @@ public abstract class MovingEntity extends Entity {
         this.speed = speed;
     }
 
-    public Movement getDefaultMovementStrategy() {
+    public MovementStrategy getDefaultMovementStrategy() {
         return defaultMovementStrategy;
     }
 
-    public void setDefaultMovementStrategy(Movement defaultMovementStrategy) {
+    public void setDefaultMovementStrategy(MovementStrategy defaultMovementStrategy) {
         this.defaultMovementStrategy = defaultMovementStrategy;
     }
 
@@ -148,7 +148,7 @@ public abstract class MovingEntity extends Entity {
     //             + ", position=" + getPosition()+ ", speed=" + speed + "]";
     // }
 
-    protected Movement getMovementFromString(String movement, String currDir, String nextDir, int remMovesCurr, int remMovesNext, boolean avoidPlayer) {
+    protected MovementStrategy getMovementFromString(String movement, String currDir, String nextDir, int remMovesCurr, int remMovesNext, boolean avoidPlayer) {
         switch(movement)  {
             case "circle":
                 return new CircleMovement(currDir, nextDir, remMovesCurr, remMovesNext, avoidPlayer);
@@ -162,7 +162,7 @@ public abstract class MovingEntity extends Entity {
         return null;
     }
 
-    protected Movement getMovementFromString(String movement) {
+    protected MovementStrategy getMovementFromString(String movement) {
         switch(movement)  {
             case "circle":
                 return new CircleMovement();
