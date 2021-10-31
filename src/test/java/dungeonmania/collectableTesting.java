@@ -19,15 +19,15 @@
 
 
 
-public class collectableTesting {
-    /**
-     * Test whether a collected entity is placed within the players inventory and removed from the map
-     */
-    @Test 
-    public void testCollected() {
-        /*Wood wood = new Wood();
-        wood.collect(); 
-        assertTrue(wood.isCollected());
+// public class collectableTesting {
+//     /**
+//      * Test whether a collected entity is placed within the players inventory and removed from the map
+//      */
+//     @Test
+//     public void testCollected() {
+//         /*Wood wood = new Wood();
+//         wood.collect();
+//         assertTrue(wood.isCollected());
 
 //         Treasure treasure = new Treasure();
 //         treasure.collect(); 
@@ -65,8 +65,8 @@ public class collectableTesting {
 //         arrows.collect(); 
 //         assertTrue(arrows.isCollected());
 
-        Armour armour = new Armour();
-        armour.collect(); 
-        assertTrue(armour.isCollected());*/
-    }
-}
+//         Armour armour = new Armour();
+//         armour.collect();
+//         assertTrue(armour.isCollected());*/
+//     }
+// }

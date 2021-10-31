@@ -736,8 +736,6 @@ public class World {
         }
     }
 
-
-
     public Map<String, StaticEntity> getStaticEntities() {
         return this.staticEntities;
     }
