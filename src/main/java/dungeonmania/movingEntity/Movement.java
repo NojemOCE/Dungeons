@@ -13,5 +13,9 @@ public interface Movement {
      */
     public void move(MovingEntity me, World world);
 
+    /**
+     * return movement type
+     * @return
+     */
     public String getMovementType();
 }

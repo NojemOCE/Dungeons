@@ -17,7 +17,7 @@ public class Mercenary extends MovingEntity implements PlayerPassiveObserver {
     static final int MERC_ATTACK = 3;
     static final int MERC_HEALTH = 20;
     private static final int GOLD_TO_BRIBE = 1;
-    private static final double BATTLE_RADIUS = 10;
+    private static final double BATTLE_RADIUS = 8;
     private boolean interactable = false;
 
     /**
@@ -32,7 +32,6 @@ public class Mercenary extends MovingEntity implements PlayerPassiveObserver {
         setDefaultMovementStrategy(new FollowPlayer());
         setAlly(false);
     }
-
 
     public Mercenary(int x, int y, String id, HealthPoint hp, String defaultMovement, String currentMovement, Boolean isAlly) {
         super(new Position(x, y, 2), id, "mercenary", hp, MERC_ATTACK);
@@ -61,6 +60,10 @@ public class Mercenary extends MovingEntity implements PlayerPassiveObserver {
         setInteractable(world.getPlayer());
     }
 
+    /**
+     * Sets the interactability of mercenary
+     * @param player player
+     */
     private void setInteractable(Player player) {
         Position relativePos = Position.calculatePositionBetween(player.getPosition(), this.getPosition());
         if (getAlly()) {
@@ -76,6 +79,7 @@ public class Mercenary extends MovingEntity implements PlayerPassiveObserver {
      *  
      * The character can bribe a mercenary if they are within 2 cardinal tiles
      * to the mercenary. Player requires minimum amount of gold to bribe.
+     * @param world
      */
     public void interact(World world) throws InvalidActionException {
         if (interactable) {
@@ -105,7 +109,6 @@ public class Mercenary extends MovingEntity implements PlayerPassiveObserver {
         }
         
     }
-
 
     @Override
     public EntityResponse getEntityResponse() {

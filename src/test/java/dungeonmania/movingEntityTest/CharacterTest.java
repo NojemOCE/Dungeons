@@ -1,12 +1,14 @@
 package dungeonmania.movingEntityTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import dungeonmania.World;
+import dungeonmania.exceptions.*;
 import dungeonmania.collectable.CollectableEntity;
 import dungeonmania.collectable.InvincibilityPotion;
 import dungeonmania.inventory.Inventory;
@@ -288,6 +290,8 @@ public class CharacterTest {
         world.getPlayer().addHealth(1);
 
         Mercenary merc = (Mercenary) world.getCharacter(new Position(3,5));
+        assertThrows(InvalidActionException.class, () -> world.interact(merc.getId()));
+
         CollectableEntity treasure = world.getCollectableEntity(new Position(7,10));
         for (int i = 0; i < 4; i++) {
             world.tick(null, Direction.RIGHT);
@@ -298,12 +302,18 @@ public class CharacterTest {
         for (int i = 0; i < 2; i++) {
             world.tick(null, Direction.RIGHT);
         }
+        assertThrows(InvalidActionException.class, () -> world.interact(merc.getId()));
+
         for (int i = 0; i < 5; i++) {
             world.tick(null, Direction.DOWN);
         }
+        
         world.tick(null, Direction.UP);
         world.interact(merc.getId());
         assertEquals(merc.getAlly(), true);
+
+        
+
 
         assertEquals(world.inInventory(treasure), false);
     }

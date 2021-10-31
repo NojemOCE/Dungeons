@@ -32,15 +32,11 @@ import dungeonmania.util.Position;
 // TODO: remember to implement all the observer interfaces as we go
 public class World {
 
-    //private int width;
-    //private int height;
-
     private Inventory inventory;
     private Gamemode gamemode;
     private Player player;
     private String id; //TODO only ever set if game is saved?
     private GoalComponent goals;
-    //private HashMap<String, Entity> entities; TBC with implementation of overarching Entity class
     private Map<String, CollectableEntity> collectableEntities = new HashMap<>();
     private Map<String, StaticEntity> staticEntities = new HashMap<>();
     private Map<String, MovingEntity> movingEntities = new HashMap<>();
@@ -57,8 +53,7 @@ public class World {
     private int tickCount = 0;
     private int highestX = 5;
     private int highestY = 5;
-    //private Map map; TBC
-
+    
     /**
      * Constructor for world that takes the string of the dungeon name to build 
      * and a string for the gamemode (Standard, Peaceful, Hard)
@@ -88,14 +83,6 @@ public class World {
      * @return world dungeon reponse
      */
     public DungeonResponse buildWorld(JSONObject worldData) {
-        /*String width = worldData.getString("width");
-        String height = worldData.getString("height");
-
-        setHeight((Integer.parseInt(height)));
-        setWidth((Integer.parseInt(width)));*/
-
-        //System.out.println(worldData.toString());
-
         JSONArray entities = worldData.getJSONArray("entities");
 
         for (int i = 0; i < entities.length(); i++) {
@@ -119,6 +106,11 @@ public class World {
         return worldDungeonResponse();
     }
 
+    /**
+     * Gets the largest bound of the map
+     * @param x x co-ordinate
+     * @param y y co-ordinate
+     */
     private void updateBounds(int x, int y)  {
         if (x > highestX) {
             highestX = x;
@@ -128,9 +120,12 @@ public class World {
         }
     }
     
-
+    /**
+     * Creates an entity from JSONObject
+     * @param obj Json object
+     * @param id id of entity
+     */
     private void createEntity(JSONObject obj, String id) {
-
         int x = (int)obj.get("x");
         int y = (int)obj.get("y");
 
@@ -257,7 +252,12 @@ public class World {
         }
 
     }
-
+    
+    /**
+     * Create Goal from json
+     * @param goal goal json
+     * @return Goal component
+     */
     private GoalComponent createGoal(JSONObject goal) {
         String currGoal = goal.getString("goal");
 
@@ -298,6 +298,10 @@ public class World {
         return null;
     }
 
+    /**
+     * Gets a Goal response
+     * @return string goal response
+     */
     private String getGoalsResponse() {
         if (!(goals == null)) {
             return goals.remainingGoalString();
@@ -309,11 +313,7 @@ public class World {
     }
 
     /**
-<<<<<<< src/main/java/dungeonmania/World.java
      * Drops armour:
-=======
-     * Drops a armour:
->>>>>>> src/main/java/dungeonmania/World.java
      * 20% of the time if the player has beaten a zombie
      * 40% of the time if the player has beaten a mercenary
      * 
@@ -357,8 +357,14 @@ public class World {
         }
     }
 
-
-    // tick for all characters and then return world dungeon response
+    /**
+     * World tick which runs everything per tick
+     * @param itemUsed if null, it is a movement, item id of item
+     * @param movementDirection if null, it is itemUsed, movement direction
+     * @return Dungeon response
+     * @throws IllegalArgumentException
+     * @throws InvalidActionException
+     */
     public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
         // IllegalArgumentException if itemUsed is not a bomb, invincibility_potion or an invisibility_potion
         // InvalidActionException if itemUsed is not in the player's inventory
@@ -455,6 +461,11 @@ public class World {
 
     }
     
+    /**
+     * Find a valid spider spawn
+     * @param position position we are checking
+     * @return boolean true if found
+     */
     private boolean validSpiderSpawnPosition(Position position) {
         StaticEntity se = getStaticEntity(position);
         MovingEntity me = getCharacter(position); 
@@ -536,6 +547,10 @@ public class World {
         return true;
     }
 
+    /**
+     * find number of spiders in world
+     * @return number of spiders
+     */
     private int currentSpiders() {
         int currSpiders = 0;
         for (MovingEntity m : movingEntities.values())  {
@@ -546,8 +561,13 @@ public class World {
         return currSpiders;
     }
 
-
-    // Interacts with a mercenary (where the character bribes the mercenary) or a zombie spawner (where the character destroys the zombie spawner)
+    /**
+     * Interacts with a mercenary (where the character bribes the mercenary) or a zombie spawner (where the character destroys the zombie spawner)
+     * @param entityId id of entity to interact with
+     * @return dungeon response
+     * @throws IllegalArgumentException
+     * @throws InvalidActionException
+     */
     public DungeonResponse interact(String entityId) throws IllegalArgumentException, InvalidActionException {
         // IllegalArgumentException if entityId is not a valid entityId
         // InvalidAction Exception if:
@@ -575,7 +595,13 @@ public class World {
         return worldDungeonResponse();
     }
 
-    // Builds the given entity where buildable is one of "bow" or "shield"
+    /**
+     * Builds the given entity where buildable is one of "bow" or "shield"
+     * @param buildable bow or shield
+     * @return dungeon response
+     * @throws IllegalArgumentException
+     * @throws InvalidActionException
+     */
     public DungeonResponse build(String buildable) throws IllegalArgumentException, InvalidActionException {
         // IllegalArgumentException if buildable is not one of bow or shield
         // InvalidActionException if the player does not have sufficient items to craft the buildable
@@ -603,10 +629,11 @@ public class World {
         return null;
     }
 
-
-    // An alternative method of the above method (getStaticEntity). I think this
-    // might be the better choice as it allows us to consider layers
-    // eg. if a boulder is already on top of a switch
+    /**
+     * get a list of static entities at a position, useful for switch and boulders
+     * @param p position in question
+     * @return list of entities at position p
+     */
     public List<StaticEntity> getStaticEntitiesAtPosition(Position p) {
         return staticEntities.values().stream().filter(x  -> x.getPosition().equals(p)).collect(Collectors.toList());
     }
@@ -682,12 +709,19 @@ public class World {
         return inventory.keyInInventory(keyColour);
     }
 
+    /**
+     * Increments entity count for entity id
+     * @return int id
+     */
     public int incrementEntityCount() {
         this.entityCount++;
         return this.entityCount;
     }
 
-
+    /**
+     * Gets all entities entity responses
+     * @return list of entity responses
+     */
     public List<EntityResponse> getEntityResponses() {
         List<EntityResponse> entityResponses = new ArrayList<>();
         
@@ -701,10 +735,20 @@ public class World {
         return entityResponses;
     }
 
+    /**
+     * get the world inventory response
+     * @return list of item responses
+     */
     public List<ItemResponse> getInventoryResponse(){
         return inventory.getInventoryResponse();
     }
     
+    /**
+     * Check if co-ordinates are in bounds
+     * @param x x co-ord
+     * @param y y co-ord
+     * @return true if in bound
+     */
     public boolean inBounds(int x, int y) {
         return !(x < 0 || x >= highestX || y < 0 || y >= highestY);
     }
@@ -785,7 +829,10 @@ public class World {
     }
 
     
-    
+    /**
+     * Saves the game to a json based on existing information 
+     * @return Json object of saved game state
+     */
     public JSONObject saveGame() {
         JSONObject worldJSON = new JSONObject();
 
@@ -809,7 +856,10 @@ public class World {
         return worldJSON;
     }
     
-
+    /**
+     * Save all static entities
+     * @return json of static entities
+     */
     private JSONArray staticEntitySaveGameJson() {
         JSONArray staticEntitiesJSON = new JSONArray();
         staticEntities.values().stream()
@@ -817,7 +867,11 @@ public class World {
                                 .forEach(x -> staticEntitiesJSON.put(x));
         return staticEntitiesJSON;
     }
-
+    
+    /**
+     * Save all moving entities
+     * @return json of moving entities
+     */
     private JSONArray movingEntitySaveGameJson() {
         JSONArray movingEntitiesJSON = new JSONArray();
         movingEntities.values().stream()
@@ -825,7 +879,11 @@ public class World {
                                 .forEach(x -> movingEntitiesJSON.put(x));
         return movingEntitiesJSON;
     }
-
+    
+    /**
+     * Save all collectable entities
+     * @return json of collectable entities
+     */
     private JSONArray collectableEntityGameJson() {
         JSONArray collectableEntitiesJSON = new JSONArray();
         collectableEntities.values().stream()
@@ -860,7 +918,9 @@ public class World {
         return id;
     }
 
-
+    /**
+     * Loads a saved game with all entities
+     */
     public void buildWorldFromFile(JSONObject gameData) {
         //TODO implement
 
@@ -904,7 +964,6 @@ public class World {
         // trigger any switches with a boulder already on top
         triggerSwitches();
 
-        //TODO add mercs? playerObservers
         movingEntities.forEach( (id, me) -> {
             player.subscribePassiveObserver((PlayerPassiveObserver)me);
         });        
@@ -929,8 +988,12 @@ public class World {
         }
 
     }
+
+    /**
+     * Creates inventory from a json
+     * @param obj json
+     */
     private void createInventoryFromJSON(JSONObject obj) {
-        // TODO update constructors
         //int x = obj.getInt("x");
         //int y = obj.getInt("y");
 
@@ -1015,8 +1078,11 @@ public class World {
         }
     }
 
+    /**
+     * Creates player from a json and remounts observers
+     * @param obj json
+     */
     private void createPlayerFromJSON(JSONObject obj) {
-        //TODO implement
         int x = obj.getInt("x");
         int y = obj.getInt("y");
 
@@ -1050,8 +1116,6 @@ public class World {
             Player player = new Player(x, y, id, playerHP, e);
             this.player = player;
 
-
-
         }
         else {
             Player player = new Player(x, y, id, playerHP);
@@ -1060,6 +1124,10 @@ public class World {
 
     }
 
+    /**
+     * Creates moving entity from a json
+     * @param obj json
+     */
     private void createMovingEntityFromJSON(JSONObject obj) {
         //TODO update constructors
 
@@ -1110,6 +1178,10 @@ public class World {
         } 
     }
 
+    /**
+     * Creates static entity from a json
+     * @param obj json
+     */
     private void createStaticEntityFromJSON(JSONObject obj) {
         //TODO update constructors
         int x = obj.getInt("x");
@@ -1170,6 +1242,10 @@ public class World {
         }
     }
 
+    /**
+     * Creates collectible from a json
+     * @param obj json
+     */
     private void createCollectableEntityFromJSON(JSONObject obj) {
         // TODO update constructors
         int x = obj.getInt("x");
