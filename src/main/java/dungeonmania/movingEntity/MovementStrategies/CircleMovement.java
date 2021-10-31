@@ -15,16 +15,27 @@ public class CircleMovement implements Movement {
     private Direction nextDirection;
     private int remMovesCurr;
     private int remMovesNext;
+    private boolean avoidPlayer;
     static final int START_MOVES = 1;
     static final int SET_MOVES = 2;
     
     
 
     public CircleMovement() {
-        currentDirection = Direction.UP;
-        nextDirection = Direction.RIGHT;
-        remMovesCurr = START_MOVES;
-        remMovesNext = START_MOVES;
+        this.currentDirection = Direction.UP;
+        this.nextDirection = Direction.RIGHT;
+        this.remMovesCurr = START_MOVES;
+        this.remMovesNext = START_MOVES;
+        this.avoidPlayer = false;
+    }
+
+    
+    public CircleMovement(String currDir, String nextDir, int remMovesCurr, int remMovesNext, boolean avoidPlayer) {
+        this.currentDirection = getDirectionFromString(currDir);
+        this.nextDirection = getDirectionFromString(nextDir);
+        this.remMovesCurr = remMovesCurr;
+        this.remMovesNext = remMovesNext;
+        this.avoidPlayer = avoidPlayer;
     }
 
     @Override
@@ -195,6 +206,22 @@ public class CircleMovement implements Movement {
         }
     }
 
+    private Direction getDirectionFromString(String d) {
+        switch(d)  {
+            case "UP":
+                return Direction.UP;
+            case "DOWN":
+                return Direction.DOWN;
+            case "LEFT":
+                return Direction.LEFT;
+            case "RIGHT":
+                return Direction.RIGHT;
+            default:
+                return Direction.NONE;
+        }
+    }
+
+
 
     public int getRemMovesCurr() {
         return remMovesCurr;
@@ -204,5 +231,12 @@ public class CircleMovement implements Movement {
         return remMovesNext;
     }
 
+    public boolean isAvoidPlayer() {
+        return avoidPlayer;
+    }
+
+    public void setAvoidPlayer(boolean avoidPlayer) {
+        this.avoidPlayer = avoidPlayer;
+    }
     
 }

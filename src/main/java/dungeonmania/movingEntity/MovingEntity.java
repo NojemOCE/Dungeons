@@ -8,6 +8,10 @@ import org.json.JSONObject;
 
 import dungeonmania.Entity;
 import dungeonmania.World;
+import dungeonmania.movingEntity.MovementStrategies.CircleMovement;
+import dungeonmania.movingEntity.MovementStrategies.FollowPlayer;
+import dungeonmania.movingEntity.MovementStrategies.RandomMovement;
+import dungeonmania.movingEntity.MovementStrategies.RunAway;
 import dungeonmania.staticEntity.StaticEntity;
 
 
@@ -126,6 +130,7 @@ public abstract class MovingEntity extends Entity {
     @Override
     public JSONObject saveGameJson() {
         JSONObject saveObj = new JSONObject();
+        saveObj.put("type", getType());
         saveObj.put("x",  getPosition().getX());
         saveObj.put("y",  getPosition().getY());
         saveObj.put("id",  getId());
@@ -146,6 +151,34 @@ public abstract class MovingEntity extends Entity {
                 + ", position=" + getPosition()+ ", speed=" + speed + "]";
     }
 
+    //might be better to move to movement
+    protected Movement getMovementFromString(String movement, String currDir, String nextDir, int remMovesCurr, int remMovesNext, boolean avoidPlayer) {
+        switch(movement)  {
+            case "circle":
+                return new CircleMovement(currDir, nextDir, remMovesCurr, remMovesNext, avoidPlayer);
+            case "followPlayer":
+                return new FollowPlayer();
+            case "randomMovement":
+                return new RandomMovement();
+            case "runAway":
+                return new RunAway();
+        }
+        return null;
+    }
+
+    protected Movement getMovementFromString(String movement) {
+        switch(movement)  {
+            case "circle":
+                return new CircleMovement();
+            case "followPlayer":
+                return new FollowPlayer();
+            case "randomMovement":
+                return new RandomMovement();
+            case "runAway":
+                return new RunAway();
+        }
+        return null;
+    }
     
     
     
