@@ -1,23 +1,27 @@
 package dungeonmania.collectable;
 
 import dungeonmania.Passive;
-import dungeonmania.movingEntity.Player;
 
 public class InvisibilityPotion extends CollectableEntity implements Passive {
 
-    private final int DURATION = 20;
+    private final int DURATION = 10;
     private int duration = DURATION;
 
     public InvisibilityPotion(int x, int y, String itemId) {
         super(x, y, itemId, "invisibility_potion");
     }
 
+    public InvisibilityPotion(String itemId, int durability) {
+        this(0, 0, itemId, durability);
+    }
+
+    public InvisibilityPotion(int x, int y, String itemId, int durability) {
+        this(x, y, itemId);
+        setDurability(durability);
+    }
+
     public void applyPassive(Player player) {
-        if (this.duration == 0) {
-            player.notifyPassive("N/A");
-        } else {
-            player.notifyPassive(getType());
-        }
+        player.notifyPassive(getType());
     }
 
     public void decreaseDuration() {
@@ -33,7 +37,6 @@ public class InvisibilityPotion extends CollectableEntity implements Passive {
         decreaseDurability();
         return this;
     }
-
     
 
 }

@@ -8,6 +8,9 @@ import org.json.JSONObject;
 
 import dungeonmania.Entity;
 import dungeonmania.World;
+import dungeonmania.movingEntity.MovementStrategies.CircleMovement;
+import dungeonmania.movingEntity.MovementStrategies.FollowPlayer;
+import dungeonmania.movingEntity.MovementStrategies.RandomMovement;
 import dungeonmania.movingEntity.MovementStrategies.RunAway;
 import dungeonmania.staticEntity.StaticEntity;
 
@@ -32,6 +35,13 @@ public abstract class MovingEntity extends Entity {
         this.speed = 0;
     }
 
+
+    // Attack and defend will be used to calculate in the battle class
+    public double attack(double attack) {
+
+        // need to go through caclulators (player may have weapons)
+        return getAttackDamage();
+    }
 
     public void defend(double attack) {
         this.healthPoint.loseHealth(attack);
@@ -75,16 +85,12 @@ public abstract class MovingEntity extends Entity {
         return healthPoint;
     }
 
-    public void addHealth(double health) {
-        this.healthPoint.gainHealth(health);
+    public void setHealthPoint(HealthPoint healthPoint) {
+        this.healthPoint = healthPoint;
     }
 
     public double getAttackDamage() {
         return attackDamage;
-    }
-
-    public void setAttackDamage(double attackDamage) {
-        this.attackDamage = attackDamage;
     }
 
     public boolean getAlly() {
@@ -119,17 +125,10 @@ public abstract class MovingEntity extends Entity {
         this.defaultMovementStrategy = defaultMovementStrategy;
     }
 
-    public void notifyPassive(String string) {
-        if (string.equals("invincibility_potion")) {
-            setMovement(new RunAway());
-        } else if (string.equals("N/A")) {
-            setMovement(getDefaultMovementStrategy());
-        }
-    }
-
     @Override
     public JSONObject saveGameJson() {
         JSONObject saveObj = new JSONObject();
+        saveObj.put("type", getType());
         saveObj.put("x",  getPosition().getX());
         saveObj.put("y",  getPosition().getY());
         saveObj.put("id",  getId());
@@ -150,6 +149,34 @@ public abstract class MovingEntity extends Entity {
                 + ", position=" + getPosition()+ ", speed=" + speed + "]";
     }
 
+    //might be better to move to movement
+    protected Movement getMovementFromString(String movement, String currDir, String nextDir, int remMovesCurr, int remMovesNext, boolean avoidPlayer) {
+        switch(movement)  {
+            case "circle":
+                return new CircleMovement(currDir, nextDir, remMovesCurr, remMovesNext, avoidPlayer);
+            case "followPlayer":
+                return new FollowPlayer();
+            case "randomMovement":
+                return new RandomMovement();
+            case "runAway":
+                return new RunAway();
+        }
+        return null;
+    }
+
+    protected Movement getMovementFromString(String movement) {
+        switch(movement)  {
+            case "circle":
+                return new CircleMovement();
+            case "followPlayer":
+                return new FollowPlayer();
+            case "randomMovement":
+                return new RandomMovement();
+            case "runAway":
+                return new RunAway();
+        }
+        return null;
+    }
     
     
     

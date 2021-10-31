@@ -105,12 +105,10 @@ public class FollowPlayer implements Movement {
         
         // only get valid neighbours
 
-        for (int i = 1; i <= 7; i = i + 2) {
-            if (neighbours.get(i).equals(world.getPlayer().getPosition())) validNeighbours.add(neighbours.get(i));
-        }
-        for (int i = 1; i <= 7; i = i + 2) {
-            validNeighbours.add(me.validMove(neighbours.get(i), world));
-        }
+        validNeighbours.add(me.validMove(neighbours.get(1), world));
+        validNeighbours.add(me.validMove(neighbours.get(3), world));
+        validNeighbours.add(me.validMove(neighbours.get(5), world));
+        validNeighbours.add(me.validMove(neighbours.get(7), world));
 
         validNeighbours.removeIf(filter -> filter.equals(position));
 

@@ -1,5 +1,7 @@
 package dungeonmania.staticEntity;
 
+import java.util.Objects;
+
 import org.json.JSONObject;
 
 import dungeonmania.Entity;
@@ -24,6 +26,12 @@ public class Door extends StaticEntity {
     public Door(int x, int y, String id, int keyColour) {
         super(new Position(x, y, 1), id, "door");
         this.keyColour = keyColour;
+    }
+
+    public Door(int x, int y, String id, int keyColour, boolean opened) {
+        super(new Position(x, y, 1), id, "door");
+        this.keyColour = keyColour;
+        this.isOpen = opened;
     }
 
     /**
@@ -55,7 +63,7 @@ public class Door extends StaticEntity {
                 return new Position(getX(), getY(), entity.getLayer());
             }
             Key key = world.keyInInventory(keyColour);
-            if (!(key.equals(null))) {
+            if (!Objects.isNull(key)) {
                 // open door
                 open();
                 // use the key

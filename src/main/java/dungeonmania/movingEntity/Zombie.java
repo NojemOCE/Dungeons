@@ -4,13 +4,12 @@ import org.json.JSONObject;
 
 import dungeonmania.World;
 import dungeonmania.movingEntity.MovementStrategies.RandomMovement;
-import dungeonmania.movingEntity.MovementStrategies.RunAway;
 import dungeonmania.util.*;
 
 
-public class Zombie extends MovingEntity implements PlayerPassiveObserver {
+public class Zombie extends MovingEntity{
     static final int ZOMBIE_ATTACK = 2;
-    static final int ZOMBIE_HEALTH = 20;
+    static final int ZOMBIE_HEALTH = 6;
 
 
     /**
@@ -25,7 +24,17 @@ public class Zombie extends MovingEntity implements PlayerPassiveObserver {
         setDefaultMovementStrategy(new RandomMovement());
         setAlly(false);
     }
-    
+
+    public Zombie(int x, int y, String id, HealthPoint hp, String defaultMovement, String currentMovement) {
+
+        super(new Position(x, y, 2), id, "zombie_toast", hp, ZOMBIE_ATTACK);
+        //need set movement from string
+        setMovement(getMovementFromString(currentMovement));
+        setDefaultMovementStrategy(getMovementFromString(defaultMovement));
+        setAlly(false);
+    }
+
+
     @Override
     public void move(World world) {
        getMovement().move(this, world);
@@ -36,22 +45,12 @@ public class Zombie extends MovingEntity implements PlayerPassiveObserver {
         JSONObject zombieJSON = super.saveGameJson();
         JSONObject movement = new JSONObject();
 
-        movement.put("default-movement", defaultMovementStrategy.getMovementType());
+        movement.put("default-strategy", defaultMovementStrategy.getMovementType());
         movement.put("movement-strategy", movementStrategy.getMovementType());
         
         zombieJSON.put("movement", movement);
 
         return zombieJSON;
     }
-
-    @Override
-    public void updateMovement(String passive) {
-        if (passive.equals("invincibility_potion")) {
-            setMovement(new RunAway());
-        } else {
-            setMovement(getDefaultMovementStrategy());
-        }
-    }
-
 }
 

@@ -9,7 +9,7 @@ import dungeonmania.movingEntity.MovementStrategies.RunAway;
 import dungeonmania.util.*;
 
 
-public class Spider extends MovingEntity implements PlayerPassiveObserver {
+public class Spider extends MovingEntity {
 
     static final int SPIDER_ATTACK = 1;
     static final int SPIDER_HEALTH = 3;
@@ -29,6 +29,15 @@ public class Spider extends MovingEntity implements PlayerPassiveObserver {
         // When character is no longer invincible, set currentMovement = defaultMovement
     }
 
+    public Spider(int x, int y, String id, HealthPoint hp, String defaultMovement, String currentMovement, String currentDir, String nextDir, int remMovesCurr, int remMovesNext, boolean avoidPlayer) {
+
+        super(new Position(x, y, 2), id, "spider", hp, SPIDER_ATTACK);
+        setMovement(getMovementFromString(currentMovement, currentDir, nextDir, remMovesCurr, remMovesNext, avoidPlayer));
+
+        setDefaultMovementStrategy(new CircleMovement());
+        setAlly(false);
+    }
+
 
     @Override
     /**
@@ -46,16 +55,18 @@ public class Spider extends MovingEntity implements PlayerPassiveObserver {
         JSONObject spiderJSON = super.saveGameJson();
         JSONObject movement = new JSONObject();
 
-        movement.put("default-movement", defaultMovementStrategy.getMovementType());
+        movement.put("default-strategy", defaultMovementStrategy.getMovementType());
         movement.put("movement-strategy", movementStrategy.getMovementType());
 
-        if(defaultMovementStrategy instanceof CircleMovement) {
+        if(movementStrategy instanceof CircleMovement) {
             CircleMovement moveStrat = (CircleMovement) defaultMovementStrategy;
             movement.put("current-direction", moveStrat.getCurrentDirection());
             movement.put("next-direction", moveStrat.getNextDirection());
             movement.put("remMovesCurr", moveStrat.getRemMovesCurr());
             movement.put("remMovesNext", moveStrat.getRemMovesNext());
+            movement.put("avoidPlayer", moveStrat.isAvoidPlayer());
         }
+        
         
         spiderJSON.put("movement", movement);
 

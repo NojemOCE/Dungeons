@@ -1,21 +1,17 @@
 package dungeonmania.movingEntity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.Objects;
-import java.util.Set;
 
 import org.json.JSONObject;
 
-import dungeonmania.Passive;
 import dungeonmania.World;
 import dungeonmania.collectable.CollectableEntity;
-import dungeonmania.gamemode.Gamemode;
 import dungeonmania.util.*;
+import dungeonmania.inventory.Inventory;
+import dungeonmania.response.models.EntityResponse;
 import dungeonmania.staticEntity.StaticEntity;
 
 
@@ -41,6 +37,12 @@ public class Player extends MovingEntity {
         setAlly(true);
     }
     
+    public Player(int x, int y, String id, HealthPoint healthPoint, double allyAttack) {
+        this(x, y, id, healthPoint);
+        this.allyAttack =  allyAttack;
+    }
+    
+
   
     @Override
     public void move(World world) {
@@ -50,7 +52,7 @@ public class Player extends MovingEntity {
 
     // TODO shouldn't this be done in move?
     // TODO implement using item?
-    public void tick(Direction movementDirection, World world) {
+    public void tick(String itemUsed, Direction movementDirection, World world) {
         // check if the direction we are moving is valid first before setting new position
         // Tick passive
         if (!Objects.isNull(activePotion)) {
@@ -69,7 +71,17 @@ public class Player extends MovingEntity {
             if (!Objects.isNull(e)) {
                 e.collect();
             }
-        } 
+        } else {
+            // use item
+        }
+    }
+
+    @Override
+    public double attack(double attack) {
+        // check inventory and mercenary in range
+        
+        // then add on mercenary modifier
+        return allyAttack;
     }
 
     @Override
@@ -86,7 +98,7 @@ public class Player extends MovingEntity {
      * @param enemy enemy that the player fights in the battle
      * @return new Battle
      */
-    public Battle battle(MovingEntity enemy, Gamemode gamemode) {
+    public Battle battle(MovingEntity enemy) {
         // we can pass in invincibility state for battle 
         // or invisibility battle wont be created "return null"
         if (!enemy.getAlly()) {
@@ -107,7 +119,7 @@ public class Player extends MovingEntity {
      */
     public void endBattle() {
         // notify observers of ending battle
-        notifyObserversForBattle(0);
+        notifyObservers(0);
     }
 
 
@@ -116,9 +128,12 @@ public class Player extends MovingEntity {
      * 
      * @param inRange
      */
-    public void addInRange(Mercenary inRange) {
-        mercenariesInRange.add(inRange);
-    
+    public void registerEntity(Mercenary inRange) {
+        mercenaryObservers.add(inRange);
+        
+        if (inRange.getAlly()) {
+            allyAttack += inRange.getAttackDamage();
+        }
     }
     
     //TODO add javadoc comment idk what this method does
@@ -126,30 +141,20 @@ public class Player extends MovingEntity {
      * 
      * @param inRange
      */
-    public void removeInRange(Mercenary inRange) {
-        mercenariesInRange.remove(inRange);
+    public void unregisterEntity(Mercenary inRange) {
+        if (inRange.getAlly()) {
+            allyAttack -= inRange.getAttackDamage();
+        }
+        mercenaryObservers.remove(inRange);
     }
 
-    public void subscribePassiveObserver(PlayerPassiveObserver me) {
-        passiveObservers.add(me);
-    
-    }
-    
-    //TODO add javadoc comment idk what this method does
-    /**
-     * 
-     * @param inRange
-     */
-    public void unsubscribePassiveObserver(PlayerPassiveObserver me) {
-        passiveObservers.remove(me);
-    }
-    
     public List<MovingEntity> alliesInRange() {
         
         List<MovingEntity> allies = new ArrayList<>();
-        for (MovingEntity m : mercenariesInRange) {
+        for (MovingEntity m : mercenaryObservers) {
             if (m.getAlly()) allies.add(m);
         }
+
         return allies;
     }
     
@@ -158,8 +163,8 @@ public class Player extends MovingEntity {
      * 
      * @param speed
      */
-    public void notifyObserversForBattle(int speed) { // notify observers for battle
-        mercenariesInRange.forEach( mercenary -> {
+    public void notifyObservers(int speed) { // notify observers for battle
+        mercenaryObservers.forEach( mercenary -> {
             mercenary.setSpeed(speed);
         });
     }
@@ -178,13 +183,14 @@ public class Player extends MovingEntity {
     @Override
     public JSONObject saveGameJson() {
         JSONObject playerJSON = super.saveGameJson();
+        playerJSON.put("ally-attack", allyAttack);
 
 
         List<String> mercList = new ArrayList<>();
-        mercList = mercenariesInRange.stream().map(MovingEntity::getId).collect(Collectors.toList());
-
+        mercList = mercenaryObservers.stream().map(MovingEntity::getId).collect(Collectors.toList());
+        
         playerJSON.put("mercenaries", mercList);
-        //TODO STILL NEED TO REMOUNT ALL OBSERVERS AFTER LOADING A SAVED GAME
+
         return playerJSON;
     }
 } 
