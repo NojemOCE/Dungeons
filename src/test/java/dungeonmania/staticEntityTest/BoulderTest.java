@@ -380,7 +380,117 @@ public class BoulderTest {
     }
 
     // test can't move two boulders
-    // test trigger and untrigger switches
 
-    
+    /**
+     * Testing that we can't move two boulders
+     * MAP
+     *  P*B
+     * There is a player with a spot between it and a boulder
+     */
+    @Test
+    public void twoBoulderTest(){
+        // Create a new world
+        World world = new World("boulders", "Standard");
+        try {
+            String file = FileLoader.loadResourceFile("/dungeons/" + "boulders" + ".json");
+            JSONObject game = new JSONObject(file);
+            world.buildWorld(game);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+     
+        // set up world such that there will be two boulders in the way
+        world.tick(null, Direction.RIGHT);
+        DungeonResponse d = world.tick(null, Direction.RIGHT);
+        List<EntityResponse> entities = d.getEntities();
+
+        // get current player position
+        Position playerPos = null;
+        for (EntityResponse er : entities) {
+            if (er.getType().equals("player")) {
+                playerPos = er.getPosition();
+                break;
+            }
+        }
+
+        assertNotNull(playerPos);
+
+        // now try to push two boulders
+        d = world.tick(null, Direction.DOWN);
+        entities = d.getEntities();
+
+        // check that new position is the same
+        Position playerPos2 = null;
+        for (EntityResponse er : entities) {
+            if (er.getType().equals("player")) {
+                playerPos2 = er.getPosition();
+                break;
+            }
+        }
+        assertNotNull(playerPos2);
+        assert(playerPos.equals(playerPos2));
+    }
+
+    /**
+     * Testing that boulder be rolled on and off switches
+     * MAP:
+     *  P B S
+     */
+    @Test
+    public void canRollOnSwith(){
+        // Create a new world
+        World world = new World("player-boulder-switch", "Standard");
+        try {
+            String file = FileLoader.loadResourceFile("/dungeons/" + "player-boulder-switch" + ".json");
+            JSONObject game = new JSONObject(file);
+            world.buildWorld(game);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        // get initial boulder position
+        DungeonResponse d = world.worldDungeonResponse();
+        List<EntityResponse> entities = d.getEntities();
+
+        Position boulderPos = null;
+        for (EntityResponse er : entities) {
+            if (er.getType().equals("boulder")) {
+                boulderPos = er.getPosition();
+                break;
+            }
+        }
+        assertNotNull(boulderPos);
+
+        // now roll and check it can go on switch
+        d = world.tick(null, Direction.RIGHT);
+        entities = d.getEntities();
+
+        Position boulderPos2 = null;
+        for (EntityResponse er : entities) {
+            if (er.getType().equals("boulder")) {
+                boulderPos2 = er.getPosition();
+                break;
+            }
+        }
+        assertNotNull(boulderPos2);
+
+        assert(boulderPos2.equals(boulderPos.translateBy(Direction.RIGHT)));
+
+        // now try to roll it off
+        d = world.tick(null, Direction.RIGHT);
+        entities = d.getEntities();
+
+        boulderPos = null;
+        for (EntityResponse er : entities) {
+            if (er.getType().equals("boulder")) {
+                boulderPos = er.getPosition();
+                break;
+            }
+        }
+        assertNotNull(boulderPos);
+
+        assert(boulderPos.equals(boulderPos2.translateBy(Direction.RIGHT)));
+    }
 }

@@ -111,17 +111,6 @@ public class World {
             setGoals(null);
         }
 
-        // TODO can we put this in a shared method
-        // trigger any switches
-        for (StaticEntity se : staticEntities.values()) {
-            if (se instanceof FloorSwitch) {
-                StaticEntity entity = getStaticEntity(se.getPosition());
-                if (entity instanceof Boulder) {
-                    ((FloorSwitch) se).trigger(this);
-                }
-            }
-        }
-
         return worldDungeonResponse();
     }
 
@@ -890,19 +879,6 @@ public class World {
         else {
             //set battle as null
         }
-
-        //Make enemies observe player
-        // TODO can we put this in a shared method
-        // trigger any switches
-        for (StaticEntity se : staticEntities.values()) {
-            if (se instanceof FloorSwitch) {
-                StaticEntity entity = getStaticEntity(se.getPosition());
-                if (entity instanceof Boulder) {
-                    ((FloorSwitch) se).trigger(this);
-                }
-            }
-        }
-
 
     }
 

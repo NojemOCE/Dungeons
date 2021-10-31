@@ -40,19 +40,6 @@ public class Boulder extends StaticEntity {
             List<StaticEntity> entitiesAtThisPos = world.getStaticEntitiesAtPosition(this.getPosition());
             List<StaticEntity> entitiesAtNewPos = world.getStaticEntitiesAtPosition(toMoveBoulderTo);
             
-            // SWITCHES:
-            // untrigger any switch in the previous spot
-            entitiesAtThisPos.stream()
-                             .filter(x -> x instanceof FloorSwitch)
-                             .map(FloorSwitch.class::cast)
-                             .forEach(x -> x.untrigger());
-
-            // trigger any switch in the new spot
-            entitiesAtNewPos.stream()
-                            .filter(x -> x instanceof FloorSwitch)
-                            .map(FloorSwitch.class::cast)
-                            .forEach(x -> x.trigger(world));
-
             // PORTALS:
             List<Portal> portals = entitiesAtNewPos.stream()
                                                    .filter(x -> x instanceof Portal)
