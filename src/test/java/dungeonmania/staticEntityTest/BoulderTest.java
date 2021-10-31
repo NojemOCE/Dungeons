@@ -438,7 +438,7 @@ public class BoulderTest {
      *  P B S
      */
     @Test
-    public void canRollOnSwith(){
+    public void canRollOnSwitch(){
         // Create a new world
         World world = new World("player-boulder-switch", "Standard");
         try {

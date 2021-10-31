@@ -107,9 +107,9 @@ public class DoorTest {
      */
     @Test
     public void keyNoMatchTest(){
-        World world = new World("key+door", "Standard");
+        World world = new World("key+door-noMatch", "Standard");
         try {
-            String file = FileLoader.loadResourceFile("/dungeons/" + "key+door" + ".json");
+            String file = FileLoader.loadResourceFile("/dungeons/" + "key+door-noMatch" + ".json");
             JSONObject game = new JSONObject(file);
             world.buildWorld(game);
         }
