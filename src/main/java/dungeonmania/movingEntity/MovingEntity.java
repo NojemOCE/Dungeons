@@ -121,14 +121,6 @@ public abstract class MovingEntity extends Entity {
     public void setDefaultMovementStrategy(Movement defaultMovementStrategy) {
         this.defaultMovementStrategy = defaultMovementStrategy;
     }
-
-    public void notifyPassive(String string) {
-        if (string.equals("invincibility_potion")) {
-            setMovement(new RunAway());
-        } else if (string.equals("N/A")) {
-            setMovement(getDefaultMovementStrategy());
-        }
-    }
     
     @Override
     public JSONObject saveGameJson() {

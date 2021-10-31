@@ -72,15 +72,6 @@ public class Mercenary extends MovingEntity implements PlayerPassiveObserver {
         }
     }
 
-
-
-    // TODO this needs to be updated
-    public void update(Movement movement) {
-        // take in duration left,
-        //after duration is 0 revert back to normal pattern;
-    }
-
-
     /**
      *  
      * The character can bribe a mercenary if they are within 2 cardinal tiles

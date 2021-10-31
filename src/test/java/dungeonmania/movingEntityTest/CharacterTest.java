@@ -83,6 +83,8 @@ public class CharacterTest {
         zombie.move(world);
         zombie.move(world);
         zombie.move(world);
+        zombie.updateMovement("invincibility_potion");
+        zombie.updateMovement("N/A");
 
         spider.setMovement(new CircleMovement("Direction.UP", "Direction.DOWN", 1, 1, true));
     }
@@ -187,7 +189,8 @@ public class CharacterTest {
         }
         world.tick(null, Direction.UP);
 
-
+        Spider spider = new Spider(1,1,"spider");
+        world.getPlayer().subscribePassiveObserver((PlayerPassiveObserver)spider);
         // Test for mercenary runningaway
         assertEquals(world.getPlayer().getPosition(), new Position(11, 10));
         world.tick(potion.getId(), null);
@@ -209,5 +212,99 @@ public class CharacterTest {
 
         assertEquals(world.getPlayer().getAttackDamage(), 3);
 
+    }
+
+    @Test
+    public void testMercOutofRange() {
+        World world = new World("merc", "Standard");
+        try {
+            String file = FileLoader.loadResourceFile("/dungeons/" + "advanced" + ".json");
+            JSONObject game = new JSONObject(file);
+            world.buildWorld(game);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Mercenary merc = (Mercenary) world.getCharacter(new Position(3,5));
+        CollectableEntity potion = world.getCollectableEntity(new Position(11,10));
+        for (int i = 0; i < 4; i++) {
+            world.tick(null, Direction.RIGHT);
+        }
+        for (int i = 0; i < 4; i++) {
+            world.tick(null, Direction.DOWN);
+        }
+        for (int i = 0; i < 2; i++) {
+            world.tick(null, Direction.RIGHT);
+        }
+        for (int i = 0; i < 2; i++) {
+            world.tick(null, Direction.DOWN);
+        }
+        for (int i = 0; i < 4; i++) {
+            world.tick(null, Direction.RIGHT);
+        }
+        for (int i = 0; i < 4; i++) {
+            world.tick(null, Direction.DOWN);
+        }
+        world.tick(null, Direction.UP);
+
+        Zombie zombie = new Zombie(1,1,"zambie");
+        world.getPlayer().subscribePassiveObserver((PlayerPassiveObserver)zombie);
+        // Test for mercenary runningaway
+        assertEquals(world.getPlayer().getPosition(), new Position(11, 10));
+        world.tick(potion.getId(), null);
+        assertEquals(world.getPlayer().getAttackDamage(), 999);
+        world.tick(null, Direction.DOWN);
+        world.tick(null, Direction.DOWN);
+
+        assertEquals(merc.getMovement().getMovementType(), "runAway");
+        world.tick(null, Direction.DOWN);
+        world.tick(null, Direction.DOWN);
+        world.tick(null, Direction.DOWN);
+        world.tick(null, Direction.UP);
+        world.tick(null, Direction.RIGHT);
+        world.tick(null, Direction.RIGHT);
+        world.tick(null, Direction.RIGHT);
+        world.tick(null, Direction.UP);
+        world.tick(null, Direction.RIGHT);
+
+
+        assertEquals(world.getPlayer().getAttackDamage(), 3);
+
+    }
+
+    @Test
+    public void testBribe() {
+        World world = new World("merc", "Standard");
+        try {
+            String file = FileLoader.loadResourceFile("/dungeons/" + "advanced" + ".json");
+            JSONObject game = new JSONObject(file);
+            world.buildWorld(game);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        world.getPlayer().addHealth(1);
+
+        Mercenary merc = (Mercenary) world.getCharacter(new Position(3,5));
+        CollectableEntity treasure = world.getCollectableEntity(new Position(7,10));
+        for (int i = 0; i < 4; i++) {
+            world.tick(null, Direction.RIGHT);
+        }
+        for (int i = 0; i < 4; i++) {
+            world.tick(null, Direction.DOWN);
+        }
+        for (int i = 0; i < 2; i++) {
+            world.tick(null, Direction.RIGHT);
+        }
+        for (int i = 0; i < 5; i++) {
+            world.tick(null, Direction.DOWN);
+        }
+        world.tick(null, Direction.UP);
+        world.interact(merc.getId());
+        assertEquals(merc.getAlly(), true);
+
+        assertEquals(world.inInventory(treasure), false);
     }
 }
