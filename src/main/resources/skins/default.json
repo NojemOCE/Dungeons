@@ -39,7 +39,7 @@
         "door": "images/tileset/walls/wooden/door_locked_silver.png",
         "key": "images/tileset/items/key_silver.png",
         "portal": "images/tileset/entities/portal_00.png",
-        "boulders":"images/tileset/entities/boulder_00.png"
+        "boulders":"images/tileset/entities/boulder_00.png",
         "armour": "images/tileset/items/armour.png",
         "one_ring": "images/tileset/items/ring_0_special.png",
         "bow": "images/tileset/items/bow_0.png",
