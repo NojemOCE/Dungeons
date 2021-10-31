@@ -60,8 +60,9 @@ public class Battle {
         if (player.getHealthPoint().getHealth() == 0) {
             if (inventory.hasItem("one_ring")) {
                 inventory.useByType("one_ring");
+                player.getHealthPoint().gainHealth(999);  
+                return;
             }
-            player.getHealthPoint().gainHealth(999);
             endBattle(false);
         }
         // game over
@@ -98,7 +99,6 @@ public class Battle {
      */
     private void endBattle(boolean playerWin) {
         setActiveBattle(false);
-        // TODO is this necessary the endBattle call
         player.endBattle();
         this.playerWins = playerWin;
     }
