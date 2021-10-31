@@ -65,9 +65,9 @@ public class Spider extends MovingEntity implements PlayerPassiveObserver {
 
     @Override
     public void updateMovement(String passive) {
-        // TODO MIA 
+        // TODO Auto-generated method stub
+        
     }
-
 
 
 }

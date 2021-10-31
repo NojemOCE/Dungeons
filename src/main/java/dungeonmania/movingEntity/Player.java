@@ -43,12 +43,11 @@ public class Player extends MovingEntity {
     @Override
     public void move(World world) {
         return;
-    
     }
 
     // TODO shouldn't this be done in move?
     // TODO implement using item?
-    public void tick(Direction movementDirection, World world) {
+    public void tick(String itemUsed, Direction movementDirection, World world) {
         // check if the direction we are moving is valid first before setting new position
         // Tick passive
         if (!Objects.isNull(activePotion)) {
@@ -59,7 +58,6 @@ public class Player extends MovingEntity {
             } 
     
         }
-
 
         if (!Objects.isNull(movementDirection)){
             setPosition(validMove(this.getPosition().translateBy(movementDirection), world));
