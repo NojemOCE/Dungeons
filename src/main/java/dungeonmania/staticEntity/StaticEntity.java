@@ -22,7 +22,9 @@ abstract public class StaticEntity extends Entity {
      * Checks how the given entity interacts with this entity.
      * @return the position the given entity should move to
      */
-    abstract public Position interact(World world, Entity entity);
+    public Position interact(World world, Entity entity){
+        return new Position(getX(), getY(), entity.getLayer());
+    }
 
     
 	@Override

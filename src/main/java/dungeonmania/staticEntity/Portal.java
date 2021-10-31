@@ -6,6 +6,7 @@ import dungeonmania.Entity;
 import dungeonmania.World;
 import dungeonmania.movingEntity.MovingEntity;
 import dungeonmania.movingEntity.Zombie;
+import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
@@ -130,4 +131,9 @@ public class Portal extends StaticEntity {
         save.put("colour", colour);
 		return save;
 	}
+
+    @Override
+    public EntityResponse getEntityResponse() {
+        return new EntityResponse(getId(), getColour() + getType(), getPosition(), false);
+    }
 }

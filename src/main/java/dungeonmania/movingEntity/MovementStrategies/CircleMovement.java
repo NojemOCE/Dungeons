@@ -1,6 +1,7 @@
 package dungeonmania.movingEntity.MovementStrategies;
 
 import java.util.List;
+import java.util.Objects;
 
 import dungeonmania.World;
 import dungeonmania.movingEntity.*;
@@ -62,6 +63,17 @@ public class CircleMovement implements Movement {
         StaticEntity plannedPositionStaticEntity = world.getStaticEntity(position);
         MovingEntity plannedPositionCharacter = world.getCharacter(position);
         Position playerPos = world.getPlayerPosition();
+
+        // if in battle, don't move (can't run away)
+        if (!Objects.isNull(world.getBattle())) {
+            // check if this objects position is same as players (for players if there is a battle)
+            // they cannot move anyways
+            if (me.getPosition().equals(world.getPlayer().getPosition())) {
+                // cannot move into battle, wait outside
+                return me.getPosition();
+            }
+            
+        }
 
 
         // Now interact with the StaticEntity in the intended position 
