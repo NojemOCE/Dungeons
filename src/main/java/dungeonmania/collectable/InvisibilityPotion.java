@@ -48,7 +48,7 @@ public class InvisibilityPotion extends CollectableEntity implements Passive {
     @Override
     public CollectableEntity consume() {
      
-
+    }
 
     
 
