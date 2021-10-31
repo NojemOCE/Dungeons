@@ -356,12 +356,14 @@ public class World {
         
         if (!Objects.isNull(itemUsed)) {
             if (inventory.getType(itemUsed).equals("bomb")) {
+                inventory.use(itemUsed);
                 PlacedBomb newBomb = new PlacedBomb(player.getX(), player.getY(), "bomb" + String.valueOf(incrementEntityCount()));
                 staticEntities.put(newBomb.getId(), newBomb);
-            }
-            CollectableEntity potion = inventory.tick(itemUsed);
-            if (!Objects.isNull(potion)) {
-                player.addPotion(potion);
+            } else {
+                CollectableEntity potion = inventory.tick(itemUsed);
+                if (!Objects.isNull(potion)) {
+                    player.addPotion(potion);
+                }
             }
         }
 
