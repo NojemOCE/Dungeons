@@ -61,6 +61,8 @@ public class CircleMovement implements Movement {
         // Check if the planned position is the current location of a static entity or a character
         StaticEntity plannedPositionStaticEntity = world.getStaticEntity(position);
         MovingEntity plannedPositionCharacter = world.getCharacter(position);
+        Position playerPos = world.getPlayerPosition();
+
 
         // Now interact with the StaticEntity in the intended position 
         // and check if if the entity is moving into the position of another enemy Character
@@ -68,6 +70,12 @@ public class CircleMovement implements Movement {
         
         if (!(plannedPositionStaticEntity == null))  {
            position = plannedPositionStaticEntity.interact(world, me); 
+        }
+
+        // If spider is avoiding player (if the player is invincible), and the spider is about to move into the player, set the move positionn as current position
+        // This will later ensure that direction is reversed
+        if (avoidPlayer && playerPos.equals(position)) {
+            position  = me.getPosition();
         }
         
 
