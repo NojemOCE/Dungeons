@@ -232,6 +232,10 @@ public class BoulderTest {
 
     /**
      * Test that boulders can be pushed through portals
+     * MAP
+     * 
+     * player B _ P _ _ P
+     *  
      */ 
     @Test
     public void boulderMoveThroughPortal() {
@@ -288,7 +292,9 @@ public class BoulderTest {
         for (int i = 0; i < 6; i++) {
             world.tick(null, Direction.RIGHT);
         }
-        d = world.tick(null, Direction.UP);
+        world.tick(null, Direction.UP);
+        d = world.tick(null, Direction.LEFT);
+
         entities = d.getEntities();
 
         // get the boulder pos

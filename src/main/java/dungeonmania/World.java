@@ -653,6 +653,11 @@ public class World {
         return inventory.inInventory(item.getId());
     }
 
+    /**
+     * Checks if a key exists in inventory and returns object
+     * @param keyColour keyColour of the key to find
+     * @return Key if exists in inventory, else false
+     */
     public Key keyInInventory(int keyColour) {
         return inventory.keyInInventory(keyColour);
     }
