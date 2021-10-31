@@ -93,6 +93,8 @@ public class Mercenary extends MovingEntity implements PlayerPassiveObserver {
                     world.useByType("treasure");
                 }
                 setAlly(true);
+                world.setBattle(null);
+                setSpeed(0);
             } else {
                 throw new InvalidActionException("Not enough gold to bribe Mercenary!");
             }

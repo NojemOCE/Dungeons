@@ -1,6 +1,7 @@
 package dungeonmania;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -353,15 +354,17 @@ public class World {
     public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
         // IllegalArgumentException if itemUsed is not a bomb, invincibility_potion or an invisibility_potion
         // InvalidActionException if itemUsed is not in the player's inventory
-        
+
         if (!Objects.isNull(itemUsed)) {
             if (inventory.getType(itemUsed).equals("bomb")) {
+                inventory.use(itemUsed);
                 PlacedBomb newBomb = new PlacedBomb(player.getX(), player.getY(), "bomb" + String.valueOf(incrementEntityCount()));
                 staticEntities.put(newBomb.getId(), newBomb);
-            }
-            CollectableEntity potion = inventory.tick(itemUsed);
-            if (!Objects.isNull(potion)) {
-                player.addPotion(potion);
+            } else {
+                CollectableEntity potion = inventory.tick(itemUsed);
+                if (!Objects.isNull(potion)) {
+                    player.addPotion(potion);
+                }
             }
         }
 
@@ -643,6 +646,14 @@ public class World {
     }
 
     /**
+     * Sets the current battle to the provided battle
+     * @param battle
+     */
+    public void setBattle(Battle battle) {
+        this.currentBattle = battle;
+    }
+
+    /**
      * Gets the Player object of the world
      * @return Player of the world
      */
@@ -845,6 +856,7 @@ public class World {
     public String getId() {
         return id;
     }
+
 
     public void buildWorldFromFile(JSONObject gameData) {
         //TODO implement
