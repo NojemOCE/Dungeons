@@ -1,72 +1,72 @@
-package dungeonmania;
+// package dungeonmania;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+// import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+// import static org.junit.jupiter.api.Assertions.assertThrows;
+// import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
-import java.util.List;
+// import java.util.ArrayList;
+// import java.util.List;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+// import org.junit.jupiter.api.Test;
+// import org.junit.jupiter.params.ParameterizedTest;
+// import org.junit.jupiter.params.provider.ValueSource;
 
-import dungeonmania.response.models.DungeonResponse;
-import static dungeonmania.TestHelpers.assertListAreEqualIgnoringOrder;
+// import dungeonmania.response.models.DungeonResponse;
+// import static dungeonmania.TestHelpers.assertListAreEqualIgnoringOrder;
 
-import dungeonmania.collectable.*;
-
-
+// import dungeonmania.collectable.*;
 
 
-public class collectableTesting {
-    /**
-     * Test whether a collected entity is placed within the players inventory and removed from the map
-     */
-    @Test 
-    public void testCollected() {
-        /*Wood wood = new Wood();
-        wood.collect(); 
-        assertTrue(wood.isCollected());
 
-        Treasure treasure = new Treasure();
-        treasure.collect(); 
-        assertTrue(treasure.isCollected());
 
-        Sword sword = new Sword();
-        sword.collect(); 
-        assertTrue(sword.isCollected());
+// public class collectableTesting {
+//     /**
+//      * Test whether a collected entity is placed within the players inventory and removed from the map
+//      */
+//     @Test
+//     public void testCollected() {
+//         /*Wood wood = new Wood();
+//         wood.collect();
+//         assertTrue(wood.isCollected());
 
-        OneRing oneRing = new OneRing();
-        oneRing.collect(); 
-        assertTrue(oneRing.isCollected());
+//         Treasure treasure = new Treasure();
+//         treasure.collect(); 
+//         assertTrue(treasure.isCollected());
 
-        Key key = new Key();
-        key.collect(); 
-        assertTrue(key.isCollected());
+//         Sword sword = new Sword();
+//         sword.collect(); 
+//         assertTrue(sword.isCollected());
 
-        InvisibilityPotion invisibilityPotion = new InvisibilityPotion();
-        invisibilityPotion.collect(); 
-        assertTrue(invisibilityPotion.isCollected());
+//         OneRing oneRing = new OneRing();
+//         oneRing.collect(); 
+//         assertTrue(oneRing.isCollected());
 
-        InvincibilityPotion invincibilityPotion = new InvincibilityPotion();
-        invincibilityPotion.collect(); 
-        assertTrue(invincibilityPotion.isCollected());
+//         Key key = new Key();
+//         key.collect(); 
+//         assertTrue(key.isCollected());
 
-        HealthPotion healthPotion = new HealthPotion();
-        healthPotion.collect(); 
-        assertTrue(healthPotion.isCollected());
+//         InvisibilityPotion invisibilityPotion = new InvisibilityPotion();
+//         invisibilityPotion.collect(); 
+//         assertTrue(invisibilityPotion.isCollected());
 
-        Bomb bomb = new Bomb();
-        bomb.collect(); 
-        assertTrue(bomb.isCollected());
+//         InvincibilityPotion invincibilityPotion = new InvincibilityPotion();
+//         invincibilityPotion.collect(); 
+//         assertTrue(invincibilityPotion.isCollected());
 
-        Arrows arrows = new Arrows();
-        arrows.collect(); 
-        assertTrue(arrows.isCollected());
+//         HealthPotion healthPotion = new HealthPotion();
+//         healthPotion.collect(); 
+//         assertTrue(healthPotion.isCollected());
 
-        Armour armour = new Armour();
-        armour.collect(); 
-        assertTrue(armour.isCollected());*/
-    }
-}
+//         Bomb bomb = new Bomb();
+//         bomb.collect(); 
+//         assertTrue(bomb.isCollected());
+
+//         Arrows arrows = new Arrows();
+//         arrows.collect(); 
+//         assertTrue(arrows.isCollected());
+
+//         Armour armour = new Armour();
+//         armour.collect();
+//         assertTrue(armour.isCollected());*/
+//     }
+// }

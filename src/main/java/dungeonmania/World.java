@@ -1,6 +1,7 @@
 package dungeonmania;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -111,6 +112,9 @@ public class World {
             setGoals(null);
         }
 
+        movingEntities.forEach((id, me) -> {
+            player.subscribePassiveObserver((PlayerPassiveObserver)me);
+        });
         return worldDungeonResponse();
     }
 
@@ -353,15 +357,17 @@ public class World {
     public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
         // IllegalArgumentException if itemUsed is not a bomb, invincibility_potion or an invisibility_potion
         // InvalidActionException if itemUsed is not in the player's inventory
-        
+
         if (!Objects.isNull(itemUsed)) {
             if (inventory.getType(itemUsed).equals("bomb")) {
+                inventory.use(itemUsed);
                 PlacedBomb newBomb = new PlacedBomb(player.getX(), player.getY(), "bomb" + String.valueOf(incrementEntityCount()));
                 staticEntities.put(newBomb.getId(), newBomb);
-            }
-            CollectableEntity potion = inventory.tick(itemUsed);
-            if (!Objects.isNull(potion)) {
-                player.addPotion(potion);
+            } else {
+                CollectableEntity potion = inventory.tick(itemUsed);
+                if (!Objects.isNull(potion)) {
+                    player.addPotion(potion);
+                }
             }
         }
 
@@ -382,6 +388,14 @@ public class World {
         
         else  {
             player.tick(movementDirection, this);
+            for (MovingEntity me : movingEntities.values()) {
+                if (me.getPosition().equals(player.getPosition())) {
+                    currentBattle = player.battle(me, gamemode); // if invisible it will add null
+                }
+            }
+            // MovingEntity me = getCharacter(player.getPosition());
+            // if (!Objects.isNull(me) && !me.getAlly()) {
+            // }
         }
 
         // collecting the collectable entity if it exists on the current position
@@ -451,29 +465,36 @@ public class World {
     }
 
     /**
-     * Helper function to create a new zombie at relevant ticks
+     * Updates zombie toast spawners
      */
     private void tickZombieToastSpawn() {
-        if (!(tickCount > 0 && tickCount % gamemode.getSpawnRate() == 0)) {
-            return;
-        }
         for (StaticEntity s : staticEntities.values()) {
             if (s instanceof ZombieToastSpawn) {
                 ZombieToastSpawn spawner = (ZombieToastSpawn) s;
                 // update interactable state
                 spawner.update(player);
-                List<Position> possibleSpawnPositions = spawner.spawn();
-                Position newPos = getSpawnPositon(possibleSpawnPositions);
-                if (newPos.equals(null)) {
-                    // no valid spawn positions
-                    return;
-                }
-                Zombie newZombie = new Zombie(newPos.getX(), newPos.getY(), "zombie_toast" + String.valueOf(incrementEntityCount()));
-                movingEntities.put(newZombie.getId(), newZombie);
-                player.subscribePassiveObserver((PlayerPassiveObserver) newZombie);
-
+                spawnZombie(spawner);
             }
         }
+    }
+
+    /**
+     * Helper function to create a new zombie at relevant ticks
+     * @param spawner Zombie spawner to spawn from
+     */
+    private void spawnZombie(ZombieToastSpawn spawner) {
+        if (!(tickCount > 0 && tickCount % gamemode.getSpawnRate() == 0)) {
+            return;
+        }
+        List<Position> possibleSpawnPositions = spawner.spawn();
+        Position newPos = getSpawnPosition(possibleSpawnPositions);
+        if (newPos.equals(null)) {
+            // no valid spawn positions
+            return;
+        }
+        Zombie newZombie = new Zombie(newPos.getX(), newPos.getY(), "zombie_toast" + String.valueOf(incrementEntityCount()));
+        movingEntities.put(newZombie.getId(), newZombie);
+        player.subscribePassiveObserver((PlayerPassiveObserver) newZombie);
     }
     
     /**
@@ -481,7 +502,7 @@ public class World {
      * @param possibleSpawnPositions List of possible cardinally adjacent positions to a spawner
      * @return position to spawn, or null if no valid positions
      */
-    private Position getSpawnPositon(List<Position> possibleSpawnPositions) {
+    private Position getSpawnPosition(List<Position> possibleSpawnPositions) {
         Position newPos = null;
         Random random = new Random();
         while (!(possibleSpawnPositions.isEmpty())) {
@@ -628,6 +649,14 @@ public class World {
     }
 
     /**
+     * Sets the current battle to the provided battle
+     * @param battle
+     */
+    public void setBattle(Battle battle) {
+        this.currentBattle = battle;
+    }
+
+    /**
      * Gets the Player object of the world
      * @return Player of the world
      */
@@ -720,8 +749,6 @@ public class World {
             movingEntities.remove(e.getId());
         }
     }
-
-
 
     public Map<String, StaticEntity> getStaticEntities() {
         return this.staticEntities;
@@ -833,6 +860,7 @@ public class World {
         return id;
     }
 
+
     public void buildWorldFromFile(JSONObject gameData) {
         //TODO implement
 
@@ -856,7 +884,7 @@ public class World {
 
         JSONObject playerObj = gameData.getJSONObject("player");
         //merc list
-        JSONArray playerObservers = createPlayerFromJSON(playerObj);
+        createPlayerFromJSON(playerObj);
 
         JSONArray movingEntitiesItems = gameData.getJSONArray("moving-entities");
         for (int i = 0; i < movingEntitiesItems.length(); i++) {
@@ -873,18 +901,14 @@ public class World {
             createCollectableEntityFromJSON(collectableEntitiesItems.getJSONObject(i));
         }
 
-
-        //TODO add mercs? playerObservers
+        movingEntities.forEach( (id, me) -> {
+            player.subscribePassiveObserver((PlayerPassiveObserver)me);
+        });        
 
         if (gameData.has("current-battle")) {
-            JSONObject b = gameData.getJSONObject("current-battle");
-            
-            // TODO need a create battle method here
+            JSONObject b = gameData.getJSONObject("current-battle"); 
+            currentBattle = new Battle(player, movingEntities.get(b.get("character")), gamemode.isEnemyAttackEnabled());
         }
-        else {
-            //set battle as null
-        }
-
     }
 
     private void createInventoryFromJSON(JSONObject obj) {
@@ -973,14 +997,12 @@ public class World {
         }
     }
 
-    private JSONArray createPlayerFromJSON(JSONObject obj) {
+    private void createPlayerFromJSON(JSONObject obj) {
         //TODO implement
         int x = obj.getInt("x");
         int y = obj.getInt("y");
 
         updateBounds(x, y);
-
-        String type = "player";
 
         String id = obj.getString("id");
 
@@ -1018,12 +1040,6 @@ public class World {
             this.player = player;
         }
 
-        
-
-        JSONArray enemyIDs = obj.getJSONArray("mercenaries");
-
-        
-        return enemyIDs;
     }
 
     private void createMovingEntityFromJSON(JSONObject obj) {
@@ -1172,7 +1188,8 @@ public class World {
         } 
         
         else if (type.equals("invisibility_potion")) {
-            InvisibilityPotion e = new InvisibilityPotion(x, y, id, durability);
+            int duration = obj.getInt("duration");
+            InvisibilityPotion e = new InvisibilityPotion(x, y, id, durability, duration);
             collectableEntities.put(e.getId(), e);
         } 
         
