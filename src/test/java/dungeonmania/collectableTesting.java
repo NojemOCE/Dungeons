@@ -23,10 +23,10 @@
 //     /**
 //      * Test whether a collected entity is placed within the players inventory and removed from the map
 //      */
-//     @Test 
+//     @Test
 //     public void testCollected() {
-//         Wood wood = new Wood();
-//         wood.collect(); 
+//         /*Wood wood = new Wood();
+//         wood.collect();
 //         assertTrue(wood.isCollected());
 
 //         Treasure treasure = new Treasure();
@@ -66,7 +66,7 @@
 //         assertTrue(arrows.isCollected());
 
 //         Armour armour = new Armour();
-//         armour.collect(); 
-//         assertTrue(armour.isCollected());
+//         armour.collect();
+//         assertTrue(armour.isCollected());*/
 //     }
 // }

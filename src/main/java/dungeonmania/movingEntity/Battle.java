@@ -35,11 +35,13 @@ public class Battle {
         // Character attack modified by players defence weapons
         double characterAttack = inventory.defenceModifier(character.getAttackDamage());
 
+        double currentPlayerHealth = player.getHealthPoint().getHealth();
+        double currentEnemyHealth = character.getHealthPoint().getHealth();
 
-        character.defend((player.getHealthPoint().getHealth() * playerAttack)/10);
+        character.defend((currentPlayerHealth * playerAttack)/10);
         //System.out.println("Player attacks with " + (player.getHealthPoint().getHealth() * playerAttack)/10);
         if (enemyAttackEnabled) {
-            player.defend((character.getHealthPoint().getHealth() * characterAttack)/10);
+            player.defend((currentEnemyHealth * characterAttack)/10);
 
         }
         //System.out.println("Enemy attacks with " + (character.getHealthPoint().getHealth() * characterAttack)/10);
@@ -75,14 +77,6 @@ public class Battle {
      */
     public MovingEntity getCharacter() {
         return character;
-    }
-
-    /**
-     * Gives the position that the battle is occuring
-     * @return position that the battle is ocurring
-     */
-    public Position getPosition() {
-        return position;
     }
 
     /**

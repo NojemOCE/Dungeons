@@ -30,8 +30,6 @@ public class HealthPoint {
         return maxHealth;
     }
 
-
-    // TODO can we remove this I don't think we need this. maybe an increase health method
     public void setHealth(double health) {
         this.health = health;
     }
@@ -48,6 +46,22 @@ public class HealthPoint {
     public void loseHealth(double attack) {
         this.health -= attack;
         if (this.health <= 0 ) setHealth(0);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        HealthPoint other = (HealthPoint) obj;
+        if (Double.doubleToLongBits(health) != Double.doubleToLongBits(other.health))
+            return false;
+        if (Double.doubleToLongBits(maxHealth) != Double.doubleToLongBits(other.maxHealth))
+            return false;
+        return true;
     }
     
 }

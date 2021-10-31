@@ -22,6 +22,11 @@ public class HealthPotion extends CollectableEntity implements Passive {
         setDurability(durability);
     }
 
+    public HealthPotion(int duration) {
+        this(0,0, null);
+        this.duration = duration;
+    }
+
     public void applyPassive(Player player) {
         System.out.println("HEAL!");
         player.addHealth(HEAL_EFFECT);

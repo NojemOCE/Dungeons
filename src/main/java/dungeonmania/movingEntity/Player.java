@@ -34,6 +34,13 @@ public class Player extends MovingEntity {
     public Player(int x, int y, String id, HealthPoint healthPoint) {
         super(new Position(x, y, 2), id, "player", healthPoint, PLAYER_ATTACK);
         setAlly(true);
+        this.activePotion = null;
+    }
+
+    public Player(int x, int y, String id, HealthPoint healthPoint, Passive activePotion) {
+        this(x, y, id, healthPoint);
+        setAlly(true);
+        this.activePotion = activePotion;
     }
 
   
@@ -176,11 +183,12 @@ public class Player extends MovingEntity {
 
         List<String> mercList = new ArrayList<>();
         mercList = mercenariesInRange.stream().map(MovingEntity::getId).collect(Collectors.toList());
-        
+        JSONObject activePotionJSON = new JSONObject();
 
         if (!Objects.isNull(activePotion)) {
-            playerJSON.put("active-potion", activePotion.getType());
-            playerJSON.put("duration", activePotion.getDuration());
+            activePotionJSON.put("active-potion", activePotion.getType());
+            activePotionJSON.put("duration", activePotion.getDuration());
+            playerJSON.put("active-potion", activePotionJSON);
         }
 
         playerJSON.put("mercenaries", mercList);

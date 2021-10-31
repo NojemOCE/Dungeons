@@ -1,6 +1,7 @@
 package dungeonmania;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -355,15 +356,17 @@ public class World {
     public DungeonResponse tick(String itemUsed, Direction movementDirection) throws IllegalArgumentException, InvalidActionException {
         // IllegalArgumentException if itemUsed is not a bomb, invincibility_potion or an invisibility_potion
         // InvalidActionException if itemUsed is not in the player's inventory
-        
+
         if (!Objects.isNull(itemUsed)) {
             if (inventory.getType(itemUsed).equals("bomb")) {
+                inventory.use(itemUsed);
                 PlacedBomb newBomb = new PlacedBomb(player.getX(), player.getY(), "bomb" + String.valueOf(incrementEntityCount()));
                 staticEntities.put(newBomb.getId(), newBomb);
-            }
-            CollectableEntity potion = inventory.tick(itemUsed);
-            if (!Objects.isNull(potion)) {
-                player.addPotion(potion);
+            } else {
+                CollectableEntity potion = inventory.tick(itemUsed);
+                if (!Objects.isNull(potion)) {
+                    player.addPotion(potion);
+                }
             }
         }
 
@@ -642,6 +645,14 @@ public class World {
     }
 
     /**
+     * Sets the current battle to the provided battle
+     * @param battle
+     */
+    public void setBattle(Battle battle) {
+        this.currentBattle = battle;
+    }
+
+    /**
      * Gets the Player object of the world
      * @return Player of the world
      */
@@ -734,8 +745,6 @@ public class World {
             movingEntities.remove(e.getId());
         }
     }
-
-
 
     public Map<String, StaticEntity> getStaticEntities() {
         return this.staticEntities;
@@ -847,6 +856,7 @@ public class World {
         return id;
     }
 
+
     public void buildWorldFromFile(JSONObject gameData) {
         //TODO implement
 
@@ -869,7 +879,8 @@ public class World {
         }
 
         JSONObject playerObj = gameData.getJSONObject("player");
-        List<String> playerObservers = createPlayerFromJSON(playerObj);
+        //merc list
+        JSONArray playerObservers = createPlayerFromJSON(playerObj);
 
         JSONArray movingEntitiesItems = gameData.getJSONArray("moving-entities");
         for (int i = 0; i < movingEntitiesItems.length(); i++) {
@@ -888,6 +899,8 @@ public class World {
 
         // trigger any switches with a boulder already on top
         triggerSwitches();
+
+        //TODO add mercs? playerObservers
 
         if (gameData.has("current-battle")) {
             JSONObject b = gameData.getJSONObject("current-battle");
@@ -999,7 +1012,7 @@ public class World {
         }
     }
 
-    private List<String> createPlayerFromJSON(JSONObject obj) {
+    private JSONArray createPlayerFromJSON(JSONObject obj) {
         //TODO implement
         int x = obj.getInt("x");
         int y = obj.getInt("y");
@@ -1010,7 +1023,6 @@ public class World {
 
         String id = obj.getString("id");
 
-        double allyAttack = obj.getDouble("ally-attack");
         JSONObject healthPoint = obj.getJSONObject("health-point");
 
         double health = healthPoint.getDouble("health");
@@ -1018,13 +1030,39 @@ public class World {
 
         HealthPoint playerHP = new HealthPoint(health, maxHealth);
 
+        if (obj.has("active-potion")) {
+            JSONObject activePotion = obj.getJSONObject("active-potion");
+            String activePotionType = activePotion.getString("active-potion");
+            int activePotionDuration = activePotion.getInt("duration");
 
-        Player player = new Player(x, y, id, playerHP);
+            Passive e = null;
+            if (activePotionType.equals("invincibility_potion")) {
+                e = new InvincibilityPotion(activePotionDuration);
+            }
+            else if (activePotionType.equals("invisibility_potion")) {
+                e = new InvisibilityPotion(activePotionDuration);
+            }
+            else if (activePotionType.equals("health_potion")) {
+                e = new HealthPotion(activePotionDuration);
+            }
 
-        //List<String> enemyIDs = (List<String>)obj.get("mercenaries");
+            Player player = new Player(x, y, id, playerHP, e);
+            this.player = player;
 
-        this.player = player;
-        return new ArrayList<>();
+
+
+        }
+        else {
+            Player player = new Player(x, y, id, playerHP);
+            this.player = player;
+        }
+
+        
+
+        JSONArray enemyIDs = obj.getJSONArray("mercenaries");
+
+        
+        return enemyIDs;
     }
 
     private void createMovingEntityFromJSON(JSONObject obj) {
