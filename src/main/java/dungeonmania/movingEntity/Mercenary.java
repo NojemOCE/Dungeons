@@ -7,17 +7,16 @@ import org.json.JSONObject;
 import dungeonmania.World;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.movingEntity.MovementStrategies.FollowPlayer;
-import dungeonmania.movingEntity.MovementStrategies.RandomMovement;
-import dungeonmania.movingEntity.MovementStrategies.RunAway;
 import dungeonmania.response.models.EntityResponse;
 
 
-public class Mercenary extends MovingEntity implements PlayerPassiveObserver {
+public class Mercenary extends MovingEntity {
 
     static final int MERC_ATTACK = 3;
     static final int MERC_HEALTH = 9;
     private static final int GOLD_TO_BRIBE = 1;
-    private static final double BATTLE_RADIUS = 15;
+    private static final double BATTLE_RADIUS = 5;
+    private Player subject;
     private boolean interactable = false;
 
     /**
@@ -41,12 +40,13 @@ public class Mercenary extends MovingEntity implements PlayerPassiveObserver {
         double x = (double)distance.getX();
         double y = (double)distance.getY();
         double distanceSquared = ((x*x) + (y*y));
-        
-        if ((Math.sqrt(distanceSquared)) <= BATTLE_RADIUS) {
+        if ((Math.pow(distanceSquared, 1/2)) <= BATTLE_RADIUS) {
             // mount player as in range
-            world.getPlayer().addInRange(this);
+            world.getPlayer().registerEntity(this);
+            this.subject = world.getPlayer();
         } else {
-            world.getPlayer().removeInRange(this);
+            this.subject = null;
+            world.getPlayer().unregisterEntity(this);
         }
         
         getMovement().move(this, world);
@@ -108,18 +108,5 @@ public class Mercenary extends MovingEntity implements PlayerPassiveObserver {
         mercJSON.put("movement", movement);
 
         return mercJSON;
-    }
-
-
-    @Override
-    public void updateMovement(String passive) {
-        if (passive.equals("invincibility_potion") && !getAlly()) {
-            setMovement(new RunAway());
-        } else if (passive.equals("invisibility_potion") && !getAlly()) {
-            setMovement(new RandomMovement());
-        } else {
-            setMovement(getDefaultMovementStrategy());
-        }
-        
     }
 }

@@ -64,6 +64,7 @@ public class World {
      */
     public World(String dungeonName, String gameMode) {
         this.dungeonName = dungeonName;
+        this.id = dungeonName;
         this.entityCount = 0;
         if (gameMode.equals("Hard")) {
             this.gamemode = new Hard();
@@ -73,8 +74,11 @@ public class World {
             this.gamemode = new Peaceful();
         }
         this.inventory = new Inventory();
-        
+    }
 
+    public World(String dungeonName, String gameMode, String id) {
+        this(dungeonName, gameMode);
+        this.id = id;
     }
 
     /**
@@ -97,7 +101,7 @@ public class World {
             createEntity(entities.getJSONObject(i), String.valueOf(incrementEntityCount()));
         }
         
-        
+        // TODO can we put this in a shared method
         if (worldData.has("goal-condition")) {
             JSONObject g = worldData.getJSONObject("goal-condition");
             GoalComponent goal = createGoal(g);
@@ -107,6 +111,7 @@ public class World {
             setGoals(null);
         }
 
+        // TODO can we put this in a shared method
         // trigger any switches
         for (StaticEntity se : staticEntities.values()) {
             if (se instanceof FloorSwitch) {
@@ -116,10 +121,6 @@ public class World {
                 }
             }
         }
-
-        movingEntities.forEach((id, me) -> {
-            player.subscribePassiveObserver((PlayerPassiveObserver)me);
-        });
 
         return worldDungeonResponse();
     }
@@ -228,7 +229,7 @@ public class World {
         } 
         
         else if (type.equals("invincibility_potion")) {
-            InvincibilityPotion e = new InvincibilityPotion(x, y, id, gamemode.isInvincibilityEnabled());
+            InvincibilityPotion e = new InvincibilityPotion(x, y, id);
             collectableEntities.put(e.getId(), e);
         } 
         
@@ -364,27 +365,12 @@ public class World {
         // IllegalArgumentException if itemUsed is not a bomb, invincibility_potion or an invisibility_potion
         // InvalidActionException if itemUsed is not in the player's inventory
         
-        if (Objects.isNull(itemUsed)) {
-            inventory.tick();
-        } else {
-            if (inventory.getType(itemUsed).equals("bomb")) {
-                PlacedBomb newBomb = new PlacedBomb(player.getX(), player.getY(), "bomb" + String.valueOf(incrementEntityCount()));
-                staticEntities.put(newBomb.getId(), newBomb);
-            }
-            CollectableEntity potion = inventory.tick(itemUsed);
-            if (!Objects.isNull(potion)) {
-                player.addPotion(potion);
-            }
-        }
-
-
         if (!Objects.isNull(currentBattle)) {
             currentBattle.battleTick(inventory);
             if (!currentBattle.isActiveBattle()) {
                 if (currentBattle.getPlayerWins()) {
                     dropBattleReward();
                     movingEntities.remove(currentBattle.getCharacter().getId());
-                    player.unsubscribePassiveObserver((PlayerPassiveObserver)currentBattle.getCharacter());
                     currentBattle = null;
                 } else {
                     this.player = null; // will end game in dungeon response
@@ -394,9 +380,21 @@ public class World {
         }
         
         else  {
-            player.tick(movementDirection, this);
+            player.tick(itemUsed, movementDirection, this);
+            //if ( !Objects.isNull(getCharacter(player.getPosition()))) { // TODO THIS IS THE TEMPORARY BATTLE 
+            //    currentBattle = player.battle(getCharacter(player.getPosition()));
+            //}
         }
-
+        if (!Objects.isNull(itemUsed)) {
+            if (inventory.getType(itemUsed).equals("bomb")) {
+                PlacedBomb newBomb = new PlacedBomb(player.getX(), player.getY(), "bomb" + String.valueOf(incrementEntityCount()));
+                staticEntities.put(newBomb.getId(), newBomb);
+            }
+            CollectableEntity potion = inventory.tick(itemUsed);
+            if (Objects.isNull(potion)) {
+                //player.addPotion(potion);
+            }
+        }
 
         // collecting the collectable entity if it exists on the current position
         CollectableEntity collectable = getCollectableEntity(player.getPosition());
@@ -410,7 +408,8 @@ public class World {
         for (MovingEntity me: movingEntities.values()) {
             me.move(this);
             if (me.getPosition().equals(player.getPosition())) {
-                currentBattle = player.battle(me, gamemode); // if invisible it will add null
+                currentBattle = player.battle(me); // if invisible it will add null
+                player.notifyObservers(1);
             }
         }
 
@@ -449,8 +448,6 @@ public class World {
 
         Spider newSpider = new Spider(x, y, "spider" + String.valueOf(incrementEntityCount()));
         movingEntities.put(newSpider.getId(), newSpider);
-        player.subscribePassiveObserver((PlayerPassiveObserver)newSpider);
-
     }
     
     private boolean validSpiderSpawnPosition(Position position) {
@@ -484,8 +481,6 @@ public class World {
                 }
                 Zombie newZombie = new Zombie(newPos.getX(), newPos.getY(), "zombie_toast" + String.valueOf(incrementEntityCount()));
                 movingEntities.put(newZombie.getId(), newZombie);
-                player.subscribePassiveObserver((PlayerPassiveObserver) newZombie);
-
             }
         }
     }
@@ -578,11 +573,12 @@ public class World {
 
     // Return a dungeon response for the current world
     public DungeonResponse worldDungeonResponse(){
-        return new DungeonResponse("1", dungeonName, getEntityResponses(), getInventoryResponse(), inventory.getBuildable(), getGoalsResponse());
+        return new DungeonResponse(id, dungeonName, getEntityResponses(), getInventoryResponse(), inventory.getBuildable(), getGoalsResponse());
     }
 
     /**
      * Returns the static entity that exists in the dungeon at position p (if one exists)
+     * Note, that this only looks at layer 1 (will not return for floor switch, exit)
      * @param p position to check
      * @return Static entity at position p
      */
@@ -726,9 +722,6 @@ public class World {
             collectableEntities.remove(e.getId());
             staticEntities.remove(e.getId());
             movingEntities.remove(e.getId());
-            if (e instanceof MovingEntity) {
-                player.unsubscribePassiveObserver((PlayerPassiveObserver)e);
-            }
         }
     }
 
@@ -781,9 +774,9 @@ public class World {
         worldJSON.put("player", player.saveGameJson());
         worldJSON.put("moving-entities", movingEntitySaveGameJson());
         worldJSON.put("static-entities", staticEntitySaveGameJson());
-        worldJSON.put("collectable-entities", staticEntitySaveGameJson());
+        worldJSON.put("collectable-entities", collectableEntityGameJson());
 
-        if (currentBattle.isActiveBattle()) {
+        if (!(currentBattle==null) && currentBattle.isActiveBattle()) {
             worldJSON.put("current-battle", currentBattle.getCharacter().getId());
         }
         if (!(goals == null)) {
@@ -833,5 +826,304 @@ public class World {
     public int getTickCount() {
         return tickCount;
     }
+
+    public String getDungeonName() {
+        return dungeonName;
+    }
+    public void setId(String id) {
+        this.id  = id;
+    }
+    public String getId() {
+        return id;
+    }
+
+    public void buildWorldFromFile(JSONObject gameData) {
+        //TODO implement
+
+        int tickNo = gameData.getInt("tick-count");
+        int entityNo = gameData.getInt("entity-count");
+
+        // TODO can we put this in a shared method
+        if (gameData.has("goal-condition")) {
+            JSONObject g = gameData.getJSONObject("goal-condition");
+            GoalComponent goal = createGoal(g);
+            setGoals(goal);
+        }
+        else {
+            setGoals(null);
+        }
+
+        JSONArray inventoryItems = gameData.getJSONArray("inventory");
+        for (int i = 0; i < inventoryItems.length(); i++) {
+            createInventoryFromJSON(inventoryItems.getJSONObject(i), String.valueOf(incrementEntityCount()));
+        }
+
+        JSONObject playerObj = gameData.getJSONObject("player");
+        createPlayerFromJSON(playerObj,String.valueOf(incrementEntityCount()));
+
+        JSONArray movingEntitiesItems = gameData.getJSONArray("inventory");
+        for (int i = 0; i < movingEntitiesItems.length(); i++) {
+            createMovingEntityFromJSON(movingEntitiesItems.getJSONObject(i), String.valueOf(incrementEntityCount()));
+        }
+
+        JSONArray staticEntitiesItems = gameData.getJSONArray("inventory");
+        for (int i = 0; i < staticEntitiesItems.length(); i++) {
+            createStaticEntityFromJSON(staticEntitiesItems.getJSONObject(i), String.valueOf(incrementEntityCount()));
+        }
+
+        JSONArray collectableEntitiesItems = gameData.getJSONArray("inventory");
+        for (int i = 0; i < collectableEntitiesItems.length(); i++) {
+            createCollectableEntityFromJSON(collectableEntitiesItems.getJSONObject(i), String.valueOf(incrementEntityCount()));
+        }
+
+
+
+        if (gameData.has("current-battle")) {
+            JSONObject b = gameData.getJSONObject("current-battle");
+            // TODO need a create battle method here
+        }
+        else {
+            //set battle as null
+        }
+
+        //Make enemies observe player
+        // TODO can we put this in a shared method
+        // trigger any switches
+        for (StaticEntity se : staticEntities.values()) {
+            if (se instanceof FloorSwitch) {
+                StaticEntity entity = getStaticEntity(se.getPosition());
+                if (entity instanceof Boulder) {
+                    ((FloorSwitch) se).trigger(this);
+                }
+            }
+        }
+
+
+    }
+
+    private void createInventoryFromJSON(JSONObject obj, String id) {
+        // TODO update constructors
+        int x = obj.getInt("x");
+        int y = obj.getInt("y");
+
+        updateBounds(x, y);
+
+        String type = obj.getString("type");
+
+        id = type + id;
+
+        
+        if (type.equals("treasure")) {
+            Treasure e = new Treasure(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("key")) {
+            int key = (int)obj.get("key");
+            Key e = new Key(x, y, id, key);
+            collectableEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("health_potion")) {
+            HealthPotion e = new HealthPotion(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("invincibility_potion")) {
+            InvincibilityPotion e = new InvincibilityPotion(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("invisibility_potion")) {
+            InvisibilityPotion e = new InvisibilityPotion(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("wood")) {
+            Wood e = new Wood(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("arrow")) {
+            Arrows e = new Arrows(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("bomb")) {
+            Bomb e = new Bomb(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("sword")) {
+            Sword e = new Sword(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        }
+        else if (type.equals("one_ring")) {
+            OneRing e = new OneRing(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        }
+        //TODO implement, add bow, shield etc
+    }
+
+    private void createPlayerFromJSON(JSONObject obj, String id) {
+        //TODO implement
+    }
+
+    private void createMovingEntityFromJSON(JSONObject obj, String id) {
+        //TODO update constructors
+
+        int x = obj.getInt("x");
+        int y = obj.getInt("y");
+
+        updateBounds(x, y);
+
+        String type = obj.getString("type");
+
+        id = type + id;
+
+        
+        if (type.equals("spider")) {
+            Spider e = new Spider(x, y, id);
+            movingEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("zombie_toast")) {
+            Zombie e = new Zombie(x, y, id);
+            movingEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("mercenary")) {
+            Mercenary e = new Mercenary(x, y, id);
+
+            movingEntities.put(e.getId(), e);
+        } 
+    }
+
+    private void createStaticEntityFromJSON(JSONObject obj, String id) {
+        //TODO update constructors
+        int x = obj.getInt("x");
+        int y = obj.getInt("y");
+
+        updateBounds(x, y);
+
+        String type = obj.getString("type");
+
+        id = type + id;
+
+        if (type.equals("wall")) {
+
+            Wall e = new Wall(x, y, id);
+
+            staticEntities.put(e.getId(), e);
+
+        } else if (type.equals("exit")) {
+            Exit e = new Exit(x,y,id);
+            staticEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("switch")) {
+            FloorSwitch e = new FloorSwitch(x, y, id);
+            staticEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("boulder")) {
+            Boulder e = new Boulder(x, y, id);
+            staticEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("door")) {
+            int key = (int)obj.get("key");
+            Door e = new Door(x, y, id, key);
+            staticEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("portal")) {
+            Portal e;
+
+            String colour = obj.getString("colour");
+
+            if (staticEntities.containsKey(colour)) {
+                e = new Portal(x, y, colour + "2", colour, (Portal) staticEntities.get(colour));
+            } else {
+                e = new Portal(x, y, colour, colour);
+            }
+            staticEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("zombie_toast_spawner")) {
+            ZombieToastSpawn e = new ZombieToastSpawn(x, y, id);
+            staticEntities.put(e.getId(), e);   
+        } else if (type.equals("player")) {
+            Player e = new Player(x, y, id, new HealthPoint(gamemode.getStartingHP()));
+           
+            this.player = e;
+        } 
+
+        //TODO add placed bomb?
+    }
+
+    private void createCollectableEntityFromJSON(JSONObject obj, String id) {
+        // TODO update constructors
+        int x = obj.getInt("x");
+        int y = obj.getInt("y");
+
+        updateBounds(x, y);
+
+        String type = obj.getString("type");
+
+        id = type + id;
+
+        
+        if (type.equals("treasure")) {
+            Treasure e = new Treasure(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("key")) {
+            int key = (int)obj.get("key");
+            Key e = new Key(x, y, id, key);
+            collectableEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("health_potion")) {
+            HealthPotion e = new HealthPotion(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("invincibility_potion")) {
+            InvincibilityPotion e = new InvincibilityPotion(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("invisibility_potion")) {
+            InvisibilityPotion e = new InvisibilityPotion(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("wood")) {
+            Wood e = new Wood(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("arrow")) {
+            Arrows e = new Arrows(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("bomb")) {
+            Bomb e = new Bomb(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        } 
+        
+        else if (type.equals("sword")) {
+            Sword e = new Sword(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        }
+        else if (type.equals("one_ring")) {
+            OneRing e = new OneRing(x, y, id);
+            collectableEntities.put(e.getId(), e);
+        }
+    }
+
 
 }
