@@ -309,11 +309,7 @@ public class World {
     }
 
     /**
-<<<<<<< src/main/java/dungeonmania/World.java
-     * Drops armour:
-=======
      * Drops a armour:
->>>>>>> src/main/java/dungeonmania/World.java
      * 20% of the time if the player has beaten a zombie
      * 40% of the time if the player has beaten a mercenary
      * 
@@ -866,6 +862,9 @@ public class World {
 
         int tickNo = gameData.getInt("tick-count");
         int entityNo = gameData.getInt("entity-count");
+        
+        setEntityCount(entityNo);
+        setTickCount(tickNo);
 
         // TODO can we put this in a shared method
         if (gameData.has("goal-condition")) {
@@ -1239,4 +1238,14 @@ public class World {
     public Position getPlayerPosition() {
         return player.getPosition();
     }
+
+    public void setTickCount(int tickCount) {
+        this.tickCount = tickCount;
+    }
+
+    public void setEntityCount(int entityCount) {
+        this.entityCount = entityCount;
+    }
+
+    
 }
