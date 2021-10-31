@@ -143,11 +143,12 @@ public class Inventory {
                 removeItem(collectable);
             }
             //tick();
+            return collectable;
         } else {
             throw new IllegalArgumentException("Wrong usable type");
         }
 
-        return collectable;
+        
     }
 
     // public void tick() {

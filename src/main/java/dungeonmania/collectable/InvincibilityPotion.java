@@ -9,26 +9,33 @@ public class InvincibilityPotion extends CollectableEntity implements Passive {
     private int duration = DURATION;
     private final int PLAYER_ATTACK = 3;
     private final int INVINCIBILITY_ATTACK = 999;
+    private boolean enabled;
 
-    public InvincibilityPotion(int x, int y, String itemId) {
+    public InvincibilityPotion(int x, int y, String itemId, boolean isInvincibilityEnabled) {
         super(x, y, itemId, "invincibility_potion");
+        this.enabled = isInvincibilityEnabled;
+
     }
 
-    public InvincibilityPotion(String itemId, int durability) {
-        this(0, 0, itemId, durability);
+    public InvincibilityPotion(String itemId, int durability, boolean isInvincibilityEnabled) {
+        this(0, 0, itemId, isInvincibilityEnabled);
     }
 
-    public InvincibilityPotion(int x, int y, String itemId, int durability) {
-        this(x, y, itemId);
+    public InvincibilityPotion(int x, int y, String itemId, int durability,int duration, boolean isInvincibilityEnabled) {
+        this(x, y, itemId, isInvincibilityEnabled);
         setDurability(durability);
+        this.duration = duration;
     }
 
     public void applyPassive(Player player) {
-        player.notifyPassive(getType());
-        if (this.duration == 0) {
-            player.setAttackDamage(PLAYER_ATTACK);
-        } else {
-            player.setAttackDamage(INVINCIBILITY_ATTACK);
+        if (enabled) {
+            if (this.duration == 0) {
+                player.notifyPassive("N/A");
+                player.setAttackDamage(PLAYER_ATTACK);
+            } else {
+                player.notifyPassive(getType());
+                player.setAttackDamage(INVINCIBILITY_ATTACK);
+            }
         }
     }
 
@@ -36,14 +43,17 @@ public class InvincibilityPotion extends CollectableEntity implements Passive {
         duration--;
     }
 
-    public int getDuration() {
-        return this.duration;
-    }
-
     @Override
     public CollectableEntity consume() {
         decreaseDurability();
         return this;
     }
+
+    @Override
+    public int getDuration() {
+        // TODO Auto-generated method stub
+        return duration;
+    }
+
 
 }

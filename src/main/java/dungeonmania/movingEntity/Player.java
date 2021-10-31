@@ -1,25 +1,28 @@
 package dungeonmania.movingEntity;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.Objects;
+import java.util.Set;
 
 import org.json.JSONObject;
 
+import dungeonmania.Passive;
 import dungeonmania.World;
 import dungeonmania.collectable.CollectableEntity;
+import dungeonmania.gamemode.Gamemode;
 import dungeonmania.util.*;
-import dungeonmania.inventory.Inventory;
-import dungeonmania.response.models.EntityResponse;
-import dungeonmania.staticEntity.StaticEntity;
-
 
 public class Player extends MovingEntity {
 
     static final int PLAYER_ATTACK = 3;
-    private List<Mercenary> mercenaryObservers = new ArrayList<>();
-    private double allyAttack;
+    private Set<Mercenary> mercenariesInRange = new HashSet<>();
+
+    private Set<PlayerPassiveObserver> passiveObservers = new HashSet<>();
+    // observer here for passive
+    private Passive activePotion;
 
     /**
      * Constructor for player taking an x coordinate, a y coordinate, an id and a HealthPoint
@@ -32,12 +35,6 @@ public class Player extends MovingEntity {
         super(new Position(x, y, 2), id, "player", healthPoint, PLAYER_ATTACK);
         setAlly(true);
     }
-    
-    public Player(int x, int y, String id, HealthPoint healthPoint, double allyAttack) {
-        this(x, y, id, healthPoint);
-        this.allyAttack =  allyAttack;
-    }
-    
 
   
     @Override
@@ -45,63 +42,36 @@ public class Player extends MovingEntity {
         return;
     
     }
+    public void tick(Direction movementDirection, World world) {
+        // check if the direction we are moving is valid first before setting new position
+        // Tick passive
+        if (!Objects.isNull(activePotion)) {
+            activePotion.decreaseDuration();
+            activePotion.applyPassive(this);
+            if (activePotion.getDuration() == 0){
+                activePotion = null;
+            } 
 
-        /**
-     * Returns the new position if posible
-     * and the old position (no movement) if not
-     */
-    @Override
-    public Position validMove(Position position, World world) {
-        
-        // Check for boundaries of the map here
-
-
-        // check if there is a static entity in the way
-        StaticEntity se = world.getStaticEntity(position);
-        if (!Objects.isNull(se)) {
-            // interact with static entitity
-            return se.interact(world, this); 
-        } 
-        if (!Objects.isNull(world.getBattle())) {
-            // check if this objects position is same as players (for players if there is a battle)
-            // they cannot move anyways
-            if (getPosition().equals(world.getPlayer().getPosition())) {
-                // cannot move into battle, wait outside
-                return getPosition();
-            }
+        } else {
+            notifyPassive("N/A");
         }
 
 
-        return position;
-    }
-
-    // TODO shouldn't this be done in move?
-    // TODO implement using item?
-    public void tick(String itemUsed, Direction movementDirection, World world) {
-        // check if the direction we are moving is valid first before setting new position
-        if (Objects.isNull(itemUsed)) {
+        if (!Objects.isNull(movementDirection)){
             setPosition(validMove(this.getPosition().translateBy(movementDirection), world));
             CollectableEntity e = world.getCollectableEntity(this.getPosition());
             if (!Objects.isNull(e)) {
                 e.collect();
             }
-        } else {
-            // use item
-        }
-    }
-
-    @Override
-    public double attack(double attack) {
-        // check inventory and mercenary in range
-        
-        // then add on mercenary modifier
-        return allyAttack;
+        } 
     }
 
     @Override
     public void defend(double attack) {
         // check inventory and mercenary in range
-        getHealthPoint().loseHealth(attack);
+        if (Objects.isNull(activePotion) || !activePotion.getType().equals("invincibility_potion")) {
+            getHealthPoint().loseHealth(attack);
+        } // doesnt lose health if invincible
 
     }
 
@@ -110,13 +80,17 @@ public class Player extends MovingEntity {
      * @param enemy enemy that the player fights in the battle
      * @return new Battle
      */
-    public Battle battle(MovingEntity enemy) {
+    public Battle battle(MovingEntity enemy, Gamemode gamemode) {
         // we can pass in invincibility state for battle 
         // or invisibility battle wont be created "return null"
         if (!enemy.getAlly()) {
-            notifyObservers(1);
 
-            return new Battle(this, enemy);
+            if (Objects.isNull(activePotion) || !activePotion.getType().equals("invisibility_potion")) {
+                notifyObserversForBattle(1); // mercenary speed
+
+                return new Battle(this, enemy, gamemode.isEnemyAttackEnabled());
+            }
+
             // notify observers of battle
         }
         return null;
@@ -127,7 +101,7 @@ public class Player extends MovingEntity {
      */
     public void endBattle() {
         // notify observers of ending battle
-        notifyObservers(0);
+        notifyObserversForBattle(0);
     }
 
 
@@ -136,12 +110,9 @@ public class Player extends MovingEntity {
      * 
      * @param inRange
      */
-    public void registerEntity(Mercenary inRange) {
-        mercenaryObservers.add(inRange);
-        
-        if (inRange.getAlly()) {
-            allyAttack += inRange.getAttackDamage();
-        }
+    public void addInRange(Mercenary inRange) {
+        mercenariesInRange.add(inRange);
+    
     }
     
     //TODO add javadoc comment idk what this method does
@@ -149,20 +120,30 @@ public class Player extends MovingEntity {
      * 
      * @param inRange
      */
-    public void unregisterEntity(Mercenary inRange) {
-        if (inRange.getAlly()) {
-            allyAttack -= inRange.getAttackDamage();
-        }
-        mercenaryObservers.remove(inRange);
+    public void removeInRange(Mercenary inRange) {
+        mercenariesInRange.remove(inRange);
     }
 
+    public void subscribePassiveObserver(PlayerPassiveObserver me) {
+        passiveObservers.add(me);
+    
+    }
+    
+    //TODO add javadoc comment idk what this method does
+    /**
+     * 
+     * @param inRange
+     */
+    public void unsubscribePassiveObserver(PlayerPassiveObserver me) {
+        passiveObservers.remove(me);
+    }
+    
     public List<MovingEntity> alliesInRange() {
         
         List<MovingEntity> allies = new ArrayList<>();
-        for (MovingEntity m : mercenaryObservers) {
+        for (MovingEntity m : mercenariesInRange) {
             if (m.getAlly()) allies.add(m);
         }
-
         return allies;
     }
     
@@ -171,21 +152,37 @@ public class Player extends MovingEntity {
      * 
      * @param speed
      */
-    public void notifyObservers(int speed) { // notify observers for battle
-        mercenaryObservers.forEach( mercenary -> {
+    public void notifyObserversForBattle(int speed) { // notify observers for battle
+        mercenariesInRange.forEach( mercenary -> {
             mercenary.setSpeed(speed);
         });
     }
 
+    public void notifyPassive(String passive) {
+        passiveObservers.forEach( obj -> {
+            obj.updateMovement(passive);
+        });
+    }
+
+    public void addPotion(CollectableEntity potion) {
+        activePotion = (Passive) potion;
+    }
+
+
     @Override
     public JSONObject saveGameJson() {
         JSONObject playerJSON = super.saveGameJson();
-        playerJSON.put("ally-attack", allyAttack);
 
 
         List<String> mercList = new ArrayList<>();
-        mercList = mercenaryObservers.stream().map(MovingEntity::getId).collect(Collectors.toList());
+        mercList = mercenariesInRange.stream().map(MovingEntity::getId).collect(Collectors.toList());
         
+
+        if (!Objects.isNull(activePotion)) {
+            playerJSON.put("active-potion", activePotion.getType());
+            playerJSON.put("duration", activePotion.getDuration());
+        }
+
         playerJSON.put("mercenaries", mercList);
 
         return playerJSON;
