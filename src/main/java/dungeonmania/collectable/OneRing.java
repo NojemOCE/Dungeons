@@ -6,4 +6,13 @@ public class OneRing extends CollectableEntity {
         super(x, y, itemId, "one_ring");
     }
 
+    public OneRing(String itemId, int durability) {
+        this(0, 0, itemId, durability);
+    }
+
+    public OneRing(int x, int y, String itemId, int durability) {
+        this(x, y, itemId);
+        setDurability(durability);
+    }
+
 }

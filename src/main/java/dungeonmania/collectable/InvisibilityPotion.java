@@ -11,6 +11,15 @@ public class InvisibilityPotion extends CollectableEntity implements Passive {
         super(x, y, itemId, "invisibility_potion");
     }
 
+    public InvisibilityPotion(String itemId, int durability) {
+        this(0, 0, itemId, durability);
+    }
+
+    public InvisibilityPotion(int x, int y, String itemId, int durability) {
+        this(x, y, itemId);
+        setDurability(durability);
+    }
+
     public void applyPassive(Player player) {
         player.notifyPassive(getType());
     }

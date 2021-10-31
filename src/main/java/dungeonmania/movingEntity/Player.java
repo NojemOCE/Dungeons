@@ -33,6 +33,11 @@ public class Player extends MovingEntity {
         setAlly(true);
     }
     
+    public Player(int x, int y, String id, HealthPoint healthPoint, double allyAttack) {
+        this(x, y, id, healthPoint);
+        this.allyAttack =  allyAttack;
+    }
+    
 
   
     @Override

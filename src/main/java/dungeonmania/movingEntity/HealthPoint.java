@@ -14,6 +14,11 @@ public class HealthPoint {
         this.maxHealth = health;
     }
 
+    public HealthPoint(double health, double maxHealth) {
+        this.health = health;
+        this.maxHealth = maxHealth;
+    }
+
     /**
      * Gives the current health
      * @return health
