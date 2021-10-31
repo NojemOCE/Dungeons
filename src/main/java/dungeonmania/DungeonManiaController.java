@@ -88,6 +88,10 @@ public class DungeonManiaController {
             throw new IllegalArgumentException("No game currently loaded");
         }
 
+        if (!current.getId().equals(name)) {
+            throw new IllegalArgumentException("You cannot save a game that is not currently loaded.");
+        }
+
         JSONObject saveState = current.saveGame();
         LocalDateTime now = LocalDateTime.now();
         String dateStr = now.format(DateTimeFormatter.ofPattern("ddMMyyyyHHmmss"));
