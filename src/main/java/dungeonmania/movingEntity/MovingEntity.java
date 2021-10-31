@@ -121,7 +121,6 @@ public abstract class MovingEntity extends Entity {
     public void setDefaultMovementStrategy(Movement defaultMovementStrategy) {
         this.defaultMovementStrategy = defaultMovementStrategy;
     }
-    
     @Override
     public JSONObject saveGameJson() {
         JSONObject saveObj = new JSONObject();

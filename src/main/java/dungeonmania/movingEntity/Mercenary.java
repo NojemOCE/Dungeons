@@ -17,7 +17,7 @@ public class Mercenary extends MovingEntity implements PlayerPassiveObserver {
     static final int MERC_ATTACK = 3;
     static final int MERC_HEALTH = 20;
     private static final int GOLD_TO_BRIBE = 1;
-    private static final double BATTLE_RADIUS = 10;
+    private static final double BATTLE_RADIUS = 8;
     private boolean interactable = false;
 
     /**
