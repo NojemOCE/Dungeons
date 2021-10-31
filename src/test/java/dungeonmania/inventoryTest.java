@@ -18,14 +18,14 @@ public class inventoryTest {
         Inventory inv = new Inventory();
 
         Armour armour = new Armour(1, 1, "armour1");
-        assert inv.numItem("armour") == 0;
+        assertEquals(inv.numItem("armour"), 0);
         inv.collect(armour);
-        assert inv.numItem("armour") == 1;
+        assertEquals(inv.numItem("armour"), 1);
 
         Sword sword = new Sword(1, 2, "sword2");
-        assert inv.numItem("sword") == 0;
+        assertEquals(inv.numItem("sword"), 0);
         inv.collect(sword);
-        assert inv.numItem("sword") == 1;
+        assertEquals(inv.numItem("sword"), 1);
         assertTrue(inv.hasWeapon());
     }
 
@@ -39,18 +39,18 @@ public class inventoryTest {
 
         HealthPotion potion = new HealthPotion(1, 1, "health_potion1");
 
-        assert inv.numItem("health_potion1") == 0;
+        assertEquals(inv.numItem("health_potion"), 0);
         inv.collect(potion);
-        assert inv.numItem("health_potion1") == 1;
+        assertEquals(inv.numItem("health_potion"), 1);
         potion.consume();
-        assert inv.numItem("health_potion1") == 0;
+        assertEquals(inv.numItem("health_potion"), 0);
 
         Bomb bomb = new Bomb(1, 2, "bomb2");
-        assert inv.numItem("bomb") == 0;
+        assertEquals(inv.numItem("bomb"), 0);
         inv.collect(bomb);
-        assert inv.numItem("bomb") == 1;
+        assertEquals(inv.numItem("bomb"), 1);
         bomb.consume();
-        assert inv.numItem("bomb") == 0;
+        assertEquals(inv.numItem("bomb"), 0);
     }
 
     /**
