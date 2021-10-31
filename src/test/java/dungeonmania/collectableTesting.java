@@ -6,9 +6,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import dungeonmania.collectable.*;
 
-
-
-
 public class collectableTesting {
      /**
       * Test whether a collected entity is placed within the players inventory and removed from the map
