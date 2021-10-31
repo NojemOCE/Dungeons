@@ -85,7 +85,14 @@ public class Boulder extends StaticEntity {
      */
     public boolean validMove(World world, Position position) {
         List<StaticEntity> entitiesAtNewPos = world.getStaticEntitiesAtPosition(position);
-        // if anything is on the same layer or higher, can't move
+        // if anything is on the same layer or higher, can't move, unless it is a portal
+        List<Portal> portals = entitiesAtNewPos.stream()
+                                               .filter(x -> x instanceof Portal)
+                                               .map(Portal.class::cast)
+                                               .collect(Collectors.toList());
+        if (!(portals.isEmpty())) {
+            return true;
+        }
         if (entitiesAtNewPos.stream().anyMatch(x -> x.getLayer() >= this.getLayer())) {
             return false;
         }
