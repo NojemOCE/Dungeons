@@ -15,7 +15,7 @@ import dungeonmania.World;
 import dungeonmania.movingEntity.*;
 import dungeonmania.util.Position;
 
-public class FollowPlayer implements Movement {
+public class FollowPlayer implements MovementStrategy {
 
     @Override
     public void move(MovingEntity me, World world) {
