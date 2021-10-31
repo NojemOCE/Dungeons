@@ -21,10 +21,6 @@ public class FloorSwitch extends StaticEntity {
         super(new Position(x, y, 0), id, "switch");
     }
 
-    public FloorSwitch(int x, int y, String id, boolean isTriggered) {
-        super(new Position(x, y, 0), id, "switch");
-        this.isTriggered = isTriggered;
-    }
     /**
      * Switches behave like empty squares, so other entities can appear on 
      * top of them. 

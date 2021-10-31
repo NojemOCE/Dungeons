@@ -218,7 +218,7 @@ public class World {
         } 
         
         else if (type.equals("invincibility_potion")) {
-            InvincibilityPotion e = new InvincibilityPotion(x, y, id);
+            InvincibilityPotion e = new InvincibilityPotion(x, y, id, gamemode.isInvincibilityEnabled());
             collectableEntities.put(e.getId(), e);
         } 
         
@@ -354,12 +354,24 @@ public class World {
         // IllegalArgumentException if itemUsed is not a bomb, invincibility_potion or an invisibility_potion
         // InvalidActionException if itemUsed is not in the player's inventory
         
+        if (!Objects.isNull(itemUsed)) {
+            if (inventory.getType(itemUsed).equals("bomb")) {
+                PlacedBomb newBomb = new PlacedBomb(player.getX(), player.getY(), "bomb" + String.valueOf(incrementEntityCount()));
+                staticEntities.put(newBomb.getId(), newBomb);
+            }
+            CollectableEntity potion = inventory.tick(itemUsed);
+            if (!Objects.isNull(potion)) {
+                player.addPotion(potion);
+            }
+        }
+
         if (!Objects.isNull(currentBattle)) {
             currentBattle.battleTick(inventory);
             if (!currentBattle.isActiveBattle()) {
                 if (currentBattle.getPlayerWins()) {
                     dropBattleReward();
                     movingEntities.remove(currentBattle.getCharacter().getId());
+                    player.unsubscribePassiveObserver((PlayerPassiveObserver)currentBattle.getCharacter());
                     currentBattle = null;
                 } else {
                     this.player = null; // will end game in dungeon response
@@ -369,20 +381,7 @@ public class World {
         }
         
         else  {
-            player.tick(itemUsed, movementDirection, this);
-            //if ( !Objects.isNull(getCharacter(player.getPosition()))) { // TODO THIS IS THE TEMPORARY BATTLE 
-            //    currentBattle = player.battle(getCharacter(player.getPosition()));
-            //}
-        }
-        if (!Objects.isNull(itemUsed)) {
-            if (inventory.getType(itemUsed).equals("bomb")) {
-                PlacedBomb newBomb = new PlacedBomb(player.getX(), player.getY(), "bomb" + String.valueOf(incrementEntityCount()));
-                staticEntities.put(newBomb.getId(), newBomb);
-            }
-            CollectableEntity potion = inventory.tick(itemUsed);
-            if (Objects.isNull(potion)) {
-                //player.addPotion(potion);
-            }
+            player.tick(movementDirection, this);
         }
 
         // collecting the collectable entity if it exists on the current position
@@ -397,8 +396,7 @@ public class World {
         for (MovingEntity me: movingEntities.values()) {
             me.move(this);
             if (me.getPosition().equals(player.getPosition())) {
-                currentBattle = player.battle(me); // if invisible it will add null
-                player.notifyObservers(1);
+                currentBattle = player.battle(me, gamemode); // if invisible it will add null
             }
         }
 
@@ -437,6 +435,8 @@ public class World {
 
         Spider newSpider = new Spider(x, y, "spider" + String.valueOf(incrementEntityCount()));
         movingEntities.put(newSpider.getId(), newSpider);
+        player.subscribePassiveObserver((PlayerPassiveObserver)newSpider);
+
     }
     
     private boolean validSpiderSpawnPosition(Position position) {
@@ -470,6 +470,8 @@ public class World {
                 }
                 Zombie newZombie = new Zombie(newPos.getX(), newPos.getY(), "zombie_toast" + String.valueOf(incrementEntityCount()));
                 movingEntities.put(newZombie.getId(), newZombie);
+                player.subscribePassiveObserver((PlayerPassiveObserver) newZombie);
+
             }
         }
     }
@@ -917,7 +919,7 @@ public class World {
         } 
         
         else if (type.equals("invincibility_potion")) {
-            InvincibilityPotion e = new InvincibilityPotion(id, durability);
+            InvincibilityPotion e = new InvincibilityPotion(id, durability, gamemode.isInvincibilityEnabled());
             inventory.collect(e);
         } 
         
@@ -987,7 +989,8 @@ public class World {
 
         HealthPoint playerHP = new HealthPoint(health, maxHealth);
 
-        Player player = new Player(x, y, id, playerHP, allyAttack);
+
+        Player player = new Player(x, y, id, playerHP);
 
         //List<String> enemyIDs = (List<String>)obj.get("mercenaries");
 
@@ -1066,8 +1069,7 @@ public class World {
         } 
         
         else if (type.equals("switch")) {
-            boolean triggered  = obj.getBoolean("triggered");
-            FloorSwitch e = new FloorSwitch(x, y, id, triggered);
+            FloorSwitch e = new FloorSwitch(x, y, id);
             staticEntities.put(e.getId(), e);
         } 
         
@@ -1137,7 +1139,7 @@ public class World {
         } 
         
         else if (type.equals("invincibility_potion")) {
-            InvincibilityPotion e = new InvincibilityPotion(x, y, id, durability);
+            InvincibilityPotion e = new InvincibilityPotion(x, y, id, gamemode.isInvincibilityEnabled());
             collectableEntities.put(e.getId(), e);
         } 
         
@@ -1171,5 +1173,7 @@ public class World {
         }
     }
 
-
+    public Position getPlayerPosition() {
+        return player.getPosition();
+    }
 }

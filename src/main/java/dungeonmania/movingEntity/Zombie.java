@@ -4,10 +4,11 @@ import org.json.JSONObject;
 
 import dungeonmania.World;
 import dungeonmania.movingEntity.MovementStrategies.RandomMovement;
+import dungeonmania.movingEntity.MovementStrategies.RunAway;
 import dungeonmania.util.*;
 
 
-public class Zombie extends MovingEntity{
+public class Zombie extends MovingEntity implements PlayerPassiveObserver {
     static final int ZOMBIE_ATTACK = 2;
     static final int ZOMBIE_HEALTH = 6;
 
@@ -38,6 +39,15 @@ public class Zombie extends MovingEntity{
     @Override
     public void move(World world) {
        getMovement().move(this, world);
+    }
+
+    @Override
+    public void updateMovement(String passive) {
+        if (passive.equals("invincibility_potion")) {
+            setMovement(new RunAway());
+        } else {
+            setMovement(getDefaultMovementStrategy());
+        }
     }
 
     @Override

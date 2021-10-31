@@ -7,7 +7,8 @@ public class Battle {
     private Player player;
     private MovingEntity character;
     private Position position;
-
+    
+    private boolean enemyAttackEnabled;
     private boolean playerWins;
     private boolean activeBattle;
 
@@ -16,10 +17,11 @@ public class Battle {
      * @param player Player that is engaged in battle
      * @param character enemy that the player is fighting in battle
      */
-    public Battle(Player player, MovingEntity character) {
+    public Battle(Player player, MovingEntity character, Boolean enemyAttack) {
         this.player = player;
         this.character = character;
         this.activeBattle = true;
+        this.enemyAttackEnabled = enemyAttack;
     }
 
     /**
@@ -35,10 +37,16 @@ public class Battle {
 
 
         character.defend((player.getHealthPoint().getHealth() * playerAttack)/10);
-        player.defend((character.getHealthPoint().getHealth() * characterAttack)/10);
+        //System.out.println("Player attacks with " + (player.getHealthPoint().getHealth() * playerAttack)/10);
+        if (enemyAttackEnabled) {
+            player.defend((character.getHealthPoint().getHealth() * characterAttack)/10);
+
+        }
+        //System.out.println("Enemy attacks with " + (character.getHealthPoint().getHealth() * characterAttack)/10);
 
         // ally help
         player.alliesInRange().forEach(ally -> {
+
             character.defend((ally.getHealthPoint().getHealth() * ally.getAttackDamage()) / 10);
         });
 
