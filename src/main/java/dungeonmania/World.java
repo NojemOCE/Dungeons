@@ -112,6 +112,9 @@ public class World {
             setGoals(null);
         }
 
+        movingEntities.forEach((id, me) -> {
+            player.subscribePassiveObserver((PlayerPassiveObserver)me);
+        });
         return worldDungeonResponse();
     }
 
