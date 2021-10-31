@@ -135,7 +135,7 @@ public class DMControllerTesting {
     @Test
     public void testBuild() {
         DungeonManiaController controller = new DungeonManiaController();
-        DungeonResponse d = controller.newGame("maze", "Standard");
+        DungeonResponse d = controller.newGame("buildable-test", "Standard");
         
         // check that exception is thrown if "buildable" is invalid
         assertThrows(IllegalArgumentException.class, () -> controller.build("invalid buildable"));
@@ -148,7 +148,12 @@ public class DMControllerTesting {
         controller.tick(null, Direction.RIGHT); // arrow
         d = controller.tick(null, Direction.RIGHT); // arrow
 
-        assertDoesNotThrow(() -> controller.build("bow"));
+        try {
+            d = controller.build("bow");
+        } catch (Exception e) {
+            assertTrue(false);
+        }
+
         List<ItemResponse> inventory = d.getInventory();
 
         boolean bowMade = false;
@@ -158,7 +163,27 @@ public class DMControllerTesting {
             }
         }
         assertTrue(bowMade);
+        
+        // now try for shield
+        controller.tick(null, Direction.RIGHT); // wood
+        controller.tick(null, Direction.RIGHT); // wood
+        d = controller.tick(null, Direction.RIGHT); // treasure
 
+        try {
+            d = controller.build("shield");
+        } catch (Exception e) {
+            assertTrue(false);
+        }
+
+        inventory = d.getInventory();
+
+        boolean shieldMade = false;
+        for (ItemResponse ir : inventory) {
+            if (ir.getType().equals("shield")) {
+                shieldMade = true;
+            }
+        }
+        assertTrue(shieldMade);
 
 
     }
