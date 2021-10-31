@@ -11,7 +11,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.response.models.DungeonResponse;
+import dungeonmania.response.models.EntityResponse;
+import dungeonmania.response.models.ItemResponse;
+import dungeonmania.util.Direction;
+
 import static dungeonmania.TestHelpers.assertListAreEqualIgnoringOrder;
 
 public class DMControllerTesting {
@@ -24,7 +29,6 @@ public class DMControllerTesting {
     @ValueSource(strings = {"advanced", "boulders", "maze"})
     public void testNewGame(String dungeon) {
         DungeonManiaController controller = new DungeonManiaController();
-        // List<String> modes = ;
         for (String mode : controller.getGameModes()) {
             assertDoesNotThrow(() -> controller.newGame(dungeon, mode));
         }
@@ -131,11 +135,56 @@ public class DMControllerTesting {
     @Test
     public void testBuild() {
         DungeonManiaController controller = new DungeonManiaController();
+        DungeonResponse d = controller.newGame("buildable-test", "Standard");
         
         // check that exception is thrown if "buildable" is invalid
         assertThrows(IllegalArgumentException.class, () -> controller.build("invalid buildable"));
-
+        
         // check that exception is thrown if the player does not have sufficient items to build
+        assertThrows(InvalidActionException.class, () -> controller.build("bow"));
+        // collect items for bow
+        controller.tick(null, Direction.RIGHT); // wood
+        controller.tick(null, Direction.RIGHT); // arrow
+        controller.tick(null, Direction.RIGHT); // arrow
+        d = controller.tick(null, Direction.RIGHT); // arrow
+
+        try {
+            d = controller.build("bow");
+        } catch (Exception e) {
+            assertTrue(false);
+        }
+
+        List<ItemResponse> inventory = d.getInventory();
+
+        boolean bowMade = false;
+        for (ItemResponse ir : inventory) {
+            if (ir.getType().equals("bow")) {
+                bowMade = true;
+            }
+        }
+        assertTrue(bowMade);
+        
+        // now try for shield
+        controller.tick(null, Direction.RIGHT); // wood
+        controller.tick(null, Direction.RIGHT); // wood
+        d = controller.tick(null, Direction.RIGHT); // treasure
+
+        try {
+            d = controller.build("shield");
+        } catch (Exception e) {
+            assertTrue(false);
+        }
+
+        inventory = d.getInventory();
+
+        boolean shieldMade = false;
+        for (ItemResponse ir : inventory) {
+            if (ir.getType().equals("shield")) {
+                shieldMade = true;
+            }
+        }
+        assertTrue(shieldMade);
+
 
     }
 

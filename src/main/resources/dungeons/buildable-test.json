@@ -1,0 +1,44 @@
+{
+    "entities": [
+        {
+            "x": 0,
+            "y": 0,
+            "type": "player"
+        },
+        {
+            "x": 1,
+            "y": 0,
+            "type": "wood"
+        },
+        {
+            "x": 2,
+            "y": 0,
+            "type": "arrow"
+        },
+        {
+            "x": 3,
+            "y": 0,
+            "type": "arrow"
+        },
+        {
+            "x": 4,
+            "y": 0,
+            "type": "arrow"
+        },
+        {
+            "x": 5,
+            "y": 0,
+            "type": "wood"
+        },
+        {
+            "x": 6,
+            "y": 0,
+            "type": "wood"
+        },
+        {
+            "x": 7,
+            "y": 0,
+            "type": "treasure"
+        }
+    ]
+}
