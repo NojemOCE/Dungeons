@@ -385,9 +385,7 @@ public class World {
             //    currentBattle = player.battle(getCharacter(player.getPosition()));
             //}
         }
-        if (Objects.isNull(itemUsed)) {
-            inventory.tick();
-        } else {
+        if (!Objects.isNull(itemUsed)) {
             if (inventory.getType(itemUsed).equals("bomb")) {
                 PlacedBomb newBomb = new PlacedBomb(player.getX(), player.getY(), "bomb" + String.valueOf(incrementEntityCount()));
                 staticEntities.put(newBomb.getId(), newBomb);
