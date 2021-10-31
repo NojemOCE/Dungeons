@@ -382,6 +382,14 @@ public class World {
         
         else  {
             player.tick(movementDirection, this);
+            for (MovingEntity me : movingEntities.values()) {
+                if (me.getPosition().equals(player.getPosition())) {
+                    currentBattle = player.battle(me, gamemode); // if invisible it will add null
+                }
+            }
+            // MovingEntity me = getCharacter(player.getPosition());
+            // if (!Objects.isNull(me) && !me.getAlly()) {
+            // }
         }
 
         // collecting the collectable entity if it exists on the current position
@@ -860,7 +868,8 @@ public class World {
         }
 
         JSONObject playerObj = gameData.getJSONObject("player");
-        List<String> playerObservers = createPlayerFromJSON(playerObj);
+        //merc list
+        JSONArray playerObservers = createPlayerFromJSON(playerObj);
 
         JSONArray movingEntitiesItems = gameData.getJSONArray("moving-entities");
         for (int i = 0; i < movingEntitiesItems.length(); i++) {
@@ -878,6 +887,7 @@ public class World {
         }
 
 
+        //TODO add mercs? playerObservers
 
         if (gameData.has("current-battle")) {
             JSONObject b = gameData.getJSONObject("current-battle");
@@ -975,7 +985,7 @@ public class World {
         }
     }
 
-    private List<String> createPlayerFromJSON(JSONObject obj) {
+    private JSONArray createPlayerFromJSON(JSONObject obj) {
         //TODO implement
         int x = obj.getInt("x");
         int y = obj.getInt("y");
@@ -986,7 +996,6 @@ public class World {
 
         String id = obj.getString("id");
 
-        double allyAttack = obj.getDouble("ally-attack");
         JSONObject healthPoint = obj.getJSONObject("health-point");
 
         double health = healthPoint.getDouble("health");
@@ -994,13 +1003,39 @@ public class World {
 
         HealthPoint playerHP = new HealthPoint(health, maxHealth);
 
+        if (obj.has("active-potion")) {
+            JSONObject activePotion = obj.getJSONObject("active-potion");
+            String activePotionType = activePotion.getString("active-potion");
+            int activePotionDuration = activePotion.getInt("duration");
 
-        Player player = new Player(x, y, id, playerHP);
+            Passive e = null;
+            if (activePotionType.equals("invincibility_potion")) {
+                e = new InvincibilityPotion(activePotionDuration);
+            }
+            else if (activePotionType.equals("invisibility_potion")) {
+                e = new InvisibilityPotion(activePotionDuration);
+            }
+            else if (activePotionType.equals("health_potion")) {
+                e = new HealthPotion(activePotionDuration);
+            }
 
-        //List<String> enemyIDs = (List<String>)obj.get("mercenaries");
+            Player player = new Player(x, y, id, playerHP, e);
+            this.player = player;
 
-        this.player = player;
-        return new ArrayList<>();
+
+
+        }
+        else {
+            Player player = new Player(x, y, id, playerHP);
+            this.player = player;
+        }
+
+        
+
+        JSONArray enemyIDs = obj.getJSONArray("mercenaries");
+
+        
+        return enemyIDs;
     }
 
     private void createMovingEntityFromJSON(JSONObject obj) {
