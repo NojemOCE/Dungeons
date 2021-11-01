@@ -17,6 +17,7 @@ import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.FileLoader;
+import dungeonmania.util.Position;
 
 import static dungeonmania.TestHelpers.assertListAreEqualIgnoringOrder;
 
@@ -46,7 +47,7 @@ public class ZombieTest {
 
         List<EntityResponse> es = d.getEntities();
 
-        Boolean isZombie = false;
+        boolean isZombie = false;
         int zombieCount = 0;
         for (EntityResponse e : es) {
             if (e.getType().equals("zombie_toast")) {
@@ -79,6 +80,37 @@ public class ZombieTest {
         assertThrows(IllegalArgumentException.class, () -> world.interact("wall3"));
 
     }
+
+    @Test
+    public void zombieWalkOnPortal() {
+        World world = new World("zombie-portal-test", "Standard");
+        
+        try {
+            String file = FileLoader.loadResourceFile("/dungeons/" + "zombie-portal-test" + ".json");
+            
+            JSONObject game = new JSONObject(file);
+            
+            world.buildWorld(game);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // if we tick the zombie should be ON the portal
+        DungeonResponse d = world.tick(null, null);
+        List<EntityResponse> es = d.getEntities();
+
+        Position zombiePos = null;
+        for (EntityResponse e : es) {
+            if (e.getType().equals("zombie_toast")) {
+                zombiePos = e.getPosition();
+                break;
+            }
+        }
+
+        assert(zombiePos.equals(new Position(2, 1)));
+    }
+    
 
 
 }
