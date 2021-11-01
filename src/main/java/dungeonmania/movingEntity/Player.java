@@ -49,6 +49,12 @@ public class Player extends MovingEntity {
         return;
     
     }
+
+    /**
+     * A world tick, player will either move or interact
+     * @param movementDirection direction, null if item
+     * @param world item, null if direction
+     */
     public void tick(Direction movementDirection, World world) {
         // check if the direction we are moving is valid first before setting new position
         // Tick passive
@@ -62,7 +68,6 @@ public class Player extends MovingEntity {
         } else {
             notifyPassive("N/A");
         }
-
 
         if (!Objects.isNull(movementDirection)){
             setPosition(validMove(this.getPosition().translateBy(movementDirection), world));
