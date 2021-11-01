@@ -33,7 +33,8 @@ public class InvincibilityPotion extends CollectableEntity implements Passive {
     }
 
     /**
-     * Sets the attack damage of the player depending on whether the invincibility potion 
+     * Sets the attack damage of the player depending on whether the invincibility potion is active
+     * and notifies the subject about whether the potion is active or not
      */
     public void applyPassive(Player player) {
         if (enabled) {
@@ -47,6 +48,9 @@ public class InvincibilityPotion extends CollectableEntity implements Passive {
         }
     }
 
+    /**
+     * Decrements the duration of the potion by 1
+     */
     public void decreaseDuration() {
         duration--;
     }
