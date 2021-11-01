@@ -150,7 +150,7 @@ public abstract class MovingEntity extends Entity {
 
     protected MovementStrategy getMovementFromString(String movement, String currDir, String nextDir, int remMovesCurr, int remMovesNext, boolean avoidPlayer) {
         switch(movement)  {
-            case "circle":
+            case "circleMovement":
                 return new CircleMovement(currDir, nextDir, remMovesCurr, remMovesNext, avoidPlayer);
             case "followPlayer":
                 return new FollowPlayer();
@@ -164,7 +164,7 @@ public abstract class MovingEntity extends Entity {
 
     protected MovementStrategy getMovementFromString(String movement) {
         switch(movement)  {
-            case "circle":
+            case "circleMovement":
                 return new CircleMovement();
             case "followPlayer":
                 return new FollowPlayer();

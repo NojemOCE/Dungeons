@@ -246,11 +246,25 @@ public class FileLoadTest {
 
 
     @Test
-    public void invalidSaveTest() {
+    public void invalidSaveLoadTest() {
         DungeonManiaController controller = new DungeonManiaController();
 
-        assertThrows(IllegalArgumentException.class, ()-> controller.saveGame("boulders"));
+        assertThrows(IllegalArgumentException.class, ()-> controller.saveGame("invalid game"));
+        assertThrows(IllegalArgumentException.class, ()-> controller.loadGame("invalid game"));
 
+        controller.newGame("boulders", "Standard");
+        assertDoesNotThrow(()-> controller.saveGame("boulders1"));
+
+        List<String> games = controller.allGames();
+
+        assertDoesNotThrow(()-> controller.loadGame("boulders1"));
+        
+    }
+
+    @Test
+    public void newSavedFolderTest() {
+        clearSavedFilesFolder();
+        DungeonManiaController controller = new DungeonManiaController();
         controller.newGame("boulders", "Standard");
         assertDoesNotThrow(()-> controller.saveGame("boulders1"));
 
@@ -702,7 +716,7 @@ public class FileLoadTest {
      * Clears the saved files folder after each test
      */
     public void clearSavedFilesFolder() {
-        deleteFile(new File("src/main/resources/savedGames"));
+        deleteFile(new File("src/main/savedGames"));
     }
 
     /**

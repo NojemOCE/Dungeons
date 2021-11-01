@@ -18,6 +18,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import dungeonmania.World;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
+import dungeonmania.response.models.ItemResponse;
 import dungeonmania.staticEntity.StaticEntity;
 import dungeonmania.util.Direction;
 import dungeonmania.util.FileLoader;
@@ -520,6 +521,153 @@ public class SpiderTest {
         exp = exp.translateBy(Direction.RIGHT);
         assertNotNull(p);
         assertEquals(exp, p);
+    }
+
+    @Test
+    public void spiderBattleTest() {
+        World world = new World("spider-battle", "Standard");
+        DungeonResponse d = null;
+        try {
+            String file = FileLoader.loadResourceFile("/dungeons/" + "spider-battle" + ".json");
+            
+            JSONObject game = new JSONObject(file);
+            
+            d = world.buildWorld(game);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        for (EntityResponse e : d.getEntities()) {
+            if (e.getType().equals("player")) {
+                assertEquals(new Position(1, 1), e.getPosition());
+            }
+            else if (e.getType().equals("spider")) {
+                assertEquals(new Position(1, 3), e.getPosition());
+            }
+            else {
+                assertEquals("wall", e.getType());
+            }
+        }
+
+        d = world.tick(null, Direction.DOWN);
+        for (EntityResponse e : d.getEntities()) {
+            if (e.getType().equals("player")) {
+                assertEquals(new Position(1, 2), e.getPosition());
+            }
+            else if (e.getType().equals("spider")) {
+                assertEquals(new Position(1, 2), e.getPosition());
+            }
+            else {
+                assertEquals("wall", e.getType());
+            }
+        }
+        
+        d = world.tick(null, Direction.DOWN);
+        for (EntityResponse e : d.getEntities()) {
+            if (e.getType().equals("player")) {
+                assertEquals(new Position(1, 2), e.getPosition());
+            }
+            else {
+                assertEquals("wall", e.getType());
+            }
+        }
+
+    }
+
+    @Test
+    public void spiderAvoidTest() {
+        World world = new World("spider-avoid", "Standard");
+        DungeonResponse d = null;
+        try {
+            String file = FileLoader.loadResourceFile("/dungeons/" + "spider-avoid" + ".json");
+            
+            JSONObject game = new JSONObject(file);
+            
+            d = world.buildWorld(game);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        for (EntityResponse e : d.getEntities()) {
+            if (e.getType().equals("player")) {
+                assertEquals(new Position(3,1), e.getPosition());
+            }
+            else if (e.getType().equals("spider")) {
+                assertEquals(new Position(1, 2), e.getPosition());
+            }
+            else if (e.getType().equals("invincibility_potion")) {
+                assertEquals(new Position(3, 2), e.getPosition());
+            }
+            else {
+                assertEquals("wall", e.getType());
+            }
+        }
+
+        d = world.tick(null, Direction.DOWN);
+        
+        for (EntityResponse e : d.getEntities()) {
+            if (e.getType().equals("player")) {
+                assertEquals(new Position(3, 2), e.getPosition());
+            }
+            else if (e.getType().equals("spider")) {
+                assertEquals(new Position(1, 1), e.getPosition());
+            }
+            else {
+                assertEquals("wall", e.getType());
+            }
+        }
+
+
+        String potionID = "";
+        for (ItemResponse i : d.getInventory()) {
+            if (i.getType().equals("invincibility_potion")) {
+                potionID = i.getId();
+            }
+        }
+        
+
+        d = world.tick(potionID, null);
+        for (EntityResponse e : d.getEntities()) {
+            if (e.getType().equals("player")) {
+                assertEquals(new Position(3, 2), e.getPosition());
+            }
+            else if (e.getType().equals("spider")) {
+                assertEquals(new Position(2, 1), e.getPosition());
+            }
+            else {
+                assertEquals("wall", e.getType());
+            }
+        }
+
+        d = world.tick(null, Direction.DOWN);
+        
+        for (EntityResponse e : d.getEntities()) {
+            if (e.getType().equals("player")) {
+                assertEquals(new Position(3, 3), e.getPosition());
+            }
+            else if (e.getType().equals("spider")) {
+                assertEquals(new Position(2, 2), e.getPosition());
+            }
+            else {
+                assertEquals("wall", e.getType());
+            }
+        }
+        d = world.tick(null, Direction.LEFT);
+        
+        for (EntityResponse e : d.getEntities()) {
+            if (e.getType().equals("player")) {
+                assertEquals(new Position(2, 3), e.getPosition());
+            }
+            else if (e.getType().equals("spider")) {
+                assertEquals(new Position(2, 2), e.getPosition());
+            }
+            else {
+                assertEquals("wall", e.getType());
+            }
+        }
+
     }
 
     private Position getSpiderPosition(List<EntityResponse> entities, String id) {
