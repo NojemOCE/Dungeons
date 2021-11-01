@@ -1,5 +1,7 @@
 package dungeonmania.collectable;
 
+import org.json.JSONObject;
+
 import dungeonmania.Passive;
 import dungeonmania.movingEntity.Player;
 
@@ -58,6 +60,15 @@ public class InvincibilityPotion extends CollectableEntity implements Passive {
     public int getDuration() {
         // TODO Auto-generated method stub
         return duration;
+    }
+
+    @Override
+    public JSONObject saveGameJson() {
+        JSONObject saveObj = super.saveGameJson();
+
+        saveObj.put("duration", duration);
+        
+        return saveObj;
     }
 
 

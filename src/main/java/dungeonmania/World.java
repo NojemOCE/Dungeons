@@ -370,7 +370,7 @@ public class World {
         // InvalidActionException if itemUsed is not in the player's inventory
 
         if (!Objects.isNull(itemUsed)) {
-            if (inventory.getType(itemUsed).equals("bomb")) {
+            if (!(inventory.getType(itemUsed) == null) && inventory.getType(itemUsed).equals("bomb")) {
                 inventory.use(itemUsed);
                 PlacedBomb newBomb = new PlacedBomb(player.getX(), player.getY(), "bomb" + String.valueOf(incrementEntityCount()));
                 staticEntities.put(newBomb.getId(), newBomb);
@@ -501,7 +501,7 @@ public class World {
         }
         List<Position> possibleSpawnPositions = spawner.spawn();
         Position newPos = getSpawnPosition(possibleSpawnPositions);
-        if (newPos.equals(null)) {
+        if (newPos == null) {
             // no valid spawn positions
             return;
         }
@@ -926,6 +926,9 @@ public class World {
 
         int tickNo = gameData.getInt("tick-count");
         int entityNo = gameData.getInt("entity-count");
+        
+        setEntityCount(entityNo);
+        setTickCount(tickNo);
 
         // TODO can we put this in a shared method
         if (gameData.has("goal-condition")) {
@@ -1315,4 +1318,14 @@ public class World {
     public Position getPlayerPosition() {
         return player.getPosition();
     }
+
+    public void setTickCount(int tickCount) {
+        this.tickCount = tickCount;
+    }
+
+    public void setEntityCount(int entityCount) {
+        this.entityCount = entityCount;
+    }
+
+    
 }
