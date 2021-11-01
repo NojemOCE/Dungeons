@@ -1,8 +1,11 @@
 package dungeonmania.movingEntityTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.List;
 
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
@@ -17,6 +20,8 @@ import dungeonmania.collectable.InvisibilityPotion;
 import dungeonmania.inventory.Inventory;
 import dungeonmania.movingEntity.*;
 import dungeonmania.movingEntity.MovementStrategies.CircleMovement;
+import dungeonmania.response.models.DungeonResponse;
+import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.FileLoader;
 import dungeonmania.util.Position;
@@ -322,7 +327,8 @@ public class CharacterTest {
         world.tick(null, Direction.UP);
         world.interact(merc.getId());
         assertEquals(merc.getAlly(), true);
-
+        world.tick(null, null);
+        
         assertEquals(world.getPlayerPosition(), new Position(7,9));
         Zombie zambie = new Zombie(7, 9, "zombie");
         world.getPlayer().subscribePassiveObserver(zambie);
@@ -330,7 +336,7 @@ public class CharacterTest {
         
         battle.battleTick(new Inventory());
         assertEquals(zambie.getHealthPoint().getHealth(), 0);
-
+        
         assertEquals(world.inInventory(treasure), false);
 
         Zombie zambie1 = new Zombie(7, 9, "zombie1");
@@ -346,4 +352,68 @@ public class CharacterTest {
         Battle battle2 = world.getPlayer().battle(zambie2, new Standard());
         assertEquals(battle2, null);
     }
+
+    /**
+     * Test that the game ends when the player dies
+     */
+    @Test
+    public void testGameOver() {
+        World world = new World("player-gameOver-test", "Peaceful");
+        try {
+            String file = FileLoader.loadResourceFile("/dungeons/" + "player-gameOver-test" + ".json");
+            JSONObject game = new JSONObject(file);
+            world.buildWorld(game);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        DungeonResponse d = world.tick(null, Direction.RIGHT);
+        // Battle battle1 = world.getPlayer().battle(zambie1, new Standard());
+        world.getPlayer().defend(100);
+        d = world.tick(null, null);
+
+        List<EntityResponse> entities = d.getEntities();
+        
+        boolean noPlayer = true;
+        for (EntityResponse er : entities) {
+            if (er.getType().equals("player")) {
+                noPlayer = false;
+                break;
+            }
+        }
+
+        assertTrue(noPlayer);
+
+    }
+
+    /**
+     * Test no valid spider spawn positions
+     */
+    @Test
+    public void testInvalidSpiderSpawn() {
+        World world = new World("a-lot-of-boulders", "Peaceful");
+        try {
+            String file = FileLoader.loadResourceFile("/dungeons/" + "a-lot-of-boulders" + ".json");
+            JSONObject game = new JSONObject(file);
+            world.buildWorld(game);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        // tick 21 times and make sure there are no spiders on the map
+
+        DungeonResponse d;
+        List<EntityResponse> entities;
+        for (int i = 0; i < 21; i++) {
+            d = world.tick(null, null);
+            entities = world.getEntityResponses();
+            for (EntityResponse er : entities) {
+                assertFalse(er.getType().equals("spider"));
+            }
+        }
+
+    }
+
 }

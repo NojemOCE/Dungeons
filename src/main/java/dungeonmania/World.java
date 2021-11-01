@@ -393,6 +393,7 @@ public class World {
                 } else {
                     this.player = null; // will end game in dungeon response
                     // needs to return early
+                    return worldDungeonResponse();
                 }
             }
         }
@@ -450,9 +451,16 @@ public class World {
         int x = ran1.nextInt(highestX);
         int y = ran2.nextInt(highestY);
         
-        while (!validSpiderSpawnPosition(new Position(x,y))) {
+        int numChecks = 0;
+        while (!validSpiderSpawnPosition(new Position(x,y)) && numChecks < 10) {
             x = ran1.nextInt(highestX);
             y = ran2.nextInt(highestY);
+            numChecks++;
+        }
+
+        // no valid positions found in reasonable time
+        if (numChecks == 10) {
+            return;
         }
 
         Spider newSpider = new Spider(x, y, "spider" + String.valueOf(incrementEntityCount()));
@@ -725,7 +733,7 @@ public class World {
     public List<EntityResponse> getEntityResponses() {
         List<EntityResponse> entityResponses = new ArrayList<>();
         
-        if (!(player  == null)){
+        if (!(player == null)){
             entityResponses.add(player.getEntityResponse());
         }
         if (!movingEntities.isEmpty()) entityResponses.addAll(movingEntities.values().stream().map(MovingEntity::getEntityResponse).collect(Collectors.toList()));
