@@ -32,6 +32,9 @@ public class InvincibilityPotion extends CollectableEntity implements Passive {
         this.duration = duration;
     }
 
+    /**
+     * Sets the attack damage of the player depending on whether the invincibility potion 
+     */
     public void applyPassive(Player player) {
         if (enabled) {
             if (this.duration == 0) {
@@ -56,7 +59,6 @@ public class InvincibilityPotion extends CollectableEntity implements Passive {
 
     @Override
     public int getDuration() {
-        // TODO Auto-generated method stub
         return duration;
     }
 

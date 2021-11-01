@@ -126,6 +126,13 @@ public class Inventory {
         return collectableItems.values().stream().anyMatch(e -> e instanceof Sword);
     }
 
+    public boolean hasItem(String itemType) {
+        if (numCollected.containsKey(itemType) && numCollected.get(itemType) != 0) {
+            return true;
+        }
+        return false;
+    }
+
     public List<ItemResponse> getInventoryResponse() {
         List<ItemResponse> itemResponses = collectableItems.values().stream().map(CollectableEntity::getItemResponse).collect(Collectors.toList());
         return itemResponses;
@@ -169,11 +176,12 @@ public class Inventory {
         }
         return null;
     }
+
     public boolean inInventory(String itemUsedId) {
         return collectableItems.containsKey(itemUsedId);
     }
 
-    public boolean isUsable(String itemUsedId) {
+    private boolean isUsable(String itemUsedId) {
         
         for ( String item : usable) {
             if (itemUsedId.contains(item)) {
@@ -184,7 +192,7 @@ public class Inventory {
         
     }
 
-    public void removeItem(CollectableEntity item) {
+    private void removeItem(CollectableEntity item) {
         //consumableItems.remove(item.getId());
         collectableItems.remove(item.getId());
         numCollected.put(item.getType(), numCollected.get(item.getType()) - 1);
