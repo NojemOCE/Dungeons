@@ -221,12 +221,13 @@ public class Inventory {
      * @return the attack of the player after all attack modifications of the inventory have been included
      */
     public double attackModifier(double playerAttack) {
+        List<String> idToRemove = new ArrayList<>();
         for (CollectableEntity item : collectableItems.values()) {
             if (item instanceof Sword ) {
                 playerAttack += ((Sword)item).attackModifier();
                 ((Sword)item).consume();
                 if (item.getDurability() == 0) {
-                    removeItem(item);
+                    idToRemove.add(item.getId());
                 }
             }
         }
@@ -236,9 +237,13 @@ public class Inventory {
                 playerAttack *= ((Bow)item).attackModifier();
                 ((Bow)item).consume();
                 if (item.getDurability() == 0) {
-                    removeItem(item);
+                    idToRemove.add(item.getId());
                 }
             }
+        }
+
+        for (String itemId : idToRemove) {
+            collectableItems.remove(itemId);
         }
 
         return playerAttack;
@@ -250,13 +255,13 @@ public class Inventory {
      * @return the attack of the enemy after all defence modifications of the inventory have been included
      */
     public double defenceModifier(double enemyAttack) {
-
+        List<String> idToRemove = new ArrayList<>();
         for (CollectableEntity item : collectableItems.values()) {
             if (item instanceof Shield ) {
                 enemyAttack -= ((Shield)item).defenceModifier();
                 ((Shield)item).consume();
                 if (item.getDurability() == 0) {
-                    removeItem(item);
+                    idToRemove.add(item.getId());
                 }
             }
         }
@@ -270,9 +275,13 @@ public class Inventory {
                 enemyAttack *= ((Armour)item).defenceModifier();
                 ((Armour)item).consume();
                 if (item.getDurability() == 0) {
-                    removeItem(item);
+                    idToRemove.add(item.getId());
                 }
             }
+        }
+
+        for (String itemId : idToRemove) {
+            collectableItems.remove(itemId);
         }
 
         return enemyAttack;
