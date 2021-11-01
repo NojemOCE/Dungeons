@@ -108,7 +108,7 @@ public class ZombieTest {
             }
         }
 
-        assert(zombiePos.equals(new Position(2, 1)));
+        assert(zombiePos.equals(new Position(2, 1)) || zombiePos.equals(new Position(1, 1)));
     }
     
 
