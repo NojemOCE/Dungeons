@@ -140,18 +140,6 @@ public class Inventory {
         return collectableItems.values().stream().anyMatch(e -> e instanceof Sword);
     }
 
-    /**
-     * Checks if there is a item that has the type which corresponds with provided item type
-     * @param itemType the type of the item to be checked
-     * @return true if there is a weapon, otherwise false
-     */
-    public boolean hasItem(String itemType) {
-        if (numCollected.containsKey(itemType) && numCollected.get(itemType) != 0) {
-            return true;
-        }
-        return false;
-    }
-
     public List<ItemResponse> getInventoryResponse() {
         List<ItemResponse> itemResponses = collectableItems.values().stream().map(CollectableEntity::getItemResponse).collect(Collectors.toList());
         return itemResponses;
@@ -237,6 +225,9 @@ public class Inventory {
             if (item instanceof Sword ) {
                 playerAttack += ((Sword)item).attackModifier();
                 ((Sword)item).consume();
+                if (item.getDurability() == 0) {
+                    removeItem(item);
+                }
             }
         }
 
@@ -244,6 +235,9 @@ public class Inventory {
             if (item instanceof Bow ) {
                 playerAttack *= ((Bow)item).attackModifier();
                 ((Bow)item).consume();
+                if (item.getDurability() == 0) {
+                    removeItem(item);
+                }
             }
         }
 
@@ -261,6 +255,9 @@ public class Inventory {
             if (item instanceof Shield ) {
                 enemyAttack -= ((Shield)item).defenceModifier();
                 ((Shield)item).consume();
+                if (item.getDurability() == 0) {
+                    removeItem(item);
+                }
             }
         }
 
@@ -272,6 +269,9 @@ public class Inventory {
             if (item instanceof Armour ) {
                 enemyAttack *= ((Armour)item).defenceModifier();
                 ((Armour)item).consume();
+                if (item.getDurability() == 0) {
+                    removeItem(item);
+                }
             }
         }
 
@@ -315,6 +315,11 @@ public class Inventory {
         return entitiesInInventory;
     }
 
+    /**
+     * Checks if there is a item that has the type which corresponds with provided item type
+     * @param itemType the type of the item to be checked
+     * @return true if there is a weapon, otherwise false
+     */
     public boolean hasItem(String type) {
         for (CollectableEntity e : collectableItems.values()) {
             if (e.getType().equals("type")) {
