@@ -97,7 +97,7 @@ public class DungeonManiaController {
 
         saveState.put("id", dungeonID);
 
-        File saveDirectory = new File("src/main/resources/savedGames");
+        File saveDirectory = new File("src/main/savedGames");
         if (!saveDirectory.exists()) {
             saveDirectory.mkdir();
         }
@@ -125,8 +125,7 @@ public class DungeonManiaController {
 
         World newGame = null;
         try {
-            String file = FileLoader.loadResourceFile("/savedGames/" + name + ".json");
-            
+            String file = FileLoader.loadFileOutsideOfResources("src/main/savedGames/" + name + ".json");
             JSONObject game = new JSONObject(file);
             
             newGame = new World(game.getString("dungeon-name"), game.getString("gamemode"), game.getString("id"));
@@ -146,7 +145,8 @@ public class DungeonManiaController {
         List<String> savedGames =  new ArrayList<>();
 
         try{
-            savedGames = FileLoader.listFileNamesInResourceDirectory("/savedGames");
+            savedGames = FileLoader.listFileNamesInDirectoryOutsideOfResources("src/main/savedGames");
+            //savedGames = FileLoader.listFileNamesInResourceDirectory("/savedGames");
         }
         catch(Exception e) {
             e.printStackTrace();

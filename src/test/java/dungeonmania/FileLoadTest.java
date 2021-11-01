@@ -49,12 +49,12 @@ public class FileLoadTest {
             //ignore
         }*/
         
-        try {
+        /*try {
             TimeUnit.SECONDS.sleep(2);
         }
         catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
         List<String> games = controller.allGames();
 
 
@@ -196,12 +196,12 @@ public class FileLoadTest {
 
         controller.saveGame("collectable-world2");
 
-        try {
+        /*try {
             TimeUnit.SECONDS.sleep(2);
         }
         catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
         List<String> games = controller.allGames();
 
         assertDoesNotThrow(() -> controller.loadGame("collectable-world2"));
@@ -252,6 +252,10 @@ public class FileLoadTest {
 
         controller.newGame("boulders", "Standard");
         assertDoesNotThrow(()-> controller.saveGame("boulders1"));
+
+        List<String> games = controller.allGames();
+
+        assertDoesNotThrow(()-> controller.loadGame("boulders1"));
         
     }
 
@@ -264,12 +268,12 @@ public class FileLoadTest {
         
         controller.saveGame("statics-world1");
 
-        try {
+        /*try {
             TimeUnit.SECONDS.sleep(2);
         }
         catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
 
         List<String> games = controller.allGames();
 
@@ -355,12 +359,12 @@ public class FileLoadTest {
 
         controller.saveGame("statics-world2");
 
-        try {
+       /*try {
             TimeUnit.SECONDS.sleep(2);
         }
         catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
         List<String> games = controller.allGames();
 
         assertDoesNotThrow(() -> controller.loadGame("statics-world2"));
@@ -423,12 +427,12 @@ public class FileLoadTest {
 
         controller.saveGame("enemies-world1");
 
-        try {
+        /*try {
             TimeUnit.SECONDS.sleep(2);
         }
         catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
 
         List<String> games = controller.allGames();
 
@@ -497,12 +501,12 @@ public class FileLoadTest {
 
         controller.saveGame("placing-bomb1");
 
-        try {
+        /*try {
             TimeUnit.SECONDS.sleep(2);
         }
         catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
 
         List<String> games = controller.allGames();
 
@@ -580,12 +584,12 @@ public class FileLoadTest {
 
         controller.saveGame("building-world1");
 
-        try {
+        /*try {
             TimeUnit.SECONDS.sleep(2);
         }
         catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
 
         List<String> games = controller.allGames();
 
@@ -657,12 +661,12 @@ public class FileLoadTest {
 
         assertDoesNotThrow(()-> controller.saveGame("invinc-potion1"));
       
-        try {
+        /*try {
             TimeUnit.SECONDS.sleep(2);
         }
         catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
         List<String> games = controller.allGames();
 
 
