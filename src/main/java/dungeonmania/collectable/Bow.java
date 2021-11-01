@@ -19,6 +19,10 @@ public class Bow extends CollectableEntity {
         setDurability(durability);
     }
 
+    /**
+     * Provides the attack modifier of the bow
+     * @return ATTACK_MULTIPLIER
+     */
     public int attackModifier() {    
         return ATTACK_MULTIPLIER; 
     }

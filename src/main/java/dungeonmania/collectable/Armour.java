@@ -19,6 +19,10 @@ public class Armour extends CollectableEntity {
         setDurability(durability);
     }
     
+    /**
+     * provides the defence modifier of armour
+     * @return DEFENCE_MODIFIER
+     */
     public double defenceModifier() {
         return DEFENCE_MULTIPLIER;
     }
