@@ -225,6 +225,9 @@ public class Inventory {
             if (item instanceof Sword ) {
                 playerAttack += ((Sword)item).attackModifier();
                 ((Sword)item).consume();
+                if (item.getDurability() == 0) {
+                    removeItem(item);
+                }
             }
         }
 
@@ -232,6 +235,9 @@ public class Inventory {
             if (item instanceof Bow ) {
                 playerAttack *= ((Bow)item).attackModifier();
                 ((Bow)item).consume();
+                if (item.getDurability() == 0) {
+                    removeItem(item);
+                }
             }
         }
 
@@ -249,6 +255,9 @@ public class Inventory {
             if (item instanceof Shield ) {
                 enemyAttack -= ((Shield)item).defenceModifier();
                 ((Shield)item).consume();
+                if (item.getDurability() == 0) {
+                    removeItem(item);
+                }
             }
         }
 
@@ -260,6 +269,9 @@ public class Inventory {
             if (item instanceof Armour ) {
                 enemyAttack *= ((Armour)item).defenceModifier();
                 ((Armour)item).consume();
+                if (item.getDurability() == 0) {
+                    removeItem(item);
+                }
             }
         }
 
