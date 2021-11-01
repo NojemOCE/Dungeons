@@ -15,9 +15,8 @@ public class TreasureGoals extends GoalLeaf{
 
     @Override
     public Boolean evaluate(World world) {
-        // TODO Auto-generated method stub
+    
         List<CollectableEntity> ce = new ArrayList<>(world.getCollectibleEntities().values());
-        // check no more treasure
         ce.removeIf(obj -> !obj.getType().equals("treasure"));
         
         if (ce.isEmpty()){

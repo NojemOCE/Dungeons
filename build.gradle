@@ -80,3 +80,7 @@ jacocoTestReport {
     
     dependsOn test
 }
+
+tasks.withType(Test) {
+    maxParallelForks = 1
+}

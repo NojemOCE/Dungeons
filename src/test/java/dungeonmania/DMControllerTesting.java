@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,7 @@ import dungeonmania.util.Direction;
 import static dungeonmania.TestHelpers.assertListAreEqualIgnoringOrder;
 
 public class DMControllerTesting {
-
+    
     /**
      * Test that all combination of games can be created (newGame)
      * - Checks that provided list of expected dungeons can be created with each in built gamemode
@@ -78,9 +79,9 @@ public class DMControllerTesting {
     //     String existingId = newDungeon.getDungeonId();
     //     assertDoesNotThrow(() -> controller.saveGame(existingId));
 
-    //     // check that valid id can be loaded
-    //     assertDoesNotThrow(() -> controller.loadGame(existingId));
-    // }
+        // check that valid id can be loaded
+        //assertDoesNotThrow(() -> controller.loadGame(existingId));
+    //}
 
     /** 
      * Test that all saved games in controller are stored as expected
@@ -101,7 +102,9 @@ public class DMControllerTesting {
 
 
         // check that saved games list is as expected
-        // assertListAreEqualIgnoringOrder(controller.allGames(), gameIds);
+        for (String id: gameIds) {
+            assert(controller.allGames().contains(id));
+        }
     }
 
 
