@@ -1,5 +1,6 @@
 package dungeonmania.util;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -8,6 +9,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.eclipse.jetty.util.IO;
 
 public final class FileLoader {
     /**
@@ -69,5 +72,15 @@ public final class FileLoader {
             int extIndex = nameAndExt.lastIndexOf('.');
             return nameAndExt.substring(0, extIndex > -1 ? extIndex : nameAndExt.length());
         }).collect(Collectors.toList());
+    }
+
+    public static String loadFileOutsideOfResources(String path) throws IOException, FileNotFoundException {
+        try {
+            File f = new File(path);
+            return new String(Files.readAllBytes(f.toPath()));
+            
+        } catch (IOException e) {
+            throw new FileNotFoundException(path);
+        }
     }
 }
