@@ -2,6 +2,7 @@ package dungeonmania;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -495,18 +496,20 @@ public class FileLoadTest {
         controller.newGame("placing-bomb", "Standard");
 
         DungeonResponse d = controller.tick(null, Direction.DOWN);
+        List<ItemResponse> inventory = d.getInventory();
 
-        controller.tick("bomb", null);
+        String bombId = null;
+        for (ItemResponse ir : inventory) {
+            if (ir.getType().equals("bomb")) {
+                bombId = ir.getId();
+            }
+        }
+        assertNotNull(bombId);
+
+        controller.tick(bombId, null);
         controller.tick(null, Direction.DOWN);
 
         controller.saveGame("placing-bomb1");
-
-        /*try {
-            TimeUnit.SECONDS.sleep(2);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }*/
 
         List<String> games = controller.allGames();
 
@@ -515,14 +518,14 @@ public class FileLoadTest {
         d = controller.tick(null, Direction.UP);
         
         List <EntityResponse> entities = d.getEntities();
-        assertEquals(23, entities.size());
+        assertEquals(19, entities.size());
 
         for (EntityResponse e: entities) {
             if (e.getType().equals("player")) {
                 assert(e.getPosition().equals(new Position(1, 3)));
             }
             else if (e.getType().equals("bomb")) {
-                assert(e.getPosition().equals(new Position(2, 2)));
+                assert(e.getPosition().equals(new Position(1, 2)));
             }
             else if (e.getType().equals("treasure")) {
                 assert(e.getPosition().equals(new Position(3, 3)));
@@ -532,7 +535,7 @@ public class FileLoadTest {
             }
         }
 
-        List<ItemResponse> inventory = d.getInventory();
+        inventory = d.getInventory();
         assertEquals(0, inventory.size());
 
         List<String> buildables = d.getBuildables();

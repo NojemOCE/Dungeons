@@ -749,9 +749,9 @@ public class World {
      * @param y y co-ord
      * @return true if in bound
      */
-    public boolean inBounds(int x, int y) {
-        return !(x < 0 || x >= highestX || y < 0 || y >= highestY);
-    }
+    // public boolean inBounds(int x, int y) {
+    //     return !(x < 0 || x >= highestX || y < 0 || y >= highestY);
+    // }
 
 
     /**
@@ -1239,7 +1239,7 @@ public class World {
             ZombieToastSpawn e = new ZombieToastSpawn(x, y, id);
             staticEntities.put(e.getId(), e);   
         } 
-        else if (type.equals("placed-bomb")) {
+        else if (type.equals("bomb")) {
             PlacedBomb e = new PlacedBomb(x, y, id);
             staticEntities.put(e.getId(), e); 
         }
