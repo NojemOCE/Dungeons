@@ -17,7 +17,7 @@ import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
 
-public class RandomMovement implements Movement {
+public class RandomMovement implements MovementStrategy {
 
     @Override
     public void move(MovingEntity me, World world) {

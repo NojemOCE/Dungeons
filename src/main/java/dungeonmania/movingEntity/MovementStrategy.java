@@ -4,7 +4,7 @@ import dungeonmania.World;
 import dungeonmania.util.*;
 import dungeonmania.*;
 
-public interface Movement {
+public interface MovementStrategy {
 
     /**
      * Takes a moving entity and the current game world, and moves them to their next position
@@ -13,5 +13,9 @@ public interface Movement {
      */
     public void move(MovingEntity me, World world);
 
+    /**
+     * return movement type
+     * @return
+     */
     public String getMovementType();
 }
