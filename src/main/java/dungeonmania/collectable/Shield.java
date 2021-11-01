@@ -20,7 +20,7 @@ public class Shield extends CollectableEntity {
     }
 
     /**
-     * provides the defence modifier of armour
+     * provides the defence modifier of shield
      * @return DEFENCE
      */
     public int defenceModifier() { 

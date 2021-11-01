@@ -20,7 +20,7 @@ public class Sword extends CollectableEntity {
     }
 
     /**
-     * Provides the attack modifier of the Sword
+     * Provides the attack modifier of the sword
      * @return ATTACK_POWER
      */
     public double attackModifier() {

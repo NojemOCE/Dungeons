@@ -1,7 +1,5 @@
 package dungeonmania.collectable;
 
-import org.json.JSONObject;
-
 import dungeonmania.Passive;
 import dungeonmania.movingEntity.Player;
 
@@ -29,11 +27,16 @@ public class HealthPotion extends CollectableEntity implements Passive {
         this.duration = duration;
     }
 
+    /**
+     * Increases the player's health points by the HEAL_EFFECT of this potion
+     */
     public void applyPassive(Player player) {
-        System.out.println("HEAL!");
         player.addHealth(HEAL_EFFECT);
     }
 
+    /**
+     * Decrements the duration of the potion by 1
+     */
     public void decreaseDuration() {
         duration--;
     }
@@ -48,14 +51,5 @@ public class HealthPotion extends CollectableEntity implements Passive {
     public CollectableEntity consume() {
         decreaseDurability();
         return this;
-    }
-
-    @Override
-    public JSONObject saveGameJson() {
-        JSONObject saveObj = super.saveGameJson();
-
-        saveObj.put("duration", duration);
-        
-        return saveObj;
     }
 }
