@@ -15,7 +15,6 @@ import dungeonmania.response.models.ItemResponse;
 
 public class Inventory {
     private Map<String, CollectableEntity> collectableItems = new HashMap<>();
-    //private Map<String, Consumable> consumableItems = new HashMap<>();
     private Map<String, Integer> numCollected = new HashMap<>();
     private List<String> usable = new ArrayList<>();
 
@@ -29,13 +28,14 @@ public class Inventory {
     /**
      * Add given item to the inventory
      * @param item item that is collected and to be added to inventory
+     * @return false when there is already a key within the inventory and the item being collected is a key
+     * @return true when the item has been collected
      */
     public boolean collect(CollectableEntity item) {
         if (item instanceof Key && numItem("key") != 0) {
             return false;
         }
 
-        //System.out.println(numItem("key"));
         item.collect();
         String itemType = item.getType();
 
@@ -43,10 +43,14 @@ public class Inventory {
         numCollected.put(itemType, numCollected.get(itemType) + 1);
 
         collectableItems.put(item.getId(), item);
-        //consumableItems.put(item.getId(), item);
         return true;
     }
 
+    /**
+     * Consumes the item which corresponds with the itemId provided if it exists within the inventory
+     * Removes the item if its durability becomes zero after being consumed
+     * @param itemId 
+     */
     public void use(String itemId) {
         if (collectableItems.containsKey(itemId)) {
             collectableItems.get(itemId).consume();
@@ -77,11 +81,17 @@ public class Inventory {
         //consumableItems.remove(idToRemove);
     }
     
+    /**
+     * Checks if the provided item type is able to be crafted with the items currently within the inventory.
+     * If the item is able to be crafted, the crafting material are consumed and the crafted item is added to the inventory
+     * @param itemType the type of the item to be built
+     * @param itemNum the number following the item's id if it is built successfully
+     * @throws InvalidActionException when there are insufficient items within the inventory to build the provided item type
+     */
     public void craft(String itemType, String itemNum) {
         if (!isBuildable(itemType)) {
             throw new InvalidActionException("Insufficient items");
         } else if (itemType.equalsIgnoreCase("bow")) {
-            System.out.println("x");
             useByType("wood");
             IntStream.range(0, 3).mapToObj(i -> "arrow").forEach(this::useByType);
             collectableItems.put(itemType + itemNum, new Bow(0, 0, itemType + itemNum));
@@ -94,6 +104,10 @@ public class Inventory {
         numCollected.put(itemType, numCollected.get(itemType) + 1);
     }
 
+    /**
+     * Provides the amount of the specified item type within the inventory
+     * @return the amount of the specified item type within the inventory
+     */
     public int numItem(String itemType) {
         numCollected.putIfAbsent(itemType, 0);
         return numCollected.get(itemType);
@@ -126,11 +140,30 @@ public class Inventory {
         return collectableItems.values().stream().anyMatch(e -> e instanceof Sword);
     }
 
+    /**
+     * Checks if there is a item that has the type which corresponds with provided item type
+     * @param itemType the type of the item to be checked
+     * @return true if there is a weapon, otherwise false
+     */
+    public boolean hasItem(String itemType) {
+        if (numCollected.containsKey(itemType) && numCollected.get(itemType) != 0) {
+            return true;
+        }
+        return false;
+    }
+
     public List<ItemResponse> getInventoryResponse() {
         List<ItemResponse> itemResponses = collectableItems.values().stream().map(CollectableEntity::getItemResponse).collect(Collectors.toList());
         return itemResponses;
     }
 
+    /**
+     * Causes a tick to occur for the item id provided
+     * @param itemUsedId the id of the item that is trying to be used
+     * @return the collectable that has been used, null otherwise
+     * @throws InvalidActionException when the item id provided doesn't correspond to an item within the inventory
+     * @throws IllegalArgumentException when the item id provided doesn't correspond to a useable item
+     */
     public CollectableEntity tick(String itemUsedId) {
         CollectableEntity collectable = null;
         if (!inInventory(itemUsedId)) {
@@ -140,7 +173,6 @@ public class Inventory {
             if (collectable.getDurability() == 0) {
                 removeItem(collectable);
             }
-            //tick();
             return collectable;
         } else {
             throw new IllegalArgumentException("Wrong usable type");
@@ -148,15 +180,6 @@ public class Inventory {
 
         
     }
-
-    // public void tick() {
-    //     for (CollectableEntity item : collectableItems.values()) {
-    //         item.tick();
-    //         if (item.getDurability() == 0) {
-    //             removeItem(item);
-    //         }
-    //     }
-    // }
 
     /**
      * Get the type of the given item
@@ -169,11 +192,22 @@ public class Inventory {
         }
         return null;
     }
+
+    /**
+     * Checks if the provided item id exists within inventory
+     * @param itemUsedId the id of the item to be checked
+     * @return true if the item is in the inventory, false otherwise
+     */
     public boolean inInventory(String itemUsedId) {
         return collectableItems.containsKey(itemUsedId);
     }
 
-    public boolean isUsable(String itemUsedId) {
+    /**
+     * Checks if the provided item id is able to be used
+     * @param itemUsedId the id of the item to be checked
+     * @return true if the item is useable, false otherwise
+     */
+    private boolean isUsable(String itemUsedId) {
         
         for ( String item : usable) {
             if (itemUsedId.contains(item)) {
@@ -184,12 +218,20 @@ public class Inventory {
         
     }
 
-    public void removeItem(CollectableEntity item) {
-        //consumableItems.remove(item.getId());
+    /**
+     * Removes the provided item from the inventory
+     * @param item the item to be removed
+     */
+    private void removeItem(CollectableEntity item) {
         collectableItems.remove(item.getId());
         numCollected.put(item.getType(), numCollected.get(item.getType()) - 1);
     }
 
+    /**
+     * Provides the attack provided to the player from the inventory
+     * @param playerAttack the players attack before the modification
+     * @return the attack of the player after all attack modifications of the inventory have been included
+     */
     public double attackModifier(double playerAttack) {
         for (CollectableEntity item : collectableItems.values()) {
             if (item instanceof Sword ) {
@@ -208,6 +250,11 @@ public class Inventory {
         return playerAttack;
     }
 
+    /**
+     * Provides the modified attack of the enemy when the defense modifier of the inventory has been applied
+     * @param enemyAttack the enemy attack before the modification
+     * @return the attack of the enemy after all defence modifications of the inventory have been included
+     */
     public double defenceModifier(double enemyAttack) {
 
         for (CollectableEntity item : collectableItems.values()) {
@@ -240,6 +287,12 @@ public class Inventory {
         return buildable;
     }
 
+    /**
+     * Checks whether the item type provided is buildable
+     * @param buildableType the type of the item to be checked
+     * @return true if the item is able to be built, false otherwise
+     * @throws IllegalArgumentExeption if the type provided isn't able to be built
+     */
     public boolean isBuildable(String buildableType) {
         if (buildableType.equalsIgnoreCase("bow")) {
             return numItem("wood") >= 1 && numItem("arrow") >= 3;
@@ -250,6 +303,10 @@ public class Inventory {
         }
     }
 
+    /**
+     * Provides the entities within the inventory in a JSON for game saving
+     * @return a JSONArray of the entities within the inventory
+     */
     public JSONArray saveGameJson() {
         JSONArray entitiesInInventory = new JSONArray();
         for (CollectableEntity e : collectableItems.values()) {

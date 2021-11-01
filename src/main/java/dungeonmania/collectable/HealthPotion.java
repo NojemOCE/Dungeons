@@ -38,6 +38,7 @@ public class HealthPotion extends CollectableEntity implements Passive {
         duration--;
     }
 
+    @Override
     public int getDuration() {
         return this.duration;
     }

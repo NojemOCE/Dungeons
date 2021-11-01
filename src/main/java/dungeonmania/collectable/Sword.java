@@ -19,6 +19,10 @@ public class Sword extends CollectableEntity {
         setDurability(durability);
     }
 
+    /**
+     * Provides the attack modifier of the Sword
+     * @return ATTACK_POWER
+     */
     public double attackModifier() {
         return ATTACK_POWER;
     }

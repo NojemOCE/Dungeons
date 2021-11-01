@@ -19,6 +19,10 @@ public class Shield extends CollectableEntity {
         setDurability(durability);
     }
 
+    /**
+     * provides the defence modifier of armour
+     * @return DEFENCE
+     */
     public int defenceModifier() { 
         return DEFENCE;
     }
