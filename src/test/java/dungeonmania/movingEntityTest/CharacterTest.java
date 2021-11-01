@@ -6,11 +6,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.shadow.com.univocity.parsers.common.processor.InputValueSwitch;
 
 import dungeonmania.World;
 import dungeonmania.exceptions.*;
+import dungeonmania.gamemode.Standard;
 import dungeonmania.collectable.CollectableEntity;
 import dungeonmania.collectable.InvincibilityPotion;
+import dungeonmania.collectable.InvisibilityPotion;
 import dungeonmania.inventory.Inventory;
 import dungeonmania.movingEntity.*;
 import dungeonmania.movingEntity.MovementStrategies.CircleMovement;
@@ -30,7 +33,8 @@ public class CharacterTest {
         Player player = new Player(1, 1, "player", playerHealth);
 
         // Ensure attributes are correct
-        assertEquals(player.getHealthPoint(), new HealthPoint(100));
+        assertEquals(player.getHealthPoint().getHealth(), 100);
+        assertEquals(player.getHealthPoint().getMaxHealth(), 100);
         assertEquals(player.getAttackDamage(), 3);
         assertEquals(player.getPosition(), new Position(1, 1));
 
@@ -196,9 +200,12 @@ public class CharacterTest {
         // Test for mercenary runningaway
         assertEquals(world.getPlayer().getPosition(), new Position(11, 10));
         world.tick(potion.getId(), null);
+        world.getPlayer().saveGameJson();
+
         assertEquals(world.getPlayer().getAttackDamage(), 999);
         world.tick(null, Direction.UP);
         world.tick(null, Direction.UP);
+        world.getPlayer().saveGameJson();
 
         assertEquals(merc.getMovement().getMovementType(), "runAway");
         world.tick(null, Direction.LEFT);
@@ -211,6 +218,10 @@ public class CharacterTest {
         world.tick(null, Direction.UP);
         world.tick(null, Direction.RIGHT);
 
+
+        world.getPlayer().addPotion(new InvisibilityPotion(10));
+        world.tick(null, Direction.LEFT);
+        world.tick(null, Direction.LEFT);
 
         assertEquals(world.getPlayer().getAttackDamage(), 3);
 
@@ -312,9 +323,27 @@ public class CharacterTest {
         world.interact(merc.getId());
         assertEquals(merc.getAlly(), true);
 
+        assertEquals(world.getPlayerPosition(), new Position(7,9));
+        Zombie zambie = new Zombie(7, 9, "zombie");
+        world.getPlayer().subscribePassiveObserver(zambie);
+        Battle battle = world.getPlayer().battle(zambie, new Standard());
         
-
+        battle.battleTick(new Inventory());
+        assertEquals(zambie.getHealthPoint().getHealth(), 0);
 
         assertEquals(world.inInventory(treasure), false);
+
+        Zombie zambie1 = new Zombie(7, 9, "zombie1");
+
+        world.getPlayer().addPotion(new InvincibilityPotion("a", 1, true));
+
+        Battle battle1 = world.getPlayer().battle(zambie1, new Standard());
+        battle1.battleTick(new Inventory());
+        Zombie zambie2 = new Zombie(7, 9, "zombie2");
+
+        world.getPlayer().addPotion(new InvisibilityPotion(10));
+
+        Battle battle2 = world.getPlayer().battle(zambie2, new Standard());
+        assertEquals(battle2, null);
     }
 }
