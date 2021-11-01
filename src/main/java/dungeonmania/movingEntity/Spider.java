@@ -33,7 +33,7 @@ public class Spider extends MovingEntity implements PlayerPassiveObserver {
         super(new Position(x, y, 2), id, "spider", hp, SPIDER_ATTACK);
         setMovement(getMovementFromString(currentMovement, currentDir, nextDir, remMovesCurr, remMovesNext, avoidPlayer));
 
-        setDefaultMovementStrategy(getMovementFromString(defaultMovement));
+        setDefaultMovementStrategy(new CircleMovement());
         setAlly(false);
     }
 

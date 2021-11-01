@@ -74,10 +74,10 @@ public class PlayerTest {
         Spider s3 = new Spider(1, 1, "spider1", new HealthPoint(10), "followPlayer", "randomMovement", "UP", "DOWN", 2, 1, false);
 
 
-        Spider s4 = new Spider(1, 1, "spider1", new HealthPoint(10), "circleMovement", "circleMovement", "RIGHT", "LEFT", 2, 1, false);
-        Spider s5 = new Spider(1, 1, "spider1", new HealthPoint(10), "circleMovement", "circleMovement", "DOWN", "RIGHT", 2, 1, false);
-        Spider s6 = new Spider(1, 1, "spider1", new HealthPoint(10), "circleMovement", "circleMovement", "LEFT", "UP", 2, 1, false);
-        Spider s7 = new Spider(1, 1, "spider1", new HealthPoint(10), "circleMovement", "circleMovement", "NONE", "LEFT", 2, 1, false);
+        Spider s4 = new Spider(1, 1, "spider1", new HealthPoint(10), "circle", "circle", "RIGHT", "LEFT", 2, 1, false);
+        Spider s5 = new Spider(1, 1, "spider1", new HealthPoint(10), "circle", "circle", "DOWN", "RIGHT", 2, 1, false);
+        Spider s6 = new Spider(1, 1, "spider1", new HealthPoint(10), "circle", "circle", "LEFT", "UP", 2, 1, false);
+        Spider s7 = new Spider(1, 1, "spider1", new HealthPoint(10), "circle", "circle", "NONE", "LEFT", 2, 1, false);
 
         assertEquals("followPlayer", s1.getMovement().getMovementType());
         assertEquals("runAway", s2.getMovement().getMovementType());
@@ -85,7 +85,6 @@ public class PlayerTest {
 
         JSONObject spider5JSON = s5.saveGameJson();
         JSONObject spider6JSON = s6.saveGameJson();
-
 
         assertDoesNotThrow(()->spider5JSON.getJSONObject("movement"));
         assertDoesNotThrow(()->spider5JSON.getJSONObject("movement"));
