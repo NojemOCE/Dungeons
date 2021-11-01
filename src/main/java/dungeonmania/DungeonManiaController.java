@@ -97,7 +97,7 @@ public class DungeonManiaController {
 
         saveState.put("id", dungeonID);
 
-        File saveDirectory = new File("src/main/resources/savedGames");
+        File saveDirectory = new File("src/main/savedGames");
         if (!saveDirectory.exists()) {
             saveDirectory.mkdir();
         }
@@ -125,8 +125,7 @@ public class DungeonManiaController {
 
         World newGame = null;
         try {
-            String file = FileLoader.loadResourceFile("/savedGames/" + name + ".json");
-            
+            String file = FileLoader.loadFileOutsideOfResources("src/main/savedGames/" + name + ".json");
             JSONObject game = new JSONObject(file);
             
             newGame = new World(game.getString("dungeon-name"), game.getString("gamemode"), game.getString("id"));
@@ -146,7 +145,8 @@ public class DungeonManiaController {
         List<String> savedGames =  new ArrayList<>();
 
         try{
-            savedGames = FileLoader.listFileNamesInResourceDirectory("/savedGames");
+            savedGames = FileLoader.listFileNamesInDirectoryOutsideOfResources("src/main/savedGames");
+            //savedGames = FileLoader.listFileNamesInResourceDirectory("/savedGames");
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -176,6 +176,13 @@ public class DungeonManiaController {
 
     }
 
+    /**
+     * Builds the given entity, where buildable is one of bow and shield.
+     * @param buildable Item to build (bow or shield)
+     * @return Current world DungeonResponse
+     * @throws IllegalArgumentException If the given buildable is not a valid type
+     * @throws InvalidActionException If the player doesn't have sufficient items to craft the buildable.
+     */
     public DungeonResponse build(String buildable) throws IllegalArgumentException, InvalidActionException {
         current.build(buildable);
         return current.worldDungeonResponse();

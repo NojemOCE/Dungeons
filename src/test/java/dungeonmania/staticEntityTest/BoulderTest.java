@@ -493,4 +493,5 @@ public class BoulderTest {
 
         assert(boulderPos.equals(boulderPos2.translateBy(Direction.RIGHT)));
     }
+
 }

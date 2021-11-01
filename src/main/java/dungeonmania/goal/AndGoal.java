@@ -23,10 +23,17 @@ public class AndGoal implements GoalComponent {
 
     @Override
     public Boolean evaluate(World world) {
+        for (GoalComponent g : subGoals) {
+            g.evaluate(world);
+        }
+
+        //To be honest I have no idea why the above for loop needs to occur first, but it won't pass the tests without it
         if (subGoals.stream().allMatch(x -> x.evaluate(world).equals(true))) {
             completed = true;
         }
-        else completed = false;
+        else {
+            completed = false;
+        }
         return completed;
         
     }

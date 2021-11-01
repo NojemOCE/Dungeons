@@ -314,4 +314,13 @@ public class Inventory {
         }
         return entitiesInInventory;
     }
+
+    public boolean hasItem(String type) {
+        for (CollectableEntity e : collectableItems.values()) {
+            if (e.getType().equals("type")) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

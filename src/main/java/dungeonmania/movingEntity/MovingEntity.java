@@ -23,8 +23,8 @@ public abstract class MovingEntity extends Entity {
 
     private int speed;
 
-    protected Movement movementStrategy;
-    protected Movement defaultMovementStrategy;
+    protected MovementStrategy movementStrategy;
+    protected MovementStrategy defaultMovementStrategy;
 
     private boolean ally;
 
@@ -35,7 +35,10 @@ public abstract class MovingEntity extends Entity {
         this.speed = 0;
     }
 
-
+    /**
+     * Defends against an attack
+     * @param attack attack damage
+     */
     public void defend(double attack) {
         this.healthPoint.loseHealth(attack);
     }
@@ -48,7 +51,6 @@ public abstract class MovingEntity extends Entity {
      */
     public Position validMove(Position position, World world) {
         
-        // Check for boundaries of the map here
         // check if there is a static entity in the way
         StaticEntity se = world.getStaticEntity(position);
         if (!Objects.isNull(se)) {
@@ -98,11 +100,11 @@ public abstract class MovingEntity extends Entity {
         this.ally = ally;
     }
 
-    public void setMovement(Movement strategy) {
+    public void setMovement(MovementStrategy strategy) {
         this.movementStrategy = strategy;
     }
 
-    public Movement getMovement() {
+    public MovementStrategy getMovement() {
         return this.movementStrategy;
     }
 
@@ -114,22 +116,14 @@ public abstract class MovingEntity extends Entity {
         this.speed = speed;
     }
 
-    public Movement getDefaultMovementStrategy() {
+    public MovementStrategy getDefaultMovementStrategy() {
         return defaultMovementStrategy;
     }
 
-    public void setDefaultMovementStrategy(Movement defaultMovementStrategy) {
+    public void setDefaultMovementStrategy(MovementStrategy defaultMovementStrategy) {
         this.defaultMovementStrategy = defaultMovementStrategy;
     }
 
-    public void notifyPassive(String string) {
-        if (string.equals("invincibility_potion")) {
-            setMovement(new RunAway());
-        } else if (string.equals("N/A")) {
-            setMovement(getDefaultMovementStrategy());
-        }
-    }
-    
     @Override
     public JSONObject saveGameJson() {
         JSONObject saveObj = new JSONObject();
@@ -147,15 +141,14 @@ public abstract class MovingEntity extends Entity {
         return saveObj;
     }
 
-    @Override
-    public String toString() {
-        return "MovingEntity [ally=" + ally + ", attackDamage=" + attackDamage + ", defaultMovementStrategy="
-                + defaultMovementStrategy + ", healthPoint=" + healthPoint + ", movementStrategy=" + movementStrategy
-                + ", position=" + getPosition()+ ", speed=" + speed + "]";
-    }
+    // @Override
+    // public String toString() {
+    //     return "MovingEntity [ally=" + ally + ", attackDamage=" + attackDamage + ", defaultMovementStrategy="
+    //             + defaultMovementStrategy + ", healthPoint=" + healthPoint + ", movementStrategy=" + movementStrategy
+    //             + ", position=" + getPosition()+ ", speed=" + speed + "]";
+    // }
 
-    //might be better to move to movement
-    protected Movement getMovementFromString(String movement, String currDir, String nextDir, int remMovesCurr, int remMovesNext, boolean avoidPlayer) {
+    protected MovementStrategy getMovementFromString(String movement, String currDir, String nextDir, int remMovesCurr, int remMovesNext, boolean avoidPlayer) {
         switch(movement)  {
             case "circle":
                 return new CircleMovement(currDir, nextDir, remMovesCurr, remMovesNext, avoidPlayer);
@@ -169,7 +162,7 @@ public abstract class MovingEntity extends Entity {
         return null;
     }
 
-    protected Movement getMovementFromString(String movement) {
+    protected MovementStrategy getMovementFromString(String movement) {
         switch(movement)  {
             case "circle":
                 return new CircleMovement();

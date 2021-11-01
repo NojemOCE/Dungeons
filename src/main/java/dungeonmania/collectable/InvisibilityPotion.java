@@ -1,5 +1,7 @@
 package dungeonmania.collectable;
 
+import org.json.JSONObject;
+
 import dungeonmania.Passive;
 import dungeonmania.movingEntity.Player;
 
@@ -50,6 +52,13 @@ public class InvisibilityPotion extends CollectableEntity implements Passive {
         return this;
     }
 
-    
+    @Override
+    public JSONObject saveGameJson() {
+        JSONObject saveObj = super.saveGameJson();
+
+        saveObj.put("duration", duration);
+        
+        return saveObj;
+    }
 
 }

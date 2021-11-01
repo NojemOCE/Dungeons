@@ -2,6 +2,7 @@ package dungeonmania;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import dungeonmania.collectable.InvincibilityPotion;
 import dungeonmania.exceptions.InvalidActionException;
 
 import org.junit.jupiter.api.Test;
@@ -23,33 +25,41 @@ import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
+import dungeonmania.util.FileLoader;
 import dungeonmania.util.Position;
 
 import static dungeonmania.TestHelpers.assertListAreEqualIgnoringOrder;
 
 public class FileLoadTest {
 
-
     @Test
     public void collectableWorldTest() {
-        clearSavedFilesFolder();
         DungeonManiaController controller = new DungeonManiaController();
 
         controller.newGame("collectable-world", "Standard");
 
-        controller.saveGame("collectable-world");
+        controller.saveGame("collectable-world1");
 
-        try {
-            TimeUnit.SECONDS.sleep(1);
+        
+        String file;
+        boolean saved = false;
+
+        /*try { 
+            Thread.sleep(100);
+        } catch (InterruptedException ie) {
+            //ignore
+        }*/
+        
+        /*try {
+            TimeUnit.SECONDS.sleep(2);
         }
         catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
         List<String> games = controller.allGames();
 
-        assertEquals(1, games.size());
 
-        assertDoesNotThrow(() -> controller.loadGame("collectable-world"));
+        assertDoesNotThrow(() -> controller.loadGame("collectable-world1"));
 
         DungeonResponse d = controller.tick(null, Direction.UP);
 
@@ -105,7 +115,7 @@ public class FileLoadTest {
         assertEquals(0, buildables.size());
 
         String dungeonID = d.getDungeonId();
-        assertEquals("collectable-world", dungeonID);
+        assertEquals("collectable-world1", dungeonID);
 
         String dungeonName = d.getDungeonName();
         assertEquals("collectable-world", dungeonName);
@@ -113,13 +123,12 @@ public class FileLoadTest {
         String goals = d.getGoals();
         assertNull(goals);
 
-        clearSavedFilesFolder();
+
 
     }
 
     @Test
     public void collectableWorldTest2() {
-        clearSavedFilesFolder();
         DungeonManiaController controller = new DungeonManiaController();
 
         DungeonResponse d = controller.newGame("collectable-world", "Standard");
@@ -186,19 +195,17 @@ public class FileLoadTest {
         inv = d.getInventory();
         assertEquals(10, inv.size());
 
-        controller.saveGame("collectable-world");
+        controller.saveGame("collectable-world2");
 
-        try {
-            TimeUnit.SECONDS.sleep(1);
+        /*try {
+            TimeUnit.SECONDS.sleep(2);
         }
         catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
         List<String> games = controller.allGames();
 
-        assertEquals(1, games.size());
-
-        assertDoesNotThrow(() -> controller.loadGame("collectable-world"));
+        assertDoesNotThrow(() -> controller.loadGame("collectable-world2"));
 
         d = controller.tick(null, Direction.UP);
 
@@ -225,7 +232,7 @@ public class FileLoadTest {
         assertEquals(0, buildables.size());
 
         String dungeonID = d.getDungeonId();
-        assertEquals("collectable-world", dungeonID);
+        assertEquals("collectable-world2", dungeonID);
 
         String dungeonName = d.getDungeonName();
         assertEquals("collectable-world", dungeonName);
@@ -233,7 +240,6 @@ public class FileLoadTest {
         String goals = d.getGoals();
         assertNull(goals);
 
-        clearSavedFilesFolder();
 
     }
     
@@ -241,39 +247,38 @@ public class FileLoadTest {
 
     @Test
     public void invalidSaveTest() {
-        clearSavedFilesFolder();
         DungeonManiaController controller = new DungeonManiaController();
 
         assertThrows(IllegalArgumentException.class, ()-> controller.saveGame("boulders"));
 
         controller.newGame("boulders", "Standard");
-        assertDoesNotThrow(()-> controller.saveGame("boulders"));
+        assertDoesNotThrow(()-> controller.saveGame("boulders1"));
+
+        List<String> games = controller.allGames();
+
+        assertDoesNotThrow(()-> controller.loadGame("boulders1"));
         
-        clearSavedFilesFolder();
     }
 
 
     @Test
     public void staticsWorldTest1() {
-        clearSavedFilesFolder();
         DungeonManiaController controller = new DungeonManiaController();
 
         controller.newGame("statics-world", "Standard");
         
-        controller.saveGame("statics-world");
+        controller.saveGame("statics-world1");
 
-        try {
-            TimeUnit.SECONDS.sleep(1);
+        /*try {
+            TimeUnit.SECONDS.sleep(2);
         }
         catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
 
         List<String> games = controller.allGames();
 
-        assertEquals(1, games.size());
-
-        assertDoesNotThrow(() -> controller.loadGame("statics-world"));
+        assertDoesNotThrow(() -> controller.loadGame("statics-world1"));
 
         DungeonResponse d = controller.tick(null, Direction.UP);
 
@@ -285,7 +290,7 @@ public class FileLoadTest {
             if (e.getType().equals("player")) {
                 assert(e.getPosition().equals(new Position(1, 1)));
             }
-            else if (e.getType().equals("portal")) {
+            else if (e.getType().contains("portal")) {
                 assert(e.getPosition().equals(new Position(2, 1)) || e.getPosition().equals(new Position(3, 3)));
             }
             else if (e.getType().equals("key")) {
@@ -318,7 +323,7 @@ public class FileLoadTest {
         assertEquals(0, buildables.size());
 
         String dungeonID = d.getDungeonId();
-        assertEquals("statics-world", dungeonID);
+        assertEquals("statics-world1", dungeonID);
 
         String dungeonName = d.getDungeonName();
         assertEquals("statics-world", dungeonName);
@@ -326,12 +331,10 @@ public class FileLoadTest {
         String goals = d.getGoals();
         assertNull(goals);
 
-        clearSavedFilesFolder();
     }
 
     @Test
     public void staticsWorldTest2() {
-        clearSavedFilesFolder();
 
         DungeonManiaController controller = new DungeonManiaController();
 
@@ -355,19 +358,17 @@ public class FileLoadTest {
         // Player opens door
         controller.tick(null, Direction.RIGHT);
 
-        controller.saveGame("statics-world");
+        controller.saveGame("statics-world2");
 
-        try {
-            TimeUnit.SECONDS.sleep(1);
+       /*try {
+            TimeUnit.SECONDS.sleep(2);
         }
         catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
         List<String> games = controller.allGames();
 
-        assertEquals(1, games.size());
-
-        assertDoesNotThrow(() -> controller.loadGame("statics-world"));
+        assertDoesNotThrow(() -> controller.loadGame("statics-world2"));
 
         // Player moves down
         d = controller.tick(null, Direction.DOWN);
@@ -379,7 +380,7 @@ public class FileLoadTest {
             if (e.getType().equals("player")) {
                 assert(e.getPosition().equals(new Position(3, 4)));
             }
-            else if (e.getType().equals("portal")) {
+            else if (e.getType().contains("portal")) {
                 assert(e.getPosition().equals(new Position(2, 1)) || e.getPosition().equals(new Position(3, 3)));
             }
             else if (e.getType().equals("open_door")) {
@@ -409,7 +410,7 @@ public class FileLoadTest {
         assertEquals(0, buildables.size());
 
         String dungeonID = d.getDungeonId();
-        assertEquals("statics-world", dungeonID);
+        assertEquals("statics-world2", dungeonID);
 
         String dungeonName = d.getDungeonName();
         assertEquals("statics-world", dungeonName);
@@ -417,30 +418,26 @@ public class FileLoadTest {
         String goals = d.getGoals();
         assertNull(goals);
 
-        clearSavedFilesFolder();
     }
 
     @Test
     public void enemiesWorldTest1() {
-        clearSavedFilesFolder();
         DungeonManiaController controller = new DungeonManiaController();
 
         controller.newGame("enemies-world", "Standard");
 
-        controller.saveGame("enemies-world");
+        controller.saveGame("enemies-world1");
 
-        try {
-            TimeUnit.SECONDS.sleep(1);
+        /*try {
+            TimeUnit.SECONDS.sleep(2);
         }
         catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
 
         List<String> games = controller.allGames();
 
-        assertEquals(1, games.size());
-
-        assertDoesNotThrow(() -> controller.loadGame("enemies-world"));
+        assertDoesNotThrow(() -> controller.loadGame("enemies-world1"));
 
         DungeonResponse d = controller.tick(null, Direction.UP);
 
@@ -483,54 +480,52 @@ public class FileLoadTest {
         assertEquals(0, buildables.size());
 
         String dungeonID = d.getDungeonId();
-        assertEquals("enemies-world", dungeonID);
+        assertEquals("enemies-world1", dungeonID);
 
         String dungeonName = d.getDungeonName();
         assertEquals("enemies-world", dungeonName);
 
         String goals = d.getGoals();
         assertEquals("(:enemies AND :treasure)", goals);
-        clearSavedFilesFolder();
     }
 
     @Test
     public void placingBombWorldTest() {
-        clearSavedFilesFolder();
         DungeonManiaController controller = new DungeonManiaController();
 
         controller.newGame("placing-bomb", "Standard");
 
         DungeonResponse d = controller.tick(null, Direction.DOWN);
+        List<ItemResponse> inventory = d.getInventory();
 
-        controller.tick("bomb", null);
+        String bombId = null;
+        for (ItemResponse ir : inventory) {
+            if (ir.getType().equals("bomb")) {
+                bombId = ir.getId();
+            }
+        }
+        assertNotNull(bombId);
+
+        controller.tick(bombId, null);
         controller.tick(null, Direction.DOWN);
 
-        controller.saveGame("placing-bomb");
-
-        try {
-            TimeUnit.SECONDS.sleep(1);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+        controller.saveGame("placing-bomb1");
 
         List<String> games = controller.allGames();
 
-        assertEquals(1, games.size());
-
-        assertDoesNotThrow(() -> controller.loadGame("placing-bomb"));
+        assertDoesNotThrow(() -> controller.loadGame("placing-bomb1"));
 
         d = controller.tick(null, Direction.UP);
         
         List <EntityResponse> entities = d.getEntities();
-        assertEquals(23, entities.size());
+        assertEquals(19, entities.size());
 
         for (EntityResponse e: entities) {
             if (e.getType().equals("player")) {
                 assert(e.getPosition().equals(new Position(1, 3)));
             }
             else if (e.getType().equals("bomb")) {
-                assert(e.getPosition().equals(new Position(2, 2)));
+                assert(e.getPosition().equals(new Position(1, 2)));
             }
             else if (e.getType().equals("treasure")) {
                 assert(e.getPosition().equals(new Position(3, 3)));
@@ -540,26 +535,24 @@ public class FileLoadTest {
             }
         }
 
-        List<ItemResponse> inventory = d.getInventory();
+        inventory = d.getInventory();
         assertEquals(0, inventory.size());
 
         List<String> buildables = d.getBuildables();
         assertEquals(0, buildables.size());
 
         String dungeonID = d.getDungeonId();
-        assertEquals("placing-bomb", dungeonID);
+        assertEquals("placing-bomb1", dungeonID);
 
         String dungeonName = d.getDungeonName();
         assertEquals("placing-bomb", dungeonName);
 
         String goals = d.getGoals();
         assertEquals(":treasure", goals);
-        clearSavedFilesFolder();
     }
 
     @Test
     public void buildingWorldTest() {
-        clearSavedFilesFolder();
         DungeonManiaController controller = new DungeonManiaController();
 
         controller.newGame("building-world", "Standard");
@@ -592,20 +585,18 @@ public class FileLoadTest {
         controller.build("shield");
 
 
-        controller.saveGame("building-world");
+        controller.saveGame("building-world1");
 
-        try {
-            TimeUnit.SECONDS.sleep(1);
+        /*try {
+            TimeUnit.SECONDS.sleep(2);
         }
         catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
 
         List<String> games = controller.allGames();
 
-        assertEquals(1, games.size());
-
-        assertDoesNotThrow(() -> controller.loadGame("building-world"));
+        assertDoesNotThrow(() -> controller.loadGame("building-world1"));
 
         DungeonResponse d = controller.tick(null, Direction.UP);
         
@@ -641,7 +632,7 @@ public class FileLoadTest {
         assertEquals(0, buildables.size());
 
         String dungeonID = d.getDungeonId();
-        assertEquals("building-world", dungeonID);
+        assertEquals("building-world1", dungeonID);
 
         String dungeonName = d.getDungeonName();
         assertEquals("building-world", dungeonName);
@@ -649,7 +640,62 @@ public class FileLoadTest {
         String goals = d.getGoals();
         assertNull(goals);
 
-        clearSavedFilesFolder();
+    }
+
+    @Test
+    public void invincicibilityPotionWorldTest() {
+        DungeonManiaController controller = new DungeonManiaController();
+
+        controller.newGame("invinc-potion", "Standard");
+
+        //Player collects invinc potion
+        DungeonResponse d = controller.tick(null, Direction.RIGHT);
+
+        String invincID = "";
+
+        for (ItemResponse i  : d.getInventory()) {
+            if (i.getType().equals("invincibility_potion")) {
+                invincID = i.getId();
+            }
+        }
+
+        controller.tick(invincID, null);
+        controller.tick(null, Direction.LEFT);
+
+        assertDoesNotThrow(()-> controller.saveGame("invinc-potion1"));
+      
+        /*try {
+            TimeUnit.SECONDS.sleep(2);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }*/
+        List<String> games = controller.allGames();
+
+
+        assertDoesNotThrow(() -> controller.loadGame("invinc-potion1"));
+
+        d = controller.tick(null, Direction.DOWN);
+
+        List <EntityResponse> entities = d.getEntities();
+
+        List<ItemResponse> inventory = d.getInventory();
+        assertEquals(0, inventory.size());
+
+        List<String> buildables = d.getBuildables();
+        assertEquals(0, buildables.size());
+
+        String dungeonID = d.getDungeonId();
+        assertEquals("invinc-potion1", dungeonID);
+
+        String dungeonName = d.getDungeonName();
+        assertEquals("invinc-potion", dungeonName);
+
+        String goals = d.getGoals();
+        assertNull(goals);
+
+
+
     }
 
     /**

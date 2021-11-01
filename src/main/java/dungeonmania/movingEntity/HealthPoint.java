@@ -34,6 +34,10 @@ public class HealthPoint {
         this.health = health;
     }
 
+    /**
+     * Gains health by amount
+     * @param health health
+     */
     public void gainHealth(double health) {
         this.health += health;
         if (this.health >= this.maxHealth) setHealth(maxHealth);
@@ -48,20 +52,5 @@ public class HealthPoint {
         if (this.health <= 0 ) setHealth(0);
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        HealthPoint other = (HealthPoint) obj;
-        if (Double.doubleToLongBits(health) != Double.doubleToLongBits(other.health))
-            return false;
-        if (Double.doubleToLongBits(maxHealth) != Double.doubleToLongBits(other.maxHealth))
-            return false;
-        return true;
-    }
     
 }

@@ -1,17 +1,15 @@
 package dungeonmania.movingEntity.MovementStrategies;
 
-import java.util.List;
 import java.util.Objects;
 
 import dungeonmania.World;
 import dungeonmania.movingEntity.*;
-import dungeonmania.staticEntity.Boulder;
-import dungeonmania.staticEntity.Door;
+
 import dungeonmania.staticEntity.StaticEntity;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
-public class CircleMovement implements Movement {
+public class CircleMovement implements MovementStrategy {
     private Direction currentDirection;
     private Direction nextDirection;
     private int remMovesCurr;

@@ -49,6 +49,12 @@ public class Player extends MovingEntity {
         return;
     
     }
+
+    /**
+     * A world tick, player will either move or interact
+     * @param movementDirection direction, null if item
+     * @param world item, null if direction
+     */
     public void tick(Direction movementDirection, World world) {
         // check if the direction we are moving is valid first before setting new position
         // Tick passive
@@ -62,7 +68,6 @@ public class Player extends MovingEntity {
         } else {
             notifyPassive("N/A");
         }
-
 
         if (!Objects.isNull(movementDirection)){
             setPosition(validMove(this.getPosition().translateBy(movementDirection), world));
@@ -88,8 +93,6 @@ public class Player extends MovingEntity {
      * @return new Battle
      */
     public Battle battle(MovingEntity enemy, Gamemode gamemode) {
-        // we can pass in invincibility state for battle 
-        // or invisibility battle wont be created "return null"
         if (!enemy.getAlly()) {
 
             if (Objects.isNull(activePotion) || !activePotion.getType().equals("invisibility_potion")) {
@@ -97,7 +100,6 @@ public class Player extends MovingEntity {
 
                 return new Battle(this, enemy, gamemode.isEnemyAttackEnabled());
             }
-
             // notify observers of battle
         }
         return null;
@@ -111,22 +113,11 @@ public class Player extends MovingEntity {
         notifyObserversForBattle(0);
     }
 
-
-    //TODO add javadoc comment idk what this method does
-    /**
-     * 
-     * @param inRange
-     */
     public void addInRange(Mercenary inRange) {
         mercenariesInRange.add(inRange);
     
     }
     
-    //TODO add javadoc comment idk what this method does
-    /**
-     * 
-     * @param inRange
-     */
     public void removeInRange(Mercenary inRange) {
         mercenariesInRange.remove(inRange);
     }
@@ -135,18 +126,17 @@ public class Player extends MovingEntity {
         passiveObservers.add(me);
     
     }
-    
-    //TODO add javadoc comment idk what this method does
-    /**
-     * 
-     * @param inRange
-     */
+
     public void unsubscribePassiveObserver(PlayerPassiveObserver me) {
         passiveObservers.remove(me);
     }
     
+    /**
+     * get a list of allies in range
+     * @return list of allies
+     */
     public List<MovingEntity> alliesInRange() {
-        
+    
         List<MovingEntity> allies = new ArrayList<>();
         for (MovingEntity m : mercenariesInRange) {
             if (m.getAlly()) allies.add(m);
@@ -154,10 +144,9 @@ public class Player extends MovingEntity {
         return allies;
     }
     
-    //TODO add javadoc comment idk what this method does
     /**
-     * 
-     * @param speed
+     * Notifies mercenaries of battle for battle advantage
+     * @param speed movement speed
      */
     public void notifyObserversForBattle(int speed) { // notify observers for battle
         mercenariesInRange.forEach( mercenary -> {
@@ -165,12 +154,20 @@ public class Player extends MovingEntity {
         });
     }
 
+    /**
+     * Notifies passive observers of player passive
+     * @param passive passive type
+     */
     public void notifyPassive(String passive) {
         passiveObservers.forEach( obj -> {
             obj.updateMovement(passive);
         });
     }
 
+    /**
+     * add active potion
+     * @param potion
+     */
     public void addPotion(CollectableEntity potion) {
         activePotion = (Passive) potion;
     }

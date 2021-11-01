@@ -5,7 +5,7 @@ import dungeonmania.movingEntity.*;
 import dungeonmania.util.Direction;
 import dungeonmania.util.Position;
 
-public class RunAway implements Movement {
+public class RunAway implements MovementStrategy {
 
     @Override
     public void move(MovingEntity me, World world) {
