@@ -96,8 +96,6 @@
 * Invisibility potion
     * Lasts for 10 ticks
     * Player cannot be invincible at the same time as being invisible
-* Wood
-* Arrows
 * Bomb
     * We cannot pick these up again
     * Blast radius =  1
@@ -113,10 +111,6 @@
 
 ## Rare Collectable Entities
 * The One Ring: has a 10% spawn rate
-
-## Buildable Entities
-* Bow
-* Shield
 
 ## Other
 * Inventory has unlimited space (no item limit)
