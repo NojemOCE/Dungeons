@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 
@@ -53,13 +54,14 @@ public class FollowPlayer implements MovementStrategy {
         Set<Position> visited = new HashSet<>();
         // start at where mercenary is
         // add position to queue
-        Queue<Position> queue = new ArrayDeque<>();
         // gets merc position
-        queue.add(me.getPosition());
         visited.add(me.getPosition());
         // we need a prev hashmap, <key,value> being <position, it's previous Position>
-        Map<Position,Position> prev = new HashMap<>();
-        prev.put(me.getPosition(), null);
+        //Map<Position,Position> prev = new HashMap<>();
+        //prev.put(me.getPosition(), null);
+    
+        Queue<Position> queue = new ArrayDeque<>();
+        queue.add(me.getPosition());
         while(!queue.isEmpty()) {
             Position node = queue.remove();
             // now verify the adjacent neighbours
@@ -68,13 +70,14 @@ public class FollowPlayer implements MovementStrategy {
                 if (!visited.contains(p)) { // for the neighbours that havent been visited
                     queue.add(p);
                     visited.add(p);
-                    prev.put(p, node);
-                    if (p.equals(player.getPosition())) break; // player is found and added, break
+                    //prev.put(p, node);
+                    //if (p.equals(player.getPosition())) break;
 
                 }
             }
         }
-
+        return new ArrayList<>(visited);
+        /*
         // backtrack through prev getting the reverse path
         List<Position> path = new ArrayList<>();
 
@@ -89,8 +92,24 @@ public class FollowPlayer implements MovementStrategy {
         
         Collections.reverse(path);
 
-        return path;
+        return path; */
     }
+
+    private List<Position> dijkstras(MovingEntity me, Player player, List<Position> visited, World world) {
+        Map<Position, Position> prev = new HashMap<>();
+        Map<Position, Double> dist = new HashMap<>();
+
+        visited.forEach(position -> {
+            dist.put(position, (double)999);
+            prev.put(position, null);
+        });
+        Queue<Position> q = new ArrayDeque<>(visited);
+        dist.put(me.getPosition(), 0.0);
+        while(!q.isEmpty()) {
+            Position u = // Smallest in dist.put check for contains value? smething
+        }
+    }
+
 
     /**
      * Returns the set of positions neighbouring a given position that would be a valid move for a given entity

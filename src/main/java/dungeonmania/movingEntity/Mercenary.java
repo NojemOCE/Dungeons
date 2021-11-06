@@ -16,7 +16,7 @@ public class Mercenary extends MovingEntity implements PlayerPassiveObserver {
 
     static final int MERC_ATTACK = 3;
     static final int MERC_HEALTH = 20;
-    private static final int GOLD_TO_BRIBE = 1;
+    protected static final int GOLD_TO_BRIBE = 1;
     private static final double BATTLE_RADIUS = 8;
     private boolean interactable = false;
 
@@ -64,7 +64,7 @@ public class Mercenary extends MovingEntity implements PlayerPassiveObserver {
      * Sets the interactability of mercenary
      * @param player player
      */
-    private void setInteractable(Player player) {
+    protected void setInteractable(Player player) {
         Position relativePos = Position.calculatePositionBetween(player.getPosition(), this.getPosition());
         if (getAlly()) {
             interactable = false;
@@ -73,6 +73,10 @@ public class Mercenary extends MovingEntity implements PlayerPassiveObserver {
         } else {
             interactable = false;
         }
+    }
+
+    protected boolean getInteractable() {
+        return this.interactable;
     }
 
     /**
