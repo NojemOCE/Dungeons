@@ -1,10 +1,13 @@
-package dungeonmania;
+package dungeonmania.factory;
 
 import java.util.Arrays;
 import java.util.List;
 
 import org.json.JSONObject;
 
+import dungeonmania.Entity;
+import dungeonmania.Passive;
+import dungeonmania.World;
 import dungeonmania.collectable.*;
 import dungeonmania.gamemode.Gamemode;
 import dungeonmania.movingEntity.*;
@@ -176,6 +179,12 @@ public class LoadGameFactory extends Factory {
             ZombieToastSpawn e = new ZombieToastSpawn(x, y, id);
             return e;   
         } 
+
+        else if (type.equals("swamp_tile")) {
+            SwampTile e = new SwampTile(x, y, id);
+            return e;   
+        } 
+        
         else if (type.equals("placed_bomb")) {
             PlacedBomb e = new PlacedBomb(x, y, id);
             return e; 
@@ -305,5 +314,4 @@ public class LoadGameFactory extends Factory {
     private List<String> movingEntitiesList() {
         return Arrays.asList("zombie_toast", "mercenary", "spider");
     }
-
 }

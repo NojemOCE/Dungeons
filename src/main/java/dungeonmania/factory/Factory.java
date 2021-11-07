@@ -1,9 +1,9 @@
-package dungeonmania;
-
-import com.google.gson.JsonObject;
+package dungeonmania.factory;
 
 import org.json.JSONObject;
 
+import dungeonmania.Entity;
+import dungeonmania.World;
 import dungeonmania.gamemode.Gamemode;
 
 public abstract class Factory {

@@ -25,6 +25,8 @@ import dungeonmania.movingEntity.*;
 import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.util.Position;
+import dungeonmania.factory.*;
+
 
 
 
@@ -518,13 +520,13 @@ public class World {
 
     /**
      * Returns the static entity that exists in the dungeon at position p (if one exists)
-     * Note, that this only looks at layer 1 (will not return for floor switch, exit)
+     * Note, that this only looks at STATIC_LAYER (will not return for floor switch, exit)
      * @param p position to check
      * @return Static entity at position p
      */
     public StaticEntity getStaticEntity(Position p) {
         for (StaticEntity s: staticEntities.values()) {
-            if (s.getPosition().equals(p) && s.getLayer() == 1)  {
+            if (s.getPosition().equals(p) && s.getLayer() == Position.STATIC_LAYER)  {
                 return s;
             }
         }
