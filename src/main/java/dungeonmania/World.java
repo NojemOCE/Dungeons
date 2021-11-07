@@ -508,7 +508,7 @@ public class World {
         // IllegalArgumentException if buildable is not one of bow or shield
         // InvalidActionException if the player does not have sufficient items to craft the buildable
         if (buildable == "midnight_armour" && numEnitity("zombie_toast") != 0) {
-
+            throw new InvalidActionException("There are zombies alive");
         }
         inventory.craft(buildable, String.valueOf(incrementEntityCount()));
         return worldDungeonResponse();
