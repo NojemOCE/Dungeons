@@ -2,21 +2,21 @@ package dungeonmania.collectable;
 
 import dungeonmania.Weapon;
 
-public class Sword extends CollectableEntity implements Weapon {
+public class Anduril extends CollectableEntity implements Weapon {
 
     private final double ATTACK_POWER = 3;
     private final int DURABILITY = 10;
 
-    public Sword(int x, int y, String itemId) {
-        super(x, y, itemId, "sword");
+    public Anduril(int x, int y, String itemId) {
+        super(x, y, itemId, "anduril");
         setDurability(DURABILITY);
     }
 
-    public Sword(String itemId, int durability) {
+    public Anduril(String itemId, int durability) {
         this(0, 0, itemId, durability);
     }
 
-    public Sword(int x, int y, String itemId, int durability) {
+    public Anduril(int x, int y, String itemId, int durability) {
         this(x, y, itemId);
         setDurability(durability);
     }
@@ -30,7 +30,8 @@ public class Sword extends CollectableEntity implements Weapon {
     }
 
     public double bossAttackModifier() {
-        return attackModifier();
+        return 3 * attackModifier();
     }
 
 }
+

@@ -1,6 +1,7 @@
 package dungeonmania.inventory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,7 @@ import java.util.stream.IntStream;
 
 import org.json.JSONArray;
 
+import dungeonmania.Weapon;
 import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.response.models.ItemResponse;
@@ -17,12 +19,11 @@ public class Inventory {
     private Map<String, CollectableEntity> collectableItems = new HashMap<>();
     private Map<String, Integer> numCollected = new HashMap<>();
     private List<String> usable = new ArrayList<>();
+    private List<String> buildables = new ArrayList<>();
 
     public Inventory() {
-        this.usable.add("bomb");
-        this.usable.add("health_potion");
-        this.usable.add("invincibility_potion");
-        this.usable.add("invisibility_potion");
+        this.usable = Arrays.asList("bomb", "health_potion", "invincibility_potion", "invisibility_potion");
+        this.buildables = Arrays.asList("bow", "shield", "sceptre", "midnight_armour");
     }
 
     /**
@@ -92,7 +93,7 @@ public class Inventory {
         if (!isBuildable(itemType)) {
             throw new InvalidActionException("Insufficient items");
         } else if (itemType.equalsIgnoreCase("bow")) {
-            useByType("wood");
+            IntStream.range(0, 1).mapToObj(i -> "wood").forEach(this::useByType);
             IntStream.range(0, 3).mapToObj(i -> "arrow").forEach(this::useByType);
             collectableItems.put(itemType + itemNum, new Bow(0, 0, itemType + itemNum));
         } else if (itemType.equalsIgnoreCase("shield")) {
@@ -181,6 +182,10 @@ public class Inventory {
         return null;
     }
 
+    public Map<String, CollectableEntity> getCollectableItems() {
+        return this.collectableItems;
+    }
+
     /**
      * Checks if the provided item id exists within inventory
      * @param itemUsedId the id of the item to be checked
@@ -215,6 +220,11 @@ public class Inventory {
         numCollected.put(item.getType(), numCollected.get(item.getType()) - 1);
     }
 
+    private void removeItem(CollectableEntity item) {
+        collectableItems.remove(item.getId());
+        numCollected.put(item.getType(), numCollected.get(item.getType()) - 1);
+    }
+
     /**
      * Provides the attack provided to the player from the inventory
      * @param playerAttack the players attack before the modification
@@ -223,9 +233,38 @@ public class Inventory {
     public double attackModifier(double playerAttack) {
         List<String> idToRemove = new ArrayList<>();
         for (CollectableEntity item : collectableItems.values()) {
-            if (item instanceof Sword ) {
-                playerAttack += ((Sword)item).attackModifier();
-                ((Sword)item).consume();
+            if (item instanceof Weapon ) {
+                playerAttack += ((Weapon)item).attackModifier();
+                ((CollectableEntity)item).consume();
+                if (item.getDurability() == 0) {
+                    idToRemove.add(item.getId());
+                }
+            }
+        }
+
+        for (CollectableEntity item : collectableItems.values()) {
+            if (item instanceof Bow ) {
+                playerAttack *= ((Bow)item).attackModifier();
+                ((Bow)item).consume();
+                if (item.getDurability() == 0) {
+                    idToRemove.add(item.getId());
+                }
+            }
+        }
+
+        for (String itemId : idToRemove) {
+            collectableItems.remove(itemId);
+        }
+
+        return playerAttack;
+    }
+
+    public double bossAttackModifier(double playerAttack) {
+        List<String> idToRemove = new ArrayList<>();
+        for (CollectableEntity item : collectableItems.values()) {
+            if (item instanceof Weapon) {
+                playerAttack += ((Weapon)item).bossAttackModifier();
+                ((CollectableEntity)item).consume();
                 if (item.getDurability() == 0) {
                     idToRemove.add(item.getId());
                 }
@@ -289,10 +328,9 @@ public class Inventory {
     
     public List<String> getBuildable() {
         ArrayList<String> buildable = new ArrayList<>();
-
-        if (isBuildable("bow")) buildable.add("bow");
-        if (isBuildable("shield")) buildable.add("shield");
-
+        for (String item : buildables) {
+            if (isBuildable(item)) buildable.add(item);
+        }
         return buildable;
     }
 
@@ -303,10 +341,15 @@ public class Inventory {
      * @throws IllegalArgumentExeption if the type provided isn't able to be built
      */
     public boolean isBuildable(String buildableType) {
+    
         if (buildableType.equalsIgnoreCase("bow")) {
             return numItem("wood") >= 1 && numItem("arrow") >= 3;
         } else if (buildableType.equalsIgnoreCase("shield")) {
             return numItem("wood") >= 2 && (numItem("treasure") >= 1 || numItem("key") == 1);
+        } else if (buildableType.equalsIgnoreCase("sceptre")) {
+            return (numItem("wood") >= 1 || numItem("arrow") >= 2) && (numItem("key") >= 1 || numItem("treasure") >= 1) && numItem("sun_stone") >= 1;
+        } else if (buildableType.equalsIgnoreCase("midnight_armour")) {
+            return numItem("armour") >= 1 && numItem("sun_stone") >= 1;
         } else {
             throw new IllegalArgumentException("Wrong buildable type");
         }
