@@ -1,8 +1,6 @@
 package dungeonmania.collectable;
 
-import dungeonmania.CraftingMaterial;
-
-public class Wood extends CollectableEntity implements CraftingMaterial {
+public class Wood extends CollectableEntity {
 
     public Wood(int x, int y, String itemId) {
         super(x, y, itemId, "wood");
@@ -15,9 +13,5 @@ public class Wood extends CollectableEntity implements CraftingMaterial {
     public Wood(int x, int y, String itemId, int durability) {
         this(x, y, itemId);
         setDurability(durability);
-    }
-
-    public void craft() {
-        decreaseDurability();
     }
 }
