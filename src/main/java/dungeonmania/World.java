@@ -101,7 +101,8 @@ public class World {
         // TODO can we put this in a shared method
         if (worldData.has("goal-condition")) {
             JSONObject g = worldData.getJSONObject("goal-condition");
-            GoalComponent goal = createGoal(g);
+            //GoalComponent goal = createGoal(g);
+            GoalComponent goal = factory.createGoal(g);
             setGoals(goal);
         }
         else {
@@ -151,7 +152,7 @@ public class World {
      * @param goal goal json
      * @return Goal component
      */
-    private GoalComponent createGoal(JSONObject goal) {
+    /*private GoalComponent createGoal(JSONObject goal) {
         String currGoal = goal.getString("goal");
 
         // Will return null if the goal is not exit,enemies,treasure, AND or OR
@@ -189,7 +190,7 @@ public class World {
         }
 
         return null;
-    }
+    }*/
 
     /**
      * Gets a Goal response
@@ -835,7 +836,8 @@ public class World {
         // TODO can we put this in a shared method
         if (gameData.has("goal-condition")) {
             JSONObject g = gameData.getJSONObject("goal-condition");
-            GoalComponent goal = createGoal(g);
+            //GoalComponent goal = createGoal(g);
+            GoalComponent goal = factory.createGoal(g);
             setGoals(goal);
         }
         else {
