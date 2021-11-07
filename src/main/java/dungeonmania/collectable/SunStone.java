@@ -1,6 +1,6 @@
 package dungeonmania.collectable;
 
-public class SunStone extends CollectableEntity {
+public class SunStone extends CollectableEntity{
     public SunStone(int x, int y, String itemId) {
         super(x, y, itemId, "sun_stone");
     }
