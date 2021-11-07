@@ -73,7 +73,8 @@ public class NewGameFactory extends Factory {
         } 
         
         else if (type.equals("swamp_tile")) {
-            SwampTile e = new SwampTile(x, y, id);
+            int movement_factor = obj.getInt("movement_factor");
+            SwampTile e = new SwampTile(x, y, id, movement_factor);
             return e;   
         } 
         
