@@ -1,35 +1,42 @@
 package dungeonmania.collectable;
 
-import dungeonmania.movingEntity.MovingEntity;
+import dungeonmania.MindControlled;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.util.Objects.isNull;
+
 public class Sceptre extends CollectableEntity {
     final int DURATION = 10;
-    private Map<MovingEntity, Integer> controlled;
+    private Map<MindControlled, Integer> controlled;
 
     public Sceptre(int x, int y, String itemId) {
         super(x, y, itemId, "sceptre");
         controlled = new HashMap<>();
     }
 
-    public void useMindControl(MovingEntity m) {
+    public void useMindControl(MindControlled m) {
         controlled.put(m, DURATION);
-        m.setAlly(false);
+        m.update(this);
     }
 
     public void updateMindControlled() {
         controlled.replaceAll((m, v) -> v - 1);
+        notifyMindControlled();
     }
 
     public void notifyMindControlled() {
-        for (MovingEntity m : controlled.keySet()) {
+        for (MindControlled m : controlled.keySet()) {
             if (controlled.get(m) == 0) {
-                m.setAlly(false);
+                m.update(this);
                 controlled.remove(m);
             }
         }
+    }
+
+    public boolean isMindControlled(MindControlled m) {
+        return !isNull(controlled.get(m));
     }
 
 }

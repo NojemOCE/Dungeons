@@ -1,5 +1,7 @@
 package dungeonmania.movingEntity;
 
+import dungeonmania.MindControlled;
+import dungeonmania.collectable.Sceptre;
 import dungeonmania.util.*;
 
 import org.json.JSONObject;
@@ -12,7 +14,7 @@ import dungeonmania.movingEntity.MovementStrategies.RunAway;
 import dungeonmania.response.models.EntityResponse;
 
 
-public class Mercenary extends MovingEntity implements PlayerPassiveObserver {
+public class Mercenary extends MovingEntity implements PlayerPassiveObserver, MindControlled {
 
     static final int MERC_ATTACK = 3;
     static final int MERC_HEALTH = 20;
@@ -129,4 +131,8 @@ public class Mercenary extends MovingEntity implements PlayerPassiveObserver {
         return mercJSON;
     }
 
+    @Override
+    public void update(Sceptre s) {
+        setAlly(s.isMindControlled(this));
+    }
 }
