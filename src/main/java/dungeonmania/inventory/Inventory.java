@@ -99,6 +99,11 @@ public class Inventory {
             IntStream.range(0, 2).mapToObj(i -> "wood").forEach(this::useByType);
             useByType(numItem("treasure") != 0 ? "treasure" : "key");
             collectableItems.put(itemType + itemNum, new Shield(0, 0, itemType + itemNum));
+        } else if (itemType.equalsIgnoreCase("midnight_armour")) {
+            IntStream.range(0, 1).mapToObj(i -> "armour").forEach(this::useByType);
+            IntStream.range(0, 1).mapToObj(i -> "sun_stone").forEach(this::useByType);
+        } else if (itemType.equalsIgnoreCase("sceptre")) {
+            
         }
         numCollected.putIfAbsent(itemType, 0);
         numCollected.put(itemType, numCollected.get(itemType) + 1);
