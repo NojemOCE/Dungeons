@@ -1,15 +1,11 @@
 package dungeonmania.collectable;
 
-import dungeonmania.Weapon;
-
 public class Anduril extends CollectableEntity implements Weapon {
 
     private final double ATTACK_POWER = 3;
-    private final int DURABILITY = 10;
 
     public Anduril(int x, int y, String itemId) {
         super(x, y, itemId, "anduril");
-        setDurability(DURABILITY);
     }
 
     public Anduril(String itemId, int durability) {
@@ -33,5 +29,7 @@ public class Anduril extends CollectableEntity implements Weapon {
         return 3 * attackModifier();
     }
 
+    @Override
+    public CollectableEntity consume() {return null;};
 }
 

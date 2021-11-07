@@ -10,7 +10,6 @@ import java.util.stream.IntStream;
 
 import org.json.JSONArray;
 
-import dungeonmania.Weapon;
 import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.response.models.ItemResponse;

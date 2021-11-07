@@ -1,7 +1,5 @@
 package dungeonmania.collectable;
 
-import dungeonmania.Weapon;
-
 public class Sword extends CollectableEntity implements Weapon {
 
     private final double ATTACK_POWER = 3;
