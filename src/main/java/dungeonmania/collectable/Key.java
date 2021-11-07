@@ -2,7 +2,9 @@ package dungeonmania.collectable;
 
 import org.json.JSONObject;
 
-public class Key extends CollectableEntity {
+import dungeonmania.CraftingMaterial;
+
+public class Key extends CollectableEntity implements CraftingMaterial {
     private int keyColour;
 
     public Key(int x, int y, String itemId, int keyColour) {
@@ -19,10 +21,12 @@ public class Key extends CollectableEntity {
         setDurability(durability);
     }
 
-
-
     public int getKeyColour() {
         return keyColour;
+    }
+
+    public void craft() {
+        decreaseDurability();
     }
 
     @Override

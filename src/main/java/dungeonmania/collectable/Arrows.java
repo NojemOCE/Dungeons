@@ -1,8 +1,8 @@
 package dungeonmania.collectable;
 
+import dungeonmania.CraftingMaterial;
 
-
-public class Arrows extends CollectableEntity {
+public class Arrows extends CollectableEntity implements CraftingMaterial {
 
     public Arrows(int x, int y, String itemId) {
         super(x, y, itemId, "arrow");
@@ -16,5 +16,9 @@ public class Arrows extends CollectableEntity {
     public Arrows(int x, int y, String itemId, int durability) {
         this(x, y, itemId);
         setDurability(durability);
+    }
+
+    public void craft() {
+        decreaseDurability();
     }
 }
