@@ -194,6 +194,10 @@ public class Inventory {
         return collectableItems.containsKey(itemUsedId);
     }
 
+    public boolean typeInInventory(String itemType) {
+        
+    }
+
     /**
      * Checks if the provided item id is able to be used
      * @param itemUsedId the id of the item to be checked

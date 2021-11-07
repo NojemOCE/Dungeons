@@ -1,4 +1,4 @@
-package dungeonmania;
+package dungeonmania.collectable;
 
 public interface Weapon {
     public double attackModifier();

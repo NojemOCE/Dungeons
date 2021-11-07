@@ -605,6 +605,10 @@ public class World {
         return inventory.inInventory(item.getId());
     }
 
+    public boolean inInventory(String itemType) {
+        return inventory.hasItem(itemType);
+    }
+
     /**
      * Checks if a key exists in inventory and returns object
      * @param keyColour keyColour of the key to find

@@ -3,11 +3,11 @@ package dungeonmania.battle;
 import java.util.ArrayList;
 import java.util.List;
 
-import dungeonmania.Weapon;
 import dungeonmania.collectable.Armour;
 import dungeonmania.collectable.Bow;
 import dungeonmania.collectable.CollectableEntity;
-import dungeonmania.collectable.Shield;
+import dungeonmania.collectable.Protection;
+import dungeonmania.collectable.Weapon;
 import dungeonmania.inventory.Inventory;
 
 public class BossBattle implements BattleStrategy {
@@ -43,9 +43,9 @@ public class BossBattle implements BattleStrategy {
     public double defenceModifier(Inventory inventory, double enemyAttack) {
         List<String> idToRemove = new ArrayList<>();
         for (CollectableEntity item : inventory.getCollectableItems().values()) {
-            if (item instanceof Shield ) {
-                enemyAttack -= ((Shield)item).defenceModifier();
-                ((Shield)item).consume();
+            if (item instanceof Protection ) {
+                enemyAttack -= ((Protection)item).defenceModifier();
+                ((CollectableEntity)item).consume();
                 if (item.getDurability() == 0) {
                     idToRemove.add(item.getId());
                 }
