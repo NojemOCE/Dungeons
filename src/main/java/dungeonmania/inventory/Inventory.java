@@ -220,9 +220,14 @@ public class Inventory {
         numCollected.put(item.getType(), numCollected.get(item.getType()) - 1);
     }
 
-    private void removeItem(CollectableEntity item) {
-        collectableItems.remove(item.getId());
-        numCollected.put(item.getType(), numCollected.get(item.getType()) - 1);
+    public void removeItem(List<String> itemIdToRemove) {
+        for (String itemId : itemIdToRemove) {
+            String type = collectableItems.get(itemId).getType();
+            numCollected.put(type, numCollected.get(type) - 1);
+
+            collectableItems.remove(itemId);
+        }
+        
     }
 
     /**
@@ -259,34 +264,34 @@ public class Inventory {
         return playerAttack;
     }
 
-    public double bossAttackModifier(double playerAttack) {
-        List<String> idToRemove = new ArrayList<>();
-        for (CollectableEntity item : collectableItems.values()) {
-            if (item instanceof Weapon) {
-                playerAttack += ((Weapon)item).bossAttackModifier();
-                ((CollectableEntity)item).consume();
-                if (item.getDurability() == 0) {
-                    idToRemove.add(item.getId());
-                }
-            }
-        }
+    // public double bossAttackModifier(double playerAttack) {
+    //     List<String> idToRemove = new ArrayList<>();
+    //     for (CollectableEntity item : collectableItems.values()) {
+    //         if (item instanceof Weapon) {
+    //             playerAttack += ((Weapon)item).bossAttackModifier();
+    //             ((CollectableEntity)item).consume();
+    //             if (item.getDurability() == 0) {
+    //                 idToRemove.add(item.getId());
+    //             }
+    //         }
+    //     }
 
-        for (CollectableEntity item : collectableItems.values()) {
-            if (item instanceof Bow ) {
-                playerAttack *= ((Bow)item).attackModifier();
-                ((Bow)item).consume();
-                if (item.getDurability() == 0) {
-                    idToRemove.add(item.getId());
-                }
-            }
-        }
+    //     for (CollectableEntity item : collectableItems.values()) {
+    //         if (item instanceof Bow ) {
+    //             playerAttack *= ((Bow)item).attackModifier();
+    //             ((Bow)item).consume();
+    //             if (item.getDurability() == 0) {
+    //                 idToRemove.add(item.getId());
+    //             }
+    //         }
+    //     }
 
-        for (String itemId : idToRemove) {
-            collectableItems.remove(itemId);
-        }
+    //     for (String itemId : idToRemove) {
+    //         collectableItems.remove(itemId);
+    //     }
 
-        return playerAttack;
-    }
+    //     return playerAttack;
+    // }
 
     /**
      * Provides the modified attack of the enemy when the defense modifier of the inventory has been applied

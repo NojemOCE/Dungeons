@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dungeonmania.Weapon;
+import dungeonmania.collectable.Bow;
 import dungeonmania.collectable.CollectableEntity;
 import dungeonmania.inventory.Inventory;
 
@@ -20,7 +21,7 @@ public class BossBattle implements BattleStrategy {
             }
         }
 
-        for (CollectableEntity item : collectableItems.values()) {
+        for (CollectableEntity item : inventory.getCollectableItems().values()) {
             if (item instanceof Bow ) {
                 playerAttack *= ((Bow)item).attackModifier();
                 ((Bow)item).consume();
@@ -29,11 +30,9 @@ public class BossBattle implements BattleStrategy {
                 }
             }
         }
-
-        for (String itemId : idToRemove) {
-            collectableItems.remove(itemId);
-        }
-
+        
+        inventory.removeItem(idToRemove);
+        
         return playerAttack;
     }
 }
