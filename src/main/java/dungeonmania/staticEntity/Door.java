@@ -24,12 +24,12 @@ public class Door extends StaticEntity {
      * @param keyColour unique key pair
      */
     public Door(int x, int y, String id, int keyColour) {
-        super(new Position(x, y, 1), id, "door");
+        super(new Position(x, y, Position.STATIC_LAYER), id, "door");
         this.keyColour = keyColour;
     }
 
     public Door(int x, int y, String id, int keyColour, boolean opened) {
-        super(new Position(x, y, 1), id, "door");
+        super(new Position(x, y, Position.STATIC_LAYER), id, "door");
         this.keyColour = keyColour;
         this.isOpen = opened;
     }

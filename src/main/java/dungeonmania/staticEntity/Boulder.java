@@ -18,7 +18,7 @@ public class Boulder extends StaticEntity {
      * @param id id of the boulder
      */
     public Boulder(int x, int y, String id) {
-        super(new Position(x, y, 1), id, "boulder");
+        super(new Position(x, y, Position.STATIC_LAYER), id, "boulder");
     }
 
     /**

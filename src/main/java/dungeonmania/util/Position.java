@@ -7,6 +7,11 @@ import java.util.Objects;
 public final class Position {
     private final int x, y, layer;
 
+    public static int MOVING_LAYER = 2;
+    public static int STATIC_LAYER = 1;
+    public static int FLOOR_LAYER = 0;
+
+
     public Position(int x, int y, int layer) {
         this.x = x;
         this.y = y;

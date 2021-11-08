@@ -20,7 +20,7 @@ public class ZombieToastSpawn extends StaticEntity {
      * @param id id of the ZombieToastSpawn
      */
     public ZombieToastSpawn(int x, int y, String id) {
-        super(new Position(x, y, 1), id, "zombie_toast_spawner");
+        super(new Position(x, y, Position.STATIC_LAYER), id, "zombie_toast_spawner");
     }
 
     /**
