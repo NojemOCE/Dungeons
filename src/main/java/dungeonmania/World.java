@@ -22,6 +22,7 @@ import dungeonmania.staticEntity.*;
 import dungeonmania.util.*;
 import dungeonmania.gamemode.*;
 import dungeonmania.movingEntity.*;
+import dungeonmania.movingEntity.States.SwampState;
 import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.util.Position;
@@ -292,11 +293,19 @@ public class World {
             }
         }
 
-        // now move all entities
+        // now move all entities 
         for (MovingEntity me: movingEntities.values()) {
             me.move(this);
             if (me.getPosition().equals(player.getPosition())) {
                 currentBattle = player.battle(me, gamemode); // if invisible it will add null
+            }
+            
+            //Get static entities at me position
+            List<StaticEntity> statics = getStaticEntitiesAtPosition(me.getPosition());
+            for (StaticEntity s: statics) {
+                if (s instanceof SwampTile) {
+                    me.setState(new SwampState(((SwampTile) s).getMovementFactor());
+                }
             }
         }
 
