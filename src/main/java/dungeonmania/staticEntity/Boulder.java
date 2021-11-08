@@ -6,10 +6,12 @@ import java.util.stream.Collectors;
 import dungeonmania.Entity;
 import dungeonmania.World;
 import dungeonmania.movingEntity.Player;
+import dungeonmania.movingEntity.States.*;
 import dungeonmania.util.Position;
 import dungeonmania.util.Direction;
 
 public class Boulder extends StaticEntity {
+    private State state;
     
     /**
      * Constructor for boulder
@@ -19,6 +21,7 @@ public class Boulder extends StaticEntity {
      */
     public Boulder(int x, int y, String id) {
         super(new Position(x, y, Position.STATIC_LAYER), id, "boulder");
+        this.state = new NormalState();
     }
 
     /**
@@ -30,7 +33,8 @@ public class Boulder extends StaticEntity {
     public Position interact(World world, Entity entity) {
 
         if (entity instanceof Player) {
-            Position toMoveBoulderTo = move(entity);
+            Position toMoveBoulderTo = state.move(this, (Player) entity, world);
+            // move(entity);
             
             if (!validMove(world, toMoveBoulderTo)) {
                 return entity.getPosition();
@@ -74,13 +78,23 @@ public class Boulder extends StaticEntity {
 
             // if we reach here then we move both the boulder and player
             // move boulder then return appropriate position for character to move to
-            this.setPosition(new Position(toMoveBoulderTo.getX(), toMoveBoulderTo.getY(), getLayer()));
-
+            updatePosition(toMoveBoulderTo, world, entitiesAtNewPos);
             return entityToMoveTo;
         }
         
         
         return entity.getPosition();
+    }
+    
+    private void updatePosition(Position toMoveTo, World world, List<StaticEntity> entities) {
+        this.setPosition(new Position(toMoveTo.getX(), toMoveTo.getY(), getLayer()));
+        // update state (if we move to a swamp tile)
+        for (StaticEntity e :  entities) {
+            if (e instanceof SwampTile) {
+                int ticks = ((SwampTile) e).getMovementFactor();
+                setState(new SwampState(ticks));
+            }
+        }
     }
 
     /**
@@ -113,7 +127,7 @@ public class Boulder extends StaticEntity {
      * @param character the character trying to move the boulder
      * @return The position that the boulder should move to
      */
-    private Position move(Entity character) {
+    public Position move(Entity character) {
         // get relative position 
         int charX = character.getX();
         int charY = character.getY();
@@ -139,5 +153,11 @@ public class Boulder extends StaticEntity {
         }
     }
 
+    public State getState() {
+        return state;
+    }
 
+    public void setState(State state) {
+        this.state = state;
+    }
 }
