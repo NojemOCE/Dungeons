@@ -32,7 +32,7 @@ public class Player extends MovingEntity {
      * @param healthPoint healthpoint of the player
      */
     public Player(int x, int y, String id, HealthPoint healthPoint) {
-        super(new Position(x, y, 2), id, "player", healthPoint, PLAYER_ATTACK);
+        super(new Position(x, y, Position.MOVING_LAYER), id, "player", healthPoint, PLAYER_ATTACK);
         setAlly(true);
         this.activePotion = null;
     }

@@ -1,7 +1,9 @@
-package dungeonmania;
+package dungeonmania.factory;
 
 import org.json.JSONObject;
 
+import dungeonmania.Entity;
+import dungeonmania.World;
 import dungeonmania.collectable.*;
 import dungeonmania.gamemode.Gamemode;
 import dungeonmania.movingEntity.*;
@@ -68,7 +70,15 @@ public class NewGameFactory extends Factory {
         else if (type.equals("zombie_toast_spawner")) {
             ZombieToastSpawn e = new ZombieToastSpawn(x, y, id);
             return e;   
-        } else if (type.equals("player")) {
+        } 
+        
+        else if (type.equals("swamp_tile")) {
+            int movement_factor = obj.getInt("movement_factor");
+            SwampTile e = new SwampTile(x, y, id, movement_factor);
+            return e;   
+        } 
+        
+        else if (type.equals("player")) {
             Player e = new Player(x, y, id, new HealthPoint(gamemode.getStartingHP()));
            
             return e;

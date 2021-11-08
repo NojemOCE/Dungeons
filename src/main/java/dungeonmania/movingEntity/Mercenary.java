@@ -27,14 +27,14 @@ public class Mercenary extends MovingEntity implements PlayerPassiveObserver {
      * @param id unique entity id of the mercenary
      */
     public Mercenary(int x, int y, String id) {
-        super(new Position(x, y, 2), id, "mercenary", new HealthPoint(MERC_HEALTH), MERC_ATTACK);
+        super(new Position(x, y, Position.MOVING_LAYER), id, "mercenary", new HealthPoint(MERC_HEALTH), MERC_ATTACK);
         setMovement(new FollowPlayer());
         setDefaultMovementStrategy(new FollowPlayer());
         setAlly(false);
     }
 
     public Mercenary(int x, int y, String id, HealthPoint hp, String defaultMovement, String currentMovement, Boolean isAlly) {
-        super(new Position(x, y, 2), id, "mercenary", hp, MERC_ATTACK);
+        super(new Position(x, y, Position.MOVING_LAYER), id, "mercenary", hp, MERC_ATTACK);
         setMovement(getMovementFromString(currentMovement));
         setDefaultMovementStrategy(getMovementFromString(defaultMovement));
         setAlly(isAlly);

@@ -14,7 +14,7 @@ public class Wall extends StaticEntity {
      * @param id id of the wall
      */
     public Wall(int x, int y, String id) {
-        super(new Position(x, y, 1), id, "wall");
+        super(new Position(x, y, Position.STATIC_LAYER), id, "wall");
     }
 
     /**
