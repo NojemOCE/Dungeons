@@ -92,7 +92,7 @@ public class SwampTileTest {
 
 
     /**
-     * Check that player can walk onto swamp tile and it takes extra time
+     * Check that player can walk onto swamp tile and it DOES NOT take extra time
      * MAP:
      * P S 
      *   B
@@ -125,30 +125,12 @@ public class SwampTileTest {
         // check that we got the position
         assertNotNull(playerPos);
 
-        // movement factor is 2 so we should stay on the tile for 2 moves
+        // movement factor is 2 but does not affect player
         d = world.tick(null, Direction.RIGHT);
         entities = d.getEntities();
 
         // get positions after tick
         Position playerPos2 = null;
-        for (EntityResponse er : entities) {
-            if (er.getType().equals("player")) {
-                playerPos2 = er.getPosition();
-            }
-        }
-
-        // check that we got the positions
-        assertNotNull(playerPos2);
-
-        assert(playerPos2.equals(playerPos));
-
-        // now if we move one more time then we should be out of the tile
-        // movement factor is 2 so we should stay on the tile for 2 moves
-        d = world.tick(null, Direction.RIGHT);
-        entities = d.getEntities();
-
-        // get positions after tick
-        playerPos2 = null;
         for (EntityResponse er : entities) {
             if (er.getType().equals("player")) {
                 playerPos2 = er.getPosition();
