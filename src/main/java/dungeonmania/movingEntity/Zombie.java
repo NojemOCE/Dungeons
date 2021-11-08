@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import dungeonmania.World;
 import dungeonmania.movingEntity.MovementStrategies.RandomMovement;
 import dungeonmania.movingEntity.MovementStrategies.RunAway;
+import dungeonmania.movingEntity.States.State;
 import dungeonmania.util.*;
 
 
@@ -20,7 +21,7 @@ public class Zombie extends MovingEntity implements PlayerPassiveObserver {
      * @param id unique entity id of zombie
      */
     public Zombie(int x, int y, String id) {
-        super(new Position(x, y, 2), id, "zombie_toast", new HealthPoint(ZOMBIE_HEALTH), ZOMBIE_ATTACK);
+        super(new Position(x, y, Position.MOVING_LAYER), id, "zombie_toast", new HealthPoint(ZOMBIE_HEALTH), ZOMBIE_ATTACK);
         setMovement(new RandomMovement());
         setDefaultMovementStrategy(new RandomMovement());
         setAlly(false);
@@ -28,16 +29,20 @@ public class Zombie extends MovingEntity implements PlayerPassiveObserver {
 
     public Zombie(int x, int y, String id, HealthPoint hp, String defaultMovement, String currentMovement) {
 
-        super(new Position(x, y, 2), id, "zombie_toast", hp, ZOMBIE_ATTACK);
+        super(new Position(x, y, Position.MOVING_LAYER), id, "zombie_toast", hp, ZOMBIE_ATTACK);
         //need set movement from string
         setMovement(getMovementFromString(currentMovement));
         setDefaultMovementStrategy(getMovementFromString(defaultMovement));
         setAlly(false);
     }
 
-
     @Override
     public void move(World world) {
+       getState().move(this, world);
+    }
+
+    @Override
+    public void moveEntity(World world) {
        getMovement().move(this, world);
     }
 

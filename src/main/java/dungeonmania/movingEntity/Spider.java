@@ -20,7 +20,7 @@ public class Spider extends MovingEntity implements PlayerPassiveObserver {
      */
     public Spider(int x, int y, String id) {
         //Attack damage to 1 and layer to 2 for now
-        super(new Position(x, y, 2), id, "spider", new HealthPoint(SPIDER_HEALTH), SPIDER_ATTACK);
+        super(new Position(x, y, Position.MOVING_LAYER), id, "spider", new HealthPoint(SPIDER_HEALTH), SPIDER_ATTACK);
         setMovement(new CircleMovement());
         setDefaultMovementStrategy(new CircleMovement());
         setAlly(false);
@@ -30,7 +30,7 @@ public class Spider extends MovingEntity implements PlayerPassiveObserver {
 
     public Spider(int x, int y, String id, HealthPoint hp, String defaultMovement, String currentMovement, String currentDir, String nextDir, int remMovesCurr, int remMovesNext, boolean avoidPlayer) {
 
-        super(new Position(x, y, 2), id, "spider", hp, SPIDER_ATTACK);
+        super(new Position(x, y, Position.MOVING_LAYER), id, "spider", hp, SPIDER_ATTACK);
         setMovement(getMovementFromString(currentMovement, currentDir, nextDir, remMovesCurr, remMovesNext, avoidPlayer));
 
         setDefaultMovementStrategy(new CircleMovement());
@@ -46,7 +46,12 @@ public class Spider extends MovingEntity implements PlayerPassiveObserver {
      * @param world World in which the spider is a character of
      */
     public void move(World world) {
-        getMovement().move(this, world);
+        getState().move(this, world);
+    }
+
+    @Override
+    public void moveEntity(World world) {
+       getMovement().move(this, world);
     }
 
     @Override

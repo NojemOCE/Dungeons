@@ -16,7 +16,7 @@ public class FloorSwitch extends StaticEntity {
      * @param id id of exit
      */
     public FloorSwitch(int x, int y, String id) {
-        super(new Position(x, y, 0), id, "switch");
+        super(new Position(x, y, Position.FLOOR_LAYER), id, "switch");
         isTriggered = false;
     }
 

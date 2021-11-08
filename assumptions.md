@@ -61,7 +61,7 @@
 ## Static Entities
 * Wall
     * The walls on the edge of the map cannot be destroyed (by the bomb)
-* Exit
+* Exit ^
     * Only triggers the exit win condition when player interacts with it
     * Player only wins the puzzle if other conditions are met, otherwise nothing happens
 * Boulder
@@ -69,7 +69,7 @@
     * Cannot be pushed into the static entities: wall, door, spawner. CAN be pushed onto switch, exit, portal (which teleports it)
     * Cannot be pushed onto enemies
     * Cannot be pushed onto collectable entities
-* Floor Switch
+* Floor Switch ^
     * Is triggered if a boulder is on it, and untriggered if the boulder is pushed off
     * Only triggered by boulder, otherwise acts as a standard ground cell, i.e. characters can just walk over it
 * Door
@@ -82,6 +82,12 @@
     * Can only be interacted with when the ‘interact’ command in the controller is called, otherwise is used like a wall
     * It breaks on one interaction/attack
     * Spawn rate is determined by current gamemode
+* Swamp Tile ^
+    * Allows boulders to roll on them.
+    * Allows all enemies to walk over it.
+
+Note: static entities marked with ^ are considered to be on the floor layer, which means moving entities and other statics may exist on top of them but two "floor layer" entities may not exist in the same cell, e.g. an exit cannot be on the same cell as a swamp tile.
+
 
 ## Collectable Entities
 * Treasure
