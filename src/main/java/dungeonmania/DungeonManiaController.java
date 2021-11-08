@@ -35,14 +35,13 @@ public class DungeonManiaController {
     }
 
     public String getSkin() {
-        return "spongebob";
 
-        /*String[] skins = {"default","lava"};
+        String[] skins = {"default","lava", "spongebob"};
 
         Random ran = new Random();
 
         int i = ran.nextInt(skins.length);
-        return skins[i];*/
+        return skins[i];
         
 
         //return "default";
