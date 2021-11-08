@@ -96,7 +96,7 @@ public class FollowPlayer implements MovementStrategy {
             Position u = getSmallestDistance(dist, visited);
             visited.remove(u);
             for (Position v: getNeighbours(me, u, world)) {
-                if (dist.get(u) + 1.0 <= dist.get(v)) { // TODO CHANGE 1.0 to actual cost
+                if (dist.get(u) + world.getDistance(v); <= dist.get(v)) { // TODO CHANGE 1.0 to actual cost
                     dist.put(v, dist.get(u) + 1.0);
                     prev.put(v,u);
                 } 
