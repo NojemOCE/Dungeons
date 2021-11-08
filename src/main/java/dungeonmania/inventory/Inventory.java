@@ -10,6 +10,7 @@ import java.util.stream.IntStream;
 
 import org.json.JSONArray;
 
+import dungeonmania.MindControlled;
 import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.response.models.ItemResponse;
@@ -81,6 +82,14 @@ public class Inventory {
         //consumableItems.remove(idToRemove);
     }
     
+    public void useSceptre(MindControlled m) {
+        for (CollectableEntity c : collectableItems.values()) {
+            if (c instanceof Sceptre) {
+                ((Sceptre) c).useMindControl(m);
+            }
+        }
+    }
+
     /**
      * Checks if the provided item type is able to be crafted with the items currently within the inventory.
      * If the item is able to be crafted, the crafting material are consumed and the crafted item is added to the inventory
@@ -103,7 +112,13 @@ public class Inventory {
             IntStream.range(0, 1).mapToObj(i -> "armour").forEach(this::useByType);
             IntStream.range(0, 1).mapToObj(i -> "sun_stone").forEach(this::useByType);
         } else if (itemType.equalsIgnoreCase("sceptre")) {
-            
+            if (numItem("wood") != 0) {
+                useByType("wood");
+            } else {
+                IntStream.range(0, 2).mapToObj(i -> "arrow").forEach(this::useByType);
+            }
+            useByType(numItem("treasure") != 0 ? "treasure" : "key");
+            useByType("sun_stone");
         }
         numCollected.putIfAbsent(itemType, 0);
         numCollected.put(itemType, numCollected.get(itemType) + 1);
@@ -389,4 +404,5 @@ public class Inventory {
         }
         return false;
     }
+
 }

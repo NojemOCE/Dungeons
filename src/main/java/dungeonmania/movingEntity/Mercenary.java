@@ -85,7 +85,9 @@ public class Mercenary extends MovingEntity implements PlayerPassiveObserver, Mi
      */
     public void interact(World world) throws InvalidActionException {
         if (interactable) {
-            if (world.numItemInInventory("treasure") >= GOLD_TO_BRIBE) {
+            if (world.numItemInInventory("sceptre") != 0) {
+                world.MindControl(this);
+            } else if (world.numItemInInventory("treasure") >= GOLD_TO_BRIBE) {
                 for (int i = 0; i < GOLD_TO_BRIBE; i++) {
                     world.useByType("treasure");
                 }

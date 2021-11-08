@@ -813,6 +813,10 @@ public class World {
         inventory.useByType(type);
     }
 
+    public void MindControl(MindControlled m) {
+        inventory.useSceptre(m);
+    }
+
     public int getTickCount() {
         return tickCount;
     }

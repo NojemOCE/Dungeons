@@ -39,4 +39,8 @@ public class Sceptre extends CollectableEntity {
         return !isNull(controlled.get(m));
     }
 
+    // Loading game (mounting)
+        // Adding it to a list with a duration
+    // Saving
+
 }
