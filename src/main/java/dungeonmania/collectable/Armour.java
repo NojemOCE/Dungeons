@@ -1,8 +1,6 @@
 package dungeonmania.collectable;
 
-import dungeonmania.CraftingMaterial;
-
-public class Armour extends CollectableEntity implements CraftingMaterial {
+public class Armour extends CollectableEntity {
 
     private final int DURABILITY = 7;
     private final double DEFENCE_MULTIPLIER = 0.5;
@@ -28,7 +26,4 @@ public class Armour extends CollectableEntity implements CraftingMaterial {
         return DEFENCE_MULTIPLIER;
     }
 
-    public void craft() {
-        setDurability(0);
-    }
 }
