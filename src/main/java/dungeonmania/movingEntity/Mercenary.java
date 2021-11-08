@@ -40,9 +40,12 @@ public class Mercenary extends MovingEntity implements PlayerPassiveObserver {
         setAlly(isAlly);
     }
 
+    public void move(World world) {
+        getState().move(this, world);
+    }
 
     @Override
-    public void move(World world) {
+    public void moveEntity(World world) {
 
         Position distance = Position.calculatePositionBetween(world.getPlayer().getPosition(), this.getPosition());
         double x = (double)distance.getX();

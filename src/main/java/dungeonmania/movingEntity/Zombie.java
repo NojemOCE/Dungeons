@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import dungeonmania.World;
 import dungeonmania.movingEntity.MovementStrategies.RandomMovement;
 import dungeonmania.movingEntity.MovementStrategies.RunAway;
+import dungeonmania.movingEntity.States.State;
 import dungeonmania.util.*;
 
 
@@ -35,9 +36,13 @@ public class Zombie extends MovingEntity implements PlayerPassiveObserver {
         setAlly(false);
     }
 
-
     @Override
     public void move(World world) {
+       getState().move(this, world);
+    }
+
+    @Override
+    public void moveEntity(World world) {
        getMovement().move(this, world);
     }
 

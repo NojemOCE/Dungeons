@@ -46,7 +46,12 @@ public class Spider extends MovingEntity implements PlayerPassiveObserver {
      * @param world World in which the spider is a character of
      */
     public void move(World world) {
-        getMovement().move(this, world);
+        getState().move(this, world);
+    }
+
+    @Override
+    public void moveEntity(World world) {
+       getMovement().move(this, world);
     }
 
     @Override

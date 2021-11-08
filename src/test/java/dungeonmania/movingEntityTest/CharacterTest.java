@@ -79,7 +79,7 @@ public class CharacterTest {
         }
 
         Spider spider = new Spider(1,1,"spider");
-        Zombie zombie = new Zombie(1,1,"zombie");
+        Zombie zombie = new Zombie(50,50,"zombie");
 
         assertEquals(spider.getPosition(), new Position(1, 1));
         spider.move(world);
