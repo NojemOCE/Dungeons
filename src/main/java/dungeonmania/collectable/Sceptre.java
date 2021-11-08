@@ -1,8 +1,12 @@
 package dungeonmania.collectable;
 
 import dungeonmania.MindControlled;
+import dungeonmania.movingEntity.MovingEntity;
+import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static java.util.Objects.isNull;
@@ -42,5 +46,16 @@ public class Sceptre extends CollectableEntity {
     // Loading game (mounting)
         // Adding it to a list with a duration
     // Saving
+
+    @Override
+    public JSONObject saveGameJson() {
+        JSONObject sceptreJSON  = super.saveGameJson();
+        List<String> controlledIds = new ArrayList<>();
+        for (MindControlled m : controlled.keySet()) {
+            controlledIds.add(((MovingEntity) m).getId());
+        }
+        sceptreJSON.put("controlled", controlledIds);
+        return sceptreJSON;
+    }
 
 }
