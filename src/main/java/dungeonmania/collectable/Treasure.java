@@ -1,8 +1,6 @@
 package dungeonmania.collectable;
 
-import dungeonmania.CraftingMaterial;
-
-public class Treasure extends CollectableEntity implements CraftingMaterial {
+public class Treasure extends CollectableEntity {
 
     public Treasure(int x, int y, String itemId) {
         super(x, y, itemId, "treasure");
@@ -17,7 +15,4 @@ public class Treasure extends CollectableEntity implements CraftingMaterial {
         setDurability(durability);
     }
 
-    public void craft() {
-        decreaseDurability();
-    }
 }
