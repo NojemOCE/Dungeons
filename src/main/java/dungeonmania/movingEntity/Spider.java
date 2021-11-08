@@ -10,8 +10,8 @@ import dungeonmania.util.*;
 
 public class Spider extends MovingEntity implements PlayerPassiveObserver {
 
-    static final int SPIDER_ATTACK = 1;
-    static final int SPIDER_HEALTH = 3;
+    static final int SPIDER_ATTACK = 5;
+    static final int SPIDER_HEALTH = 5;
     /**
      * Constructor for spider taking an x coordinate, and y coordinate and an id
      * @param x x coordinate of the spider

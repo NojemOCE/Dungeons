@@ -26,8 +26,6 @@ public class FollowPlayer implements MovementStrategy {
         // maybe check for errors (list is empty or just has 1 etc...)
         // calculate distance inbetween player and mercenary, if in battle radius 
         // use path.get(1)
-
-
         if (path.size() < 1) return;
         if (path.get(1).equals(world.getPlayer().getPosition())) {
             if (!Objects.isNull(world.getBattle()) || me.getAlly()) me.setPosition(path.get(0));

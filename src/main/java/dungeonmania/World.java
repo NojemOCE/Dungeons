@@ -440,7 +440,6 @@ public class World {
         if (!Objects.isNull(currentBattle)) {
             movingEntities.remove(currentBattle.getCharacter().getId());
             player.unsubscribePassiveObserver((PlayerPassiveObserver)currentBattle.getCharacter());
-            player.endBattle();
             currentBattle = null;
         }
 
@@ -1353,6 +1352,5 @@ public class World {
         }
         return 1.0;
     }
-
     
 }

@@ -64,7 +64,6 @@ public class Battle {
 
         // ally help
         player.alliesInRange().forEach(ally -> {
-
             character.defend((ally.getHealthPoint().getHealth() * ally.getAttackDamage()) / 10);
         });
 

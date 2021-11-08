@@ -96,20 +96,11 @@ public class Player extends MovingEntity {
         if (!enemy.getAlly()) {
             if (Objects.isNull(activePotion) || !activePotion.getType().equals("invisibility_potion")) {
                 notifyObserversForBattle(world); // mercenary speed
-                System.out.println(enemy);
                 return new Battle(this, enemy, gamemode.isEnemyAttackEnabled());
             }
             // notify observers of battle
         }
         return null;
-    }
-
-    /**
-     * Notifies observers of a battle ending
-     */
-    public void endBattle() {
-        // notify observers of ending battle
-        //notifyObserversForBattle(0);
     }
 
     public void addInRange(Mercenary inRange) {
