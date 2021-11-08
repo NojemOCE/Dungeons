@@ -146,25 +146,21 @@ public class CharacterTest {
         }
         Mercenary merc = (Mercenary) world.getCharacter(new Position(3,5));
         world.tick(null, null);
-        assertEquals(merc.getPosition(), new Position(2, 5));
+        assertEquals(merc.getPosition(), new Position(3, 4));
         world.tick(null, null);
-        assertEquals(merc.getPosition(), new Position(1, 5));
+        assertEquals(merc.getPosition(), new Position(2, 4));
         world.tick(null, null);
-        assertEquals(merc.getPosition(), new Position(1, 4));
+        assertEquals(merc.getPosition(), new Position(2, 3));
 
         world.getPlayer().tick(Direction.RIGHT, world);
         world.tick(null, null);
-        assertEquals(merc.getPosition(), new Position(1, 3));
+        assertEquals(merc.getPosition(), new Position(2, 2));
         world.tick(null, null);
-        assertEquals(merc.getPosition(), new Position(1, 2));
-
-        world.tick(null, null);
-        assertEquals(merc.getPosition(), new Position(1, 1));
-        world.tick(null, null);
-
         assertEquals(merc.getPosition(), new Position(2, 1));
+
         world.tick(null, null);
-        assertEquals(merc.getPosition(), new Position(2, 1)); // on top of player
+        assertEquals(merc.getPosition(), new Position(2, 1));
+
         assertEquals(world.getBattle().isActiveBattle(), true);
         // recalculate bfs
     }
