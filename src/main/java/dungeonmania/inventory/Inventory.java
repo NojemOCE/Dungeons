@@ -160,6 +160,10 @@ public class Inventory {
         return collectableItems.values().stream().anyMatch(e -> e instanceof Sword);
     }
 
+    public boolean hasSceptre() {
+        return collectableItems.values().stream().anyMatch(e -> e instanceof Sceptre);
+    }
+
     public List<ItemResponse> getInventoryResponse() {
         List<ItemResponse> itemResponses = collectableItems.values().stream().map(CollectableEntity::getItemResponse).collect(Collectors.toList());
         return itemResponses;
@@ -371,7 +375,7 @@ public class Inventory {
         } else if (buildableType.equalsIgnoreCase("shield")) {
             return numItem("wood") >= 2 && (numItem("treasure") >= 1 || numItem("key") == 1);
         } else if (buildableType.equalsIgnoreCase("sceptre")) {
-            return (numItem("wood") >= 1 || numItem("arrow") >= 2) && (numItem("key") >= 1 || numItem("treasure") >= 1) && numItem("sun_stone") >= 1;
+            return (numItem("wood") >= 1 || numItem("arrow") >= 2) && (numItem("key") >= 1 || numItem("treasure") >= 1) && numItem("sun_stone") >= 1 && hasSceptre();
         } else if (buildableType.equalsIgnoreCase("midnight_armour")) {
             return numItem("armour") >= 1 && numItem("sun_stone") >= 1;
         } else {
