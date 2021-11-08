@@ -25,6 +25,12 @@ public class Sceptre extends CollectableEntity {
         m.update(this);
     }
 
+    // For when loading, setting a duration
+    public void useMindControl(MindControlled m, int duration) {
+        controlled.put(m, duration);
+        m.update(this);
+    }
+
     public void updateMindControlled() {
         controlled.replaceAll((m, v) -> v - 1);
         notifyMindControlled();
@@ -45,7 +51,6 @@ public class Sceptre extends CollectableEntity {
 
     // Loading game (mounting)
         // Adding it to a list with a duration
-    // Saving
 
     @Override
     public JSONObject saveGameJson() {
