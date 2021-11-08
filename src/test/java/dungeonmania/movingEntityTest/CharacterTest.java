@@ -371,7 +371,7 @@ public class CharacterTest {
         assertEquals(world.getPlayerPosition(), new Position(7,9));
         Zombie zambie = new Zombie(7, 9, "zombie");
         world.getPlayer().subscribePassiveObserver(zambie);
-        Battle battle = world.getPlayer().battle(zambie, new Standard());
+        Battle battle = world.getPlayer().battle(zambie,world, new Standard());
         
         battle.battleTick(new Inventory());
         assertEquals(zambie.getHealthPoint().getHealth(), 0);
@@ -382,13 +382,13 @@ public class CharacterTest {
 
         world.getPlayer().addPotion(new InvincibilityPotion("a", 1, true));
 
-        Battle battle1 = world.getPlayer().battle(zambie1, new Standard());
+        Battle battle1 = world.getPlayer().battle(zambie1,world, new Standard());
         battle1.battleTick(new Inventory());
         Zombie zambie2 = new Zombie(7, 9, "zombie2");
 
         world.getPlayer().addPotion(new InvisibilityPotion(10));
 
-        Battle battle2 = world.getPlayer().battle(zambie2, new Standard());
+        Battle battle2 = world.getPlayer().battle(zambie2,world, new Standard());
         assertEquals(battle2, null);
     }
 

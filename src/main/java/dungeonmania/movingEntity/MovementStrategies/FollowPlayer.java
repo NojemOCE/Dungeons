@@ -26,20 +26,16 @@ public class FollowPlayer implements MovementStrategy {
         // maybe check for errors (list is empty or just has 1 etc...)
         // calculate distance inbetween player and mercenary, if in battle radius 
         // use path.get(1)
-        if (!path.isEmpty() && path.size() <= 2) {
 
-            if (path.get(1).equals(world.getPlayer().getPosition())) {
-                if (!Objects.isNull(world.getBattle()) || me.getAlly()) me.setPosition(path.get(0));
-                else me.setPosition(me.validMove(path.get(1), world));
-            } 
 
-        } else if (!path.isEmpty() && path.size() > 2) {
+        if (path.size() < 1) return;
+        if (path.get(1).equals(world.getPlayer().getPosition())) {
+            if (!Objects.isNull(world.getBattle()) || me.getAlly()) me.setPosition(path.get(0));
+            else me.setPosition(me.validMove(path.get(1), world));
+        } else me.setPosition(me.validMove(path.get(1), world));
 
-            // still need to use the battle radius, translate by two
-            // THE PATH MAY INCLUDE THE START, if MERC NOT MOVING CHANGE me.getSpeed() +1`
-            if (!Objects.isNull(world.getBattle()) && path.get(me.getSpeed() + 1).equals(world.getPlayer().getPosition())) me.setPosition(path.get(0));
-            else me.setPosition(path.get(me.getSpeed() + 1));
-        }
+
+       
     }
 
     /**
@@ -96,8 +92,8 @@ public class FollowPlayer implements MovementStrategy {
             Position u = getSmallestDistance(dist, visited);
             visited.remove(u);
             for (Position v: getNeighbours(me, u, world)) {
-                if (dist.get(u) + world.getDistance(v) <= dist.get(v)) { // TODO CHANGE 1.0 to actual cost
-                    dist.put(v, dist.get(u) + 1.0);
+                if (dist.get(u) + world.getDistance(v) < dist.get(v)) { // TODO CHANGE 1.0 to actual cost
+                    dist.put(v, dist.get(u) + world.getDistance(v));
                     prev.put(v,u);
                 } 
             }

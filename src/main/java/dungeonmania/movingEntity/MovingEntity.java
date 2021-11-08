@@ -21,8 +21,6 @@ public abstract class MovingEntity extends Entity {
     private HealthPoint healthPoint;
     private double attackDamage;
 
-    private int speed;
-
     protected MovementStrategy movementStrategy;
     protected MovementStrategy defaultMovementStrategy;
 
@@ -32,7 +30,6 @@ public abstract class MovingEntity extends Entity {
         super(position, id, type);
         this.healthPoint = healthPoint;
         this.attackDamage = attackDamage;
-        this.speed = 0;
     }
 
     /**
@@ -106,14 +103,6 @@ public abstract class MovingEntity extends Entity {
 
     public MovementStrategy getMovement() {
         return this.movementStrategy;
-    }
-
-    public int getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(int speed) {
-        this.speed = speed;
     }
 
     public MovementStrategy getDefaultMovementStrategy() {

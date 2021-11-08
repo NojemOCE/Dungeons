@@ -92,12 +92,11 @@ public class Player extends MovingEntity {
      * @param enemy enemy that the player fights in the battle
      * @return new Battle
      */
-    public Battle battle(MovingEntity enemy, Gamemode gamemode) {
+    public Battle battle(MovingEntity enemy, World world, Gamemode gamemode) {
         if (!enemy.getAlly()) {
-
             if (Objects.isNull(activePotion) || !activePotion.getType().equals("invisibility_potion")) {
-                notifyObserversForBattle(1); // mercenary speed
-
+                notifyObserversForBattle(world); // mercenary speed
+                System.out.println(enemy);
                 return new Battle(this, enemy, gamemode.isEnemyAttackEnabled());
             }
             // notify observers of battle
@@ -110,7 +109,7 @@ public class Player extends MovingEntity {
      */
     public void endBattle() {
         // notify observers of ending battle
-        notifyObserversForBattle(0);
+        //notifyObserversForBattle(0);
     }
 
     public void addInRange(Mercenary inRange) {
@@ -148,9 +147,10 @@ public class Player extends MovingEntity {
      * Notifies mercenaries of battle for battle advantage
      * @param speed movement speed
      */
-    public void notifyObserversForBattle(int speed) { // notify observers for battle
+    public void notifyObserversForBattle(World world) { // notify observers for battle
         mercenariesInRange.forEach( mercenary -> {
-            mercenary.setSpeed(speed);
+            mercenary.move(world);
+
         });
     }
 

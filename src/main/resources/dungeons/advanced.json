@@ -389,6 +389,11 @@
         "type": "treasure"
       },
       {
+        "x": 2,
+        "y": 1,
+        "type": "mercenary"
+      },
+      {
         "x": 11,
         "y": 10,
         "type": "invincibility_potion"

@@ -31,7 +31,7 @@ public class Assassin extends Mercenary {
                 }
                 setAlly(true);
                 world.setBattle(null);
-                setSpeed(0);
+
             } else {
                 throw new InvalidActionException("Not enough gold to bribe Assassin!");
             }
