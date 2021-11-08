@@ -1,5 +1,6 @@
 package dungeonmania.movingEntityTest;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -11,6 +12,7 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.shadow.com.univocity.parsers.common.processor.InputValueSwitch;
 
+import dungeonmania.DungeonManiaController;
 import dungeonmania.World;
 import dungeonmania.exceptions.*;
 import dungeonmania.gamemode.Standard;
@@ -22,6 +24,7 @@ import dungeonmania.movingEntity.*;
 import dungeonmania.movingEntity.MovementStrategies.CircleMovement;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
+import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import dungeonmania.util.FileLoader;
 import dungeonmania.util.Position;
@@ -97,7 +100,7 @@ public class CharacterTest {
         zombie.updateMovement("invincibility_potion");
         zombie.updateMovement("N/A");
 
-        spider.setMovement(new CircleMovement("Direction.UP", "Direction.DOWN", 1, 1, true));
+        spider.setMovement(new CircleMovement("UP", "DOWN", 1, 1, true));
     }
 
     @Test
@@ -229,6 +232,46 @@ public class CharacterTest {
         world.tick(null, Direction.LEFT);
 
         assertEquals(world.getPlayer().getAttackDamage(), 3);
+
+    }
+
+    @Test
+    public void testSaveJSON() {
+        DungeonManiaController controller = new DungeonManiaController();
+        controller.newGame("advanced", "Standard");
+        for (int i = 0; i < 4; i++) {
+            controller.tick(null, Direction.RIGHT);
+        }
+        for (int i = 0; i < 4; i++) {
+            controller.tick(null, Direction.DOWN);
+        }
+        for (int i = 0; i < 2; i++) {
+            controller.tick(null, Direction.RIGHT);
+        }
+        for (int i = 0; i < 2; i++) {
+            controller.tick(null, Direction.DOWN);
+        }
+        for (int i = 0; i < 4; i++) {
+            controller.tick(null, Direction.RIGHT);
+        }
+        for (int i = 0; i < 4; i++) {
+            controller.tick(null, Direction.DOWN);
+        }
+        controller.tick(null, Direction.UP);
+
+        DungeonResponse a = controller.tick(null,null);
+        String id = "";
+        for (ItemResponse i : a.getInventory()) {
+            if (i.getType().equals("invincibility_potion")) {
+                id = i.getId();
+            }
+        }
+        controller.tick(id, null);
+        controller.tick(null, null);
+
+        controller.saveGame("advanced");
+        
+        assertDoesNotThrow(() -> controller.loadGame("advanced"));
 
     }
 

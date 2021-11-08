@@ -63,13 +63,16 @@ public class Door extends StaticEntity {
                 return new Position(getX(), getY(), entity.getLayer());
             }
             Key key = world.keyInInventory(keyColour);
-            if (!Objects.isNull(key)) {
+            if (world.inInventory("sun_stone")) {
+                open();
+                return new Position(getX(), getY(), entity.getLayer());
+            } else if (!Objects.isNull(key)) {
                 // open door
                 open();
                 // use the key
                 world.use(key.getId());
                 return new Position(getX(), getY(), entity.getLayer());
-            }
+            } 
         } else if (entity instanceof Spider) {
             return new Position(getX(), getY(), entity.getLayer());
         }

@@ -1,6 +1,6 @@
 package dungeonmania.collectable;
 
-public class Shield extends CollectableEntity {
+public class Shield extends CollectableEntity implements Protection {
 
     private final int DURABILITY = 10;
     private final int DEFENCE = 10;
