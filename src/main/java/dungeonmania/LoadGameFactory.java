@@ -25,7 +25,7 @@ public class LoadGameFactory extends Factory {
         int x = obj.getInt("x");
         int y = obj.getInt("y");
 
-        //updateBounds(x, y);
+        updateBounds(x, y);
 
         String id = obj.getString("id");
 
@@ -73,7 +73,7 @@ public class LoadGameFactory extends Factory {
         int x = obj.getInt("x");
         int y = obj.getInt("y");
 
-        //updateBounds(x, y);
+        updateBounds(x, y);
 
         String type = obj.getString("type");
 
@@ -127,7 +127,7 @@ public class LoadGameFactory extends Factory {
         int x = obj.getInt("x");
         int y = obj.getInt("y");
 
-        //updateBounds(x, y);
+        updateBounds(x, y);
 
         String type = obj.getString("type");
 
@@ -194,7 +194,7 @@ public class LoadGameFactory extends Factory {
 
         int durability = obj.getInt("durability");
 
-        //updateBounds(x, y);
+        updateBounds(x, y);
 
         String type = obj.getString("type");
 
