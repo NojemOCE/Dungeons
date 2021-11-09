@@ -22,6 +22,7 @@ import dungeonmania.movingEntity.MovementStrategies.CircleMovement;
 import dungeonmania.movingEntity.MovementStrategies.FollowPlayer;
 import dungeonmania.movingEntity.MovementStrategies.RandomMovement;
 import dungeonmania.movingEntity.MovementStrategies.RunAway;
+import dungeonmania.movingEntity.States.NormalState;
 import dungeonmania.util.Direction;
 import dungeonmania.util.FileLoader;
 import dungeonmania.util.Position;
@@ -48,7 +49,7 @@ public class PlayerTest {
     public void mercRunAwayTest() {
         Passive invincibilityPassive  = new InvincibilityPotion(5);
 
-        Mercenary merc = new Mercenary(2, 1, "mercenary1", new HealthPoint(10), new FollowPlayer(), new FollowPlayer(), false);
+        Mercenary merc = new Mercenary(2, 1, "mercenary1", new HealthPoint(10), new FollowPlayer(), new FollowPlayer(), false, new NormalState());
         
 
         merc.updateMovement("invincibility_potion");
@@ -60,7 +61,7 @@ public class PlayerTest {
     public void mercRunAwayAllyTest() {
         Passive invincibilityPassive  = new InvincibilityPotion(5);
 
-        Mercenary merc = new Mercenary(2, 1, "mercenary1", new HealthPoint(10), new FollowPlayer(), new FollowPlayer(), true);
+        Mercenary merc = new Mercenary(2, 1, "mercenary1", new HealthPoint(10), new FollowPlayer(), new FollowPlayer(), true, new NormalState());
         
 
         merc.updateMovement("invincibility_potion");
@@ -71,17 +72,17 @@ public class PlayerTest {
     @Test
     public void spiderConstructors() {
 
-        Spider s1 = new Spider(1, 1, "spider1", new HealthPoint(10), new RunAway(), new FollowPlayer());
+        Spider s1 = new Spider(1, 1, "spider1", new HealthPoint(10), new RunAway(), new FollowPlayer(), new NormalState());
         
-        Spider s2 = new Spider(1, 1, "spider1", new HealthPoint(10), new RandomMovement(), new RunAway());
+        Spider s2 = new Spider(1, 1, "spider1", new HealthPoint(10), new RandomMovement(), new RunAway(), new NormalState());
         
-        Spider s3 = new Spider(1, 1, "spider1", new HealthPoint(10), new FollowPlayer(), new RandomMovement());
+        Spider s3 = new Spider(1, 1, "spider1", new HealthPoint(10), new FollowPlayer(), new RandomMovement(), new NormalState());
 
 
-        Spider s4 = new Spider(1, 1, "spider1", new HealthPoint(10), new CircleMovement(), new CircleMovement(Direction.RIGHT, Direction.LEFT, 2, 1, false));
-        Spider s5 = new Spider(1, 1, "spider1", new HealthPoint(10), new CircleMovement(), new CircleMovement(Direction.DOWN, Direction.RIGHT, 2, 1, false));
-        Spider s6 = new Spider(1, 1, "spider1", new HealthPoint(10), new CircleMovement(), new CircleMovement(Direction.LEFT, Direction.UP, 2, 1, false));
-        Spider s7 = new Spider(1, 1, "spider1", new HealthPoint(10), new CircleMovement(), new CircleMovement(Direction.NONE, Direction.LEFT, 2, 1, false));
+        Spider s4 = new Spider(1, 1, "spider1", new HealthPoint(10), new CircleMovement(), new CircleMovement(Direction.RIGHT, Direction.LEFT, 2, 1, false), new NormalState());
+        Spider s5 = new Spider(1, 1, "spider1", new HealthPoint(10), new CircleMovement(), new CircleMovement(Direction.DOWN, Direction.RIGHT, 2, 1, false), new NormalState());
+        Spider s6 = new Spider(1, 1, "spider1", new HealthPoint(10), new CircleMovement(), new CircleMovement(Direction.LEFT, Direction.UP, 2, 1, false), new NormalState());
+        Spider s7 = new Spider(1, 1, "spider1", new HealthPoint(10), new CircleMovement(), new CircleMovement(Direction.NONE, Direction.LEFT, 2, 1, false), new NormalState());
 
         assertEquals("followPlayer", s1.getMovement().getMovementType());
         assertEquals("runAway", s2.getMovement().getMovementType());
@@ -107,6 +108,9 @@ public class PlayerTest {
         assertEquals("UP", s6CurrMovement.getString("next-direction"));
         assertEquals(2, s6CurrMovement.getInt("remMovesCurr"));
         assertEquals(1, s6CurrMovement.getInt("remMovesNext"));
+
+        JSONObject s5State = spider5JSON.getJSONObject("state");
+        assertEquals("normalState", s5State.getString("state"));
 
     }
 

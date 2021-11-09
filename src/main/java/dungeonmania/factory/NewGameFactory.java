@@ -11,11 +11,15 @@ import dungeonmania.staticEntity.*;
 
 public class NewGameFactory extends Factory {
 
+    /**
+     * Constructor for a NewGameFactory taking in a gamemode
+     * @param gamemode gamemode of factory
+     */
     public NewGameFactory(Gamemode gamemode) {
         super(gamemode);
     }
 
-
+    @Override
     public Entity createEntity(JSONObject obj, World world) {
         int x = (int)obj.get("x");
         int y = (int)obj.get("y");

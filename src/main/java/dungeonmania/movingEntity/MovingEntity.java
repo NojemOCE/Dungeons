@@ -31,6 +31,14 @@ public abstract class MovingEntity extends Entity {
     private boolean ally;
     private State state;
 
+    /**
+     * Connstructor for moving entity taking position, id, type, healthpoint and attack damage
+     * @param position position of the moving entity
+     * @param id unique id of the entity
+     * @param type string type of the entity
+     * @param healthPoint healthpoint object of the entity
+     * @param attackDamage attack damage double of the entity
+     */
     public MovingEntity(Position position, String id, String type, HealthPoint healthPoint, double attackDamage) {
         super(position, id, type);
         this.healthPoint = healthPoint;
@@ -47,6 +55,10 @@ public abstract class MovingEntity extends Entity {
         this.healthPoint.loseHealth(attack);
     }
 
+    /**
+     * Moves an entity in accordance with its movement state
+     * @param world current world that the entity resides in. Allows the entity to observe its surroundings
+     */
     public abstract void move(World world);
 
     /**
@@ -80,50 +92,98 @@ public abstract class MovingEntity extends Entity {
         return position;
     }
 
+    /**
+     * Gets the healthpoint object of the entity
+     * @return healthpoint object of moving entity
+     */
     public HealthPoint getHealthPoint() {
         return healthPoint;
     }
 
+    /**
+     * Adds a given amount to the entity's health
+     * @param health health to add
+     */
     public void addHealth(double health) {
         this.healthPoint.gainHealth(health);
     }
 
+    /**
+     * Gets the attack damage of the moving entity
+     * @return attack damage of entity
+     */
     public double getAttackDamage() {
         return attackDamage;
     }
 
+    /**
+     * Sets the attack damage of the moving entity
+     * @param attackDamage double to set attack damage to
+     */
     public void setAttackDamage(double attackDamage) {
         this.attackDamage = attackDamage;
     }
 
+    /**
+     * Gets whether the moving entity is an ally of the player
+     * @return true if ally, false otherwise
+     */
     public boolean getAlly() {
         return this.ally;
     }
 
+    /**
+     * Sets the moving entity as an ally or enemy
+     * @param ally if true, sets player as ally. Otherwise sets player as enemy.
+     */
     public void setAlly(boolean ally) {
         this.ally = ally;
     }
 
+    /**
+     * Sets the moving entity's current movement strategy
+     * @param strategy movement strategy to set
+     */
     public void setMovement(MovementStrategy strategy) {
         this.movementStrategy = strategy;
     }
 
+    /**
+     * Gets the moving entity's movement strategy
+     * @return current movement strategy of moving entity
+     */
     public MovementStrategy getMovement() {
         return this.movementStrategy;
     }
 
+    /**
+     * Gets the speed of the moving entity
+     * @return speed of the moving entity
+     */
     public int getSpeed() {
         return speed;
     }
 
+    /**
+     * Sets the speed of the moving entity
+     * @param speed speed to set
+     */
     public void setSpeed(int speed) {
         this.speed = speed;
     }
 
+    /**
+     * Gets the moving entity's default movement strategy
+     * @return default movement strategy of moving entity
+     */
     public MovementStrategy getDefaultMovementStrategy() {
         return defaultMovementStrategy;
     }
 
+    /**
+     * Sets the moving entity's default movement strategy
+     * @param defaultMovementStrategy default movement strategy to set
+     */
     public void setDefaultMovementStrategy(MovementStrategy defaultMovementStrategy) {
         this.defaultMovementStrategy = defaultMovementStrategy;
     }
@@ -145,49 +205,35 @@ public abstract class MovingEntity extends Entity {
         return saveObj;
     }
 
+    
+    
+    /**
+     * Moves an entity in accordance with its movement strategy
+     * @param world current world that the entity resides in. Allows the entity to observe its surroundings
+     */
+    abstract public void moveEntity(World world);
+
+    /**
+     * Gets the movement state of the moving entity
+     * @return movement state of the entity (normal or swamp)
+     */
+    public State getState() {
+        return state;
+    }
+
+    /**
+     * Sets the movement state of the moving entity
+     * @param state state to set to (normal or swamp)
+     */
+    public void setState(State state) {
+        this.state = state;
+    }
+
     // @Override
     // public String toString() {
     //     return "MovingEntity [ally=" + ally + ", attackDamage=" + attackDamage + ", defaultMovementStrategy="
     //             + defaultMovementStrategy + ", healthPoint=" + healthPoint + ", movementStrategy=" + movementStrategy
     //             + ", position=" + getPosition()+ ", speed=" + speed + "]";
     // }
-
-    /*protected MovementStrategy getMovementFromString(String movement, String currDir, String nextDir, int remMovesCurr, int remMovesNext, boolean avoidPlayer) {
-        switch(movement)  {
-            case "circle":
-                return new CircleMovement(currDir, nextDir, remMovesCurr, remMovesNext, avoidPlayer);
-            case "followPlayer":
-                return new FollowPlayer();
-            case "randomMovement":
-                return new RandomMovement();
-            case "runAway":
-                return new RunAway();
-        }
-        return null;
-    }*/
-
-    protected MovementStrategy getMovementFromString(String movement) {
-        switch(movement)  {
-            case "circle":
-                return new CircleMovement();
-            case "followPlayer":
-                return new FollowPlayer();
-            case "randomMovement":
-                return new RandomMovement();
-            case "runAway":
-                return new RunAway();
-        }
-        return null;
-    }
-    
-    abstract public void moveEntity(World world);
-
-    public State getState() {
-        return state;
-    }
-
-    public void setState(State state) {
-        this.state = state;
-    }
 
 }
