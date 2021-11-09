@@ -2,6 +2,9 @@ package dungeonmania.movingEntity;
 
 import dungeonmania.World;
 import dungeonmania.util.*;
+
+import org.json.JSONObject;
+
 import dungeonmania.*;
 
 public interface MovementStrategy {
@@ -18,4 +21,6 @@ public interface MovementStrategy {
      * @return
      */
     public String getMovementType();
+
+    public JSONObject getMovementJson();
 }

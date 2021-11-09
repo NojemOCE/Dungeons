@@ -28,12 +28,21 @@ public class Spider extends MovingEntity implements PlayerPassiveObserver {
         // When character is no longer invincible, set currentMovement = defaultMovement
     }
 
-    public Spider(int x, int y, String id, HealthPoint hp, String defaultMovement, String currentMovement, String currentDir, String nextDir, int remMovesCurr, int remMovesNext, boolean avoidPlayer) {
+    /*public Spider(int x, int y, String id, HealthPoint hp, String defaultMovement, String currentMovement, String currentDir, String nextDir, int remMovesCurr, int remMovesNext, boolean avoidPlayer) {
 
         super(new Position(x, y, Position.MOVING_LAYER), id, "spider", hp, SPIDER_ATTACK);
         setMovement(getMovementFromString(currentMovement, currentDir, nextDir, remMovesCurr, remMovesNext, avoidPlayer));
 
         setDefaultMovementStrategy(new CircleMovement());
+        setAlly(false);
+    }*/
+
+
+
+    public Spider(int x, int y, String id, HealthPoint hp, MovementStrategy defaultMovement, MovementStrategy currentMovement) {
+        super(new Position(x, y, Position.MOVING_LAYER), id, "spider", hp, SPIDER_ATTACK);
+        setMovement(currentMovement);
+        setDefaultMovementStrategy(defaultMovement);
         setAlly(false);
     }
 
@@ -57,12 +66,15 @@ public class Spider extends MovingEntity implements PlayerPassiveObserver {
     @Override
     public JSONObject saveGameJson() {
         JSONObject spiderJSON = super.saveGameJson();
-        JSONObject movement = new JSONObject();
+        //JSONObject movement = new JSONObject();
 
-        movement.put("default-strategy", defaultMovementStrategy.getMovementType());
-        movement.put("movement-strategy", movementStrategy.getMovementType());
+        spiderJSON.put("default-strategy", defaultMovementStrategy.getMovementJson());
+        spiderJSON.put("movement-strategy", movementStrategy.getMovementJson());
 
-        if(movementStrategy instanceof CircleMovement) {
+        //movement.put("default-strategy", defaultMovementStrategy.getMovementType());
+        //movement.put("movement-strategy", movementStrategy.getMovementType());
+
+        /*if(movementStrategy instanceof CircleMovement) {
             CircleMovement moveStrat = (CircleMovement) defaultMovementStrategy;
             movement.put("current-direction", moveStrat.getCurrentDirection());
             movement.put("next-direction", moveStrat.getNextDirection());
@@ -72,7 +84,7 @@ public class Spider extends MovingEntity implements PlayerPassiveObserver {
         }
         
         
-        spiderJSON.put("movement", movement);
+        spiderJSON.put("movement", movement);*/
 
         return spiderJSON;
     }

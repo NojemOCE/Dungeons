@@ -11,7 +11,12 @@ import dungeonmania.World;
 import dungeonmania.collectable.*;
 import dungeonmania.gamemode.Gamemode;
 import dungeonmania.movingEntity.*;
+import dungeonmania.movingEntity.MovementStrategies.CircleMovement;
+import dungeonmania.movingEntity.MovementStrategies.FollowPlayer;
+import dungeonmania.movingEntity.MovementStrategies.RandomMovement;
+import dungeonmania.movingEntity.MovementStrategies.RunAway;
 import dungeonmania.staticEntity.*;
+import dungeonmania.util.Direction;
 
 public class LoadGameFactory extends Factory {
 
@@ -80,10 +85,16 @@ public class LoadGameFactory extends Factory {
 
         String type = obj.getString("type");
 
-        JSONObject movement = obj.getJSONObject("movement");
+        //JSONObject movement = obj.getJSONObject("movement");
 
-        String defaultMovement = movement.getString("default-strategy");
-        String currentMovement = movement.getString("movement-strategy");
+        //String defaultMovement = movement.getString("default-strategy");
+        //String currentMovement = movement.getString("movement-strategy");
+
+        JSONObject defaultMovementJSON = obj.getJSONObject("default-strategy");
+        JSONObject currentMovementJSON = obj.getJSONObject("movement-strategy");
+
+        MovementStrategy defaultMovement = getMovementStrategyFromJSON(defaultMovementJSON);
+        MovementStrategy currentMovement = getMovementStrategyFromJSON(currentMovementJSON);
 
         JSONObject healthPoint = obj.getJSONObject("health-point");
 
@@ -97,18 +108,21 @@ public class LoadGameFactory extends Factory {
 
         
         if (type.equals("spider")) {
-            String currentDir = movement.getString("current-direction");
-            String nextDir = movement.getString("next-direction");
-            int remMovesCurr = movement.getInt("remMovesCurr");
-            int remMovesNext = movement.getInt("remMovesNext");
-            boolean avoidPlayer  = movement.getBoolean("avoidPlayer");
-            Spider e = new Spider(x, y, id, entityHP, defaultMovement, currentMovement, currentDir, nextDir, remMovesCurr, remMovesNext, avoidPlayer);
+            Spider e = new Spider(x, y, id, entityHP, defaultMovement, currentMovement);
+
+            //String currentDir = movement.getString("current-direction");
+            //String nextDir = movement.getString("next-direction");
+            //int remMovesCurr = movement.getInt("remMovesCurr");
+            //int remMovesNext = movement.getInt("remMovesNext");
+            //boolean avoidPlayer  = movement.getBoolean("avoidPlayer");
+            //Spider e = new Spider(x, y, id, entityHP, defaultMovement, currentMovement, currentDir, nextDir, remMovesCurr, remMovesNext, avoidPlayer);
 
             return e;
         } 
         
         else if (type.equals("zombie_toast")) {
             Zombie e = new Zombie(x, y, id, entityHP, defaultMovement, currentMovement);
+
             return e;
         } 
         
@@ -119,6 +133,49 @@ public class LoadGameFactory extends Factory {
             return e;
         } 
         return null;
+    }
+
+    private MovementStrategy getMovementStrategyFromJSON(JSONObject movementJSON) {
+        String movement = movementJSON.getString("movement");
+
+        if (movement.equals("circleMovement")) {
+            String currentDirString = movementJSON.getString("current-direction");
+            String nextDirString = movementJSON.getString("next-direction");
+            int remMovesCurr = movementJSON.getInt("remMovesCurr");
+            int remMovesNext = movementJSON.getInt("remMovesNext");
+            boolean avoidPlayer = movementJSON.getBoolean("avoidPlayer");
+
+            Direction currentDirection = getDirectionFromString(currentDirString);
+            Direction nextDirection = getDirectionFromString(nextDirString);
+
+            return new CircleMovement(currentDirection, nextDirection, remMovesCurr, remMovesNext, avoidPlayer);
+        }
+        else if (movement.equals("followPlayer")) {
+            return new FollowPlayer();
+        }
+        else if (movement.equals("randomMovement")) {
+            return new RandomMovement();
+        }
+        else if (movement.equals("runAway")) {
+            return new RunAway();
+        }
+
+        return null;
+    }
+
+    private Direction getDirectionFromString(String d) {
+        switch(d)  {
+            case "UP":
+                return Direction.UP;
+            case "DOWN":
+                return Direction.DOWN;
+            case "LEFT":
+                return Direction.LEFT;
+            case "RIGHT":
+                return Direction.RIGHT;
+            default:
+                return Direction.NONE;
+        }
     }
 
     /**

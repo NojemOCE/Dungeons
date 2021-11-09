@@ -11,6 +11,8 @@ import java.util.Queue;
 import java.util.Random;
 import java.util.Set;
 
+import org.json.JSONObject;
+
 import dungeonmania.World;
 import dungeonmania.movingEntity.*;
 import dungeonmania.util.Direction;
@@ -56,5 +58,12 @@ public class RandomMovement implements MovementStrategy {
     @Override
     public String getMovementType() {
         return "randomMovement";
+    }
+    
+    @Override
+    public JSONObject getMovementJson() {
+        JSONObject obj = new JSONObject();
+        obj.put("movement", getMovementType());
+        return obj;
     }
 }

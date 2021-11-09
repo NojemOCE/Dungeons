@@ -2,6 +2,8 @@ package dungeonmania.movingEntity.MovementStrategies;
 
 import java.util.Objects;
 
+import org.json.JSONObject;
+
 import dungeonmania.World;
 import dungeonmania.movingEntity.*;
 
@@ -29,9 +31,17 @@ public class CircleMovement implements MovementStrategy {
     }
 
     
-    public CircleMovement(String currDir, String nextDir, int remMovesCurr, int remMovesNext, boolean avoidPlayer) {
+    /*public CircleMovement(String currDir, String nextDir, int remMovesCurr, int remMovesNext, boolean avoidPlayer) {
         this.currentDirection = getDirectionFromString(currDir);
         this.nextDirection = getDirectionFromString(nextDir);
+        this.remMovesCurr = remMovesCurr;
+        this.remMovesNext = remMovesNext;
+        this.avoidPlayer = avoidPlayer;
+    }*/
+
+    public CircleMovement(Direction currentDirection, Direction nextDirection, int remMovesCurr, int remMovesNext, boolean avoidPlayer) {
+        this.currentDirection = currentDirection;
+        this.nextDirection = nextDirection;
         this.remMovesCurr = remMovesCurr;
         this.remMovesNext = remMovesNext;
         this.avoidPlayer = avoidPlayer;
@@ -198,7 +208,7 @@ public class CircleMovement implements MovementStrategy {
 
     @Override
     public String getMovementType() {
-        return "circle";
+        return "circleMovement";
     }
 
     public String getCurrentDirection() {
@@ -224,7 +234,7 @@ public class CircleMovement implements MovementStrategy {
         }
     }
 
-    private Direction getDirectionFromString(String d) {
+    /*private Direction getDirectionFromString(String d) {
         switch(d)  {
             case "UP":
                 return Direction.UP;
@@ -237,11 +247,11 @@ public class CircleMovement implements MovementStrategy {
             default:
                 return Direction.NONE;
         }
-    }
+    }*/
 
 
 
-    public int getRemMovesCurr() {
+    /*public int getRemMovesCurr() {
         return remMovesCurr;
     }
 
@@ -251,10 +261,23 @@ public class CircleMovement implements MovementStrategy {
 
     public boolean isAvoidPlayer() {
         return avoidPlayer;
-    }
+    }*/
 
     public void setAvoidPlayer(boolean avoidPlayer) {
         this.avoidPlayer = avoidPlayer;
+    }
+
+    @Override
+    public JSONObject getMovementJson() {
+        JSONObject obj = new JSONObject();
+        obj.put("movement", getMovementType());
+        obj.put("current-direction", getDirectionString(currentDirection));
+        obj.put("next-direction", getDirectionString(nextDirection));
+        obj.put("remMovesCurr", remMovesCurr);
+        obj.put("remMovesNext", remMovesNext);
+        obj.put("avoidPlayer", avoidPlayer);
+        
+        return obj;
     }
     
 }

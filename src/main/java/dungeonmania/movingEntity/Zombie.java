@@ -27,12 +27,19 @@ public class Zombie extends MovingEntity implements PlayerPassiveObserver {
         setAlly(false);
     }
 
-    public Zombie(int x, int y, String id, HealthPoint hp, String defaultMovement, String currentMovement) {
+    /*public Zombie(int x, int y, String id, HealthPoint hp, String defaultMovement, String currentMovement) {
 
         super(new Position(x, y, Position.MOVING_LAYER), id, "zombie_toast", hp, ZOMBIE_ATTACK);
         //need set movement from string
         setMovement(getMovementFromString(currentMovement));
         setDefaultMovementStrategy(getMovementFromString(defaultMovement));
+        setAlly(false);
+    }*/
+
+    public Zombie(int x, int y, String id, HealthPoint hp, MovementStrategy defaultMovement, MovementStrategy currentMovement) {
+        super(new Position(x, y, Position.MOVING_LAYER), id, "zombie_toast", hp, ZOMBIE_ATTACK);
+        setMovement(currentMovement);
+        setDefaultMovementStrategy(defaultMovement);
         setAlly(false);
     }
 
@@ -58,12 +65,15 @@ public class Zombie extends MovingEntity implements PlayerPassiveObserver {
     @Override
     public JSONObject saveGameJson() {
         JSONObject zombieJSON = super.saveGameJson();
-        JSONObject movement = new JSONObject();
+        //JSONObject movement = new JSONObject();
 
-        movement.put("default-strategy", defaultMovementStrategy.getMovementType());
-        movement.put("movement-strategy", movementStrategy.getMovementType());
+        zombieJSON.put("default-strategy", defaultMovementStrategy.getMovementJson());
+        zombieJSON.put("movement-strategy", movementStrategy.getMovementJson());
+
+        //movement.put("default-strategy", defaultMovementStrategy.getMovementType());
+        //movement.put("movement-strategy", movementStrategy.getMovementType());
         
-        zombieJSON.put("movement", movement);
+        //zombieJSON.put("movement", movement);
 
         return zombieJSON;
     }

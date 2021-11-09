@@ -152,7 +152,7 @@ public abstract class MovingEntity extends Entity {
     //             + ", position=" + getPosition()+ ", speed=" + speed + "]";
     // }
 
-    protected MovementStrategy getMovementFromString(String movement, String currDir, String nextDir, int remMovesCurr, int remMovesNext, boolean avoidPlayer) {
+    /*protected MovementStrategy getMovementFromString(String movement, String currDir, String nextDir, int remMovesCurr, int remMovesNext, boolean avoidPlayer) {
         switch(movement)  {
             case "circle":
                 return new CircleMovement(currDir, nextDir, remMovesCurr, remMovesNext, avoidPlayer);
@@ -164,7 +164,7 @@ public abstract class MovingEntity extends Entity {
                 return new RunAway();
         }
         return null;
-    }
+    }*/
 
     protected MovementStrategy getMovementFromString(String movement) {
         switch(movement)  {

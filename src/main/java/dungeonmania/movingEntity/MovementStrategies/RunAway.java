@@ -1,5 +1,7 @@
 package dungeonmania.movingEntity.MovementStrategies;
 
+import org.json.JSONObject;
+
 import dungeonmania.World;
 import dungeonmania.movingEntity.*;
 import dungeonmania.util.Direction;
@@ -43,5 +45,12 @@ public class RunAway implements MovementStrategy {
     @Override
     public String getMovementType() {
         return "runAway";
+    }
+
+    @Override
+    public JSONObject getMovementJson() {
+        JSONObject obj = new JSONObject();
+        obj.put("movement", getMovementType());
+        return obj;
     }
 }

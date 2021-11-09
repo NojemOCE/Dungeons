@@ -33,10 +33,17 @@ public class Mercenary extends MovingEntity implements PlayerPassiveObserver {
         setAlly(false);
     }
 
-    public Mercenary(int x, int y, String id, HealthPoint hp, String defaultMovement, String currentMovement, Boolean isAlly) {
+    /*public Mercenary(int x, int y, String id, HealthPoint hp, String defaultMovement, String currentMovement, Boolean isAlly) {
         super(new Position(x, y, Position.MOVING_LAYER), id, "mercenary", hp, MERC_ATTACK);
         setMovement(getMovementFromString(currentMovement));
         setDefaultMovementStrategy(getMovementFromString(defaultMovement));
+        setAlly(isAlly);
+    }*/
+
+    public Mercenary(int x, int y, String id, HealthPoint hp, MovementStrategy defaultMovement, MovementStrategy currentMovement, Boolean isAlly) {
+        super(new Position(x, y, Position.MOVING_LAYER), id, "mercenary", hp, MERC_ATTACK);
+        setMovement(currentMovement);
+        setDefaultMovementStrategy(defaultMovement);
         setAlly(isAlly);
     }
 
@@ -121,12 +128,15 @@ public class Mercenary extends MovingEntity implements PlayerPassiveObserver {
     @Override
     public JSONObject saveGameJson() {
         JSONObject mercJSON = super.saveGameJson();
-        JSONObject movement = new JSONObject();
+        //JSONObject movement = new JSONObject();
 
-        movement.put("default-strategy", defaultMovementStrategy.getMovementType());
-        movement.put("movement-strategy", movementStrategy.getMovementType());
+        mercJSON.put("default-strategy", defaultMovementStrategy.getMovementJson());
+        mercJSON.put("movement-strategy", movementStrategy.getMovementJson());
+
+        //movement.put("default-strategy", defaultMovementStrategy.getMovementType());
+        //movement.put("movement-strategy", movementStrategy.getMovementType());
         
-        mercJSON.put("movement", movement);
+        //mercJSON.put("movement", movement);
         mercJSON.put("ally", getAlly());
 
         return mercJSON;
