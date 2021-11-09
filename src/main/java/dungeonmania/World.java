@@ -453,7 +453,7 @@ public class World {
     public DungeonResponse build(String buildable) throws IllegalArgumentException, InvalidActionException {
         // IllegalArgumentException if buildable is not one of bow or shield
         // InvalidActionException if the player does not have sufficient items to craft the buildable
-        if (buildable == "midnight_armour" && numEnitity("zombie_toast") != 0) {
+        if (buildable == "midnight_armour" && numMovingEntity("zombie_toast") != 0) {
             throw new InvalidActionException("There are zombies alive");
         }
         inventory.craft(buildable, String.valueOf(incrementEntityCount()));
@@ -868,6 +868,17 @@ public class World {
     public void setEntityCount(int entityCount) {
         factory.setEntityCount(entityCount);
         //this.entityCount = entityCount;
+    }
+
+    public int numMovingEntity(String entityType) {
+        int count = 0;
+        for (MovingEntity entity : movingEntities.values()) {
+            if (entity.getType() == entityType) {
+                count++;
+            }
+        }
+        
+        return count;
     }
  
 }
