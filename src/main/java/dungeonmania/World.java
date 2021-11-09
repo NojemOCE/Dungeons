@@ -102,7 +102,6 @@ public class World {
         return worldDungeonResponse();
     }
 
-<<<<<<< HEAD
 
     private void addEntity(Entity e) {
         if (e instanceof Player) {
@@ -119,200 +118,6 @@ public class World {
         }
     }
     
-=======
-    /**
-     * Gets the largest bound of the map
-     * @param x x co-ordinate
-     * @param y y co-ordinate
-     */
-    private void updateBounds(int x, int y)  {
-        if (x > highestX) {
-            highestX = x;
-        }
-        if (y > highestY) {
-            highestY = y;
-        }
-    }
-    
-    /**
-     * Creates an entity from JSONObject
-     * @param obj Json object
-     * @param id id of entity
-     */
-    private void createEntity(JSONObject obj, String id) {
-        int x = (int)obj.get("x");
-        int y = (int)obj.get("y");
-
-
-        updateBounds(x, y);
-
-        String type = obj.getString("type");
-
-        id = type + id;
-
-        if (type.equals("wall")) {
-
-            Wall e = new Wall(x, y, id);
-
-            staticEntities.put(e.getId(), e);
-
-        } else if (type.equals("exit")) {
-            Exit e = new Exit(x,y,id);
-            staticEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("switch")) {
-            FloorSwitch e = new FloorSwitch(x, y, id);
-            staticEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("boulder")) {
-            Boulder e = new Boulder(x, y, id);
-            staticEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("door")) {
-            int key = (int)obj.get("key");
-            Door e = new Door(x, y, id, key);
-            staticEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("portal")) {
-            Portal e;
-
-            String colour = obj.getString("colour");
-
-            if (staticEntities.containsKey(colour)) {
-                e = new Portal(x, y, colour + "2", colour, (Portal) staticEntities.get(colour));
-            } else {
-                e = new Portal(x, y, colour, colour);
-            }
-            staticEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("zombie_toast_spawner")) {
-            ZombieToastSpawn e = new ZombieToastSpawn(x, y, id);
-            staticEntities.put(e.getId(), e);   
-        } else if (type.equals("player")) {
-            Player e = new Player(x, y, id, new HealthPoint(gamemode.getStartingHP()));
-           
-            this.player = e;
-        } 
-        
-        else if (type.equals("spider")) {
-            Spider e = new Spider(x, y, id);
-            movingEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("zombie_toast")) {
-            Zombie e = new Zombie(x, y, id);
-            movingEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("mercenary")) {
-            Mercenary e = new Mercenary(x, y, id);
-
-            movingEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("treasure")) {
-            Treasure e = new Treasure(x, y, id);
-            collectableEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("key")) {
-            int key = (int)obj.get("key");
-            Key e = new Key(x, y, id, key);
-            collectableEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("health_potion")) {
-            HealthPotion e = new HealthPotion(x, y, id);
-            collectableEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("invincibility_potion")) {
-            InvincibilityPotion e = new InvincibilityPotion(x, y, id, gamemode.isInvincibilityEnabled());
-            collectableEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("invisibility_potion")) {
-            InvisibilityPotion e = new InvisibilityPotion(x, y, id);
-            collectableEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("wood")) {
-            Wood e = new Wood(x, y, id);
-            collectableEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("arrow")) {
-            Arrows e = new Arrows(x, y, id);
-            collectableEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("bomb")) {
-            Bomb e = new Bomb(x, y, id);
-            collectableEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("sword")) {
-            Sword e = new Sword(x, y, id);
-            collectableEntities.put(e.getId(), e);
-        }
-        else if (type.equals("one_ring")) {
-            OneRing e = new OneRing(x, y, id);
-            collectableEntities.put(e.getId(), e);
-        }
-
-    }
-    
-    /**
-     * Create Goal from json
-     * @param goal goal json
-     * @return Goal component
-     */
-    private GoalComponent createGoal(JSONObject goal) {
-        String currGoal = goal.getString("goal");
-
-        // Will return null if the goal is not exit,enemies,treasure, AND or OR
-        if (currGoal.equals("exit")) {
-            return new ExitGoal(currGoal);
-        }
-        else if (currGoal.equals("enemies")) {
-            return new EnemiesGoal(currGoal);
-        }
-        else if (currGoal.equals("boulders")) {
-            return new BoulderGoals(currGoal);
-        }
-        else if (currGoal.equals("treasure")) {
-            return new TreasureGoals(currGoal);
-        }
-        else if (currGoal.equals("AND")) {
-            AndGoal andGoal = new AndGoal(currGoal);
-            JSONArray subGoals = goal.getJSONArray("subgoals");
-
-            for (int i = 0; i < subGoals.length(); i++) {
-                GoalComponent subGoal = createGoal(subGoals.getJSONObject(i));
-                andGoal.addSubGoal(subGoal);
-            }
-            return andGoal; 
-        }
-        else if (currGoal.equals("OR")) {
-            OrGoal orGoal = new OrGoal(currGoal);
-            JSONArray subGoals = goal.getJSONArray("subgoals");
-
-            for (int i = 0; i < subGoals.length(); i++) {
-                GoalComponent subGoal = createGoal(subGoals.getJSONObject(i));
-                orGoal.addSubGoal(subGoal);
-            }
-            return orGoal; 
-        }
-
-        return null;
-    }
-
->>>>>>> VL/milestone3
     /**
      * Gets a Goal response
      * @return string goal response
@@ -424,12 +229,8 @@ public class World {
                 collectableEntities.remove(collectable.getId());
             }
         }
-<<<<<<< HEAD
 
         // now move all entities 
-=======
-        // now move all entities
->>>>>>> VL/milestone3
         for (MovingEntity me: movingEntities.values()) {
             if (!Objects.isNull(currentBattle) && currentBattle.getCharacter().equals(me)) continue;
             me.move(this);
