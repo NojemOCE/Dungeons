@@ -1348,7 +1348,7 @@ public class World {
 
     public double getDistance(Position position) {
         if (getStaticEntity(position) instanceof SwampTile) {
-            return 2.0;
+            return (SwampTile)getStaticEntity(position).getMovementFactor();
         }
         return 1.0;
     }
