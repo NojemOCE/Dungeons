@@ -595,10 +595,10 @@ public class World {
         // * the player does not have a weapon and attempts to destroy a spawner
         if (movingEntities.containsKey(entityId)) {
             MovingEntity e = movingEntities.get(entityId);
-            if (!(e instanceof Mercenary)) {
+            if (!(e instanceof MercenaryComponent)) {
                 throw new IllegalArgumentException();
             } else {
-                ((Mercenary) e).interact(this);
+                ((MercenaryComponent) e).interact(this);
             }
         } else if (staticEntities.containsKey(entityId)) {
             StaticEntity e = staticEntities.get(entityId);
@@ -718,6 +718,7 @@ public class World {
     public boolean inInventory(CollectableEntity item) {
         return inventory.inInventory(item.getId());
     }
+
 
     /**
      * Checks if a key exists in inventory and returns object
@@ -1350,7 +1351,7 @@ public class World {
         List<StaticEntity> l = getStaticEntitiesAtPosition(position);
         for (StaticEntity se : l) {
             if (se.getType().equals("swamp_tile")) {
-                return (SwampTile)se.getMovementFactor();
+                //return (SwampTile)se.getMovementFactor();
             }
         }
         return 1.0;

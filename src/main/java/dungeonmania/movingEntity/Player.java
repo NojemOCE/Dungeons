@@ -18,7 +18,7 @@ import dungeonmania.util.*;
 public class Player extends MovingEntity {
 
     static final int PLAYER_ATTACK = 3;
-    private Set<Mercenary> mercenariesInRange = new HashSet<>();
+    private Set<MercenaryComponent> mercenariesInRange = new HashSet<>();
 
     private Set<PlayerPassiveObserver> passiveObservers = new HashSet<>();
     // observer here for passive
@@ -103,13 +103,13 @@ public class Player extends MovingEntity {
         return null;
     }
 
-    public void addInRange(Mercenary inRange) {
-        mercenariesInRange.add(inRange);
+    public void addInRange(MercenaryComponent mercenaryComponent) {
+        mercenariesInRange.add(mercenaryComponent);
     
     }
     
-    public void removeInRange(Mercenary inRange) {
-        mercenariesInRange.remove(inRange);
+    public void removeInRange(MercenaryComponent mercenaryComponent) {
+        mercenariesInRange.remove(mercenaryComponent);
     }
 
     public void subscribePassiveObserver(PlayerPassiveObserver me) {

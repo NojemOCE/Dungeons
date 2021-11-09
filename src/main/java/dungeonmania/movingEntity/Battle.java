@@ -1,12 +1,10 @@
 package dungeonmania.movingEntity;
 
 import dungeonmania.inventory.Inventory;
-import dungeonmania.util.Position;
 
 public class Battle {
     private Player player;
     private MovingEntity character;
-    private Position position;
     
     private boolean enemyAttackEnabled;
     private boolean playerWins;
