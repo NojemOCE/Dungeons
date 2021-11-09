@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 
@@ -21,24 +22,20 @@ public class FollowPlayer implements MovementStrategy {
 
     @Override
     public void move(MovingEntity me, World world) {
-        List<Position> path = bfs(me, world.getPlayer(), world);
+
+
+        List<Position> path = getPath(dijkstras(me, world.getPlayer(), bfs(me, world.getPlayer(),world), world), world.getPlayer());
         // maybe check for errors (list is empty or just has 1 etc...)
         // calculate distance inbetween player and mercenary, if in battle radius 
         // use path.get(1)
-        if (!path.isEmpty() && path.size() <= 2) {
+        if (path.size() < 1) return;
+        if (path.get(1).equals(world.getPlayer().getPosition())) {
+            if (!Objects.isNull(world.getBattle()) || me.getAlly()) me.setPosition(path.get(0));
+            else me.setPosition(me.validMove(path.get(1), world));
+        } else me.setPosition(me.validMove(path.get(1), world));
 
-            if (path.get(1).equals(world.getPlayer().getPosition())) {
-                if (!Objects.isNull(world.getBattle()) || me.getAlly()) me.setPosition(path.get(0));
-                else me.setPosition(me.validMove(path.get(1), world));
-            } 
 
-        } else if (!path.isEmpty() && path.size() > 2) {
-
-            // still need to use the battle radius, translate by two
-            // THE PATH MAY INCLUDE THE START, if MERC NOT MOVING CHANGE me.getSpeed() +1`
-            if (!Objects.isNull(world.getBattle()) && path.get(me.getSpeed() + 1).equals(world.getPlayer().getPosition())) me.setPosition(path.get(0));
-            else me.setPosition(path.get(me.getSpeed() + 1));
-        }
+       
     }
 
     /**
@@ -55,13 +52,14 @@ public class FollowPlayer implements MovementStrategy {
         Set<Position> visited = new HashSet<>();
         // start at where mercenary is
         // add position to queue
-        Queue<Position> queue = new ArrayDeque<>();
         // gets merc position
-        queue.add(me.getPosition());
         visited.add(me.getPosition());
         // we need a prev hashmap, <key,value> being <position, it's previous Position>
-        Map<Position,Position> prev = new HashMap<>();
-        prev.put(me.getPosition(), null);
+        //Map<Position,Position> prev = new HashMap<>();
+        //prev.put(me.getPosition(), null);
+    
+        Queue<Position> queue = new ArrayDeque<>();
+        queue.add(me.getPosition());
         while(!queue.isEmpty()) {
             Position node = queue.remove();
             // now verify the adjacent neighbours
@@ -70,14 +68,52 @@ public class FollowPlayer implements MovementStrategy {
                 if (!visited.contains(p)) { // for the neighbours that havent been visited
                     queue.add(p);
                     visited.add(p);
-                    prev.put(p, node);
-                    if (p.equals(player.getPosition())) break; // player is found and added, break
+                    //prev.put(p, node);
+                    //if (p.equals(player.getPosition())) break;
 
                 }
             }
         }
+        return new ArrayList<>(visited);
+    }
 
-        // backtrack through prev getting the reverse path
+    private Map<Position, Position> dijkstras(MovingEntity me, Player player, List<Position> visited, World world) {
+        Map<Position, Position> prev = new HashMap<>();
+        Map<Position, Double> dist = new HashMap<>();
+
+        visited.forEach(position -> {
+            dist.put(position, 99.0);
+            prev.put(position, null);
+        });
+
+        dist.put(me.getPosition(), 0.0);
+
+        while(!visited.isEmpty()) {
+            Position u = getSmallestDistance(dist, visited);
+            visited.remove(u);
+            for (Position v: getNeighbours(me, u, world)) {
+                if (dist.get(u) + world.getDistance(v) < dist.get(v)) { // TODO CHANGE 1.0 to actual cost
+                    dist.put(v, dist.get(u) + world.getDistance(v));
+                    prev.put(v,u);
+                } 
+            }
+        }
+        return prev;
+    }
+
+    private Position getSmallestDistance(Map<Position, Double> dist, List<Position> visited) {
+        Position smallest = new Position(0, 0);
+        double currDistance = 99.0;
+        for (Position p : dist.keySet()) {
+            if (visited.contains(p) && dist.get(p) <= currDistance){
+                currDistance = dist.get(p);
+                smallest = p;
+            }
+        }
+        return smallest;
+    }
+
+    private List<Position> getPath(Map<Position, Position> prev,Player player) {
         List<Position> path = new ArrayList<>();
 
         int x = player.getPosition().getX();
@@ -90,7 +126,6 @@ public class FollowPlayer implements MovementStrategy {
 
         
         Collections.reverse(path);
-
         return path;
     }
 
@@ -119,6 +154,7 @@ public class FollowPlayer implements MovementStrategy {
 
         return validNeighbours;
     }
+
     @Override
     public String getMovementType() {
         return "followPlayer";

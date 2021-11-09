@@ -114,16 +114,13 @@ public class CharacterTest {
 
         // on same cell, battle should be created
 
-        double playerAttack = (player.getHealthPoint().getHealth() * player.getAttackDamage())/10;
         // Character attack modified by players defence weapons
-        double characterAttack = (mercenary.getHealthPoint().getHealth() * mercenary.getAttackDamage())/10;
         battle.battleTick(inventory);
+        assertEquals(player.getHealthPoint().getHealth(), 23.7);
 
-        assertEquals(player.getHealthPoint().getHealth(), player.getHealthPoint().getMaxHealth() - characterAttack);
+        assertEquals(mercenary.getHealthPoint().getHealth(), 0);
 
-        assertEquals(mercenary.getHealthPoint().getHealth(), (mercenary.getHealthPoint().getMaxHealth() - playerAttack));
-
-        assertEquals(battle.isActiveBattle(),true);
+        assertEquals(battle.isActiveBattle(),false);
 
         battle.battleTick(inventory);
         battle.battleTick(inventory);
@@ -134,7 +131,7 @@ public class CharacterTest {
     }
 
     @Test
-    public void testMercenaryBFS() {
+    public void testMercenaryDjikstras() {
         World world = new World("merc", "Standard");
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "advanced" + ".json");
@@ -154,19 +151,8 @@ public class CharacterTest {
 
         world.getPlayer().tick(Direction.RIGHT, world);
         world.tick(null, null);
-        assertEquals(merc.getPosition(), new Position(1, 3));
         world.tick(null, null);
         assertEquals(merc.getPosition(), new Position(1, 2));
-
-        world.tick(null, null);
-        assertEquals(merc.getPosition(), new Position(1, 1));
-        world.tick(null, null);
-
-        assertEquals(merc.getPosition(), new Position(2, 1));
-        world.tick(null, null);
-        assertEquals(merc.getPosition(), new Position(2, 1)); // on top of player
-        assertEquals(world.getBattle().isActiveBattle(), true);
-        // recalculate bfs
     }
 
     @Test
@@ -375,7 +361,7 @@ public class CharacterTest {
         assertEquals(world.getPlayerPosition(), new Position(7,9));
         Zombie zambie = new Zombie(7, 9, "zombie");
         world.getPlayer().subscribePassiveObserver(zambie);
-        Battle battle = world.getPlayer().battle(zambie, new Standard());
+        Battle battle = world.getPlayer().battle(zambie,world, new Standard());
         
         battle.battleTick(new Inventory());
         assertEquals(zambie.getHealthPoint().getHealth(), 0);
@@ -386,13 +372,13 @@ public class CharacterTest {
 
         world.getPlayer().addPotion(new InvincibilityPotion("a", 1, true));
 
-        Battle battle1 = world.getPlayer().battle(zambie1, new Standard());
+        Battle battle1 = world.getPlayer().battle(zambie1,world, new Standard());
         battle1.battleTick(new Inventory());
         Zombie zambie2 = new Zombie(7, 9, "zombie2");
 
         world.getPlayer().addPotion(new InvisibilityPotion(10));
 
-        Battle battle2 = world.getPlayer().battle(zambie2, new Standard());
+        Battle battle2 = world.getPlayer().battle(zambie2,world, new Standard());
         assertEquals(battle2, null);
     }
 
@@ -410,11 +396,11 @@ public class CharacterTest {
         catch (Exception e) {
             e.printStackTrace();
         }
-        
+        world.getPlayer().defend(30);
+
         DungeonResponse d = world.tick(null, Direction.RIGHT);
         // Battle battle1 = world.getPlayer().battle(zambie1, new Standard());
-        world.getPlayer().defend(100);
-        d = world.tick(null, null);
+
 
         List<EntityResponse> entities = d.getEntities();
         

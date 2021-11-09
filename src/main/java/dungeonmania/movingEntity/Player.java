@@ -18,7 +18,7 @@ import dungeonmania.util.*;
 public class Player extends MovingEntity {
 
     static final int PLAYER_ATTACK = 3;
-    private Set<Mercenary> mercenariesInRange = new HashSet<>();
+    private Set<MercenaryComponent> mercenariesInRange = new HashSet<>();
 
     private Set<PlayerPassiveObserver> passiveObservers = new HashSet<>();
     // observer here for passive
@@ -92,12 +92,10 @@ public class Player extends MovingEntity {
      * @param enemy enemy that the player fights in the battle
      * @return new Battle
      */
-    public Battle battle(MovingEntity enemy, Gamemode gamemode) {
+    public Battle battle(MovingEntity enemy, World world, Gamemode gamemode) {
         if (!enemy.getAlly()) {
-
             if (Objects.isNull(activePotion) || !activePotion.getType().equals("invisibility_potion")) {
-                notifyObserversForBattle(1); // mercenary speed
-
+                notifyObserversForBattle(world); // mercenary speed
                 return new Battle(this, enemy, gamemode.isEnemyAttackEnabled());
             }
             // notify observers of battle
@@ -105,21 +103,13 @@ public class Player extends MovingEntity {
         return null;
     }
 
-    /**
-     * Notifies observers of a battle ending
-     */
-    public void endBattle() {
-        // notify observers of ending battle
-        notifyObserversForBattle(0);
-    }
-
-    public void addInRange(Mercenary inRange) {
-        mercenariesInRange.add(inRange);
+    public void addInRange(MercenaryComponent mercenaryComponent) {
+        mercenariesInRange.add(mercenaryComponent);
     
     }
     
-    public void removeInRange(Mercenary inRange) {
-        mercenariesInRange.remove(inRange);
+    public void removeInRange(MercenaryComponent mercenaryComponent) {
+        mercenariesInRange.remove(mercenaryComponent);
     }
 
     public void subscribePassiveObserver(PlayerPassiveObserver me) {
@@ -148,9 +138,10 @@ public class Player extends MovingEntity {
      * Notifies mercenaries of battle for battle advantage
      * @param speed movement speed
      */
-    public void notifyObserversForBattle(int speed) { // notify observers for battle
+    public void notifyObserversForBattle(World world) { // notify observers for battle
         mercenariesInRange.forEach( mercenary -> {
-            mercenary.setSpeed(speed);
+            mercenary.move(world);
+
         });
     }
 
