@@ -4,6 +4,7 @@ import org.json.JSONObject;
 
 import dungeonmania.World;
 import dungeonmania.movingEntity.MovementStrategies.*;
+import dungeonmania.movingEntity.States.State;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
 
@@ -25,11 +26,12 @@ public abstract class MercenaryComponent extends MovingEntity implements PlayerP
         setAlly(false);
     }
 
-    public MercenaryComponent(int x, int y, String id, String type, HealthPoint health, double attack, String defaultMovement, String currentMovement, Boolean isAlly) {
+    public MercenaryComponent(int x, int y, String id, String type, HealthPoint health, double attack, MovementStrategy defaultMovement, MovementStrategy currentMovement, Boolean isAlly, State state) {
         super(new Position(x, y, Position.MOVING_LAYER), id, type, health, attack);
-        setMovement(getMovementFromString(currentMovement));
-        setDefaultMovementStrategy(getMovementFromString(defaultMovement));
+        setMovement(currentMovement);
+        setDefaultMovementStrategy(defaultMovement);
         setAlly(isAlly);
+        setState(state);
     }
 
 

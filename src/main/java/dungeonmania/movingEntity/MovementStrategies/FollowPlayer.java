@@ -12,6 +12,8 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 
+import org.json.JSONObject;
+
 import dungeonmania.World;
 import dungeonmania.movingEntity.*;
 import dungeonmania.util.Position;
@@ -156,5 +158,12 @@ public class FollowPlayer implements MovementStrategy {
     @Override
     public String getMovementType() {
         return "followPlayer";
+    }
+
+    @Override
+    public JSONObject getMovementJson() {
+        JSONObject obj = new JSONObject();
+        obj.put("movement", getMovementType());
+        return obj;
     }
 }

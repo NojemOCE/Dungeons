@@ -179,5 +179,11 @@ public class Player extends MovingEntity {
 
         return playerJSON;
     }
+
+    @Override
+    public void moveEntity(World world) {
+        return;
+        
+    }
 } 
 

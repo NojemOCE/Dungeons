@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import dungeonmania.World;
 import dungeonmania.movingEntity.MovementStrategies.RandomMovement;
 import dungeonmania.movingEntity.MovementStrategies.RunAway;
+import dungeonmania.movingEntity.States.State;
 import dungeonmania.util.*;
 
 
@@ -26,18 +27,31 @@ public class Zombie extends MovingEntity implements PlayerPassiveObserver {
         setAlly(false);
     }
 
-    public Zombie(int x, int y, String id, HealthPoint hp, String defaultMovement, String currentMovement) {
-
+    /**
+     * Constructor for zombie taking x, y coordinates, id, Healthpoint, default movement strategy, current movement strategy, and the state of the zombie
+     * @param x x coordinate of the zombie
+     * @param y y coordinate of the zombie
+     * @param id iunique entity id of the zombie
+     * @param hp healthpoint object of the zombie
+     * @param defaultMovement default movement strategy of the zombie
+     * @param currentMovement current movement strategy of the zombie
+     * @param state state of the zombie's movement (normal or swamp)
+     */
+    public Zombie(int x, int y, String id, HealthPoint hp, MovementStrategy defaultMovement, MovementStrategy currentMovement, State state) {
         super(new Position(x, y, Position.MOVING_LAYER), id, "zombie_toast", hp, ZOMBIE_ATTACK);
-        //need set movement from string
-        setMovement(getMovementFromString(currentMovement));
-        setDefaultMovementStrategy(getMovementFromString(defaultMovement));
+        setMovement(currentMovement);
+        setDefaultMovementStrategy(defaultMovement);
         setAlly(false);
+        setState(state);
     }
-
 
     @Override
     public void move(World world) {
+       getState().move(this, world);
+    }
+
+    @Override
+    public void moveEntity(World world) {
        getMovement().move(this, world);
     }
 
@@ -53,12 +67,10 @@ public class Zombie extends MovingEntity implements PlayerPassiveObserver {
     @Override
     public JSONObject saveGameJson() {
         JSONObject zombieJSON = super.saveGameJson();
-        JSONObject movement = new JSONObject();
 
-        movement.put("default-strategy", defaultMovementStrategy.getMovementType());
-        movement.put("movement-strategy", movementStrategy.getMovementType());
-        
-        zombieJSON.put("movement", movement);
+        zombieJSON.put("default-strategy", defaultMovementStrategy.getMovementJson());
+        zombieJSON.put("movement-strategy", movementStrategy.getMovementJson());
+        zombieJSON.put("state", getState().getStateJson());
 
         return zombieJSON;
     }

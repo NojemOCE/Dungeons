@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -34,7 +35,20 @@ public class DungeonManiaController {
     }
 
     public String getSkin() {
-        return "default";
+
+        String[] skins = {"default","lava", "spongebob"};
+
+        Random ran = new Random();
+
+        int i = ran.nextInt(skins.length);
+        return skins[i];
+        
+
+        //return "default";
+    }
+
+    public List<String> getSkins() {
+        return Arrays.asList("lava", "default");
     }
 
     public String getLocalisation() {

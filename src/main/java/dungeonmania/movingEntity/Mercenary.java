@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import dungeonmania.World;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.movingEntity.MovementStrategies.FollowPlayer;
+import dungeonmania.movingEntity.States.State;
 
 public class Mercenary extends MercenaryComponent {
 
@@ -27,18 +28,16 @@ public class Mercenary extends MercenaryComponent {
         setAlly(false);
     }
 
-    public Mercenary(int x, int y, String id, HealthPoint hp, String defaultMovement, String currentMovement, Boolean isAlly) {
-        super(x, y, id, "mercenary", hp, MERC_ATTACK);
-        setMovement(getMovementFromString(currentMovement));
-        setDefaultMovementStrategy(getMovementFromString(defaultMovement));
-        setAlly(isAlly);
+    public Mercenary(int x, int y, String id, HealthPoint hp, MovementStrategy defaultMovement, MovementStrategy currentMovement, Boolean isAlly, State state) {
+        super(x,y,id,"mercenary", hp, MERC_ATTACK, defaultMovement,currentMovement,isAlly,state);
+
     }
 
     /**
-     *  
      * The character can bribe a mercenary if they are within 2 cardinal tiles
      * to the mercenary. Player requires minimum amount of gold to bribe.
-     * @param world
+     * @param world current world that the mercenary is in
+     * @throws InvalidActionException if the player does not have enough gold, or if the player is not within 2 cardinal tiles of the mercenary
      */
     public void interact(World world) throws InvalidActionException {
         if (getInteractable()) {
@@ -59,15 +58,19 @@ public class Mercenary extends MercenaryComponent {
     @Override
     public JSONObject saveGameJson() {
         JSONObject mercJSON = super.saveGameJson();
-        JSONObject movement = new JSONObject();
 
-        movement.put("default-strategy", defaultMovementStrategy.getMovementType());
-        movement.put("movement-strategy", movementStrategy.getMovementType());
-        
-        mercJSON.put("movement", movement);
+        mercJSON.put("default-strategy", defaultMovementStrategy.getMovementJson());
+        mercJSON.put("movement-strategy", movementStrategy.getMovementJson());
+        mercJSON.put("state", getState().getStateJson());
         mercJSON.put("ally", getAlly());
 
         return mercJSON;
+    }
+
+    @Override
+    public void moveEntity(World world) {
+        // TODO Auto-generated method stub
+        
     }
 
 }

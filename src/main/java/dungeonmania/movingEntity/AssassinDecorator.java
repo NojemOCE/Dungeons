@@ -25,4 +25,10 @@ public class AssassinDecorator extends MercenaryComponent {
 
         }
     }
+
+    @Override
+    public void moveEntity(World world) {
+        // TODO Auto-generated method stub
+        
+    }
 }
