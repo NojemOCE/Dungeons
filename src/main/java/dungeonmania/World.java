@@ -252,14 +252,6 @@ public class World {
             if (me.getPosition().equals(player.getPosition())) {
                 currentBattle = player.battle(me, gamemode); // if invisible it will add null
             }
-            
-            //Get static entities at me position
-            List<StaticEntity> statics = getStaticEntitiesAtPosition(me.getPosition());
-            for (StaticEntity s: statics) {
-                if (s instanceof SwampTile) {
-                    me.setState(new SwampState(((SwampTile) s).getMovementFactor());
-                }
-            }
         }
 
         // spawn relevant enemies at the specified tick intervals

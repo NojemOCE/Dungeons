@@ -75,6 +75,8 @@ public class Mercenary extends MovingEntity implements PlayerPassiveObserver {
         
         getMovement().move(this, world);
         setInteractable(world.getPlayer());
+        
+        checkSwampTile(world);
     }
 
     /**
