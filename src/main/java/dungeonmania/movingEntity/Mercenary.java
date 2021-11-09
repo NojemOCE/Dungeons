@@ -11,6 +11,7 @@ import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.movingEntity.MovementStrategies.FollowPlayer;
 import dungeonmania.movingEntity.MovementStrategies.RandomMovement;
 import dungeonmania.movingEntity.MovementStrategies.RunAway;
+import dungeonmania.movingEntity.States.State;
 import dungeonmania.response.models.EntityResponse;
 
 
@@ -35,13 +36,26 @@ public class Mercenary extends MovingEntity implements PlayerPassiveObserver, Mi
         setAlly(false);
     }
 
-    public Mercenary(int x, int y, String id, HealthPoint hp, String defaultMovement, String currentMovement, Boolean isAlly) {
+    /**
+     * Constructor for mercenary taking x, y coordinates, id, Healthpoint, default movement strategy, current movement strategy, whether the mercenary is an ally, and the state of the mercenary
+     * @param x x coordinate of the mercenary
+     * @param y y coordinate of the mercenary
+     * @param id iunique entity id of the mercenary
+     * @param hp healthpoint object of the mercenary
+     * @param defaultMovement default movement strategy of the mercenary
+     * @param currentMovement current movement strategy of the mercenary
+     * @param isAlly whether the mercenary is an ally (true or false)
+     * @param state state of the mercenary's movement (normal or swamp)
+     */
+    public Mercenary(int x, int y, String id, HealthPoint hp, MovementStrategy defaultMovement, MovementStrategy currentMovement, Boolean isAlly, State state) {
         super(new Position(x, y, Position.MOVING_LAYER), id, "mercenary", hp, MERC_ATTACK);
-        setMovement(getMovementFromString(currentMovement));
-        setDefaultMovementStrategy(getMovementFromString(defaultMovement));
+        setMovement(currentMovement);
+        setDefaultMovementStrategy(defaultMovement);
         setAlly(isAlly);
+        setState(state);
     }
 
+    @Override
     public void move(World world) {
         getState().move(this, world);
     }
@@ -80,11 +94,12 @@ public class Mercenary extends MovingEntity implements PlayerPassiveObserver, Mi
         }
     }
 
+    // TODO !!!!!!!! wouldn't this method be better off in world? why should the merc check if the player has enough treasure or is within 2 tiles. I think the player should do this
     /**
-     *  
      * The character can bribe a mercenary if they are within 2 cardinal tiles
      * to the mercenary. Player requires minimum amount of gold to bribe.
-     * @param world
+     * @param world current world that the mercenary is in
+     * @throws InvalidActionException if the player does not have enough gold, or if the player is not within 2 cardinal tiles of the mercenary
      */
     public void interact(World world) throws InvalidActionException {
         if (interactable) {
@@ -125,12 +140,10 @@ public class Mercenary extends MovingEntity implements PlayerPassiveObserver, Mi
     @Override
     public JSONObject saveGameJson() {
         JSONObject mercJSON = super.saveGameJson();
-        JSONObject movement = new JSONObject();
 
-        movement.put("default-strategy", defaultMovementStrategy.getMovementType());
-        movement.put("movement-strategy", movementStrategy.getMovementType());
-        
-        mercJSON.put("movement", movement);
+        mercJSON.put("default-strategy", defaultMovementStrategy.getMovementJson());
+        mercJSON.put("movement-strategy", movementStrategy.getMovementJson());
+        mercJSON.put("state", getState().getStateJson());
         mercJSON.put("ally", getAlly());
 
         return mercJSON;

@@ -2,6 +2,8 @@ package dungeonmania.movingEntity.MovementStrategies;
 
 import java.util.Objects;
 
+import org.json.JSONObject;
+
 import dungeonmania.World;
 import dungeonmania.movingEntity.*;
 
@@ -28,10 +30,9 @@ public class CircleMovement implements MovementStrategy {
         this.avoidPlayer = false;
     }
 
-    
-    public CircleMovement(String currDir, String nextDir, int remMovesCurr, int remMovesNext, boolean avoidPlayer) {
-        this.currentDirection = getDirectionFromString(currDir);
-        this.nextDirection = getDirectionFromString(nextDir);
+    public CircleMovement(Direction currentDirection, Direction nextDirection, int remMovesCurr, int remMovesNext, boolean avoidPlayer) {
+        this.currentDirection = currentDirection;
+        this.nextDirection = nextDirection;
         this.remMovesCurr = remMovesCurr;
         this.remMovesNext = remMovesNext;
         this.avoidPlayer = avoidPlayer;
@@ -102,7 +103,7 @@ public class CircleMovement implements MovementStrategy {
 
 
     /**
-     * Returns the position that the entity would next move to
+     * Returns the position that the entity would next move to in its circle patternn
      * @return entity's next planned position
      */
     private Position plannedNextPosition(MovingEntity me) {
@@ -198,17 +199,22 @@ public class CircleMovement implements MovementStrategy {
 
     @Override
     public String getMovementType() {
-        return "circle";
+        return "circleMovement";
     }
 
-    public String getCurrentDirection() {
+    /*public String getCurrentDirection() {
         return getDirectionString(currentDirection);
     }
     public String getNextDirection() {
         return getDirectionString(nextDirection);
-    }
+    }*/
 
 
+    /**
+     * Gets a given direction as a string
+     * @param d direction
+     * @return string of direction, eg. Direction.UP becmes "UP"
+     */
     private String getDirectionString(Direction d) {
         switch(d)  {
             case UP:
@@ -224,37 +230,25 @@ public class CircleMovement implements MovementStrategy {
         }
     }
 
-    private Direction getDirectionFromString(String d) {
-        switch(d)  {
-            case "UP":
-                return Direction.UP;
-            case "DOWN":
-                return Direction.DOWN;
-            case "LEFT":
-                return Direction.LEFT;
-            case "RIGHT":
-                return Direction.RIGHT;
-            default:
-                return Direction.NONE;
-        }
-    }
-
-
-
-    public int getRemMovesCurr() {
-        return remMovesCurr;
-    }
-
-    public int getRemMovesNext() {
-        return remMovesNext;
-    }
-
-    public boolean isAvoidPlayer() {
-        return avoidPlayer;
-    }
-
+    /**
+     * Sets the movement strategy to avoid the player
+     * @param avoidPlayer boolean to determine if the player should be avoided
+     */
     public void setAvoidPlayer(boolean avoidPlayer) {
         this.avoidPlayer = avoidPlayer;
+    }
+
+    @Override
+    public JSONObject getMovementJson() {
+        JSONObject obj = new JSONObject();
+        obj.put("movement", getMovementType());
+        obj.put("current-direction", getDirectionString(currentDirection));
+        obj.put("next-direction", getDirectionString(nextDirection));
+        obj.put("remMovesCurr", remMovesCurr);
+        obj.put("remMovesNext", remMovesNext);
+        obj.put("avoidPlayer", avoidPlayer);
+        
+        return obj;
     }
     
 }

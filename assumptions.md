@@ -85,6 +85,8 @@
 * Swamp Tile ^
     * Allows boulders to roll on them.
     * Allows all enemies to walk over it.
+    * Affects all entities but player == affects moving entities and boulder.
+    * Movement factor must be greater than 1.
 
 Note: static entities marked with ^ are considered to be on the floor layer, which means moving entities and other statics may exist on top of them but two "floor layer" entities may not exist in the same cell, e.g. an exit cannot be on the same cell as a swamp tile.
 
