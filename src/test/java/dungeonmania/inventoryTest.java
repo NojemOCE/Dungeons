@@ -210,4 +210,32 @@ public class inventoryTest {
         assert inv.numItem("treasure") == 0;
         assert inv.numItem("shield") == 1;
     }
+
+
+/**
+     * When crafting a midnight armour, it should appear in the inventory
+     * The items used to craft it should not appear in the inventory
+     */
+    @Test
+    public void testCraftMidnightArmour() {
+
+        Inventory inv = new Inventory();
+        assert inv.numItem("sun_stone") == 0;
+        assert inv.numItem("armour") == 0;
+
+        SunStone sunstone = new SunStone(1, 1, "sunstone1");
+        inv.collect(sunstone);
+        assert inv.numItem("sun_stone") == 1;
+
+        Armour armour = new Armour(1, 1, "armour2");
+        inv.collect(armour);
+        assert inv.numItem("armour") == 1;
+
+        assert inv.getBuildable().contains("midnight_armour");
+        inv.craft("midnight_armour", "3");
+
+        assert inv.numItem("sun_stone") == 0;
+        assert inv.numItem("armour") == 0;
+        assert inv.numItem("midnight_armour") == 1;
+    }
 }
