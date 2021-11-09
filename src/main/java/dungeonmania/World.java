@@ -257,7 +257,7 @@ public class World {
             List<StaticEntity> statics = getStaticEntitiesAtPosition(me.getPosition());
             for (StaticEntity s: statics) {
                 if (s instanceof SwampTile) {
-                    me.setState(new SwampState(((SwampTile) s).getMovementFactor());
+                    me.setState(new SwampState(((SwampTile) s).getMovementFactor()));
                 }
             }
         }
