@@ -22,6 +22,7 @@ import dungeonmania.staticEntity.*;
 import dungeonmania.util.*;
 import dungeonmania.gamemode.*;
 import dungeonmania.movingEntity.*;
+import dungeonmania.movingEntity.States.SwampState;
 import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.util.Position;
@@ -54,8 +55,6 @@ public class World {
     static final double ZOMBIE_ARMOUR_DROP = 0.2;
     static final double ONE_RING_DROP = 0.1;
     private int tickCount = 0;
-    private int highestX = 5;
-    private int highestY = 5;
     
     
     /**
@@ -131,20 +130,6 @@ public class World {
         }
         else if (e instanceof StaticEntity) {
             staticEntities.put(e.getId(), (StaticEntity) e);
-        }
-    }
-
-    /**
-     * Gets the largest bound of the map
-     * @param x x co-ordinate
-     * @param y y co-ordinate
-     */
-    private void updateBounds(int x, int y)  {
-        if (x > highestX) {
-            highestX = x;
-        }
-        if (y > highestY) {
-            highestY = y;
         }
     }
     
@@ -311,11 +296,19 @@ public class World {
             }
         }
 
-        // now move all entities
+        // now move all entities 
         for (MovingEntity me: movingEntities.values()) {
             me.move(this);
             if (me.getPosition().equals(player.getPosition())) {
                 currentBattle = player.battle(me, gamemode); // if invisible it will add null
+            }
+            
+            //Get static entities at me position
+            List<StaticEntity> statics = getStaticEntitiesAtPosition(me.getPosition());
+            for (StaticEntity s: statics) {
+                if (s instanceof SwampTile) {
+                    me.setState(new SwampState(((SwampTile) s).getMovementFactor());
+                }
             }
         }
 
@@ -344,13 +337,13 @@ public class World {
         Random ran1 = new Random();
         Random ran2 = new Random();
 
-        int x = ran1.nextInt(highestX);
-        int y = ran2.nextInt(highestY);
+        int x = ran1.nextInt(factory.getHighestX());
+        int y = ran2.nextInt(factory.getHighestY());
         
         int numChecks = 0;
         while (!validSpiderSpawnPosition(new Position(x,y)) && numChecks < 10) {
-            x = ran1.nextInt(highestX);
-            y = ran2.nextInt(highestY);
+            x = ran1.nextInt(factory.getHighestX());
+            y = ran2.nextInt(factory.getHighestY());
             numChecks++;
         }
 
@@ -725,13 +718,6 @@ public class World {
         return inventory.hasWeapon();
     }
 
-    public int getHighestX() {
-        return highestX;
-    }
-
-    public int getHighestY() {
-        return highestY;
-    }
 
     
     /**

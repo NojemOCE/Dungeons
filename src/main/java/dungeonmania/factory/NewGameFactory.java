@@ -21,7 +21,7 @@ public class NewGameFactory extends Factory {
         int y = (int)obj.get("y");
 
 
-        //world.updateBounds(x, y);
+        updateBounds(x, y);
 
         String type = obj.getString("type");
 
