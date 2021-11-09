@@ -88,6 +88,20 @@ public class inventoryTest {
         inv.collect(wood);
         assertEquals(inv.numItem("wood"), 1);
         assertTrue(inv.inInventory("wood10"));
+
+        Anduril anduril = new Anduril(1, 1, "anduril11");
+        assertEquals(inv.numItem("anduril"), 0);
+        assertFalse(inv.inInventory("anduril11"));
+        inv.collect(anduril);
+        assertEquals(inv.numItem("anduril"), 1);
+        assertTrue(inv.inInventory("anduril11"));
+
+        SunStone sunstone = new SunStone(1, 1, "sunstone12");
+        assertEquals(inv.numItem("sun_stone"), 0);
+        assertFalse(inv.inInventory("sun_stone12"));
+        inv.collect(sunstone);
+        assertEquals(inv.numItem("sun_stone"), 1);
+        assertTrue(inv.inInventory("sunstone12"));
     }
 
     /**
@@ -103,15 +117,32 @@ public class inventoryTest {
         assertFalse(inv.inInventory("health_potion1"));
         inv.collect(potion);
         assertTrue(inv.inInventory("health_potion1"));
-        potion.consume();
-        //assertFalse(inv.inInventory("health_potion1"));
+        inv.use(potion.getId());
+        assertFalse(inv.inInventory("health_potion1"));
 
         Bomb bomb = new Bomb(1, 2, "bomb2");
         assertFalse(inv.inInventory("bomb2"));
         inv.collect(bomb);
         assertTrue(inv.inInventory("bomb2"));
-        bomb.consume();
-        //assertFalse(inv.inInventory("bomb2"));
+        inv.use(bomb.getId());
+        assertFalse(inv.inInventory("bomb2"));
+    }
+
+    /**
+     * When consuming a sunstone for opening doors and bribing, the sunstone should remain in the inventory
+     */
+    @Test
+    public void testUseSunStone() {
+
+        Inventory inv = new Inventory();
+
+        SunStone sunstone = new SunStone(1, 1, "sunstone1");
+
+        assertFalse(inv.inInventory("sunstone1"));
+        inv.collect(sunstone);
+        assertTrue(inv.inInventory("sunstone1"));
+        inv.use(sunstone.getId());
+        assertTrue(inv.inInventory("sunstone1"));
     }
 
     /**
