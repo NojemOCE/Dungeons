@@ -1,5 +1,7 @@
 package dungeonmania.movingEntity.States;
 
+import org.json.JSONObject;
+
 import dungeonmania.World;
 import dungeonmania.movingEntity.MovingEntity;
 import dungeonmania.movingEntity.Player;
@@ -22,6 +24,13 @@ public class NormalState implements State{
     @Override
     public Position move(Boulder e, Player p, World world) {
         return e.move(p);
+    }
+
+    @Override
+    public JSONObject getStateJson() {
+        JSONObject obj = new JSONObject();
+        obj.put("state", "normalState");
+        return obj;
     }
     
 }

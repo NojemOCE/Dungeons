@@ -1,5 +1,7 @@
 package dungeonmania.movingEntity.States;
 
+import org.json.JSONObject;
+
 import dungeonmania.World;
 import dungeonmania.movingEntity.MovingEntity;
 import dungeonmania.movingEntity.Player;
@@ -32,6 +34,14 @@ public class SwampState implements State {
             e.setState(new NormalState());
         }
         return e.getPosition();        
+    }
+
+    @Override
+    public JSONObject getStateJson() {
+        JSONObject obj = new JSONObject();
+        obj.put("state", "swampState");
+        obj.put("remTicks", remTicks);
+        return obj;
     }
 
 

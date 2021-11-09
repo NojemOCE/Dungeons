@@ -100,7 +100,7 @@ public class CharacterTest {
         zombie.updateMovement("invincibility_potion");
         zombie.updateMovement("N/A");
 
-        spider.setMovement(new CircleMovement("UP", "DOWN", 1, 1, true));
+        spider.setMovement(new CircleMovement(Direction.UP, Direction.DOWN, 1, 1, true));
     }
 
     @Test

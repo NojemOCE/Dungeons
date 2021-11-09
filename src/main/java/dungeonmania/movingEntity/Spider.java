@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import dungeonmania.World;
 import dungeonmania.movingEntity.MovementStrategies.CircleMovement;
 import dungeonmania.movingEntity.MovementStrategies.RandomMovement;
+import dungeonmania.movingEntity.States.State;
 import dungeonmania.util.*;
 
 
@@ -28,13 +29,22 @@ public class Spider extends MovingEntity implements PlayerPassiveObserver {
         // When character is no longer invincible, set currentMovement = defaultMovement
     }
 
-    public Spider(int x, int y, String id, HealthPoint hp, String defaultMovement, String currentMovement, String currentDir, String nextDir, int remMovesCurr, int remMovesNext, boolean avoidPlayer) {
-
+    /**
+     * Constructor for spider taking x, y coordinates, id, Healthpoint, default movement strategy, current movement strategy, and the state of the spider
+     * @param x x coordinate of the spider
+     * @param y y coordinate of the spider
+     * @param id iunique entity id of the spider
+     * @param hp healthpoint object of the spider
+     * @param defaultMovement default movement strategy of the spider
+     * @param currentMovement current movement strategy of the spider
+     * @param state state of the spider's movement (normal or swamp)
+     */
+    public Spider(int x, int y, String id, HealthPoint hp, MovementStrategy defaultMovement, MovementStrategy currentMovement, State state) {
         super(new Position(x, y, Position.MOVING_LAYER), id, "spider", hp, SPIDER_ATTACK);
-        setMovement(getMovementFromString(currentMovement, currentDir, nextDir, remMovesCurr, remMovesNext, avoidPlayer));
-
-        setDefaultMovementStrategy(new CircleMovement());
+        setMovement(currentMovement);
+        setDefaultMovementStrategy(defaultMovement);
         setAlly(false);
+        setState(state);
     }
 
 
@@ -57,22 +67,10 @@ public class Spider extends MovingEntity implements PlayerPassiveObserver {
     @Override
     public JSONObject saveGameJson() {
         JSONObject spiderJSON = super.saveGameJson();
-        JSONObject movement = new JSONObject();
 
-        movement.put("default-strategy", defaultMovementStrategy.getMovementType());
-        movement.put("movement-strategy", movementStrategy.getMovementType());
-
-        if(movementStrategy instanceof CircleMovement) {
-            CircleMovement moveStrat = (CircleMovement) defaultMovementStrategy;
-            movement.put("current-direction", moveStrat.getCurrentDirection());
-            movement.put("next-direction", moveStrat.getNextDirection());
-            movement.put("remMovesCurr", moveStrat.getRemMovesCurr());
-            movement.put("remMovesNext", moveStrat.getRemMovesNext());
-            movement.put("avoidPlayer", moveStrat.isAvoidPlayer());
-        }
-        
-        
-        spiderJSON.put("movement", movement);
+        spiderJSON.put("default-strategy", defaultMovementStrategy.getMovementJson());
+        spiderJSON.put("movement-strategy", movementStrategy.getMovementJson());
+        spiderJSON.put("state", getState().getStateJson());
 
         return spiderJSON;
     }

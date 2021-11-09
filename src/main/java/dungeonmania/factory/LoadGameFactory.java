@@ -11,18 +11,30 @@ import dungeonmania.World;
 import dungeonmania.collectable.*;
 import dungeonmania.gamemode.Gamemode;
 import dungeonmania.movingEntity.*;
+import dungeonmania.movingEntity.MovementStrategies.CircleMovement;
+import dungeonmania.movingEntity.MovementStrategies.FollowPlayer;
+import dungeonmania.movingEntity.MovementStrategies.RandomMovement;
+import dungeonmania.movingEntity.MovementStrategies.RunAway;
+import dungeonmania.movingEntity.States.NormalState;
+import dungeonmania.movingEntity.States.State;
+import dungeonmania.movingEntity.States.SwampState;
 import dungeonmania.staticEntity.*;
+import dungeonmania.util.Direction;
 
 public class LoadGameFactory extends Factory {
 
-    
+    /**
+     * Constructor for LoadGameFactory taking a gamemode
+     * @param gamemode gamemode of the factory
+     */
     public LoadGameFactory(Gamemode gamemode) {
         super(gamemode);
     }
 
     /**
-     * Creates player from a json and remounts observers
-     * @param obj json
+     * Creates annd returns Player from a JSON Object
+     * @param obj JSON object to build player from
+     * @return player
      */
     private Player createPlayerFromJSON(JSONObject obj) {
         int x = obj.getInt("x");
@@ -67,8 +79,9 @@ public class LoadGameFactory extends Factory {
     }
 
     /**
-     * Creates moving entity from a json
-     * @param obj json
+     * Creates and returns moving entity from a JSON Object
+     * @param obj JSON Object to build moving entity from
+     * @return moving entity
      */
     private MovingEntity createMovingEntityFromJSON(JSONObject obj) {
         //TODO update constructors
@@ -80,10 +93,15 @@ public class LoadGameFactory extends Factory {
 
         String type = obj.getString("type");
 
-        JSONObject movement = obj.getJSONObject("movement");
+        JSONObject defaultMovementJSON = obj.getJSONObject("default-strategy");
+        JSONObject currentMovementJSON = obj.getJSONObject("movement-strategy");
 
-        String defaultMovement = movement.getString("default-strategy");
-        String currentMovement = movement.getString("movement-strategy");
+        MovementStrategy defaultMovement = getMovementStrategyFromJSON(defaultMovementJSON);
+        MovementStrategy currentMovement = getMovementStrategyFromJSON(currentMovementJSON);
+
+        JSONObject stateJSON = obj.getJSONObject("state");
+
+        State state = getStateFromJSON(stateJSON);
 
         JSONObject healthPoint = obj.getJSONObject("health-point");
 
@@ -97,33 +115,97 @@ public class LoadGameFactory extends Factory {
 
         
         if (type.equals("spider")) {
-            String currentDir = movement.getString("current-direction");
-            String nextDir = movement.getString("next-direction");
-            int remMovesCurr = movement.getInt("remMovesCurr");
-            int remMovesNext = movement.getInt("remMovesNext");
-            boolean avoidPlayer  = movement.getBoolean("avoidPlayer");
-            Spider e = new Spider(x, y, id, entityHP, defaultMovement, currentMovement, currentDir, nextDir, remMovesCurr, remMovesNext, avoidPlayer);
-
+            Spider e = new Spider(x, y, id, entityHP, defaultMovement, currentMovement, state);
             return e;
         } 
         
         else if (type.equals("zombie_toast")) {
-            Zombie e = new Zombie(x, y, id, entityHP, defaultMovement, currentMovement);
+            Zombie e = new Zombie(x, y, id, entityHP, defaultMovement, currentMovement, state);
             return e;
         } 
         
         else if (type.equals("mercenary")) {
             boolean isAlly = obj.getBoolean("ally");
-            Mercenary e = new Mercenary(x, y, id, entityHP, defaultMovement, currentMovement, isAlly);
-
+            Mercenary e = new Mercenary(x, y, id, entityHP, defaultMovement, currentMovement, isAlly, state);
             return e;
         } 
         return null;
     }
 
     /**
-     * Creates static entity from a json
-     * @param obj json
+     * Creates and returns a movement State object from a given JSON Object
+     * @param stateJSON JSON object to build state from
+     * @return movement state 
+     */
+    private State getStateFromJSON(JSONObject stateJSON) {
+        String type = stateJSON.getString("state");
+        if (type.equals("normalState")) {
+            return new NormalState();
+        }
+        else if (type.equals("swampState")) {
+            int remTicks = stateJSON.getInt("remTicks");
+            return new SwampState(remTicks);
+        }
+        return null;
+    }
+
+    /**
+     * Creates and returns a movement strategy from a given JSON Object
+     * @param movementJSON JSON object to build movement strategy from
+     * @return movement strategy
+     */
+    private MovementStrategy getMovementStrategyFromJSON(JSONObject movementJSON) {
+        String movement = movementJSON.getString("movement");
+
+        if (movement.equals("circleMovement")) {
+            String currentDirString = movementJSON.getString("current-direction");
+            String nextDirString = movementJSON.getString("next-direction");
+            int remMovesCurr = movementJSON.getInt("remMovesCurr");
+            int remMovesNext = movementJSON.getInt("remMovesNext");
+            boolean avoidPlayer = movementJSON.getBoolean("avoidPlayer");
+
+            Direction currentDirection = getDirectionFromString(currentDirString);
+            Direction nextDirection = getDirectionFromString(nextDirString);
+
+            return new CircleMovement(currentDirection, nextDirection, remMovesCurr, remMovesNext, avoidPlayer);
+        }
+        else if (movement.equals("followPlayer")) {
+            return new FollowPlayer();
+        }
+        else if (movement.equals("randomMovement")) {
+            return new RandomMovement();
+        }
+        else if (movement.equals("runAway")) {
+            return new RunAway();
+        }
+
+        return null;
+    }
+
+    /**
+     * Creates and returns a direction from a string
+     * @param d string of direction
+     * @return direction
+     */
+    private Direction getDirectionFromString(String d) {
+        switch(d)  {
+            case "UP":
+                return Direction.UP;
+            case "DOWN":
+                return Direction.DOWN;
+            case "LEFT":
+                return Direction.LEFT;
+            case "RIGHT":
+                return Direction.RIGHT;
+            default:
+                return Direction.NONE;
+        }
+    }
+
+    /**
+     * Creates and returns a static entity from a JSON Object
+     * @param obj JSON Object to build static entity from
+     * @return static entity
      */
     private StaticEntity createStaticEntityFromJSON(JSONObject obj, World world) {
         //TODO update constructors
@@ -194,8 +276,9 @@ public class LoadGameFactory extends Factory {
     }
 
     /**
-     * Creates collectible from a json
-     * @param obj json
+     * Creates and returns a Collectable Entity from a JSON Object
+     * @param obj JSON Object to create collectable entity from
+     * @return collectable entity
      */
     private CollectableEntity createCollectableEntityFromJSON(JSONObject obj) {
         // TODO update constructors
@@ -304,15 +387,30 @@ public class LoadGameFactory extends Factory {
         return null;
     }
 
+    /**
+     * Returns a list of all the different string types of collectable entities
+     * @return String list of collectable entity types
+     */
     private List<String> collectablesList() {
+        // TODO add additional entities
         return Arrays.asList("arrow", "armour", "bomb", "bow", "health_potion", "invisibility_potion", "invincibility_potion", "key", "one_ring", "shield", "sword", "treasure", "wood");
     }
 
+    /**
+     * Returns a list of all the different string types of static entities
+     * @return String list of static entity types
+     */
     private List<String> staticsList() {
+        // TODO add additional entities
         return Arrays.asList("boulder", "door", "exit", "switch", "placed_bomb", "portal", "wall", "zombie_toast_spawner");
     }
 
+    /**
+     * Returns a list of all the different string types of moving entities
+     * @return String list of moving entity types
+     */
     private List<String> movingEntitiesList() {
+        // TODO add additional entities
         return Arrays.asList("zombie_toast", "mercenary", "spider");
     }
 }
