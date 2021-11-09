@@ -29,10 +29,6 @@ import dungeonmania.util.Position;
 import dungeonmania.factory.*;
 
 
-
-
-
-// TODO: remember to implement all the observer interfaces as we go
 public class World {
 
     private Inventory inventory;
@@ -133,52 +129,6 @@ public class World {
         }
     }
     
-    
-    /**
-     * Create Goal from json
-     * @param goal goal json
-     * @return Goal component
-     */
-    /*private GoalComponent createGoal(JSONObject goal) {
-        String currGoal = goal.getString("goal");
-
-        // Will return null if the goal is not exit,enemies,treasure, AND or OR
-        if (currGoal.equals("exit")) {
-            return new ExitGoal(currGoal);
-        }
-        else if (currGoal.equals("enemies")) {
-            return new EnemiesGoal(currGoal);
-        }
-        else if (currGoal.equals("boulders")) {
-            return new BoulderGoals(currGoal);
-        }
-        else if (currGoal.equals("treasure")) {
-            return new TreasureGoals(currGoal);
-        }
-        else if (currGoal.equals("AND")) {
-            AndGoal andGoal = new AndGoal(currGoal);
-            JSONArray subGoals = goal.getJSONArray("subgoals");
-
-            for (int i = 0; i < subGoals.length(); i++) {
-                GoalComponent subGoal = createGoal(subGoals.getJSONObject(i));
-                andGoal.addSubGoal(subGoal);
-            }
-            return andGoal; 
-        }
-        else if (currGoal.equals("OR")) {
-            OrGoal orGoal = new OrGoal(currGoal);
-            JSONArray subGoals = goal.getJSONArray("subgoals");
-
-            for (int i = 0; i < subGoals.length(); i++) {
-                GoalComponent subGoal = createGoal(subGoals.getJSONObject(i));
-                orGoal.addSubGoal(subGoal);
-            }
-            return orGoal; 
-        }
-
-        return null;
-    }*/
-
     /**
      * Gets a Goal response
      * @return string goal response
