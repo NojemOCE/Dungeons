@@ -11,6 +11,8 @@ import dungeonmania.goal.*;
 public abstract class Factory {
     Gamemode gamemode;
     int entityCount = 0;
+    int highestX = 5;
+    int highestY = 5;
 
     /**
      * Constructor for Factory taking in a GameMode
@@ -58,6 +60,7 @@ public abstract class Factory {
         newEntityObj.put("x", x);
         newEntityObj.put("y", y);
         newEntityObj.put("type", type);
+        updateBounds(x, y);
 
         return createEntity(newEntityObj, world);
     }
@@ -69,6 +72,29 @@ public abstract class Factory {
     public int getEntityCount() {
         return entityCount;
     }
+
+    /**
+     * Sets the largest bounds of the map
+     * @param x x co-ordinate
+     * @param y y co-ordinate
+     */
+    public void updateBounds(int x, int y) {
+        if (x > highestX) {
+            highestX = x;
+        }
+        if (y > highestY) {
+            highestY = y;
+        }
+    }
+
+    public int getHighestX() {
+        return highestX;
+    }
+
+    public int getHighestY() {
+        return highestY;
+    }
+    
     
     /**
      * Creates and returns a GoalComponent, taking in a JSON object

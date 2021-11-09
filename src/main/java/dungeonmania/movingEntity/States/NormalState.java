@@ -4,7 +4,10 @@ import org.json.JSONObject;
 
 import dungeonmania.World;
 import dungeonmania.movingEntity.MovingEntity;
+import dungeonmania.movingEntity.Player;
 import dungeonmania.staticEntity.Boulder;
+import dungeonmania.util.Position;
+
 
 public class NormalState implements State{
 
@@ -19,9 +22,8 @@ public class NormalState implements State{
     }
 
     @Override
-    public void move(Boulder e, World world) {
-        // TODO Auto-generated method stub
-        
+    public Position move(Boulder e, Player p, World world) {
+        return e.move(p);
     }
 
     @Override
