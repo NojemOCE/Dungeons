@@ -25,6 +25,8 @@ import dungeonmania.movingEntity.*;
 import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.util.Position;
+import dungeonmania.factory.*;
+
 
 
 
@@ -101,7 +103,8 @@ public class World {
         // TODO can we put this in a shared method
         if (worldData.has("goal-condition")) {
             JSONObject g = worldData.getJSONObject("goal-condition");
-            GoalComponent goal = createGoal(g);
+            //GoalComponent goal = createGoal(g);
+            GoalComponent goal = factory.createGoal(g);
             setGoals(goal);
         }
         else {
@@ -151,7 +154,7 @@ public class World {
      * @param goal goal json
      * @return Goal component
      */
-    private GoalComponent createGoal(JSONObject goal) {
+    /*private GoalComponent createGoal(JSONObject goal) {
         String currGoal = goal.getString("goal");
 
         // Will return null if the goal is not exit,enemies,treasure, AND or OR
@@ -189,7 +192,7 @@ public class World {
         }
 
         return null;
-    }
+    }*/
 
     /**
      * Gets a Goal response
@@ -521,13 +524,13 @@ public class World {
 
     /**
      * Returns the static entity that exists in the dungeon at position p (if one exists)
-     * Note, that this only looks at layer 1 (will not return for floor switch, exit)
+     * Note, that this only looks at STATIC_LAYER (will not return for floor switch, exit)
      * @param p position to check
      * @return Static entity at position p
      */
     public StaticEntity getStaticEntity(Position p) {
         for (StaticEntity s: staticEntities.values()) {
-            if (s.getPosition().equals(p) && s.getLayer() == 1)  {
+            if (s.getPosition().equals(p) && s.getLayer() == Position.STATIC_LAYER)  {
                 return s;
             }
         }
@@ -813,6 +816,10 @@ public class World {
         inventory.useByType(type);
     }
 
+    public void MindControl(MindControlled m) {
+        inventory.useSceptre(m);
+    }
+
     public int getTickCount() {
         return tickCount;
     }
@@ -842,7 +849,8 @@ public class World {
         // TODO can we put this in a shared method
         if (gameData.has("goal-condition")) {
             JSONObject g = gameData.getJSONObject("goal-condition");
-            GoalComponent goal = createGoal(g);
+            //GoalComponent goal = createGoal(g);
+            GoalComponent goal = factory.createGoal(g);
             setGoals(goal);
         }
         else {

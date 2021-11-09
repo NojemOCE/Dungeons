@@ -1,5 +1,7 @@
 package dungeonmania.movingEntity;
 
+import dungeonmania.MindControlled;
+import dungeonmania.collectable.Sceptre;
 import dungeonmania.util.*;
 
 import org.json.JSONObject;
@@ -12,7 +14,7 @@ import dungeonmania.movingEntity.MovementStrategies.RunAway;
 import dungeonmania.response.models.EntityResponse;
 
 
-public class Mercenary extends MovingEntity implements PlayerPassiveObserver {
+public class Mercenary extends MovingEntity implements PlayerPassiveObserver, MindControlled {
 
     static final int MERC_ATTACK = 3;
     static final int MERC_HEALTH = 20;
@@ -27,22 +29,25 @@ public class Mercenary extends MovingEntity implements PlayerPassiveObserver {
      * @param id unique entity id of the mercenary
      */
     public Mercenary(int x, int y, String id) {
-        super(new Position(x, y, 2), id, "mercenary", new HealthPoint(MERC_HEALTH), MERC_ATTACK);
+        super(new Position(x, y, Position.MOVING_LAYER), id, "mercenary", new HealthPoint(MERC_HEALTH), MERC_ATTACK);
         setMovement(new FollowPlayer());
         setDefaultMovementStrategy(new FollowPlayer());
         setAlly(false);
     }
 
     public Mercenary(int x, int y, String id, HealthPoint hp, String defaultMovement, String currentMovement, Boolean isAlly) {
-        super(new Position(x, y, 2), id, "mercenary", hp, MERC_ATTACK);
+        super(new Position(x, y, Position.MOVING_LAYER), id, "mercenary", hp, MERC_ATTACK);
         setMovement(getMovementFromString(currentMovement));
         setDefaultMovementStrategy(getMovementFromString(defaultMovement));
         setAlly(isAlly);
     }
 
+    public void move(World world) {
+        getState().move(this, world);
+    }
 
     @Override
-    public void move(World world) {
+    public void moveEntity(World world) {
 
         Position distance = Position.calculatePositionBetween(world.getPlayer().getPosition(), this.getPosition());
         double x = (double)distance.getX();
@@ -83,7 +88,9 @@ public class Mercenary extends MovingEntity implements PlayerPassiveObserver {
      */
     public void interact(World world) throws InvalidActionException {
         if (interactable) {
-            if (world.numItemInInventory("treasure") >= GOLD_TO_BRIBE) {
+            if (world.numItemInInventory("sceptre") != 0) {
+                world.MindControl(this);
+            } else if (world.numItemInInventory("treasure") >= GOLD_TO_BRIBE) {
                 for (int i = 0; i < GOLD_TO_BRIBE; i++) {
                     world.useByType("treasure");
                 }
@@ -129,4 +136,8 @@ public class Mercenary extends MovingEntity implements PlayerPassiveObserver {
         return mercJSON;
     }
 
+    @Override
+    public void update(Sceptre s) {
+        setAlly(s.isMindControlled(this));
+    }
 }

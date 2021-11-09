@@ -12,6 +12,8 @@ import dungeonmania.movingEntity.MovementStrategies.CircleMovement;
 import dungeonmania.movingEntity.MovementStrategies.FollowPlayer;
 import dungeonmania.movingEntity.MovementStrategies.RandomMovement;
 import dungeonmania.movingEntity.MovementStrategies.RunAway;
+import dungeonmania.movingEntity.States.NormalState;
+import dungeonmania.movingEntity.States.State;
 import dungeonmania.staticEntity.StaticEntity;
 
 
@@ -27,12 +29,14 @@ public abstract class MovingEntity extends Entity {
     protected MovementStrategy defaultMovementStrategy;
 
     private boolean ally;
+    private State state;
 
     public MovingEntity(Position position, String id, String type, HealthPoint healthPoint, double attackDamage) {
         super(position, id, type);
         this.healthPoint = healthPoint;
         this.attackDamage = attackDamage;
         this.speed = 0;
+        this.state = new NormalState();
     }
 
     /**
@@ -176,6 +180,14 @@ public abstract class MovingEntity extends Entity {
         return null;
     }
     
-    
-    
+    abstract public void moveEntity(World world);
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
 }
