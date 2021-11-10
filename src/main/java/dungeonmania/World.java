@@ -268,13 +268,14 @@ public class World {
         tickZombieToastSpawn();
 
         // Now evaluate goals. Goal should never be null, but add a check incase there is an error in the input file
-        if (!(goals == null)){
-            goals.evaluate(this);
-        }
+
         if (!Objects.isNull(currentBattle)) {
             movingEntities.remove(currentBattle.getCharacter().getId());
             player.unsubscribePassiveObserver((PlayerPassiveObserver)currentBattle.getCharacter());
             currentBattle = null;
+        }
+        if (!(goals == null)){
+            goals.evaluate(this);
         }
 
         tickCount++;
@@ -874,10 +875,27 @@ public class World {
         List<StaticEntity> l = getStaticEntitiesAtPosition(position);
         for (StaticEntity se : l) {
             if (se.getType().equals("swamp_tile")) {
-                //return (SwampTile)se.getMovementFactor();
+                SwampTile s = (SwampTile)se;
+                return s.getMovementFactor();
             }
         }
         return 1.0;
+    }
+
+    public int getXBound() {
+        return Math.max(player.getX(), factory.getHighestX());
+    }
+
+    public int getYBound() {
+        return Math.max(player.getY(), factory.getHighestY());
+    }
+
+    public int getXBoundN() {
+        return Math.min(player.getX(), 0);
+    }
+
+    public int getYBoundN() {
+        return Math.min(player.getY(), 0);
     }
     
 }
