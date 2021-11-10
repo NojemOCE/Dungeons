@@ -17,7 +17,7 @@ public class InventoryControllerTesting {
     @Test
     public void testCollectItem() {
         DungeonManiaController controller = new DungeonManiaController();
-        controller.newGame("collectable-world", "Standard");
+        controller.newGame("collectable-world", "standard");
         DungeonResponse CurrDungResp = controller.tick(null, Direction.DOWN);
 
         boolean contains = false;
@@ -37,7 +37,7 @@ public class InventoryControllerTesting {
     @Test
     public void testConsumeItem() {
         DungeonManiaController controller = new DungeonManiaController();
-        controller.newGame("collectable-world", "Standard");
+        controller.newGame("collectable-world", "standard");
         
         controller.tick(null, Direction.DOWN);
         DungeonResponse CurrDungResp = controller.tick("health_potion", null);

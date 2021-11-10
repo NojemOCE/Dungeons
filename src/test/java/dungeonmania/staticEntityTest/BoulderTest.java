@@ -37,7 +37,7 @@ public class BoulderTest {
     @Test
     public void boulderMovePlayerLeft(){
         // Create a new world
-        World world = new World("boulder+player", "Standard");
+        World world = new World("boulder+player", "standard");
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "boulder+player" + ".json");
             JSONObject game = new JSONObject(file);
@@ -238,7 +238,7 @@ public class BoulderTest {
     @Test
     public void boulderMoveThroughPortal() {
         // Create a new world
-        World world = new World("portals-boulder", "Standard");
+        World world = new World("portals-boulder", "standard");
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "portals-boulder" + ".json");
             JSONObject game = new JSONObject(file);
@@ -390,7 +390,7 @@ public class BoulderTest {
     @Test
     public void twoBoulderTest(){
         // Create a new world
-        World world = new World("boulders", "Standard");
+        World world = new World("boulders", "standard");
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "boulders" + ".json");
             JSONObject game = new JSONObject(file);
@@ -440,7 +440,7 @@ public class BoulderTest {
     @Test
     public void canRollOnSwitch(){
         // Create a new world
-        World world = new World("player-boulder-switch", "Standard");
+        World world = new World("player-boulder-switch", "standard");
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "player-boulder-switch" + ".json");
             JSONObject game = new JSONObject(file);

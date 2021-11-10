@@ -46,7 +46,7 @@ public class WorldTest {
 
     @Test
     public void testDungeonResponse() {
-        World world = new World("portals", "Standard");
+        World world = new World("portals", "standard");
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "portals" + ".json");
             JSONObject game = new JSONObject(file);
@@ -76,7 +76,7 @@ public class WorldTest {
 
     @Test
     public void testBuildable() {
-        World world = new World("advanced", "Standard");
+        World world = new World("advanced", "standard");
         assertThrows(IllegalArgumentException.class, () -> world.build("invalid buildable"));
 
         assertThrows(InvalidActionException.class, () -> world.build("bow"));

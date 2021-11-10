@@ -51,7 +51,7 @@ public class CharacterTest {
 
     @Test
     public void testPlayerMovement() {
-        World world = new World("test", "Standard");
+        World world = new World("test", "standard");
         
         HealthPoint playerHealth = new HealthPoint(100);
 
@@ -68,7 +68,7 @@ public class CharacterTest {
 
     @Test
     public void testCharacterMovement() {
-        World world = new World("key+door-noMatch", "Standard");
+        World world = new World("key+door-noMatch", "standard");
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "key+door-noMatch" + ".json");
             JSONObject game = new JSONObject(file);
@@ -135,7 +135,7 @@ public class CharacterTest {
 
     @Test
     public void testMercenaryBFS() {
-        World world = new World("merc", "Standard");
+        World world = new World("merc", "standard");
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "advanced" + ".json");
             JSONObject game = new JSONObject(file);
@@ -171,7 +171,7 @@ public class CharacterTest {
 
     @Test
     public void testRunAway() {
-        World world = new World("merc", "Standard");
+        World world = new World("merc", "standard");
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "advanced" + ".json");
             JSONObject game = new JSONObject(file);
@@ -238,7 +238,7 @@ public class CharacterTest {
     @Test
     public void testSaveJSON() {
         DungeonManiaController controller = new DungeonManiaController();
-        controller.newGame("advanced", "Standard");
+        controller.newGame("advanced", "standard");
         for (int i = 0; i < 4; i++) {
             controller.tick(null, Direction.RIGHT);
         }
@@ -277,7 +277,7 @@ public class CharacterTest {
 
     @Test
     public void testMercOutofRange() {
-        World world = new World("merc", "Standard");
+        World world = new World("merc", "standard");
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "advanced" + ".json");
             JSONObject game = new JSONObject(file);
@@ -336,7 +336,7 @@ public class CharacterTest {
 
     @Test
     public void testBribe() {
-        World world = new World("merc", "Standard");
+        World world = new World("merc", "standard");
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "advanced" + ".json");
             JSONObject game = new JSONObject(file);
@@ -401,7 +401,7 @@ public class CharacterTest {
      */
     @Test
     public void testGameOver() {
-        World world = new World("player-gameOver-test", "Peaceful");
+        World world = new World("player-gameOver-test", "peaceful");
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "player-gameOver-test" + ".json");
             JSONObject game = new JSONObject(file);
@@ -435,7 +435,7 @@ public class CharacterTest {
      */
     @Test
     public void testInvalidSpiderSpawn() {
-        World world = new World("a-lot-of-boulders", "Peaceful");
+        World world = new World("a-lot-of-boulders", "peaceful");
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "a-lot-of-boulders" + ".json");
             JSONObject game = new JSONObject(file);

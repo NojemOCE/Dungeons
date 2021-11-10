@@ -23,7 +23,7 @@ public class GoalsTest {
     public void simpleOrTest1(){
         DungeonManiaController c = new DungeonManiaController();
 
-        DungeonResponse d = c.newGame("simple-or-goal", "Standard");
+        DungeonResponse d = c.newGame("simple-or-goal", "standard");
         assertEquals("(:enemies OR :exit)", d.getGoals());
 
         d = c.tick(null, Direction.RIGHT);
@@ -34,7 +34,7 @@ public class GoalsTest {
     public void simpleOrTest2(){
         DungeonManiaController c = new DungeonManiaController();
 
-        DungeonResponse d = c.newGame("simple-or-goal", "Standard");
+        DungeonResponse d = c.newGame("simple-or-goal", "standard");
         assertEquals("(:enemies OR :exit)", d.getGoals());
 
         d = c.tick(null, Direction.DOWN);
@@ -58,7 +58,7 @@ public class GoalsTest {
     public void simpleAndTest1(){
         DungeonManiaController c = new DungeonManiaController();
 
-        DungeonResponse d = c.newGame("simple-and-goal", "Standard");
+        DungeonResponse d = c.newGame("simple-and-goal", "standard");
         assertEquals("(:enemies AND :exit)", d.getGoals());
         
         
@@ -90,7 +90,7 @@ public class GoalsTest {
         DungeonManiaController c = new DungeonManiaController();
         // Check if the player goes on exit before the other goals are achieved, that the goal is not completed
         
-        DungeonResponse d = c.newGame("simple-and-goal", "Standard");
+        DungeonResponse d = c.newGame("simple-and-goal", "standard");
         assertEquals("(:enemies AND :exit)", d.getGoals());
 
         // Player moves to the top of the exit
@@ -121,7 +121,7 @@ public class GoalsTest {
         DungeonManiaController c = new DungeonManiaController();
         // Check if the player goes on exit before the other goals are achieved, that the goal is not completed
         
-        DungeonResponse d = c.newGame("simple-boulders", "Standard");
+        DungeonResponse d = c.newGame("simple-boulders", "standard");
         assertEquals("(:exit OR :boulders)", d.getGoals());
 
         // Player pushes one boulder onto a switch (note, in this map, one boulder is created on top of a switch)
@@ -143,7 +143,7 @@ public class GoalsTest {
         DungeonManiaController c = new DungeonManiaController();
         // Check if the player goes on exit before the other goals are achieved, that the goal is not completed
         
-        DungeonResponse d = c.newGame("simple-boulders", "Standard");
+        DungeonResponse d = c.newGame("simple-boulders", "standard");
         assertEquals("(:exit OR :boulders)", d.getGoals());
 
         // Player pushes one boulder onto a switch (note, in this map, one boulder is created on top of a switch)
@@ -168,7 +168,7 @@ public class GoalsTest {
         DungeonManiaController c = new DungeonManiaController();
         // Check if the player goes on exit before the other goals are achieved, that the goal is not completed
         
-        DungeonResponse d = c.newGame("simple-treasure", "Standard");
+        DungeonResponse d = c.newGame("simple-treasure", "standard");
         assertEquals("(:exit AND :treasure)", d.getGoals());
 
         // Player moves right
@@ -219,7 +219,7 @@ public class GoalsTest {
         DungeonManiaController c = new DungeonManiaController();
         // Check if the player goes on exit before the other goals are achieved, that the goal is not completed
         
-        DungeonResponse d = c.newGame("simple-treasure", "Standard");
+        DungeonResponse d = c.newGame("simple-treasure", "standard");
         assertEquals("(:exit AND :treasure)", d.getGoals());
 
         // Player moves down

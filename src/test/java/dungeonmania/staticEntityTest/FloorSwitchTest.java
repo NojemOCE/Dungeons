@@ -35,7 +35,7 @@ public class FloorSwitchTest {
     @Test
     public void playerOnSwitch(){
         // Create a new world
-        World world = new World("player-boulder-switch", "Standard");
+        World world = new World("player-boulder-switch", "standard");
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "player-boulder-switch" + ".json");
             JSONObject game = new JSONObject(file);

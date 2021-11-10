@@ -25,7 +25,7 @@ public class ZombieTest {
 
     @Test
     public void zombieSpawnTest(){
-        World world = new World("zombie-spawn-test", "Standard");
+        World world = new World("zombie-spawn-test", "standard");
         
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "zombie-spawn-test" + ".json");
@@ -62,7 +62,7 @@ public class ZombieTest {
 
     @Test
     public void zombieInteractTest(){
-        World world = new World("invalid-interact", "Standard");
+        World world = new World("invalid-interact", "standard");
         
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "invalid-interact" + ".json");
@@ -83,7 +83,7 @@ public class ZombieTest {
 
     @Test
     public void zombieWalkOnPortal() {
-        World world = new World("zombie-portal-test", "Standard");
+        World world = new World("zombie-portal-test", "standard");
         
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "zombie-portal-test" + ".json");

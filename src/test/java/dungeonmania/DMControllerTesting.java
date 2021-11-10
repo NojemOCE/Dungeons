@@ -44,7 +44,7 @@ public class DMControllerTesting {
         DungeonManiaController controller = new DungeonManiaController();
 
         // test for invalid dungeon
-        String validMode = "Standard";
+        String validMode = "standard";
         assertThrows(IllegalArgumentException.class, () -> controller.newGame("does not exist", validMode));
 
         // test for invalid mode
@@ -61,7 +61,7 @@ public class DMControllerTesting {
     public void testSaveGame() {
         DungeonManiaController controller = new DungeonManiaController();
 
-        DungeonResponse newDungeon = controller.newGame("maze", "Standard");
+        DungeonResponse newDungeon = controller.newGame("maze", "standard");
 
         assertDoesNotThrow(() -> controller.saveGame(newDungeon.getDungeonId()));
 
@@ -114,7 +114,7 @@ public class DMControllerTesting {
     @Test
     public void testBuild() {
         DungeonManiaController controller = new DungeonManiaController();
-        DungeonResponse d = controller.newGame("buildable-test", "Standard");
+        DungeonResponse d = controller.newGame("buildable-test", "standard");
         
         // check that exception is thrown if "buildable" is invalid
         assertThrows(IllegalArgumentException.class, () -> controller.build("invalid buildable"));
@@ -173,7 +173,7 @@ public class DMControllerTesting {
     public void testInteractZombieSpawner() {
         // check that zombie spawners die when interacted with
         DungeonManiaController controller = new DungeonManiaController();
-        DungeonResponse d = controller.newGame("zombieSpawner+sword", "Standard");
+        DungeonResponse d = controller.newGame("zombieSpawner+sword", "standard");
 
         // we are too far away
         for (EntityResponse er : d.getEntities()) {
@@ -221,7 +221,7 @@ public class DMControllerTesting {
     @Test
     public void testZombieSpawner() {
         DungeonManiaController controller = new DungeonManiaController();
-        DungeonResponse d = controller.newGame("zombieSpawner+sword", "Standard");
+        DungeonResponse d = controller.newGame("zombieSpawner+sword", "standard");
 
         // test zombie spawn rate
         for (int i = 0; i < 20; i++) {

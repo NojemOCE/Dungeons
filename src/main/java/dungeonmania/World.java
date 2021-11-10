@@ -62,9 +62,9 @@ public class World {
         this.dungeonName = dungeonName;
         this.id = dungeonName;
         this.entityCount = 0;
-        if (gameMode.equals("Hard")) {
+        if (gameMode.equals("hard")) {
             this.gamemode = new Hard();
-        } else if (gameMode.equals("Standard")) {
+        } else if (gameMode.equals("standard")) {
             this.gamemode = new Standard();
         } else {
             this.gamemode = new Peaceful();
@@ -103,6 +103,10 @@ public class World {
         movingEntities.forEach((id, me) -> {
             player.subscribePassiveObserver((PlayerPassiveObserver)me);
         });
+
+        if (!Objects.isNull(goals)) {
+            goals.evaluate(this);
+        }
         return worldDungeonResponse();
     }
 
@@ -982,6 +986,9 @@ public class World {
         if (gameData.has("current-battle")) {
             JSONObject b = gameData.getJSONObject("current-battle"); 
             currentBattle = new Battle(player, movingEntities.get(b.get("character")), gamemode.isEnemyAttackEnabled());
+        }
+        if (!Objects.isNull(goals)) {
+            goals.evaluate(this);
         }
     }
 

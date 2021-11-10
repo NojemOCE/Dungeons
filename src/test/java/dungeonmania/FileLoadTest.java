@@ -36,7 +36,7 @@ public class FileLoadTest {
     public void collectableWorldTest() {
         DungeonManiaController controller = new DungeonManiaController();
 
-        controller.newGame("collectable-world", "Standard");
+        controller.newGame("collectable-world", "standard");
 
         controller.saveGame("collectable-world1");
 
@@ -64,7 +64,7 @@ public class FileLoadTest {
         DungeonResponse d = controller.tick(null, Direction.UP);
 
         List <EntityResponse> entities = d.getEntities();
-        assertEquals(32, entities.size());
+        assertEquals(31, entities.size());
 
         for (EntityResponse e: entities)  {
             if (e.getType().equals("player")) {
@@ -131,7 +131,7 @@ public class FileLoadTest {
     public void collectableWorldTest2() {
         DungeonManiaController controller = new DungeonManiaController();
 
-        DungeonResponse d = controller.newGame("collectable-world", "Standard");
+        DungeonResponse d = controller.newGame("collectable-world", "standard");
         List<ItemResponse> inv = d.getInventory();
         assertEquals(0, inv.size());
 
@@ -252,7 +252,7 @@ public class FileLoadTest {
         assertThrows(IllegalArgumentException.class, ()-> controller.saveGame("invalid game"));
         assertThrows(IllegalArgumentException.class, ()-> controller.loadGame("invalid game"));
 
-        controller.newGame("boulders", "Standard");
+        controller.newGame("boulders", "standard");
         assertDoesNotThrow(()-> controller.saveGame("boulders1"));
 
         List<String> games = controller.allGames();
@@ -265,7 +265,7 @@ public class FileLoadTest {
     public void newSavedFolderTest() {
         clearSavedFilesFolder();
         DungeonManiaController controller = new DungeonManiaController();
-        controller.newGame("boulders", "Standard");
+        controller.newGame("boulders", "standard");
         assertDoesNotThrow(()-> controller.saveGame("boulders1"));
 
         List<String> games = controller.allGames();
@@ -279,7 +279,7 @@ public class FileLoadTest {
     public void staticsWorldTest1() {
         DungeonManiaController controller = new DungeonManiaController();
 
-        controller.newGame("statics-world", "Standard");
+        controller.newGame("statics-world", "standard");
         
         controller.saveGame("statics-world1");
 
@@ -352,7 +352,7 @@ public class FileLoadTest {
 
         DungeonManiaController controller = new DungeonManiaController();
 
-        controller.newGame("statics-world", "Standard");
+        controller.newGame("statics-world", "standard");
 
         
 
@@ -438,7 +438,7 @@ public class FileLoadTest {
     public void enemiesWorldTest1() {
         DungeonManiaController controller = new DungeonManiaController();
 
-        controller.newGame("enemies-world", "Standard");
+        controller.newGame("enemies-world", "standard");
 
         controller.saveGame("enemies-world1");
 
@@ -507,7 +507,7 @@ public class FileLoadTest {
     public void placingBombWorldTest() {
         DungeonManiaController controller = new DungeonManiaController();
 
-        controller.newGame("placing-bomb", "Standard");
+        controller.newGame("placing-bomb", "standard");
 
         DungeonResponse d = controller.tick(null, Direction.DOWN);
         List<ItemResponse> inventory = d.getInventory();
@@ -569,7 +569,7 @@ public class FileLoadTest {
     public void buildingWorldTest() {
         DungeonManiaController controller = new DungeonManiaController();
 
-        controller.newGame("building-world", "Standard");
+        controller.newGame("building-world", "standard");
 
         // Move right and collect wood
         controller.tick(null, Direction.RIGHT);
@@ -660,7 +660,7 @@ public class FileLoadTest {
     public void invincicibilityPotionWorldTest() {
         DungeonManiaController controller = new DungeonManiaController();
 
-        controller.newGame("invinc-potion", "Standard");
+        controller.newGame("invinc-potion", "standard");
 
         //Player collects invinc potion
         DungeonResponse d = controller.tick(null, Direction.RIGHT);

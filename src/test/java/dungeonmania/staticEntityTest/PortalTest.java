@@ -56,7 +56,7 @@ public class PortalTest {
     @Test
     public void twinTeleport() {
         // Create a new world
-        World world = new World("portals", "Standard");
+        World world = new World("portals", "standard");
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "portals" + ".json");
             JSONObject game = new JSONObject(file);
@@ -163,7 +163,7 @@ public class PortalTest {
     @Test
     public void twinTeleportBlock() {
         // Create a new world
-        World world = new World("portals-two-boulders-v2", "Standard");
+        World world = new World("portals-two-boulders-v2", "standard");
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "portals-two-boulders-v2" + ".json");
             JSONObject game = new JSONObject(file);
@@ -212,7 +212,7 @@ public class PortalTest {
     @Test
     public void twinTeleportBlockBoulder() {
         // Create a new world
-        World world = new World("portals-three-boulders", "Standard");
+        World world = new World("portals-three-boulders", "standard");
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "portals-three-boulders" + ".json");
             JSONObject game = new JSONObject(file);
