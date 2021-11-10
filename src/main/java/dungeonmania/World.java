@@ -268,13 +268,14 @@ public class World {
         tickZombieToastSpawn();
 
         // Now evaluate goals. Goal should never be null, but add a check incase there is an error in the input file
-        if (!(goals == null)){
-            goals.evaluate(this);
-        }
+
         if (!Objects.isNull(currentBattle)) {
             movingEntities.remove(currentBattle.getCharacter().getId());
             player.unsubscribePassiveObserver((PlayerPassiveObserver)currentBattle.getCharacter());
             currentBattle = null;
+        }
+        if (!(goals == null)){
+            goals.evaluate(this);
         }
 
         tickCount++;
