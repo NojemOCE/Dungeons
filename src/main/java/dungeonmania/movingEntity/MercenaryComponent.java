@@ -34,9 +34,13 @@ public abstract class MercenaryComponent extends MovingEntity implements PlayerP
         setState(state);
     }
 
-
     @Override
     public void move(World world) {
+        getState().move(this, world);
+    }
+
+    @Override
+    public void moveEntity(World world) {
 
         Position distance = Position.calculatePositionBetween(world.getPlayer().getPosition(), this.getPosition());
         double x = (double)distance.getX();
@@ -52,6 +56,8 @@ public abstract class MercenaryComponent extends MovingEntity implements PlayerP
         
         getMovement().move(this, world);
         setInteractable(world.getPlayer());
+
+        checkSwampTile(world);
     }
 
     /**

@@ -46,7 +46,6 @@ public class Mercenary extends MercenaryComponent {
                     world.useByType("treasure");
                 }
                 setAlly(true);
-                world.setBattle(null);
             } else {
                 throw new InvalidActionException("Not enough gold to bribe Mercenary!");
             }
@@ -66,11 +65,4 @@ public class Mercenary extends MercenaryComponent {
 
         return mercJSON;
     }
-
-    @Override
-    public void moveEntity(World world) {
-        // TODO Auto-generated method stub
-        
-    }
-
 }

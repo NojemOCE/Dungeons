@@ -25,6 +25,7 @@ import dungeonmania.movingEntity.*;
 import dungeonmania.movingEntity.States.SwampState;
 import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
+import dungeonmania.factory.*;
 import dungeonmania.util.Position;
 
 public class World {
@@ -40,6 +41,8 @@ public class World {
     private int entityCount;
     private Battle currentBattle;
     private String dungeonName;
+    private Factory factory;
+
 
     static final int MAX_SPIDERS = 6;
     static final int SPIDER_SPAWN = 20;
@@ -65,11 +68,15 @@ public class World {
             this.gamemode = new Peaceful();
         }
         this.inventory = new Inventory();
+        this.factory = new NewGameFactory(gamemode);
+
+
     }
 
     public World(String dungeonName, String gameMode, String id) {
         this(dungeonName, gameMode);
         this.id = id;
+        this.factory = new LoadGameFactory(gamemode);
     }
 
     /**
@@ -81,9 +88,15 @@ public class World {
         JSONArray entities = worldData.getJSONArray("entities");
 
         for (int i = 0; i < entities.length(); i++) {
-            createEntity(entities.getJSONObject(i), String.valueOf(incrementEntityCount()));
+            Entity e = factory.createEntity(entities.getJSONObject(i), this);
+
+            addEntity(e);
+
+            // move increment entity count to factory
+            // if collectable, add to colletable etc
         }
-        
+
+
         // TODO can we put this in a shared method
         if (worldData.has("goal-condition")) {
             JSONObject g = worldData.getJSONObject("goal-condition");
@@ -524,14 +537,6 @@ public class World {
     }
 
     /**
-     * Sets the current battle to the provided battle
-     * @param battle
-     */
-    public void setBattle(Battle battle) {
-        this.currentBattle = battle;
-    }
-
-    /**
      * Gets the Player object of the world
      * @return Player of the world
      */
@@ -764,8 +769,6 @@ public class World {
      * Loads a saved game with all entities
      */
     public void buildWorldFromFile(JSONObject gameData) {
-        //TODO implement
-
         int tickNo = gameData.getInt("tick-count");
         int entityNo = gameData.getInt("entity-count");
         
@@ -785,39 +788,46 @@ public class World {
 
         JSONArray inventoryItems = gameData.getJSONArray("inventory");
         for (int i = 0; i < inventoryItems.length(); i++) {
-            createInventoryFromJSON(inventoryItems.getJSONObject(i));
+            Entity e = factory.createEntity(inventoryItems.getJSONObject(i), this);
+            inventory.collect((CollectableEntity) e);
         }
 
         JSONObject playerObj = gameData.getJSONObject("player");
-        //merc list
-        createPlayerFromJSON(playerObj);
+        //TODO get merc list
+        Entity player = factory.createEntity(playerObj, this);
+        this.player = (Player) player;
+
 
         JSONArray movingEntitiesItems = gameData.getJSONArray("moving-entities");
         for (int i = 0; i < movingEntitiesItems.length(); i++) {
-            createMovingEntityFromJSON(movingEntitiesItems.getJSONObject(i));
+            Entity e = factory.createEntity(movingEntitiesItems.getJSONObject(i), this);
+            movingEntities.put(e.getId(), (MovingEntity) e);
         }
 
         JSONArray staticEntitiesItems = gameData.getJSONArray("static-entities");
         for (int i = 0; i < staticEntitiesItems.length(); i++) {
-            createStaticEntityFromJSON(staticEntitiesItems.getJSONObject(i));
+            Entity e = factory.createEntity(staticEntitiesItems.getJSONObject(i), this);
+            staticEntities.put(e.getId(), (StaticEntity) e);
         }
 
         JSONArray collectableEntitiesItems = gameData.getJSONArray("collectable-entities");
         for (int i = 0; i < collectableEntitiesItems.length(); i++) {
-            createCollectableEntityFromJSON(collectableEntitiesItems.getJSONObject(i));
+            Entity e = factory.createEntity(collectableEntitiesItems.getJSONObject(i), this);
+            collectableEntities.put(e.getId(), (CollectableEntity) e);
         }
 
         // trigger any switches with a boulder already on top
         triggerSwitches();
 
         movingEntities.forEach( (id, me) -> {
-            player.subscribePassiveObserver((PlayerPassiveObserver)me);
+            this.player.subscribePassiveObserver((PlayerPassiveObserver)me);
         });        
 
-        if (gameData.has("current-battle")) {
-            JSONObject b = gameData.getJSONObject("current-battle"); 
-            currentBattle = new Battle(player, movingEntities.get(b.get("character")), gamemode.isEnemyAttackEnabled());
-        }
+        int entityCount = factory.getEntityCount();
+
+        this.factory = new NewGameFactory(gamemode);
+        factory.setEntityCount(entityCount);
+
     }
 
     /**
@@ -833,327 +843,6 @@ public class World {
             }
         }
 
-    }
-
-    /**
-     * Creates inventory from a json
-     * @param obj json
-     */
-    private void createInventoryFromJSON(JSONObject obj) {
-        //int x = obj.getInt("x");
-        //int y = obj.getInt("y");
-
-        //updateBounds(x, y);
-
-        int durability = obj.getInt("durability");
-
-        String type = obj.getString("type");
-
-        String id = obj.getString("id");
-
-        
-        if (type.equals("treasure")) {
-
-            Treasure e = new Treasure(id, durability);
-            inventory.collect(e);
-        } 
-        
-        else if (type.equals("key")) {
-            int key = obj.getInt("key");
-            Key e = new Key(id, key, durability);
-            
-            inventory.collect(e);
-
-        } 
-        
-        else if (type.equals("health_potion")) {
-            HealthPotion e = new HealthPotion(id, durability);
-
-            inventory.collect(e);
-        } 
-        
-        else if (type.equals("invincibility_potion")) {
-            InvincibilityPotion e = new InvincibilityPotion(id, durability, gamemode.isInvincibilityEnabled());
-            inventory.collect(e);
-        } 
-        
-        else if (type.equals("invisibility_potion")) {
-            InvisibilityPotion e = new InvisibilityPotion(id, durability);
-            inventory.collect(e);
-        } 
-        
-        else if (type.equals("wood")) {
-            Wood e = new Wood(id, durability);
-            inventory.collect(e);
-        } 
-        
-        else if (type.equals("arrow")) {
-            Arrows e = new Arrows(id, durability);
-            inventory.collect(e);
-
-        } 
-        
-        else if (type.equals("bomb")) {
-            Bomb e = new Bomb(id, durability);
-            inventory.collect(e);
-        } 
-        
-        else if (type.equals("sword")) {
-            Sword e = new Sword(id, durability);
-            inventory.collect(e);
-        }
-
-        else if (type.equals("one_ring")) {
-            OneRing e = new OneRing(id, durability);
-            inventory.collect(e);
-        }
-
-        else if (type.equals("armour")) {
-            Armour e = new Armour(id, durability);
-            inventory.collect(e);
-        }
-
-        else if (type.equals("bow")) {
-            Bow e = new Bow(id, durability);
-            inventory.collect(e);
-        }
-
-        else if (type.equals("shield")) {
-            Shield e = new Shield(id, durability);
-            inventory.collect(e);
-        }
-    }
-
-    /**
-     * Creates player from a json and remounts observers
-     * @param obj json
-     */
-    private void createPlayerFromJSON(JSONObject obj) {
-        int x = obj.getInt("x");
-        int y = obj.getInt("y");
-
-
-        String id = obj.getString("id");
-
-        JSONObject healthPoint = obj.getJSONObject("health-point");
-
-        double health = healthPoint.getDouble("health");
-        double maxHealth = healthPoint.getDouble("max-health");
-
-        HealthPoint playerHP = new HealthPoint(health, maxHealth);
-
-        if (obj.has("active-potion")) {
-            JSONObject activePotion = obj.getJSONObject("active-potion");
-            String activePotionType = activePotion.getString("active-potion");
-            int activePotionDuration = activePotion.getInt("duration");
-
-            Passive e = null;
-            if (activePotionType.equals("invincibility_potion")) {
-                e = new InvincibilityPotion(activePotionDuration);
-            }
-            else if (activePotionType.equals("invisibility_potion")) {
-                e = new InvisibilityPotion(activePotionDuration);
-            }
-            else if (activePotionType.equals("health_potion")) {
-                e = new HealthPotion(activePotionDuration);
-            }
-
-            Player player = new Player(x, y, id, playerHP, e);
-            this.player = player;
-
-        }
-        else {
-            Player player = new Player(x, y, id, playerHP);
-            this.player = player;
-        }
-
-    }
-
-    /**
-     * Creates moving entity from a json
-     * @param obj json
-     */
-    private void createMovingEntityFromJSON(JSONObject obj) {
-        //TODO update constructors
-
-        int x = obj.getInt("x");
-        int y = obj.getInt("y");
-
-
-        String type = obj.getString("type");
-
-        JSONObject movement = obj.getJSONObject("movement");
-
-        String defaultMovement = movement.getString("default-strategy");
-        String currentMovement = movement.getString("movement-strategy");
-
-        JSONObject healthPoint = obj.getJSONObject("health-point");
-
-        double health = healthPoint.getDouble("health");
-        double maxHealth = healthPoint.getDouble("max-health");
-
-        HealthPoint entityHP = new HealthPoint(health, maxHealth);
-        
-
-        String id = obj.getString("id");
-
-        
-        if (type.equals("spider")) {
-            String currentDir = movement.getString("current-direction");
-            String nextDir = movement.getString("next-direction");
-            int remMovesCurr = movement.getInt("remMovesCurr");
-            int remMovesNext = movement.getInt("remMovesNext");
-            boolean avoidPlayer  = movement.getBoolean("avoidPlayer");
-            Spider e = new Spider(x, y, id, entityHP, defaultMovement, currentMovement, currentDir, nextDir, remMovesCurr, remMovesNext, avoidPlayer);
-
-            movingEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("zombie_toast")) {
-            Zombie e = new Zombie(x, y, id, entityHP, defaultMovement, currentMovement);
-            movingEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("mercenary")) {
-            boolean isAlly = obj.getBoolean("ally");
-            Mercenary e = new Mercenary(x, y, id, entityHP, defaultMovement, currentMovement, isAlly);
-
-            movingEntities.put(e.getId(), e);
-        } 
-    }
-
-    /**
-     * Creates static entity from a json
-     * @param obj json
-     */
-    private void createStaticEntityFromJSON(JSONObject obj) {
-        //TODO update constructors
-        int x = obj.getInt("x");
-        int y = obj.getInt("y");
-
-        updateBounds(x, y);
-
-        String type = obj.getString("type");
-
-        String id = obj.getString("id");
-
-        if (type.equals("wall")) {
-            Wall e = new Wall(x, y, id);
-            staticEntities.put(e.getId(), e);
-
-        } else if (type.equals("exit")) {
-            Exit e = new Exit(x,y,id);
-            staticEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("switch")) {
-            FloorSwitch e = new FloorSwitch(x, y, id);
-            staticEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("boulder")) {
-            Boulder e = new Boulder(x, y, id);
-            staticEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("door")) {
-            int key = obj.getInt("key");
-            boolean opened = obj.getBoolean("open");
-            Door e = new Door(x, y, id, key, opened);
-            staticEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("portal")) {
-            Portal e;
-
-            String colour = obj.getString("colour");
-
-            if (staticEntities.containsKey(colour)) {
-                e = new Portal(x, y, colour + "2", colour, (Portal) staticEntities.get(colour));
-            } else {
-                e = new Portal(x, y, colour, colour);
-            }
-            staticEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("zombie_toast_spawner")) {
-            ZombieToastSpawn e = new ZombieToastSpawn(x, y, id);
-            staticEntities.put(e.getId(), e);   
-        } 
-        else if (type.equals("bomb")) {
-            PlacedBomb e = new PlacedBomb(x, y, id);
-            staticEntities.put(e.getId(), e); 
-        }
-    }
-
-    /**
-     * Creates collectible from a json
-     * @param obj json
-     */
-    private void createCollectableEntityFromJSON(JSONObject obj) {
-        // TODO update constructors
-        int x = obj.getInt("x");
-        int y = obj.getInt("y");
-
-        int durability = obj.getInt("durability");
-
-        updateBounds(x, y);
-
-        String type = obj.getString("type");
-
-        String id = obj.getString("id");
-
-        
-        if (type.equals("treasure")) {
-            Treasure e = new Treasure(x, y, id, durability);
-            collectableEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("key")) {
-            int key = (int)obj.get("key");
-            Key e = new Key(x, y, id, key, durability);
-            collectableEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("health_potion")) {
-            HealthPotion e = new HealthPotion(x, y, id, durability);
-            collectableEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("invincibility_potion")) {
-            InvincibilityPotion e = new InvincibilityPotion(x, y, id, gamemode.isInvincibilityEnabled());
-            collectableEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("invisibility_potion")) {
-            int duration = obj.getInt("duration");
-            InvisibilityPotion e = new InvisibilityPotion(x, y, id, durability, duration);
-            collectableEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("wood")) {
-            Wood e = new Wood(x, y, id, durability);
-            collectableEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("arrow")) {
-            Arrows e = new Arrows(x, y, id, durability);
-            collectableEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("bomb")) {
-            Bomb e = new Bomb(x, y, id, durability);
-            collectableEntities.put(e.getId(), e);
-        } 
-        
-        else if (type.equals("sword")) {
-            Sword e = new Sword(x, y, id, durability);
-            collectableEntities.put(e.getId(), e);
-        }
-        else if (type.equals("one_ring")) {
-            OneRing e = new OneRing(x, y, id, durability);
-            collectableEntities.put(e.getId(), e);
-        }
     }
 
     public Position getPlayerPosition() {

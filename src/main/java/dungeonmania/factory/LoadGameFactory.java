@@ -125,7 +125,7 @@ public class LoadGameFactory extends Factory {
         } 
         else if (type.equals("mercenary")) {
             boolean isAlly = obj.getBoolean("ally");
-            Mercenary e = new MercenaryComponent(x, y, id, entityHP, defaultMovement, currentMovement, isAlly, state);
+            Mercenary e = new Mercenary(x, y, id, entityHP, defaultMovement, currentMovement, isAlly, state);
             return e;
         } 
         return null;

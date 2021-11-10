@@ -2,19 +2,18 @@ package dungeonmania.movingEntity;
 
 import dungeonmania.util.Position;
 
+import java.util.List;
 import java.util.Objects;
 
 import org.json.JSONObject;
 
 import dungeonmania.Entity;
 import dungeonmania.World;
-import dungeonmania.movingEntity.MovementStrategies.CircleMovement;
-import dungeonmania.movingEntity.MovementStrategies.FollowPlayer;
-import dungeonmania.movingEntity.MovementStrategies.RandomMovement;
-import dungeonmania.movingEntity.MovementStrategies.RunAway;
 import dungeonmania.movingEntity.States.NormalState;
 import dungeonmania.movingEntity.States.State;
+import dungeonmania.movingEntity.States.SwampState;
 import dungeonmania.staticEntity.StaticEntity;
+import dungeonmania.staticEntity.SwampTile;
 
 
 
@@ -41,6 +40,7 @@ public abstract class MovingEntity extends Entity {
         super(position, id, type);
         this.healthPoint = healthPoint;
         this.attackDamage = attackDamage;
+        this.state = new NormalState();
     }
 
     /**
@@ -203,6 +203,20 @@ public abstract class MovingEntity extends Entity {
      */
     public void setState(State state) {
         this.state = state;
+    }
+
+    /**
+     * Checks if the moving entity is on a swamp tile, and updates their movement state if they are
+     * @param world world in which the moving entity resides
+     */
+    public void checkSwampTile(World world) {
+        List<StaticEntity> statics = world.getStaticEntitiesAtPosition(getPosition());
+            for (StaticEntity s: statics) {
+                if (s instanceof SwampTile) {
+                    setState(new SwampState(((SwampTile) s).getMovementFactor()));
+                    return;
+                }
+            }
     }
 
     // @Override

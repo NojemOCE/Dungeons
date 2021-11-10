@@ -53,6 +53,7 @@ public class Zombie extends MovingEntity implements PlayerPassiveObserver {
     @Override
     public void moveEntity(World world) {
        getMovement().move(this, world);
+       checkSwampTile(world);
     }
 
     @Override
