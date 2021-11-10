@@ -1,0 +1,578 @@
+Test 1-1
+
+GamemodesTest > 1-1 Testing peaceful mode causes player to take no damage FAILED
+    java.lang.IllegalArgumentException: peaceful is not a valid game mode.
+        at dungeonmania.DungeonManiaController.newGame(DungeonManiaController.java:64)
+        at dungeonmania.controllerTest.GamemodesTest.testPeacefulNoDamage(GamemodesTest.java:20)
+FAILURE
+DONE
+Test 1-2
+
+GamemodesTest > 1-2 Testing zombies spawn every 15 ticks in hard mode FAILED
+    org.opentest4j.AssertionFailedError: expected: <1> but was: <0>
+        at app//org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:55)
+        at app//org.junit.jupiter.api.AssertionUtils.failNotEqual(AssertionUtils.java:62)
+        at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:166)
+        at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:161)
+        at app//org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:628)
+        at app//dungeonmania.controllerTest.GamemodesTest.testHardZombieSpawning(GamemodesTest.java:40)
+FAILURE
+DONE
+Test 1-3
+
+GamemodesTest > 1-3 Test invincibility potions don't work in hard mode FAILED
+    java.lang.IllegalArgumentException: hard is not a valid game mode.
+        at dungeonmania.DungeonManiaController.newGame(DungeonManiaController.java:64)
+        at dungeonmania.controllerTest.GamemodesTest.testHardInvincibility(GamemodesTest.java:68)
+
+ZombieTest > 1-3 Testing zombies spawn with armour intermittently (at least once every 200 ticks) FAILED
+    java.lang.IllegalArgumentException: standard is not a valid game mode.
+        at dungeonmania.DungeonManiaController.newGame(DungeonManiaController.java:64)
+        at dungeonmania.controllerTest.ZombieTest.testZombiesHaveArmour(ZombieTest.java:67)
+FAILURE
+DONE
+Test 2-1
+
+ZombieTest > 2-1 Testing movement of zombies FAILED
+    java.lang.IllegalArgumentException: standard is not a valid game mode.
+        at dungeonmania.DungeonManiaController.newGame(DungeonManiaController.java:64)
+        at dungeonmania.controllerTest.ZombieTest.testZombieMovement(ZombieTest.java:22)
+FAILURE
+DONE
+Test 2-2
+
+ZombieTest > 2-2 Testing zombies cannot move through boulders and walls FAILED
+    java.lang.IllegalArgumentException: standard is not a valid game mode.
+        at dungeonmania.DungeonManiaController.newGame(DungeonManiaController.java:64)
+        at dungeonmania.controllerTest.ZombieTest.testZombieNotMovingThroughBlockingEntities(ZombieTest.java:50)
+FAILURE
+DONE
+Test 2-3
+SUCCESS
+DONE
+Test 2-4
+
+ZombieTest > ZombieSpawnerTest > Testing zombie spawners spawn zombies every 20 ticks FAILED
+    java.lang.IllegalArgumentException: standard is not a valid game mode.
+        at dungeonmania.DungeonManiaController.newGame(DungeonManiaController.java:64)
+        at dungeonmania.controllerTest.ZombieTest$ZombieSpawnerTest.testZombieSpawning(ZombieTest.java:92)
+FAILURE
+DONE
+Test 2-5
+
+ZombieTest > ZombieSpawnerTest > Testing destroying zombie spawners FAILED
+    java.lang.IllegalArgumentException: standard is not a valid game mode.
+        at dungeonmania.DungeonManiaController.newGame(DungeonManiaController.java:64)
+        at dungeonmania.controllerTest.ZombieTest$ZombieSpawnerTest.testZombieSpawnerDestruction(ZombieTest.java:127)
+FAILURE
+DONE
+Test 3-1
+
+MercenaryTest > 3-1 Test mercenary spawning FAILED
+    java.lang.IllegalArgumentException: standard is not a valid game mode.
+        at dungeonmania.DungeonManiaController.newGame(DungeonManiaController.java:64)
+        at dungeonmania.controllerTest.MercenaryTest.testMercenarySpawning(MercenaryTest.java:24)
+FAILURE
+DONE
+Test 3-2
+
+MercenaryTest > 3-2 Testing mercenaries cannot move through boulders and walls FAILED
+    java.lang.IllegalArgumentException: standard is not a valid game mode.
+        at dungeonmania.DungeonManiaController.newGame(DungeonManiaController.java:64)
+        at dungeonmania.controllerTest.MercenaryTest.testMercenaryNotMovingThroughBlockingEntities(MercenaryTest.java:48)
+FAILURE
+DONE
+Test 3-3
+
+MercenaryTest > Testing bribing a mercenary ensures there is no battle FAILED
+    java.lang.IllegalArgumentException: standard is not a valid game mode.
+        at dungeonmania.DungeonManiaController.newGame(DungeonManiaController.java:64)
+        at dungeonmania.controllerTest.MercenaryTest.testMercenaryBribing(MercenaryTest.java:65)
+FAILURE
+DONE
+Test 3-4
+
+MercenaryTest > Testing mercenaries spawn with armour FAILED
+    java.lang.IllegalArgumentException: standard is not a valid game mode.
+        at dungeonmania.DungeonManiaController.newGame(DungeonManiaController.java:64)
+        at dungeonmania.controllerTest.MercenaryTest.testMercenarySpawningWithArmour(MercenaryTest.java:93)
+FAILURE
+DONE
+Test 4-1
+
+CollectablesTest > 4-1 Testing picking up all types of collectables FAILED
+    java.lang.IllegalArgumentException: standard is not a valid game mode.
+        at dungeonmania.DungeonManiaController.newGame(DungeonManiaController.java:64)
+        at dungeonmania.controllerTest.CollectablesTest.testCollectablePickup(CollectablesTest.java:24)
+FAILURE
+DONE
+Test 4-2
+
+CollectablesTest > 4-2 Test picking up a key puts the key in the inventory FAILED
+    java.lang.IllegalArgumentException: standard is not a valid game mode.
+        at dungeonmania.DungeonManiaController.newGame(DungeonManiaController.java:64)
+        at dungeonmania.controllerTest.CollectablesTest.testKeyInInventory(CollectablesTest.java:44)
+FAILURE
+DONE
+Test 4-3
+
+CollectablesTest > 4-3 Test invisibility potions ensure battles do not occur FAILED
+    java.lang.IllegalArgumentException: standard is not a valid game mode.
+        at dungeonmania.DungeonManiaController.newGame(DungeonManiaController.java:64)
+        at dungeonmania.controllerTest.CollectablesTest.testInvisibilityPotion(CollectablesTest.java:68)
+FAILURE
+DONE
+Test 4-4
+
+CollectablesTest > 4-4 Test invincibility potions cause enemies to run away FAILED
+    java.lang.IllegalArgumentException: standard is not a valid game mode.
+        at dungeonmania.DungeonManiaController.newGame(DungeonManiaController.java:64)
+        at dungeonmania.controllerTest.CollectablesTest.testInvincibilityPotion(CollectablesTest.java:97)
+FAILURE
+DONE
+Test 5-1
+SUCCESS
+DONE
+Test 5-2
+SUCCESS
+DONE
+Test 6-1
+SUCCESS
+DONE
+Test 6-2
+SUCCESS
+DONE
+Test 6-3
+SUCCESS
+DONE
+Test 6-4
+SUCCESS
+DONE
+Test 6-5
+SUCCESS
+DONE
+Test 6-6
+SUCCESS
+DONE
+Test 7-1
+SUCCESS
+DONE
+Test 7-2
+
+BasicGoalsTest > 7-2 Test a map with an enemies goal, but with no enemies is automatically achieved FAILED
+    org.opentest4j.AssertionFailedError: expected: <:enemies> but was: <>
+        at app//org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:55)
+        at app//org.junit.jupiter.api.AssertionUtils.failNotEqual(AssertionUtils.java:62)
+        at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182)
+        at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:177)
+        at app//org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1141)
+        at app//dungeonmania.controllerTest.BasicGoalsTest.testEnemyGoalNoEnemies(BasicGoalsTest.java:49)
+FAILURE
+DONE
+Test 7-3
+
+BasicGoalsTest > 7-3 Testing achieving an enemies goal with a single spider on the map FAILED
+    org.opentest4j.AssertionFailedError: expected: <:enemies> but was: <>
+        at app//org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:55)
+        at app//org.junit.jupiter.api.AssertionUtils.failNotEqual(AssertionUtils.java:62)
+        at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182)
+        at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:177)
+        at app//org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1141)
+        at app//dungeonmania.controllerTest.BasicGoalsTest.testEnemyGoalSpider(BasicGoalsTest.java:73)
+FAILURE
+DONE
+Test 7-4
+
+BasicGoalsTest > 7-4 Test a map with a switch goal, but no switch is automatically achieved FAILED
+    org.opentest4j.AssertionFailedError: expected: <:boulders> but was: <>
+        at app//org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:55)
+        at app//org.junit.jupiter.api.AssertionUtils.failNotEqual(AssertionUtils.java:62)
+        at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182)
+        at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:177)
+        at app//org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1141)
+        at app//dungeonmania.controllerTest.BasicGoalsTest.testSwitchGoalNoSwitch(BasicGoalsTest.java:88)
+FAILURE
+DONE
+Test 7-5
+SUCCESS
+DONE
+Test 7-6
+SUCCESS
+DONE
+Test 7-7
+
+BasicGoalsTest > Test a map with a treasure goal, but no treasure is automatically achieved FAILED
+    org.opentest4j.AssertionFailedError: expected: <:treasure> but was: <>
+        at app//org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:55)
+        at app//org.junit.jupiter.api.AssertionUtils.failNotEqual(AssertionUtils.java:62)
+        at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182)
+        at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:177)
+        at app//org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1141)
+        at app//dungeonmania.controllerTest.BasicGoalsTest.testTreasureGoalNoTreasure(BasicGoalsTest.java:153)
+FAILURE
+DONE
+Test 7-8
+SUCCESS
+DONE
+Test 7-9
+SUCCESS
+DONE
+Test 8-1
+
+MovementTest > 8-1 Test the player can move down FAILED
+    dungeonmania.exceptions.InvalidActionException: Item not in Inventory
+        at app//dungeonmania.inventory.Inventory.tick(Inventory.java:158)
+        at app//dungeonmania.World.tick(World.java:378)
+        at app//dungeonmania.DungeonManiaController.tick(DungeonManiaController.java:158)
+        at app//dungeonmania.controllerTest.MovementTest.testMovement(MovementTest.java:27)
+        at app//dungeonmania.controllerTest.MovementTest.testMovementDown(MovementTest.java:37)
+FAILURE
+DONE
+Test 8-2
+
+MovementTest > 8-2 Test the player can move up FAILED
+    dungeonmania.exceptions.InvalidActionException: Item not in Inventory
+        at app//dungeonmania.inventory.Inventory.tick(Inventory.java:158)
+        at app//dungeonmania.World.tick(World.java:378)
+        at app//dungeonmania.DungeonManiaController.tick(DungeonManiaController.java:158)
+        at app//dungeonmania.controllerTest.MovementTest.testMovement(MovementTest.java:27)
+        at app//dungeonmania.controllerTest.MovementTest.testMovementUp(MovementTest.java:44)
+FAILURE
+DONE
+Test 8-3
+
+MovementTest > 8-3 Test the player can move left FAILED
+    dungeonmania.exceptions.InvalidActionException: Item not in Inventory
+        at app//dungeonmania.inventory.Inventory.tick(Inventory.java:158)
+        at app//dungeonmania.World.tick(World.java:378)
+        at app//dungeonmania.DungeonManiaController.tick(DungeonManiaController.java:158)
+        at app//dungeonmania.controllerTest.MovementTest.testMovement(MovementTest.java:27)
+        at app//dungeonmania.controllerTest.MovementTest.testMovementLeft(MovementTest.java:51)
+FAILURE
+DONE
+Test 8-4
+
+MovementTest > 8-4 Test the player can move right FAILED
+    dungeonmania.exceptions.InvalidActionException: Item not in Inventory
+        at app//dungeonmania.inventory.Inventory.tick(Inventory.java:158)
+        at app//dungeonmania.World.tick(World.java:378)
+        at app//dungeonmania.DungeonManiaController.tick(DungeonManiaController.java:158)
+        at app//dungeonmania.controllerTest.MovementTest.testMovement(MovementTest.java:27)
+        at app//dungeonmania.controllerTest.MovementTest.testMovementRight(MovementTest.java:58)
+FAILURE
+DONE
+Test 9-1
+SUCCESS
+DONE
+Test 9-2
+SUCCESS
+DONE
+Test 9-3
+SUCCESS
+DONE
+Test 10-1
+SUCCESS
+DONE
+Test 10-2
+SUCCESS
+DONE
+Test 10-3
+SUCCESS
+DONE
+Test 10-4
+SUCCESS
+DONE
+Test 10-5
+
+BombsTest > Test placing a bomb on a map cardinally adjacent to an active switch causes the bomb to detonate, removing surrounding entites except for the player FAILED
+    org.opentest4j.AssertionFailedError: expected: <0> but was: <1>
+        at app//org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:55)
+        at app//org.junit.jupiter.api.AssertionUtils.failNotEqual(AssertionUtils.java:62)
+        at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:150)
+        at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:145)
+        at app//org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:527)
+        at app//dungeonmania.controllerTest.BombsTest.testBombPlaceMapCardinallyAdjacentActiveSwitch(BombsTest.java:130)
+FAILURE
+DONE
+Test 10-6
+SUCCESS
+DONE
+Test 10-7
+SUCCESS
+DONE
+Test 10-8
+SUCCESS
+DONE
+Test 11-1
+
+BouldersTest > 11-1 Test pushing a boulder FAILED
+    java.lang.IllegalArgumentException: standard is not a valid game mode.
+        at dungeonmania.DungeonManiaController.newGame(DungeonManiaController.java:64)
+        at dungeonmania.controllerTest.BouldersTest.testPushBoulder(BouldersTest.java:28)
+FAILURE
+DONE
+Test 11-2
+
+BouldersTest > 11-2 Test pushing a boulder into a wall FAILED
+    java.lang.IllegalArgumentException: standard is not a valid game mode.
+        at dungeonmania.DungeonManiaController.newGame(DungeonManiaController.java:64)
+        at dungeonmania.controllerTest.BouldersTest.testPushBoulderIntoWall(BouldersTest.java:40)
+FAILURE
+DONE
+Test 11-3
+
+BouldersTest > 11-3 Test the player is unable to push two boulders FAILED
+    java.lang.IllegalArgumentException: standard is not a valid game mode.
+        at dungeonmania.DungeonManiaController.newGame(DungeonManiaController.java:64)
+        at dungeonmania.controllerTest.BouldersTest.testPushTwoBoulders(BouldersTest.java:53)
+FAILURE
+DONE
+Test 12-1
+
+SaveLoadTest > 12-1 Test saving and loading a simple maze map FAILED
+    java.lang.IllegalArgumentException: standard is not a valid game mode.
+        at dungeonmania.DungeonManiaController.newGame(DungeonManiaController.java:64)
+        at dungeonmania.controllerTest.SaveLoadTest.testMazeSave(SaveLoadTest.java:20)
+FAILURE
+DONE
+Test 12-2
+
+SaveLoadTest > 12-2 Test saving and loading a map with boulders and switches FAILED
+    java.lang.IllegalArgumentException: standard is not a valid game mode.
+        at dungeonmania.DungeonManiaController.newGame(DungeonManiaController.java:64)
+        at dungeonmania.controllerTest.SaveLoadTest.testBouldersSave(SaveLoadTest.java:38)
+FAILURE
+DONE
+Test 12-3
+
+SaveLoadTest > 12-3 Test saving and loading a map with enemies and collectables FAILED
+    java.lang.IllegalArgumentException: standard is not a valid game mode.
+        at dungeonmania.DungeonManiaController.newGame(DungeonManiaController.java:64)
+        at dungeonmania.controllerTest.SaveLoadTest.testAdvancedSave(SaveLoadTest.java:57)
+FAILURE
+DONE
+Test 12-4
+
+SaveLoadTest > 12-4 Test saving on a map containing all types of entities FAILED
+    java.lang.IllegalArgumentException: standard is not a valid game mode.
+        at dungeonmania.DungeonManiaController.newGame(DungeonManiaController.java:64)
+        at dungeonmania.controllerTest.SaveLoadTest.testSaveAllEntities(SaveLoadTest.java:75)
+FAILURE
+DONE
+Test 13-1
+SUCCESS
+DONE
+Test 13-2
+SUCCESS
+DONE
+Test 13-3
+SUCCESS
+DONE
+Test 13-4
+SUCCESS
+DONE
+Test 13-5
+SUCCESS
+DONE
+Test 13-6
+SUCCESS
+DONE
+Test 13-7
+SUCCESS
+DONE
+Test 14-1
+
+InterfaceTest > 14-1 Testing newGame interface method, normal operation FAILED
+    java.lang.IllegalArgumentException: standard is not a valid game mode.
+        at dungeonmania.DungeonManiaController.newGame(DungeonManiaController.java:64)
+        at dungeonmania.controllerTest.InterfaceTest.testNewGameInterfaceNormalOperation(InterfaceTest.java:22)
+FAILURE
+DONE
+Test 14-2
+SUCCESS
+DONE
+Test 14-3
+SUCCESS
+DONE
+Test 14-4
+
+InterfaceTest > TickInterfaceTest > 14-4 Testing tick interface method, normal operation FAILED
+    java.lang.IllegalArgumentException: standard is not a valid game mode.
+        at dungeonmania.DungeonManiaController.newGame(DungeonManiaController.java:64)
+        at dungeonmania.controllerTest.InterfaceTest$TickInterfaceTest.testTickInterfaceNormalOperation(InterfaceTest.java:61)
+FAILURE
+DONE
+Test 14-5
+
+InterfaceTest > TickInterfaceTest > 14-5 Testing tick with an invalid ite FAILED
+    java.lang.IllegalArgumentException: standard is not a valid game mode.
+        at dungeonmania.DungeonManiaController.newGame(DungeonManiaController.java:64)
+        at dungeonmania.controllerTest.InterfaceTest$TickInterfaceTest.testTickInterfaceInvalidItem(InterfaceTest.java:75)
+FAILURE
+DONE
+Test 14-6
+
+InterfaceTest > TickInterfaceTest > 14-6 Testing tick with an item that is not in the player's inventory FAILED
+    java.lang.IllegalArgumentException: standard is not a valid game mode.
+        at dungeonmania.DungeonManiaController.newGame(DungeonManiaController.java:64)
+        at dungeonmania.controllerTest.InterfaceTest$TickInterfaceTest.testTickInterfaceItemNotInInventory(InterfaceTest.java:87)
+FAILURE
+DONE
+Test 15-1
+SUCCESS
+DONE
+Test 15-2
+SUCCESS
+DONE
+Test 15-3
+SUCCESS
+DONE
+Test 15-4
+SUCCESS
+DONE
+Test 15-5
+SUCCESS
+DONE
+Test 15-6
+SUCCESS
+DONE
+Test 15-7
+SUCCESS
+DONE
+Test 15-8
+
+ComplexGoalsTest > 15-8 Testing a map with ENEMIES or EXIT goal FAILED
+    org.opentest4j.AssertionFailedError: expected: <(:exit OR :enemies)> but was: <>
+        at app//org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:55)
+        at app//org.junit.jupiter.api.AssertionUtils.failNotEqual(AssertionUtils.java:62)
+        at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182)
+        at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:177)
+        at app//org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1141)
+        at app//dungeonmania.controllerTest.ComplexGoalsTest.testExitOrEnemyGoal(ComplexGoalsTest.java:155)
+FAILURE
+DONE
+Test 15-9
+
+ComplexGoalsTest > 15-9 Testing a map with EXIT or SWITCH goal FAILED
+    org.opentest4j.AssertionFailedError: expected: <(:exit OR :boulders)> but was: <>
+        at app//org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:55)
+        at app//org.junit.jupiter.api.AssertionUtils.failNotEqual(AssertionUtils.java:62)
+        at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182)
+        at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:177)
+        at app//org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1141)
+        at app//dungeonmania.controllerTest.ComplexGoalsTest.testExitOrSwitchGoal(ComplexGoalsTest.java:166)
+FAILURE
+DONE
+Test 15-10
+SUCCESS
+DONE
+Test 15-11
+
+ComplexGoalsTest > 15-11 Testing a map with ENEMIES or SWITCH goal FAILED
+    org.opentest4j.AssertionFailedError: expected: <(:enemies OR :boulders)> but was: <>
+        at app//org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:55)
+        at app//org.junit.jupiter.api.AssertionUtils.failNotEqual(AssertionUtils.java:62)
+        at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182)
+        at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:177)
+        at app//org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1141)
+        at app//dungeonmania.controllerTest.ComplexGoalsTest.testEnemiesOrSwitchGoal(ComplexGoalsTest.java:189)
+FAILURE
+DONE
+Test 15-12
+
+ComplexGoalsTest > 15-12 Testing a map with ENEMIES or TREASURE goal FAILED
+    org.opentest4j.AssertionFailedError: expected: <(:enemies OR :treasure)> but was: <>
+        at app//org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:55)
+        at app//org.junit.jupiter.api.AssertionUtils.failNotEqual(AssertionUtils.java:62)
+        at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182)
+        at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:177)
+        at app//org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1141)
+        at app//dungeonmania.controllerTest.ComplexGoalsTest.testEnemiesOrTreasureGoal(ComplexGoalsTest.java:201)
+FAILURE
+DONE
+Test 15-13
+
+ComplexGoalsTest > 15-13 Testing a map with SWTICH or TREASURE goal FAILED
+    org.opentest4j.AssertionFailedError: expected: <(:boulders OR :treasure)> but was: <>
+        at app//org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:55)
+        at app//org.junit.jupiter.api.AssertionUtils.failNotEqual(AssertionUtils.java:62)
+        at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182)
+        at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:177)
+        at app//org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1141)
+        at app//dungeonmania.controllerTest.ComplexGoalsTest.testSwitchOrTreasureGoal(ComplexGoalsTest.java:213)
+FAILURE
+DONE
+Test 15-14
+
+ComplexGoalsTest > 15-14 Testing a map with EXIT or TREASURE or SWITCH goal FAILED
+    org.opentest4j.AssertionFailedError: expected: <(:exit OR (:enemies OR (:boulders OR :treasure)))> but was: <>
+        at app//org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:55)
+        at app//org.junit.jupiter.api.AssertionUtils.failNotEqual(AssertionUtils.java:62)
+        at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182)
+        at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:177)
+        at app//org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1141)
+        at app//dungeonmania.controllerTest.ComplexGoalsTest.testEnemiesOrExitOrTreasureOrSwitchGoal(ComplexGoalsTest.java:232)
+FAILURE
+DONE
+Test 15-15
+SUCCESS
+DONE
+Test 15-16
+
+ComplexGoalsTest > 15-16 Testing a map with ENEMEIS AND (TREASURE OR SWITCH) goal FAILED
+    org.opentest4j.AssertionFailedError: expected: <51> but was: <5>
+        at app//org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:55)
+        at app//org.junit.jupiter.api.AssertionUtils.failNotEqual(AssertionUtils.java:62)
+        at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:150)
+        at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:145)
+        at app//org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:527)
+        at app//dungeonmania.controllerTest.ComplexGoalsTest.testExitAndEnemiesAndTreasureOrSwitchGoal(ComplexGoalsTest.java:269)
+FAILURE
+DONE
+Test 16-1
+
+BattleTest > 16-1 Test player battles spider and player or zombie dies FAILED
+    org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
+        at app//org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:55)
+        at app//org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:40)
+        at app//org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:35)
+        at app//org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:179)
+        at app//dungeonmania.controllerTest.BattleTest.testPlayerOrSpiderDiesWhenBattle(BattleTest.java:41)
+FAILURE
+DONE
+Test 16-2
+SUCCESS
+DONE
+Test 16-3
+FAILURE
+DONE
+Test 16-4
+
+BattleTest > 16-4 Test player wins a battle against a spider with an invinicibility potion FAILED
+    org.opentest4j.AssertionFailedError: expected: <0> but was: <1>
+        at app//org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:55)
+        at app//org.junit.jupiter.api.AssertionUtils.failNotEqual(AssertionUtils.java:62)
+        at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:150)
+        at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:145)
+        at app//org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:527)
+        at app//dungeonmania.controllerTest.BattleTest.testPlayerWinsSpiderBattleWithInvincibilityPotion(BattleTest.java:116)
+FAILURE
+DONE
+Test 16-5
+
+BattleTest > 16-5 Test player wins a battle against a zombie with an invincibility potion FAILED
+    org.opentest4j.AssertionFailedError: expected: <0> but was: <1>
+        at app//org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:55)
+        at app//org.junit.jupiter.api.AssertionUtils.failNotEqual(AssertionUtils.java:62)
+        at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:150)
+        at app//org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:145)
+        at app//org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:527)
+        at app//dungeonmania.controllerTest.BattleTest.testPlayerWinsZombieBattleWithInvincibilityPotion(BattleTest.java:140)
+FAILURE
+DONE
+Test 16-6
+FAILURE
+DONE
+Test 16-7
+FAILURE
+DONE
