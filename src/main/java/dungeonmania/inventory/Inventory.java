@@ -10,7 +10,6 @@ import java.util.stream.IntStream;
 
 import org.json.JSONArray;
 
-import dungeonmania.MindControlled;
 import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.response.models.ItemResponse;
@@ -82,12 +81,7 @@ public class Inventory {
         //consumableItems.remove(idToRemove);
     }
     
-    public void useSceptre(MindControlled m) {
-        for (CollectableEntity c : collectableItems.values()) {
-            if (c instanceof Sceptre) {
-                ((Sceptre) c).useMindControl(m);
-            }
-        }
+    public void useSceptre() {
     }
 
     /**
@@ -400,13 +394,8 @@ public class Inventory {
      * @param itemType the type of the item to be checked
      * @return true if there is a weapon, otherwise false
      */
-    public boolean hasItem(String type) {
-        for (CollectableEntity e : collectableItems.values()) {
-            if (e.getType().equals("type")) {
-                return true;
-            }
-        }
-        return false;
+    public boolean hasItem(String itemType) {
+        return collectableItems.values().stream().anyMatch(e -> e.getType().equals(itemType));
     }
 
 }

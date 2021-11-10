@@ -750,8 +750,7 @@ public class World {
         inventory.useByType(type);
     }
 
-    public void MindControl(MindControlled m) {
-        inventory.useSceptre(m);
+    public void useSceptre() {
     }
 
     public int getTickCount() {

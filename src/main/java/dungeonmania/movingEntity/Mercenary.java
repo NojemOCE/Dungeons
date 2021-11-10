@@ -1,9 +1,5 @@
 package dungeonmania.movingEntity;
 
-import dungeonmania.MindControlled;
-import dungeonmania.collectable.Sceptre;
-import dungeonmania.util.*;
-
 import org.json.JSONObject;
 
 import dungeonmania.World;
@@ -43,7 +39,9 @@ public class Mercenary extends MercenaryComponent {
      */
     public void interact(World world) throws InvalidActionException {
         if (getInteractable()) {
-            if (world.numItemInInventory("treasure") >= GOLD_TO_BRIBE) {
+            if (world.inInventory("sceptre")) {
+
+            } else if (world.numItemInInventory("treasure") >= GOLD_TO_BRIBE) {
                 for (int i = 0; i < GOLD_TO_BRIBE; i++) {
                     world.useByType("treasure");
                 }
