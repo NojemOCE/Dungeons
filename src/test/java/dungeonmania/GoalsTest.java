@@ -44,11 +44,11 @@ public class GoalsTest {
         d = c.tick(null, Direction.DOWN);
         assertEquals("(:enemies OR :exit)", d.getGoals());
 
-        d = c.tick(null, Direction.DOWN);
+        /*d = c.tick(null, Direction.DOWN);
         assertEquals("(:enemies OR :exit)", d.getGoals());
         
         d = c.tick(null, Direction.DOWN);
-        assertEquals("(:enemies OR :exit)", d.getGoals());
+        assertEquals("(:enemies OR :exit)", d.getGoals());*/
 
         //Battle ended, goal achieved
         d = c.tick(null, Direction.DOWN);
@@ -65,18 +65,14 @@ public class GoalsTest {
         d = c.tick(null, Direction.UP);
         assertEquals("(:enemies AND :exit)", d.getGoals());
 
-        //Mercenary and player meet on the same square (battle)
+        //Mercenary and player meet on the same square and battle
         d = c.tick(null, Direction.RIGHT);
         assertEquals("(:enemies AND :exit)", d.getGoals());
 
-        //In battle
-        d = c.tick(null, Direction.DOWN);
-        assertEquals("(:enemies AND :exit)", d.getGoals());
-
-        d = c.tick(null, Direction.DOWN);
-        assertEquals("(:enemies AND :exit)", d.getGoals());
-
         //Battle ended, enemies goal achieved
+        d = c.tick(null, Direction.UP);
+        assertEquals(":exit", d.getGoals());
+        
         d = c.tick(null, Direction.DOWN);
         assertEquals(":exit", d.getGoals());
 
@@ -98,17 +94,14 @@ public class GoalsTest {
         assertEquals(":enemies", d.getGoals());
 
         
-        // Mercenary and player meet on the same square (battle)
+        // Mercenary and player meet on the same square and battle
         d = c.tick(null, Direction.UP);
         assertEquals("(:enemies AND :exit)", d.getGoals());
 
-        d = c.tick(null, Direction.DOWN);
-        assertEquals("(:enemies AND :exit)", d.getGoals());
-
-        d = c.tick(null, Direction.DOWN);
-        assertEquals("(:enemies AND :exit)", d.getGoals());
-
         //Battle ended, enemies goal achieved
+        d = c.tick(null, Direction.UP);
+        assertEquals(":exit", d.getGoals());
+
         d = c.tick(null, Direction.DOWN);
         assertEquals(":exit", d.getGoals());
         

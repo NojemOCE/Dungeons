@@ -163,7 +163,7 @@ public class SpiderTest {
 
         assertDoesNotThrow(()-> world.tick(null, Direction.DOWN));
 
-        d = world.tick(null, Direction.DOWN);
+        d = world.tick(null, Direction.UP);
 
         spiderCount = 0;
         // Check one spider has been killed
@@ -550,10 +550,10 @@ public class SpiderTest {
             }
         }
 
-        d = world.tick(null, Direction.DOWN);
+        d = world.tick(null, Direction.RIGHT);
         for (EntityResponse e : d.getEntities()) {
             if (e.getType().equals("player")) {
-                assertEquals(new Position(1, 2), e.getPosition());
+                assertEquals(new Position(2, 1), e.getPosition());
             }
             else if (e.getType().equals("spider")) {
                 assertEquals(new Position(1, 2), e.getPosition());
@@ -566,7 +566,7 @@ public class SpiderTest {
         d = world.tick(null, Direction.DOWN);
         for (EntityResponse e : d.getEntities()) {
             if (e.getType().equals("player")) {
-                assertEquals(new Position(1, 2), e.getPosition());
+                assertEquals(new Position(2, 2), e.getPosition());
             }
             else {
                 assertEquals("wall", e.getType());
