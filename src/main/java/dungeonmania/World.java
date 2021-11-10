@@ -266,6 +266,7 @@ public class World {
         // spawn relevant enemies at the specified tick intervals
         tickSpiderSpawn();
         tickZombieToastSpawn();
+        tickSpectre();
 
         // Now evaluate goals. Goal should never be null, but add a check incase there is an error in the input file
 
@@ -282,6 +283,9 @@ public class World {
         return worldDungeonResponse();
     }
 
+    private void tickSpectre() {
+        inventory.tickSpectre();
+    }
 
     /**
      * Helper function to create a new spider at relevant ticks
@@ -750,7 +754,8 @@ public class World {
         inventory.useByType(type);
     }
 
-    public void useSceptre() {
+    public void useSceptre(MercenaryComponent m) {
+        inventory.useSceptre(m);
     }
 
     public int getTickCount() {

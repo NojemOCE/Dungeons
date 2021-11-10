@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import dungeonmania.movingEntity.MercenaryComponent;
 import org.json.JSONArray;
 
 import dungeonmania.collectable.*;
@@ -81,7 +82,8 @@ public class Inventory {
         //consumableItems.remove(idToRemove);
     }
     
-    public void useSceptre() {
+    public void useSceptre(MercenaryComponent m) {
+        getSceptre().useMindControl(m);
     }
 
     /**
@@ -154,8 +156,15 @@ public class Inventory {
         return collectableItems.values().stream().anyMatch(e -> e instanceof Sword);
     }
 
-    public boolean hasSceptre() {
-        return collectableItems.values().stream().anyMatch(e -> e instanceof Sceptre);
+    public Sceptre getSceptre() {
+        for (CollectableEntity c : collectableItems.values()) {
+            if (c instanceof Sceptre) return (Sceptre) c;
+        }
+        return null;
+    }
+
+    public void tickSpectre() {
+        getSceptre().tickMindControlled();
     }
 
     public List<ItemResponse> getInventoryResponse() {
