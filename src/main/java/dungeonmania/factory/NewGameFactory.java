@@ -161,7 +161,7 @@ public class NewGameFactory extends Factory {
         else if (type.equals("one_ring")) {
             OneRing e = new OneRing(x, y, id);
             return e;
-        }
+        } 
         
 
         return null;
