@@ -9,10 +9,6 @@ import org.json.JSONObject;
 
 import dungeonmania.Entity;
 import dungeonmania.World;
-import dungeonmania.movingEntity.MovementStrategies.CircleMovement;
-import dungeonmania.movingEntity.MovementStrategies.FollowPlayer;
-import dungeonmania.movingEntity.MovementStrategies.RandomMovement;
-import dungeonmania.movingEntity.MovementStrategies.RunAway;
 import dungeonmania.movingEntity.States.NormalState;
 import dungeonmania.movingEntity.States.State;
 import dungeonmania.movingEntity.States.SwampState;
@@ -25,8 +21,6 @@ import dungeonmania.staticEntity.SwampTile;
 public abstract class MovingEntity extends Entity {
     private HealthPoint healthPoint;
     private double attackDamage;
-
-    private int speed;
 
     protected MovementStrategy movementStrategy;
     protected MovementStrategy defaultMovementStrategy;
@@ -46,7 +40,6 @@ public abstract class MovingEntity extends Entity {
         super(position, id, type);
         this.healthPoint = healthPoint;
         this.attackDamage = attackDamage;
-        this.speed = 0;
         this.state = new NormalState();
     }
 
@@ -159,26 +152,6 @@ public abstract class MovingEntity extends Entity {
         return this.movementStrategy;
     }
 
-    /**
-     * Gets the speed of the moving entity
-     * @return speed of the moving entity
-     */
-    public int getSpeed() {
-        return speed;
-    }
-
-    /**
-     * Sets the speed of the moving entity
-     * @param speed speed to set
-     */
-    public void setSpeed(int speed) {
-        this.speed = speed;
-    }
-
-    /**
-     * Gets the moving entity's default movement strategy
-     * @return default movement strategy of moving entity
-     */
     public MovementStrategy getDefaultMovementStrategy() {
         return defaultMovementStrategy;
     }

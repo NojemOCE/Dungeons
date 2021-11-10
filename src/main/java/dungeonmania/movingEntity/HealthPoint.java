@@ -34,6 +34,10 @@ public class HealthPoint {
         this.health = health;
     }
 
+    public void setMaxHealth(double health) {
+        this.maxHealth = health;
+    }
+
     /**
      * Gains health by amount
      * @param health health

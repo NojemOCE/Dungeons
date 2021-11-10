@@ -123,7 +123,6 @@ public class LoadGameFactory extends Factory {
             Zombie e = new Zombie(x, y, id, entityHP, defaultMovement, currentMovement, state);
             return e;
         } 
-        
         else if (type.equals("mercenary")) {
             boolean isAlly = obj.getBoolean("ally");
             Mercenary e = new Mercenary(x, y, id, entityHP, defaultMovement, currentMovement, isAlly, state);

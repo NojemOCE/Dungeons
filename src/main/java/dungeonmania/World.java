@@ -25,9 +25,8 @@ import dungeonmania.movingEntity.*;
 import dungeonmania.movingEntity.States.SwampState;
 import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
-import dungeonmania.util.Position;
 import dungeonmania.factory.*;
-
+import dungeonmania.util.Position;
 
 public class World {
 
@@ -44,6 +43,7 @@ public class World {
     private String dungeonName;
     private Factory factory;
 
+
     static final int MAX_SPIDERS = 6;
     static final int SPIDER_SPAWN = 20;
     static final int MECERNARY_SPAWN = 25;
@@ -51,7 +51,6 @@ public class World {
     static final double ZOMBIE_ARMOUR_DROP = 0.2;
     static final double ONE_RING_DROP = 0.1;
     private int tickCount = 0;
-    
     
     /**
      * Constructor for world that takes the string of the dungeon name to build 
@@ -70,6 +69,8 @@ public class World {
         }
         this.inventory = new Inventory();
         this.factory = new NewGameFactory(gamemode);
+
+
     }
 
     public World(String dungeonName, String gameMode, String id) {
@@ -94,7 +95,8 @@ public class World {
             // move increment entity count to factory
             // if collectable, add to colletable etc
         }
-        
+
+
         // TODO can we put this in a shared method
         if (worldData.has("goal-condition")) {
             JSONObject g = worldData.getJSONObject("goal-condition");
@@ -203,8 +205,8 @@ public class World {
         if (!Objects.isNull(itemUsed)) {
             if (!(inventory.getType(itemUsed) == null) && inventory.getType(itemUsed).equals("bomb")) {
                 inventory.use(itemUsed);
-                Entity newBomb = factory.createEntity(player.getX(), player.getY(), "placed_bomb", this);
-                staticEntities.put(newBomb.getId(), (PlacedBomb) newBomb);
+                PlacedBomb newBomb = new PlacedBomb(player.getX(), player.getY(), "bomb" + String.valueOf(incrementEntityCount()));
+                staticEntities.put(newBomb.getId(), newBomb);
             } else {
                 CollectableEntity potion = inventory.tick(itemUsed);
                 if (!Objects.isNull(potion)) {
@@ -212,32 +214,27 @@ public class World {
                 }
             }
         }
+        
 
-        if (!Objects.isNull(currentBattle)) {
-            currentBattle.battleTick(inventory);
-            if (!currentBattle.isActiveBattle()) {
-                if (currentBattle.getPlayerWins()) {
-                    dropBattleReward();
-                    movingEntities.remove(currentBattle.getCharacter().getId());
-                    player.unsubscribePassiveObserver((PlayerPassiveObserver)currentBattle.getCharacter());
-                    currentBattle = null;
-                } else {
-                    this.player = null; // will end game in dungeon response
-                    // needs to return early
-                    return worldDungeonResponse();
+        player.tick(movementDirection, this);
+        for (MovingEntity me : movingEntities.values()) {
+            if (me.getPosition().equals(player.getPosition())) {
+                currentBattle = player.battle(me,this, gamemode);
+                if (!Objects.isNull(currentBattle)) {
+                    currentBattle.battleTick(inventory);
+                    if (currentBattle.getPlayerWins()) {
+                        dropBattleReward();
+    
+                    } else {
+                        this.player = null; // will end game in dungeon response
+                        // needs to return early
+                        return worldDungeonResponse();
+                    } // if invisible it will add null
                 }
+                
             }
         }
-        
-        else  {
-            player.tick(movementDirection, this);
-            for (MovingEntity me : movingEntities.values()) {
-                if (me.getPosition().equals(player.getPosition())) {
-                    currentBattle = player.battle(me, gamemode); // if invisible it will add null
-                }
-            }
-        }
-        
+    
         // collecting the collectable entity if it exists on the current position
         CollectableEntity collectable = getCollectableEntity(player.getPosition());
         if(!Objects.isNull(collectable)) {
@@ -248,9 +245,21 @@ public class World {
 
         // now move all entities 
         for (MovingEntity me: movingEntities.values()) {
+            if (!Objects.isNull(currentBattle) && currentBattle.getCharacter().equals(me)) continue;
             me.move(this);
             if (me.getPosition().equals(player.getPosition())) {
-                currentBattle = player.battle(me, gamemode); // if invisible it will add null
+                currentBattle = player.battle(me,this, gamemode);
+                if (!Objects.isNull(currentBattle)) {
+                    currentBattle.battleTick(inventory);
+                    if (currentBattle.getPlayerWins()) {
+                        dropBattleReward();
+    
+                    } else {
+                        this.player = null; // will end game in dungeon response
+                        // needs to return early
+                        return worldDungeonResponse();
+                    } // if invisible it will add null
+                }
             }
         }
 
@@ -262,7 +271,12 @@ public class World {
         if (!(goals == null)){
             goals.evaluate(this);
         }
-        
+        if (!Objects.isNull(currentBattle)) {
+            movingEntities.remove(currentBattle.getCharacter().getId());
+            player.unsubscribePassiveObserver((PlayerPassiveObserver)currentBattle.getCharacter());
+            currentBattle = null;
+        }
+
         tickCount++;
         return worldDungeonResponse();
     }
@@ -294,9 +308,9 @@ public class World {
             return;
         }
 
-        Entity e = factory.createEntity(x, y, "spider", this);
-        movingEntities.put(e.getId(), (Spider) e);
-        player.subscribePassiveObserver((PlayerPassiveObserver)(Spider)e);
+        Spider newSpider = new Spider(x, y, "spider" + String.valueOf(incrementEntityCount()));
+        movingEntities.put(newSpider.getId(), newSpider);
+        player.subscribePassiveObserver((PlayerPassiveObserver)newSpider);
 
     }
     
@@ -344,10 +358,9 @@ public class World {
             // no valid spawn positions
             return;
         }
-
-        Entity newZombie = factory.createEntity(newPos.getX(), newPos.getY(), "zombie_toast", this);
-        movingEntities.put(newZombie.getId(), (Zombie) newZombie);
-        player.subscribePassiveObserver((PlayerPassiveObserver) (Zombie) newZombie);
+        Zombie newZombie = new Zombie(newPos.getX(), newPos.getY(), "zombie_toast" + String.valueOf(incrementEntityCount()));
+        movingEntities.put(newZombie.getId(), newZombie);
+        player.subscribePassiveObserver((PlayerPassiveObserver) newZombie);
     }
     
     /**
@@ -416,10 +429,10 @@ public class World {
         // * the player does not have a weapon and attempts to destroy a spawner
         if (movingEntities.containsKey(entityId)) {
             MovingEntity e = movingEntities.get(entityId);
-            if (!(e instanceof Mercenary)) {
+            if (!(e instanceof MercenaryComponent)) {
                 throw new IllegalArgumentException();
             } else {
-                ((Mercenary) e).interact(this);
+                ((MercenaryComponent) e).interact(this);
             }
         } else if (staticEntities.containsKey(entityId)) {
             StaticEntity e = staticEntities.get(entityId);
@@ -456,13 +469,13 @@ public class World {
 
     /**
      * Returns the static entity that exists in the dungeon at position p (if one exists)
-     * Note, that this only looks at STATIC_LAYER (will not return for floor switch, exit)
+     * Note, that this only looks at layer 1 (will not return for floor switch, exit)
      * @param p position to check
      * @return Static entity at position p
      */
     public StaticEntity getStaticEntity(Position p) {
         for (StaticEntity s: staticEntities.values()) {
-            if (s.getPosition().equals(p) && s.getLayer() == Position.STATIC_LAYER)  {
+            if (s.getPosition().equals(p) && s.getLayer() == 1)  {
                 return s;
             }
         }
@@ -516,14 +529,6 @@ public class World {
     }
 
     /**
-     * Sets the current battle to the provided battle
-     * @param battle
-     */
-    public void setBattle(Battle battle) {
-        this.currentBattle = battle;
-    }
-
-    /**
      * Gets the Player object of the world
      * @return Player of the world
      */
@@ -539,6 +544,7 @@ public class World {
     public boolean inInventory(CollectableEntity item) {
         return inventory.inInventory(item.getId());
     }
+
 
     /**
      * Checks if a key exists in inventory and returns object
@@ -755,8 +761,6 @@ public class World {
      * Loads a saved game with all entities
      */
     public void buildWorldFromFile(JSONObject gameData) {
-        //TODO implement
-
         int tickNo = gameData.getInt("tick-count");
         int entityNo = gameData.getInt("entity-count");
         
@@ -811,15 +815,11 @@ public class World {
             this.player.subscribePassiveObserver((PlayerPassiveObserver)me);
         });        
 
-        if (gameData.has("current-battle")) {
-            JSONObject b = gameData.getJSONObject("current-battle"); 
-            currentBattle = new Battle(this.player, movingEntities.get(b.get("character")), gamemode.isEnemyAttackEnabled());
-        }
-
         int entityCount = factory.getEntityCount();
 
         this.factory = new NewGameFactory(gamemode);
         factory.setEntityCount(entityCount);
+
     }
 
     /**
@@ -837,7 +837,6 @@ public class World {
 
     }
 
-    
     public Position getPlayerPosition() {
         return player.getPosition();
     }
@@ -847,8 +846,17 @@ public class World {
     }
 
     public void setEntityCount(int entityCount) {
-        factory.setEntityCount(entityCount);
-        //this.entityCount = entityCount;
+        this.entityCount = entityCount;
     }
- 
+
+    public double getDistance(Position position) {
+        List<StaticEntity> l = getStaticEntitiesAtPosition(position);
+        for (StaticEntity se : l) {
+            if (se.getType().equals("swamp_tile")) {
+                //return (SwampTile)se.getMovementFactor();
+            }
+        }
+        return 1.0;
+    }
+    
 }

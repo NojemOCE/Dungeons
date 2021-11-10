@@ -156,6 +156,7 @@ public class NewGameFactory extends Factory {
             OneRing e = new OneRing(x, y, id);
             return e;
         }
+        
 
         return null;
     }

@@ -1,12 +1,10 @@
 package dungeonmania.movingEntity;
 
 import dungeonmania.inventory.Inventory;
-import dungeonmania.util.Position;
 
 public class Battle {
     private Player player;
     private MovingEntity character;
-    private Position position;
     
     private boolean enemyAttackEnabled;
     private boolean playerWins;
@@ -30,6 +28,22 @@ public class Battle {
      */
     public void battleTick(Inventory inventory) {
 
+        
+        if (character.getHealthPoint().getHealth() == 0) {
+            endBattle(true);
+            return;
+        } 
+        if (player.getHealthPoint().getHealth() == 0) {
+            if (inventory.hasItem("one_ring")) {
+                inventory.useByType("one_ring");
+                player.getHealthPoint().gainHealth(999);  
+            } else {
+                endBattle(false);
+                return;
+            }
+        }
+
+
         // Base attack modified by inventory weapons
         double playerAttack = inventory.attackModifier(player.getAttackDamage());
         // Character attack modified by players defence weapons
@@ -39,33 +53,19 @@ public class Battle {
         double currentEnemyHealth = character.getHealthPoint().getHealth();
 
         character.defend((currentPlayerHealth * playerAttack)/10);
-        //System.out.println("Player attacks with " + (player.getHealthPoint().getHealth() * playerAttack)/10);
+        //System.out.println("Player attacks with " + (currentPlayerHealth * playerAttack)/10);
         if (enemyAttackEnabled) {
             player.defend((currentEnemyHealth * characterAttack)/10);
 
         }
-        //System.out.println("Enemy attacks with " + (character.getHealthPoint().getHealth() * characterAttack)/10);
+        //System.out.println("Enemy attacks with " + (currentEnemyHealth * characterAttack)/10);
 
         // ally help
         player.alliesInRange().forEach(ally -> {
-
             character.defend((ally.getHealthPoint().getHealth() * ally.getAttackDamage()) / 10);
         });
 
-
-        if (character.getHealthPoint().getHealth() == 0) {
-            endBattle(true);
-        }
-
-        if (player.getHealthPoint().getHealth() == 0) {
-            if (inventory.hasItem("one_ring")) {
-                inventory.useByType("one_ring");
-                player.getHealthPoint().gainHealth(999);  
-                return;
-            }
-            endBattle(false);
-        }
-        // game over
+        battleTick(inventory);
     }
 
     /**
@@ -99,7 +99,6 @@ public class Battle {
      */
     private void endBattle(boolean playerWin) {
         setActiveBattle(false);
-        player.endBattle();
         this.playerWins = playerWin;
     }
 
