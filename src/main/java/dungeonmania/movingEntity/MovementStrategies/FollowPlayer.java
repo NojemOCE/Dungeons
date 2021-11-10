@@ -65,7 +65,8 @@ public class FollowPlayer implements MovementStrategy {
             // now verify the adjacent neighbours
             Set<Position> neighbours = getNeighbours(me, node, world);
             for (Position p : neighbours) {
-                if (!visited.contains(p)) { // for the neighbours that havent been visited
+                if (!visited.contains(p)){ 
+                    // for the neighbours that havent been visited
                     queue.add(p);
                     visited.add(p);
                     //prev.put(p, node);
