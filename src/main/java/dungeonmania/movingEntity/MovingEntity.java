@@ -62,7 +62,15 @@ public abstract class MovingEntity extends Entity {
      * and the old position (no movement) if not
      */
     public Position validMove(Position position, World world) {
-        
+
+        if (position.getX() < world.getXBoundN() || position.getX() > world.getXBound()) {
+            return getPosition();
+        }
+
+        if (position.getY() < world.getYBoundN() || position.getY() > world.getYBound()) {
+            return getPosition();
+        }
+
         // check if there is a static entity in the way
         StaticEntity se = world.getStaticEntity(position);
         if (!Objects.isNull(se)) {
