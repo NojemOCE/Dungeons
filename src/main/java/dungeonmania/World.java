@@ -60,9 +60,10 @@ public class World {
         this.dungeonName = dungeonName;
         this.id = dungeonName;
         this.entityCount = 0;
-        if (gameMode.equals("Hard")) {
+        gameMode = gameMode.toLowerCase();
+        if (gameMode.equals("hard")) {
             this.gamemode = new Hard();
-        } else if (gameMode.equals("Standard")) {
+        } else if (gameMode.equals("standard")) {
             this.gamemode = new Standard();
         } else {
             this.gamemode = new Peaceful();
