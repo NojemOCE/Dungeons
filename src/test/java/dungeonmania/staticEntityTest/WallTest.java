@@ -32,7 +32,7 @@ public class WallTest {
      */
     @Test
     public void walkIntoWall() {
-        World world = new World("wall", "Standard");
+        World world = new World("wall", "Standard", 1);
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "wall" + ".json");
             JSONObject game = new JSONObject(file);

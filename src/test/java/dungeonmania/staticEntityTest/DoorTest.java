@@ -34,7 +34,7 @@ public class DoorTest {
      */
     @Test
     public void keyOpenTest(){
-        World world = new World("key+door", "Standard");
+        World world = new World("key+door", "Standard", 1);
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "key+door" + ".json");
             JSONObject game = new JSONObject(file);
@@ -107,7 +107,7 @@ public class DoorTest {
      */
     @Test
     public void keyNoMatchTest(){
-        World world = new World("key+door-noMatch", "Standard");
+        World world = new World("key+door-noMatch", "Standard", 1);
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "key+door-noMatch" + ".json");
             JSONObject game = new JSONObject(file);

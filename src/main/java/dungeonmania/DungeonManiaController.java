@@ -78,7 +78,9 @@ public class DungeonManiaController {
         if (!dungeons().contains(dungeonName)) throw new IllegalArgumentException(dungeonName  + "is not a dungeon. Please select a valid dungeon.");
         if (!(getGameModes().contains(gameMode))) throw new IllegalArgumentException(gameMode + " is not a valid game mode.");
 
-        World newGame = new World(dungeonName, gameMode);
+        Random ran = new Random();
+
+        World newGame = new World(dungeonName, gameMode, ran.nextInt());
         // create JSON object
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + dungeonName + ".json");
@@ -142,8 +144,10 @@ public class DungeonManiaController {
         try {
             String file = FileLoader.loadFileOutsideOfResources("src/main/savedGames/" + name + ".json");
             JSONObject game = new JSONObject(file);
-            
-            newGame = new World(game.getString("dungeon-name"), game.getString("gamemode"), game.getString("id"));
+
+            Random ran = new Random();
+
+            newGame = new World(game.getString("dungeon-name"), game.getString("gamemode"), game.getString("id"), ran.nextInt());
 
             newGame.buildWorldFromFile(game);
         }

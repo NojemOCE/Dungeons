@@ -45,7 +45,7 @@
         "bow": "images/tileset/items/bow_0.png",
         "shield": "images/tileset/items/shield.png",
         "player": "images/tileset/entities/snowman.png",
-        "placed_bomb": "images/tileset/items/bomb.png",
+        "bomb_placed": "images/tileset/items/bomb.png",
         "assassin": "images/tileset/entities/assassin.png",
         "hydra": "images/tileset/entities/hydra.png",
         "swamp_tile": "images/tileset/entities/swamp_tile.png",

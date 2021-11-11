@@ -42,6 +42,7 @@ public class World {
     private Battle currentBattle;
     private String dungeonName;
     private Factory factory;
+    private int randomSeed;
 
 
     static final int MAX_SPIDERS = 6;
@@ -50,16 +51,22 @@ public class World {
     static final double MERCENARY_ARMOUR_DROP = 0.4;
     static final double ZOMBIE_ARMOUR_DROP = 0.2;
     static final double ONE_RING_DROP = 0.1;
+<<<<<<< src/main/java/dungeonmania/World.java
+    private int tickCount = 1;
+    
+=======
     private int tickCount = 0;
 
+>>>>>>> src/main/java/dungeonmania/World.java
     /**
      * Constructor for world that takes the string of the dungeon name to build
      * and a string for the gamemode (Standard, Peaceful, Hard)
      */
-    public World(String dungeonName, String gameMode) {
+    public World(String dungeonName, String gameMode, int randomSeed) {
         this.dungeonName = dungeonName;
         this.id = dungeonName;
         this.entityCount = 0;
+        this.randomSeed = randomSeed;
         gameMode = gameMode.toLowerCase();
         if (gameMode.equals("hard")) {
             this.gamemode = new Hard();
@@ -69,13 +76,13 @@ public class World {
             this.gamemode = new Peaceful();
         }
         this.inventory = new Inventory();
-        this.factory = new NewGameFactory(gamemode);
+        this.factory = new NewGameFactory(gamemode, (new Random(randomSeed)).nextInt());
 
 
     }
 
-    public World(String dungeonName, String gameMode, String id) {
-        this(dungeonName, gameMode);
+    public World(String dungeonName, String gameMode, String id, int randomSeed) {
+        this(dungeonName, gameMode, randomSeed);
         this.id = id;
         this.factory = new LoadGameFactory(gamemode);
     }
@@ -113,6 +120,10 @@ public class World {
         movingEntities.forEach((id, me) -> {
             player.subscribePassiveObserver((PlayerPassiveObserver)me);
         });
+
+        if (!(goals == null)) {
+            goals.evaluate(this);
+        }
         return worldDungeonResponse();
     }
 
@@ -163,7 +174,7 @@ public class World {
 
 
         if (currentBattle.getCharacter() instanceof Mercenary) {
-            Random ran = new Random();
+            Random ran = new Random(randomSeed);
             int next = ran.nextInt(10);
             if (10 * MERCENARY_ARMOUR_DROP > next)  {
                 // return an armour
@@ -173,7 +184,7 @@ public class World {
         }
 
         else if (currentBattle.getCharacter() instanceof Zombie) {
-            Random ran = new Random();
+            Random ran = new Random(randomSeed);
             int next = ran.nextInt(10);
             if (10 * ZOMBIE_ARMOUR_DROP > next)  {
                 // return an armour
@@ -182,7 +193,7 @@ public class World {
             }
         }
 
-        Random ran = new Random();
+        Random ran = new Random(randomSeed);
         int next = ran.nextInt(10);
         if (10 * ONE_RING_DROP > next)  {
             // return the one ring
@@ -265,8 +276,14 @@ public class World {
         }
 
         // spawn relevant enemies at the specified tick intervals
-        tickSpiderSpawn();
-        tickZombieToastSpawn();
+        List<Entity> newEntities = factory.tick(this);
+
+        for (Entity e: newEntities) {
+            addEntity(e);
+            if (e instanceof MovingEntity) {
+                player.subscribePassiveObserver((PlayerPassiveObserver)e);
+            }
+        }
         inventory.tickSpectre();
 
         // Now evaluate goals. Goal should never be null, but add a check incase there is an error in the input file
@@ -283,45 +300,13 @@ public class World {
         tickCount++;
         return worldDungeonResponse();
     }
-
-    /**
-     * Helper function to create a new spider at relevant ticks
-     */
-    private void tickSpiderSpawn() {
-        if (!(tickCount > 0 && tickCount % SPIDER_SPAWN == 0 && currentSpiders() < MAX_SPIDERS)) {
-            return;
-        }
-
-        Random ran1 = new Random();
-        Random ran2 = new Random();
-
-        int x = ran1.nextInt(factory.getHighestX());
-        int y = ran2.nextInt(factory.getHighestY());
-
-        int numChecks = 0;
-        while (!validSpiderSpawnPosition(new Position(x,y)) && numChecks < 10) {
-            x = ran1.nextInt(factory.getHighestX());
-            y = ran2.nextInt(factory.getHighestY());
-            numChecks++;
-        }
-
-        // no valid positions found in reasonable time
-        if (numChecks == 10) {
-            return;
-        }
-
-        Spider newSpider = new Spider(x, y, "spider" + String.valueOf(incrementEntityCount()));
-        movingEntities.put(newSpider.getId(), newSpider);
-        player.subscribePassiveObserver((PlayerPassiveObserver)newSpider);
-
-    }
-
+    
     /**
      * Find a valid spider spawn
      * @param position position we are checking
      * @return boolean true if found
      */
-    private boolean validSpiderSpawnPosition(Position position) {
+    public boolean validSpiderSpawnPosition(Position position) {
         StaticEntity se = getStaticEntity(position);
         MovingEntity me = getCharacter(position);
 
@@ -332,66 +317,11 @@ public class World {
         return true;
     }
 
-    /**
-     * Updates zombie toast spawners
-     */
-    private void tickZombieToastSpawn() {
-        for (StaticEntity s : staticEntities.values()) {
-            if (s instanceof ZombieToastSpawn) {
-                ZombieToastSpawn spawner = (ZombieToastSpawn) s;
-                // update interactable state
-                spawner.update(player);
-                spawnZombie(spawner);
-            }
-        }
-    }
-
-    /**
-     * Helper function to create a new zombie at relevant ticks
-     * @param spawner Zombie spawner to spawn from
-     */
-    private void spawnZombie(ZombieToastSpawn spawner) {
-        if (!(tickCount > 0 && tickCount % gamemode.getSpawnRate() == 0)) {
-            return;
-        }
-        List<Position> possibleSpawnPositions = spawner.spawn();
-        Position newPos = getSpawnPosition(possibleSpawnPositions);
-        if (newPos == null) {
-            // no valid spawn positions
-            return;
-        }
-        Zombie newZombie = new Zombie(newPos.getX(), newPos.getY(), "zombie_toast" + String.valueOf(incrementEntityCount()));
-        movingEntities.put(newZombie.getId(), newZombie);
-        player.subscribePassiveObserver((PlayerPassiveObserver) newZombie);
-    }
-
-    /**
-     * Get a random spawn position for new zombie
-     * @param possibleSpawnPositions List of possible cardinally adjacent positions to a spawner
-     * @return position to spawn, or null if no valid positions
-     */
-    private Position getSpawnPosition(List<Position> possibleSpawnPositions) {
-        Position newPos = null;
-        Random random = new Random();
-        while (!(possibleSpawnPositions.isEmpty())) {
-            int posIndex = random.nextInt(possibleSpawnPositions.size());
-            newPos = possibleSpawnPositions.get(posIndex);
-            if (validZombieSpawnPosition(newPos)) {
-                break;
-            } else {
-                possibleSpawnPositions.remove(posIndex);
-            }
-            newPos = null;
-        }
-        return newPos;
-    }
-
-    /**
      * Checks whether a given position is a valid zombie spawn position
      * @param position Position to check
      * @return true if the position giveen is valid, otherwise false
      */
-    private boolean validZombieSpawnPosition(Position position) {
+    public boolean validZombieSpawnPosition(Position position) {
         StaticEntity se = getStaticEntity(position);
         MovingEntity me = getCharacter(position);
 
@@ -406,7 +336,7 @@ public class World {
      * find number of spiders in world
      * @return number of spiders
      */
-    private int currentSpiders() {
+    public int currentSpiders() {
         int currSpiders = 0;
         for (MovingEntity m : movingEntities.values())  {
             if (m instanceof Spider) {
@@ -835,9 +765,15 @@ public class World {
             this.player.subscribePassiveObserver((PlayerPassiveObserver)me);
         });
 
+        if (!(goals == null)) {
+            goals.evaluate(this);
+        }
+
         int entityCount = factory.getEntityCount();
 
-        this.factory = new NewGameFactory(gamemode);
+        Random ran = new Random(randomSeed);
+
+        this.factory = new NewGameFactory(gamemode, ran.nextInt());
         factory.setEntityCount(entityCount);
 
         if (gameData.has("controlled")) {

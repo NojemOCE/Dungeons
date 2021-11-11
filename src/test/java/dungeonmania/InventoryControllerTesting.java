@@ -40,7 +40,7 @@ public class InventoryControllerTesting {
         controller.newGame("collectable-world", "Standard");
         
         controller.tick(null, Direction.DOWN);
-        DungeonResponse CurrDungResp = controller.tick("health_potion5", null);
+        DungeonResponse CurrDungResp = controller.tick("health_potion5", Direction.NONE);
         
         boolean contains = false;
         for (ItemResponse ir : CurrDungResp.getInventory()) {

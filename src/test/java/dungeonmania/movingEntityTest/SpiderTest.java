@@ -30,7 +30,7 @@ public class SpiderTest {
 
     @Test
     public void spiderTest1(){
-        World world = new World("maze", "Standard");
+        World world = new World("maze", "Standard", 1);
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "maze" + ".json");
             
@@ -68,7 +68,7 @@ public class SpiderTest {
         // Loads a board with the maximum number of spiders already placed on it.
         // Character is moved to ensure that they don't move into any of these spiders.
         // Spider placement has been selected to ensure that they do not run into each other
-        World world = new World("simple-spiders", "Standard");
+        World world = new World("simple-spiders", "Standard", 1);
         
         DungeonResponse d = null;
         try {
@@ -132,7 +132,7 @@ public class SpiderTest {
         // Loads a board with the maximum number of spiders already placed on it.
         // Character is moved to ensure that they don't move into any of these spiders.
         // Spider placement has been selected to ensure that they do not run into each other
-        World world = new World("simple-spiders", "Standard");
+        World world = new World("simple-spiders", "Standard", 1);
         
         DungeonResponse d = null;
         try {
@@ -172,7 +172,7 @@ public class SpiderTest {
                 spiderCount++;
             }
         }
-        assertEquals(4, spiderCount);
+        assertEquals(5, spiderCount);
 
         for (int i=0; i < 18; i++) {
             assertDoesNotThrow(()-> world.tick(null, Direction.UP));
@@ -201,13 +201,13 @@ public class SpiderTest {
         assertEquals(true, newSpider);
         assertEquals(1, newSpiderCount);
         assertEquals(true, isSpider);
-        assertEquals(5, spiderCount);
+        assertEquals(6, spiderCount);
 
     }
 
     @Test
     public void spiderBoulderTest1() {
-        World world = new World("simple-spider-boulder1", "Standard");
+        World world = new World("simple-spider-boulder1", "Standard", 1);
         DungeonResponse d = null;
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "simple-spider-boulder1" + ".json");
@@ -282,7 +282,7 @@ public class SpiderTest {
 
     @Test
     public void spiderBoulderTest2() {
-        World world = new World("simple-spider-boulder2", "Standard");
+        World world = new World("simple-spider-boulder2", "Standard", 1);
         DungeonResponse d = null;
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "simple-spider-boulder2" + ".json");
@@ -380,7 +380,7 @@ public class SpiderTest {
 
     @Test
     public void spiderBoulderTest3() {
-        World world = new World("simple-spider-boulder3", "Standard");
+        World world = new World("simple-spider-boulder3", "Standard", 1);
         DungeonResponse d = null;
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "simple-spider-boulder3" + ".json");
@@ -525,7 +525,7 @@ public class SpiderTest {
 
     @Test
     public void spiderBattleTest() {
-        World world = new World("spider-battle", "Standard");
+        World world = new World("spider-battle", "Standard", 1);
         DungeonResponse d = null;
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "spider-battle" + ".json");
@@ -566,7 +566,7 @@ public class SpiderTest {
         d = world.tick(null, Direction.DOWN);
         for (EntityResponse e : d.getEntities()) {
             if (e.getType().equals("player")) {
-                assertEquals(new Position(1, 3), e.getPosition());
+                assertEquals(new Position(2, 2), e.getPosition());
             }
             else {
                 assertEquals("wall", e.getType());
@@ -577,7 +577,7 @@ public class SpiderTest {
 
     @Test
     public void spiderAvoidTest() {
-        World world = new World("spider-avoid", "Standard");
+        World world = new World("spider-avoid", "Standard", 1);
         DungeonResponse d = null;
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "spider-avoid" + ".json");

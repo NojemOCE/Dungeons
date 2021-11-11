@@ -1,5 +1,6 @@
 package dungeonmania.staticEntityTest;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.nio.file.DirectoryNotEmptyException;
@@ -35,7 +36,7 @@ public class SwampTileTest {
     @Test
     public void boulderTest() {
         // Create a new world
-        World world = new World("simple_swamp", "Standard");
+        World world = new World("simple_swamp", "Standard", 1);
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "simple_swamp" + ".json");
             JSONObject game = new JSONObject(file);
@@ -146,7 +147,7 @@ public class SwampTileTest {
     @Test
     public void playerMovementTest() {
         // Create a new world
-        World world = new World("simple_swamp", "Standard");
+        World world = new World("simple_swamp", "Standard", 1);
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "simple_swamp" + ".json");
             JSONObject game = new JSONObject(file);
@@ -199,7 +200,7 @@ public class SwampTileTest {
     @Test
     public void spiderSwampTest() {
         // Create a new world
-        World world = new World("swamp+spider", "Standard");
+        World world = new World("swamp+spider", "Standard", 1);
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "swamp+spider" + ".json");
             JSONObject game = new JSONObject(file);
@@ -210,8 +211,8 @@ public class SwampTileTest {
         }
 
         // move spider into swamp tile
-        DungeonResponse d = world.tick(null, null);
-        d = world.tick(null, null);
+        DungeonResponse d = world.tick(null, Direction.NONE);
+        d = world.tick(null, Direction.NONE);
         List<EntityResponse> entities = d.getEntities();
 
         // get the current positions
@@ -234,7 +235,7 @@ public class SwampTileTest {
         assert(spiderPos.equals(swampPos));
 
         // check they are in the same spot after a tick
-        d = world.tick(null, null);
+        d = world.tick(null, Direction.NONE);
         entities = d.getEntities();
         for (EntityResponse er : entities) {
             if (er.getType().equals("spider")) {
@@ -250,7 +251,7 @@ public class SwampTileTest {
         assert(spiderPos.equals(swampPos));
 
         // now after one tick the spider should be at the next tile
-        d = world.tick(null, null);
+        d = world.tick(null, Direction.NONE);
         entities = d.getEntities();
         Position spiderPos2 = null;
 
@@ -274,10 +275,10 @@ public class SwampTileTest {
      * W   M   swamp   player
      * W   W
      */
-    /*@Test
+    @Test
     public void mercSwampTest() {
         // Create a new world
-        World world = new World("swamp+merc", "Standard");
+        World world = new World("swamp+merc", "Standard", 1);
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "swamp+merc" + ".json");
             JSONObject game = new JSONObject(file);
@@ -288,7 +289,7 @@ public class SwampTileTest {
         }
 
         // move merc into swamp tile
-        DungeonResponse d = world.tick(null, null);
+        DungeonResponse d = world.tick(null, Direction.RIGHT);
         List<EntityResponse> entities = d.getEntities();
 
         // get the current positions
@@ -296,7 +297,7 @@ public class SwampTileTest {
         Position swampPos = null;
 
         for (EntityResponse er : entities) {
-            if (er.getType().equals("mercenary")) {
+            if (er.getType().equals("mercenary") || er.getType().equals("assassin")){
                 mercPos = er.getPosition();
             } else if (er.getType().equals("swamp_tile")) {
                 swampPos = er.getPosition();
@@ -308,15 +309,17 @@ public class SwampTileTest {
         assertNotNull(swampPos);
 
         // check they are on the same spot
-        assert(mercPos.equals(swampPos));
+        assertEquals(swampPos, mercPos);
 
         // check it is still on the same spot after one tick
-        d = world.tick(null, null);
+        d = world.tick(null, Direction.LEFT);
+        entities = d.getEntities();
+
         // get the current positions
         Position mercPos2 = null;
 
         for (EntityResponse er : entities) {
-            if (er.getType().equals("mercenary")) {
+            if (er.getType().equals("mercenary") || er.getType().equals("assassin")) {
                 mercPos2 = er.getPosition();
             }
         }
@@ -325,22 +328,25 @@ public class SwampTileTest {
         assertNotNull(mercPos2);
 
         // check they are on the same spot
-        assert(mercPos.equals(mercPos2));
+        assertEquals(mercPos, mercPos2);
 
         // now after one tick the merc will move right
-        d = world.tick(null, null);
+        d = world.tick(null, Direction.RIGHT);
+        entities = d.getEntities();
         // get the current positions
-        mercPos2 = null;
+        //mercPos2 = null;
+
+        Position mercPos3 = null;
 
         for (EntityResponse er : entities) {
-            if (er.getType().equals("mercenary")) {
-                mercPos2 = er.getPosition();
+            if (er.getType().equals("mercenary")|| er.getType().equals("assassin")) {
+                mercPos3 = er.getPosition();
             }
         }
 
         // check that we got the positions
-        assertNotNull(mercPos2);
+        assertNotNull(mercPos3);
 
-        assert(mercPos2.equals(mercPos.translateBy(Direction.RIGHT)));
-    }*/
+        assertEquals(mercPos2.translateBy(Direction.RIGHT), mercPos3);
+    }
 }

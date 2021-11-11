@@ -42,7 +42,6 @@ public abstract class MercenaryComponent extends MovingEntity implements PlayerP
 
     @Override
     public void moveEntity(World world) {
-
         Position distance = Position.calculatePositionBetween(world.getPlayer().getPosition(), this.getPosition());
         double x = (double)distance.getX();
         double y = (double)distance.getY();

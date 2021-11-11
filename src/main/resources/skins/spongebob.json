@@ -45,7 +45,7 @@
         "bow": "images/tileset/items/bow_0.png",
         "shield": "images/tileset/items/shield.png",
         "player": "images/tileset/ourEntities/spongebob/spongebob.png",
-        "placed_bomb": "images/tileset/items/bomb.png",
+        "bomb_placed": "images/tileset/items/bomb.png",
         "assassin": "images/tileset/ourEntities/spongebob/plankton.png",
         "hydra": "images/tileset/ourEntities/spongebob/squidward.png",
         "swamp_tile": "images/tileset/entities/swamp_tile.png",
