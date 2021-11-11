@@ -48,7 +48,6 @@ public class Player extends MovingEntity {
     @Override
     public void move(World world) {
         return;
-    
     }
 
     /**
