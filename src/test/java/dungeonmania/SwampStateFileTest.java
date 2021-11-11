@@ -31,7 +31,7 @@ public class SwampStateFileTest {
 
         DungeonManiaController c = new DungeonManiaController();
 
-        c.newGame("simple_swamp", "standard");
+        c.newGame("simple_swamp1", "Standard");
 
         // move player into position to push boulder
         c.tick(null, Direction.DOWN);
@@ -131,7 +131,7 @@ public class SwampStateFileTest {
 
         DungeonManiaController c = new DungeonManiaController();
 
-        c.newGame("swamp+spider", "standard");
+        c.newGame("swamp+spider1", "Standard");
         
         // move spider into swamp tile
         c.tick(null, Direction.UP);
@@ -211,7 +211,7 @@ public class SwampStateFileTest {
 
         DungeonManiaController c = new DungeonManiaController();
 
-        c.newGame("swamp+merc", "standard");
+        c.newGame("swamp+merc1", "Standard");
 
         
         // move merc into swamp tile and immediately save file
