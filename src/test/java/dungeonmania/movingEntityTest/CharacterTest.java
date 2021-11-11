@@ -14,6 +14,7 @@ import org.junit.jupiter.params.shadow.com.univocity.parsers.common.processor.In
 
 import dungeonmania.DungeonManiaController;
 import dungeonmania.World;
+import dungeonmania.battle.NormalBattle;
 import dungeonmania.exceptions.*;
 import dungeonmania.gamemode.Standard;
 import dungeonmania.collectable.CollectableEntity;
@@ -110,7 +111,7 @@ public class CharacterTest {
         Player player = new Player(1, 1, "player", playerHealth);
         Mercenary mercenary =  new Mercenary(1,1,"merc");
         Inventory inventory = new Inventory();
-        Battle battle = new Battle(player, mercenary, true);
+        Battle battle = new Battle(player, mercenary, true, new NormalBattle());
 
         // on same cell, battle should be created
 

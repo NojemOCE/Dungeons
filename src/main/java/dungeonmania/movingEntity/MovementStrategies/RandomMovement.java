@@ -16,7 +16,6 @@ import org.json.JSONObject;
 import dungeonmania.World;
 import dungeonmania.movingEntity.*;
 import dungeonmania.util.Direction;
-import dungeonmania.util.Position;
 
 
 public class RandomMovement implements MovementStrategy {

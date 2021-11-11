@@ -11,8 +11,9 @@ import dungeonmania.collectable.Shield;
 import dungeonmania.collectable.Weapon;
 import dungeonmania.inventory.Inventory;
 
-public class NormalBattle {
-
+public class NormalBattle implements BattleStrategy {
+    
+    @Override
     public double attackModifier(Inventory inventory, double playerAttack) {
         List<String> idToRemove = new ArrayList<>();
         for (CollectableEntity item : inventory.getCollectableItems().values()) {
@@ -40,6 +41,7 @@ public class NormalBattle {
         return playerAttack;
     }
 
+    @Override
     public double defenceModifier(Inventory inventory, double enemyAttack) {
         List<String> idToRemove = new ArrayList<>();
         for (CollectableEntity item : inventory.getCollectableItems().values()) {

@@ -279,7 +279,7 @@ public class World {
                 player.subscribePassiveObserver((PlayerPassiveObserver)e);
             }
         }
-        //inventory.tickSpectre();
+        inventory.tickSpectre();
 
         // Now evaluate goals. Goal should never be null, but add a check incase there is an error in the input file
 
@@ -311,7 +311,8 @@ public class World {
         }
         return true;
     }
-    /**
+    
+    /*
      * Checks whether a given position is a valid zombie spawn position
      * @param position Position to check
      * @return true if the position giveen is valid, otherwise false

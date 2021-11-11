@@ -22,12 +22,12 @@ public class Hydra extends Zombie {
         setType("hydra");
     }
 
-    @Override
-    /**
-     * Defends against an attack
-     * @param attack attack damage
-     */
     public void defend(double attack) {
+        if (attack < 0) {
+            getHealthPoint().loseHealth(Math.abs(attack));
+            return;
+        }
+
         Random r = new Random();
         if (r.nextInt(100) < 50) {
             if (getHealthPoint().getHealth() + attack >= getHealthPoint().getMaxHealth()) {
