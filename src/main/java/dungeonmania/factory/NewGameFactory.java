@@ -105,9 +105,9 @@ public class NewGameFactory extends Factory {
 
             if (r.nextInt(100) < 30) {
                 e = new AssassinDecorator(e);
-                return e;
+                return (AssassinDecorator)e;
             } 
-            return e;
+            return (Mercenary)e;
         } 
         
         else if (type.equals("treasure")) {
