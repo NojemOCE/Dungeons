@@ -6,6 +6,7 @@ public class Battle {
     private Player player;
     private MovingEntity character;
     
+    
     private boolean enemyAttackEnabled;
     private boolean playerWins;
     private boolean activeBattle;
