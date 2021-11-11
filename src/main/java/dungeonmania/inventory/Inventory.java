@@ -111,6 +111,7 @@ public class Inventory {
         } else if (itemType.equalsIgnoreCase("midnight_armour")) {
             IntStream.range(0, 1).mapToObj(i -> "armour").forEach(this::useByType);
             IntStream.range(0, 1).mapToObj(i -> "sun_stone").forEach(this::useByType);
+            collectableItems.put(itemType + itemNum, new MidnightArmour(0, 0, itemType + itemNum));
         } else if (itemType.equalsIgnoreCase("sceptre")) {
             if (numItem("wood") != 0) {
                 useByType("wood");
@@ -119,6 +120,7 @@ public class Inventory {
             }
             useByType(numItem("treasure") != 0 ? "treasure" : "key");
             useByType("sun_stone");
+            collectableItems.put(itemType + itemNum, new Sceptre(0, 0, itemType + itemNum));
         }
         numCollected.putIfAbsent(itemType, 0);
         numCollected.put(itemType, numCollected.get(itemType) + 1);
