@@ -1,12 +1,14 @@
 package dungeonmania.inventory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import dungeonmania.movingEntity.MercenaryComponent;
 import org.json.JSONArray;
 
 import dungeonmania.collectable.*;
@@ -17,12 +19,11 @@ public class Inventory {
     private Map<String, CollectableEntity> collectableItems = new HashMap<>();
     private Map<String, Integer> numCollected = new HashMap<>();
     private List<String> usable = new ArrayList<>();
+    private List<String> buildables = new ArrayList<>();
 
     public Inventory() {
-        this.usable.add("bomb");
-        this.usable.add("health_potion");
-        this.usable.add("invincibility_potion");
-        this.usable.add("invisibility_potion");
+        this.usable = Arrays.asList("bomb", "health_potion", "invincibility_potion", "invisibility_potion");
+        this.buildables = Arrays.asList("bow", "shield", "sceptre", "midnight_armour");
     }
 
     /**
@@ -81,6 +82,14 @@ public class Inventory {
         //consumableItems.remove(idToRemove);
     }
     
+    public void useSceptre(MercenaryComponent m) {
+        getSceptre().useMindControl(m);
+    }
+
+    public void useSceptre(MercenaryComponent m, int duration) {
+        getSceptre().useMindControl(m, duration);
+    }
+
     /**
      * Checks if the provided item type is able to be crafted with the items currently within the inventory.
      * If the item is able to be crafted, the crafting material are consumed and the crafted item is added to the inventory
@@ -92,13 +101,24 @@ public class Inventory {
         if (!isBuildable(itemType)) {
             throw new InvalidActionException("Insufficient items");
         } else if (itemType.equalsIgnoreCase("bow")) {
-            useByType("wood");
+            IntStream.range(0, 1).mapToObj(i -> "wood").forEach(this::useByType);
             IntStream.range(0, 3).mapToObj(i -> "arrow").forEach(this::useByType);
             collectableItems.put(itemType + itemNum, new Bow(0, 0, itemType + itemNum));
         } else if (itemType.equalsIgnoreCase("shield")) {
             IntStream.range(0, 2).mapToObj(i -> "wood").forEach(this::useByType);
             useByType(numItem("treasure") != 0 ? "treasure" : "key");
             collectableItems.put(itemType + itemNum, new Shield(0, 0, itemType + itemNum));
+        } else if (itemType.equalsIgnoreCase("midnight_armour")) {
+            IntStream.range(0, 1).mapToObj(i -> "armour").forEach(this::useByType);
+            IntStream.range(0, 1).mapToObj(i -> "sun_stone").forEach(this::useByType);
+        } else if (itemType.equalsIgnoreCase("sceptre")) {
+            if (numItem("wood") != 0) {
+                useByType("wood");
+            } else {
+                IntStream.range(0, 2).mapToObj(i -> "arrow").forEach(this::useByType);
+            }
+            useByType(numItem("treasure") != 0 ? "treasure" : "key");
+            useByType("sun_stone");
         }
         numCollected.putIfAbsent(itemType, 0);
         numCollected.put(itemType, numCollected.get(itemType) + 1);
@@ -138,6 +158,17 @@ public class Inventory {
      */
     public boolean hasWeapon() {
         return collectableItems.values().stream().anyMatch(e -> e instanceof Sword);
+    }
+
+    public Sceptre getSceptre() {
+        for (CollectableEntity c : collectableItems.values()) {
+            if (c instanceof Sceptre) return (Sceptre) c;
+        }
+        return null;
+    }
+
+    public void tickSpectre() {
+        getSceptre().tickMindControlled();
     }
 
     public List<ItemResponse> getInventoryResponse() {
@@ -181,6 +212,10 @@ public class Inventory {
         return null;
     }
 
+    public Map<String, CollectableEntity> getCollectableItems() {
+        return this.collectableItems;
+    }
+
     /**
      * Checks if the provided item id exists within inventory
      * @param itemUsedId the id of the item to be checked
@@ -215,6 +250,16 @@ public class Inventory {
         numCollected.put(item.getType(), numCollected.get(item.getType()) - 1);
     }
 
+    public void removeItem(List<String> itemIdToRemove) {
+        for (String itemId : itemIdToRemove) {
+            String type = collectableItems.get(itemId).getType();
+            numCollected.put(type, numCollected.get(type) - 1);
+
+            collectableItems.remove(itemId);
+        }
+        
+    }
+
     /**
      * Provides the attack provided to the player from the inventory
      * @param playerAttack the players attack before the modification
@@ -223,9 +268,38 @@ public class Inventory {
     public double attackModifier(double playerAttack) {
         List<String> idToRemove = new ArrayList<>();
         for (CollectableEntity item : collectableItems.values()) {
-            if (item instanceof Sword ) {
-                playerAttack += ((Sword)item).attackModifier();
-                ((Sword)item).consume();
+            if (item instanceof Weapon ) {
+                playerAttack += ((Weapon)item).attackModifier();
+                ((CollectableEntity)item).consume();
+                if (item.getDurability() == 0) {
+                    idToRemove.add(item.getId());
+                }
+            }
+        }
+
+        for (CollectableEntity item : collectableItems.values()) {
+            if (item instanceof Bow ) {
+                playerAttack *= ((Bow)item).attackModifier();
+                ((Bow)item).consume();
+                if (item.getDurability() == 0) {
+                    idToRemove.add(item.getId());
+                }
+            }
+        }
+
+        for (String itemId : idToRemove) {
+            collectableItems.remove(itemId);
+        }
+
+        return playerAttack;
+    }
+
+    public double bossAttackModifier(double playerAttack) {
+        List<String> idToRemove = new ArrayList<>();
+        for (CollectableEntity item : collectableItems.values()) {
+            if (item instanceof Weapon) {
+                playerAttack += ((Weapon)item).bossAttackModifier();
+                ((CollectableEntity)item).consume();
                 if (item.getDurability() == 0) {
                     idToRemove.add(item.getId());
                 }
@@ -289,10 +363,9 @@ public class Inventory {
     
     public List<String> getBuildable() {
         ArrayList<String> buildable = new ArrayList<>();
-
-        if (isBuildable("bow")) buildable.add("bow");
-        if (isBuildable("shield")) buildable.add("shield");
-
+        for (String item : buildables) {
+            if (isBuildable(item)) buildable.add(item);
+        }
         return buildable;
     }
 
@@ -303,10 +376,15 @@ public class Inventory {
      * @throws IllegalArgumentExeption if the type provided isn't able to be built
      */
     public boolean isBuildable(String buildableType) {
+    
         if (buildableType.equalsIgnoreCase("bow")) {
             return numItem("wood") >= 1 && numItem("arrow") >= 3;
         } else if (buildableType.equalsIgnoreCase("shield")) {
             return numItem("wood") >= 2 && (numItem("treasure") >= 1 || numItem("key") == 1);
+        } else if (buildableType.equalsIgnoreCase("sceptre")) {
+            return (numItem("wood") >= 1 || numItem("arrow") >= 2) && (numItem("key") >= 1 || numItem("treasure") >= 1) && numItem("sun_stone") >= 1;
+        } else if (buildableType.equalsIgnoreCase("midnight_armour")) {
+            return numItem("armour") >= 1 && numItem("sun_stone") >= 1;
         } else {
             throw new IllegalArgumentException("Wrong buildable type");
         }
@@ -329,12 +407,8 @@ public class Inventory {
      * @param itemType the type of the item to be checked
      * @return true if there is a weapon, otherwise false
      */
-    public boolean hasItem(String type) {
-        for (CollectableEntity e : collectableItems.values()) {
-            if (e.getType().equals("type")) {
-                return true;
-            }
-        }
-        return false;
+    public boolean hasItem(String itemType) {
+        return collectableItems.values().stream().anyMatch(e -> e.getType().equals(itemType));
     }
+
 }

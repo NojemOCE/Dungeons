@@ -51,9 +51,9 @@ public class World {
     static final double ZOMBIE_ARMOUR_DROP = 0.2;
     static final double ONE_RING_DROP = 0.1;
     private int tickCount = 0;
-    
+
     /**
-     * Constructor for world that takes the string of the dungeon name to build 
+     * Constructor for world that takes the string of the dungeon name to build
      * and a string for the gamemode (Standard, Peaceful, Hard)
      */
     public World(String dungeonName, String gameMode) {
@@ -131,7 +131,7 @@ public class World {
             staticEntities.put(e.getId(), (StaticEntity) e);
         }
     }
-    
+
     /**
      * Gets a Goal response
      * @return string goal response
@@ -150,10 +150,10 @@ public class World {
      * Drops armour:
      * 20% of the time if the player has beaten a zombie
      * 40% of the time if the player has beaten a mercenary
-     * 
+     *
      * Drops the one ring:
      * 10% of the time
-     * 
+     *
      * If an item is dropped, it is automatically added to the players inventory
      */
     private void dropBattleReward(){
@@ -203,7 +203,7 @@ public class World {
         // IllegalArgumentException if itemUsed is not a bomb, invincibility_potion or an invisibility_potion
         // InvalidActionException if itemUsed is not in the player's inventory
 
-        if (!Objects.isNull(itemUsed)) {
+        if (!Objects.isNull(itemUsed) ) {
             if (!(inventory.getType(itemUsed) == null) && inventory.getType(itemUsed).equals("bomb")) {
                 inventory.use(itemUsed);
                 PlacedBomb newBomb = new PlacedBomb(player.getX(), player.getY(), "bomb" + String.valueOf(incrementEntityCount()));
@@ -215,7 +215,7 @@ public class World {
                 }
             }
         }
-        
+
 
         player.tick(movementDirection, this);
         for (MovingEntity me : movingEntities.values()) {
@@ -225,17 +225,17 @@ public class World {
                     currentBattle.battleTick(inventory);
                     if (currentBattle.getPlayerWins()) {
                         dropBattleReward();
-    
+
                     } else {
                         this.player = null; // will end game in dungeon response
                         // needs to return early
                         return worldDungeonResponse();
                     } // if invisible it will add null
                 }
-                
+
             }
         }
-    
+
         // collecting the collectable entity if it exists on the current position
         CollectableEntity collectable = getCollectableEntity(player.getPosition());
         if(!Objects.isNull(collectable)) {
@@ -254,7 +254,7 @@ public class World {
                     currentBattle.battleTick(inventory);
                     if (currentBattle.getPlayerWins()) {
                         dropBattleReward();
-    
+
                     } else {
                         this.player = null; // will end game in dungeon response
                         // needs to return early
@@ -267,6 +267,7 @@ public class World {
         // spawn relevant enemies at the specified tick intervals
         tickSpiderSpawn();
         tickZombieToastSpawn();
+        inventory.tickSpectre();
 
         // Now evaluate goals. Goal should never be null, but add a check incase there is an error in the input file
 
@@ -283,7 +284,6 @@ public class World {
         return worldDungeonResponse();
     }
 
-
     /**
      * Helper function to create a new spider at relevant ticks
      */
@@ -297,7 +297,7 @@ public class World {
 
         int x = ran1.nextInt(factory.getHighestX());
         int y = ran2.nextInt(factory.getHighestY());
-        
+
         int numChecks = 0;
         while (!validSpiderSpawnPosition(new Position(x,y)) && numChecks < 10) {
             x = ran1.nextInt(factory.getHighestX());
@@ -315,7 +315,7 @@ public class World {
         player.subscribePassiveObserver((PlayerPassiveObserver)newSpider);
 
     }
-    
+
     /**
      * Find a valid spider spawn
      * @param position position we are checking
@@ -323,7 +323,7 @@ public class World {
      */
     private boolean validSpiderSpawnPosition(Position position) {
         StaticEntity se = getStaticEntity(position);
-        MovingEntity me = getCharacter(position); 
+        MovingEntity me = getCharacter(position);
 
         // if there is a static entity and its a boulder OR there is already a moving entity OR player is there, NOT VALID
         if ((!(se == null) && (se instanceof Boulder)) || !(me == null) || (player.getPosition().equals(position))) {
@@ -364,7 +364,7 @@ public class World {
         movingEntities.put(newZombie.getId(), newZombie);
         player.subscribePassiveObserver((PlayerPassiveObserver) newZombie);
     }
-    
+
     /**
      * Get a random spawn position for new zombie
      * @param possibleSpawnPositions List of possible cardinally adjacent positions to a spawner
@@ -393,7 +393,7 @@ public class World {
      */
     private boolean validZombieSpawnPosition(Position position) {
         StaticEntity se = getStaticEntity(position);
-        MovingEntity me = getCharacter(position); 
+        MovingEntity me = getCharacter(position);
 
         // if there is a static entity higher than layer 0 OR there is already a moving entity OR player is there, NOT VALID
         if ((!(se == null) && (se.getPosition().getLayer() > 0) || !(me == null) || (player.getPosition().equals(position)))) {
@@ -460,6 +460,9 @@ public class World {
     public DungeonResponse build(String buildable) throws IllegalArgumentException, InvalidActionException {
         // IllegalArgumentException if buildable is not one of bow or shield
         // InvalidActionException if the player does not have sufficient items to craft the buildable
+        if (buildable == "midnight_armour" && numMovingEntity("zombie_toast") != 0) {
+            throw new InvalidActionException("There are zombies alive");
+        }
         inventory.craft(buildable, String.valueOf(incrementEntityCount()));
         return worldDungeonResponse();
     }
@@ -547,6 +550,9 @@ public class World {
         return inventory.inInventory(item.getId());
     }
 
+    public boolean inInventory(String itemType) {
+        return inventory.hasItem(itemType);
+    }
 
     /**
      * Checks if a key exists in inventory and returns object
@@ -572,14 +578,14 @@ public class World {
      */
     public List<EntityResponse> getEntityResponses() {
         List<EntityResponse> entityResponses = new ArrayList<>();
-        
+
         if (!(player == null)){
             entityResponses.add(player.getEntityResponse());
         }
         if (!movingEntities.isEmpty()) entityResponses.addAll(movingEntities.values().stream().map(MovingEntity::getEntityResponse).collect(Collectors.toList()));
         if (!staticEntities.isEmpty()) entityResponses.addAll(staticEntities.values().stream().map(StaticEntity::getEntityResponse).collect(Collectors.toList()));
         if (!collectableEntities.isEmpty()) entityResponses.addAll(collectableEntities.values().stream().map(CollectableEntity::getEntityResponse).collect(Collectors.toList()));
-        
+
         return entityResponses;
     }
 
@@ -590,7 +596,7 @@ public class World {
     public List<ItemResponse> getInventoryResponse(){
         return inventory.getInventoryResponse();
     }
-    
+
     /**
      * Check if co-ordinates are in bounds
      * @param x x co-ord
@@ -659,7 +665,7 @@ public class World {
     public void use(String itemId) {
         inventory.use(itemId);
     }
-    
+
     /**
      * Checks if the player has a weapon in inventory
      * @return true if there is a weapon, otherwise false
@@ -669,9 +675,9 @@ public class World {
     }
 
 
-    
+
     /**
-     * Saves the game to a json based on existing information 
+     * Saves the game to a json based on existing information
      * @return Json object of saved game state
      */
     public JSONObject saveGame() {
@@ -694,9 +700,13 @@ public class World {
             worldJSON.put("goal-condition", goals.saveGameJson());
         }
 
+        if (inventory.hasItem("spectre")) {
+            worldJSON.put("controlled", inventory.getSceptre().getMindControlled());
+        }
+
         return worldJSON;
     }
-    
+
     /**
      * Save all static entities
      * @return json of static entities
@@ -708,7 +718,7 @@ public class World {
                                 .forEach(x -> staticEntitiesJSON.put(x));
         return staticEntitiesJSON;
     }
-    
+
     /**
      * Save all moving entities
      * @return json of moving entities
@@ -720,7 +730,7 @@ public class World {
                                 .forEach(x -> movingEntitiesJSON.put(x));
         return movingEntitiesJSON;
     }
-    
+
     /**
      * Save all collectable entities
      * @return json of collectable entities
@@ -732,7 +742,7 @@ public class World {
                                 .forEach(x -> collectableEntitiesJSON.put(x));
         return collectableEntitiesJSON;
     }
-    
+
     public int numItemInInventory(String itemType) {
         return inventory.numItem(itemType);
     }
@@ -743,6 +753,14 @@ public class World {
      */
     public void useByType(String type) {
         inventory.useByType(type);
+    }
+
+    public void useSceptre(MercenaryComponent m) {
+        inventory.useSceptre(m);
+    }
+
+    public void useSceptre(MercenaryComponent m, int duration) {
+        inventory.useSceptre(m, duration);
     }
 
     public int getTickCount() {
@@ -765,7 +783,7 @@ public class World {
     public void buildWorldFromFile(JSONObject gameData) {
         int tickNo = gameData.getInt("tick-count");
         int entityNo = gameData.getInt("entity-count");
-        
+
         setEntityCount(entityNo);
         setTickCount(tickNo);
 
@@ -815,13 +833,22 @@ public class World {
 
         movingEntities.forEach( (id, me) -> {
             this.player.subscribePassiveObserver((PlayerPassiveObserver)me);
-        });        
+        });
 
         int entityCount = factory.getEntityCount();
 
         this.factory = new NewGameFactory(gamemode);
         factory.setEntityCount(entityCount);
 
+        if (gameData.has("controlled")) {
+            JSONArray mindControlledEntities = gameData.getJSONArray("controlled");
+            for (int i = 0; i < mindControlledEntities.length(); i++) {
+                JSONObject obj = collectableEntitiesItems.getJSONObject(i);
+                MercenaryComponent m = (MercenaryComponent) movingEntities.get(obj.getString("id"));
+                int duration = Integer.parseInt(obj.getString("duration"));
+                useSceptre(m, duration);
+            }
+        }
     }
 
     /**
@@ -851,6 +878,17 @@ public class World {
         this.entityCount = entityCount;
     }
 
+    public int numMovingEntity(String entityType) {
+        int count = 0;
+        for (MovingEntity entity : movingEntities.values()) {
+            if (entity.getType() == entityType) {
+                count++;
+            }
+        }
+        
+        return count;
+    }
+ 
     public double getDistance(Position position) {
         List<StaticEntity> l = getStaticEntitiesAtPosition(position);
         for (StaticEntity se : l) {
