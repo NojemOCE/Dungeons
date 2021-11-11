@@ -42,6 +42,7 @@ public class World {
     private Battle currentBattle;
     private String dungeonName;
     private Factory factory;
+    private int randomSeed;
 
 
     static final int MAX_SPIDERS = 6;
@@ -56,10 +57,11 @@ public class World {
      * Constructor for world that takes the string of the dungeon name to build 
      * and a string for the gamemode (Standard, Peaceful, Hard)
      */
-    public World(String dungeonName, String gameMode) {
+    public World(String dungeonName, String gameMode, int randomSeed) {
         this.dungeonName = dungeonName;
         this.id = dungeonName;
         this.entityCount = 0;
+        this.randomSeed = randomSeed;
         gameMode = gameMode.toLowerCase();
         if (gameMode.equals("hard")) {
             this.gamemode = new Hard();
@@ -74,8 +76,8 @@ public class World {
 
     }
 
-    public World(String dungeonName, String gameMode, String id) {
-        this(dungeonName, gameMode);
+    public World(String dungeonName, String gameMode, String id, int randomSeed) {
+        this(dungeonName, gameMode, randomSeed);
         this.id = id;
         this.factory = new LoadGameFactory(gamemode);
     }
@@ -163,7 +165,7 @@ public class World {
 
 
         if (currentBattle.getCharacter() instanceof Mercenary) {
-            Random ran = new Random();
+            Random ran = new Random(randomSeed);
             int next = ran.nextInt(10);
             if (10 * MERCENARY_ARMOUR_DROP > next)  {
                 // return an armour
@@ -173,7 +175,7 @@ public class World {
         }
 
         else if (currentBattle.getCharacter() instanceof Zombie) {
-            Random ran = new Random();
+            Random ran = new Random(randomSeed);
             int next = ran.nextInt(10);
             if (10 * ZOMBIE_ARMOUR_DROP > next)  {
                 // return an armour
@@ -182,7 +184,7 @@ public class World {
             }
         }
 
-        Random ran = new Random();
+        Random ran = new Random(randomSeed);
         int next = ran.nextInt(10);
         if (10 * ONE_RING_DROP > next)  {
             // return the one ring
@@ -292,8 +294,8 @@ public class World {
             return;
         }
 
-        Random ran1 = new Random();
-        Random ran2 = new Random();
+        Random ran1 = new Random(randomSeed);
+        Random ran2 = new Random(randomSeed);
 
         int x = ran1.nextInt(factory.getHighestX());
         int y = ran2.nextInt(factory.getHighestY());
@@ -372,7 +374,7 @@ public class World {
      */
     private Position getSpawnPosition(List<Position> possibleSpawnPositions) {
         Position newPos = null;
-        Random random = new Random();
+        Random random = new Random(randomSeed);
         while (!(possibleSpawnPositions.isEmpty())) {
             int posIndex = random.nextInt(possibleSpawnPositions.size());
             newPos = possibleSpawnPositions.get(posIndex);
