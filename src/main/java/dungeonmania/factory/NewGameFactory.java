@@ -11,13 +11,13 @@ import dungeonmania.movingEntity.*;
 import dungeonmania.staticEntity.*;
 
 public class NewGameFactory extends Factory {
-
+    private int randomSeed;
     /**
      * Constructor for a NewGameFactory taking in a gamemode
      * @param gamemode gamemode of factory
      */
-    public NewGameFactory(Gamemode gamemode) {
-        super(gamemode);
+    public NewGameFactory(Gamemode gamemode, int randomSeed) {
+        super(gamemode, randomSeed);
     }
 
     @Override
@@ -100,9 +100,10 @@ public class NewGameFactory extends Factory {
         } 
         
         else if (type.equals("mercenary")) {
-            Random r = new Random();
+            Random r = new Random(randomSeed);
             MercenaryComponent e = new Mercenary(x, y, id);
 
+            // There is a 30% chance that a new mercenary will be an assassin.
             if (r.nextInt(100) < 30) {
                 e = new AssassinDecorator(e);
                 return e;
@@ -161,7 +162,15 @@ public class NewGameFactory extends Factory {
         else if (type.equals("one_ring")) {
             OneRing e = new OneRing(x, y, id);
             return e;
-        } 
+        }
+        /*else if (type.equals("anduril")) {
+            Anduril e = new Anduril(x, y, id);
+            return e;
+        }
+        else if (type.equals("sun_stone")) {
+            SunStone e = new SunStone(x, y, id);
+            return e;
+        } */
         
 
         return null;

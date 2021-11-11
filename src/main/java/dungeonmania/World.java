@@ -51,7 +51,7 @@ public class World {
     static final double MERCENARY_ARMOUR_DROP = 0.4;
     static final double ZOMBIE_ARMOUR_DROP = 0.2;
     static final double ONE_RING_DROP = 0.1;
-    private int tickCount = 0;
+    private int tickCount = 1;
     
     /**
      * Constructor for world that takes the string of the dungeon name to build 
@@ -71,7 +71,7 @@ public class World {
             this.gamemode = new Peaceful();
         }
         this.inventory = new Inventory();
-        this.factory = new NewGameFactory(gamemode);
+        this.factory = new NewGameFactory(gamemode, (new Random(randomSeed)).nextInt());
 
 
     }
@@ -267,8 +267,14 @@ public class World {
         }
 
         // spawn relevant enemies at the specified tick intervals
-        tickSpiderSpawn();
-        tickZombieToastSpawn();
+        List<Entity> newEntities = factory.tick(this);
+
+        for (Entity e: newEntities) {
+            addEntity(e);
+            if (e instanceof MovingEntity) {
+                player.subscribePassiveObserver((PlayerPassiveObserver)e);
+            }
+        }
 
         // Now evaluate goals. Goal should never be null, but add a check incase there is an error in the input file
 
@@ -284,46 +290,13 @@ public class World {
         tickCount++;
         return worldDungeonResponse();
     }
-
-
-    /**
-     * Helper function to create a new spider at relevant ticks
-     */
-    private void tickSpiderSpawn() {
-        if (!(tickCount > 0 && tickCount % SPIDER_SPAWN == 0 && currentSpiders() < MAX_SPIDERS)) {
-            return;
-        }
-
-        Random ran1 = new Random(randomSeed);
-        Random ran2 = new Random(randomSeed);
-
-        int x = ran1.nextInt(factory.getHighestX());
-        int y = ran2.nextInt(factory.getHighestY());
-        
-        int numChecks = 0;
-        while (!validSpiderSpawnPosition(new Position(x,y)) && numChecks < 10) {
-            x = ran1.nextInt(factory.getHighestX());
-            y = ran2.nextInt(factory.getHighestY());
-            numChecks++;
-        }
-
-        // no valid positions found in reasonable time
-        if (numChecks == 10) {
-            return;
-        }
-
-        Spider newSpider = new Spider(x, y, "spider" + String.valueOf(incrementEntityCount()));
-        movingEntities.put(newSpider.getId(), newSpider);
-        player.subscribePassiveObserver((PlayerPassiveObserver)newSpider);
-
-    }
     
     /**
      * Find a valid spider spawn
      * @param position position we are checking
      * @return boolean true if found
      */
-    private boolean validSpiderSpawnPosition(Position position) {
+    public boolean validSpiderSpawnPosition(Position position) {
         StaticEntity se = getStaticEntity(position);
         MovingEntity me = getCharacter(position); 
 
@@ -335,65 +308,11 @@ public class World {
     }
 
     /**
-     * Updates zombie toast spawners
-     */
-    private void tickZombieToastSpawn() {
-        for (StaticEntity s : staticEntities.values()) {
-            if (s instanceof ZombieToastSpawn) {
-                ZombieToastSpawn spawner = (ZombieToastSpawn) s;
-                // update interactable state
-                spawner.update(player);
-                spawnZombie(spawner);
-            }
-        }
-    }
-
-    /**
-     * Helper function to create a new zombie at relevant ticks
-     * @param spawner Zombie spawner to spawn from
-     */
-    private void spawnZombie(ZombieToastSpawn spawner) {
-        if (!(tickCount > 0 && tickCount % gamemode.getSpawnRate() == 0)) {
-            return;
-        }
-        List<Position> possibleSpawnPositions = spawner.spawn();
-        Position newPos = getSpawnPosition(possibleSpawnPositions);
-        if (newPos == null) {
-            // no valid spawn positions
-            return;
-        }
-        Zombie newZombie = new Zombie(newPos.getX(), newPos.getY(), "zombie_toast" + String.valueOf(incrementEntityCount()));
-        movingEntities.put(newZombie.getId(), newZombie);
-        player.subscribePassiveObserver((PlayerPassiveObserver) newZombie);
-    }
-    
-    /**
-     * Get a random spawn position for new zombie
-     * @param possibleSpawnPositions List of possible cardinally adjacent positions to a spawner
-     * @return position to spawn, or null if no valid positions
-     */
-    private Position getSpawnPosition(List<Position> possibleSpawnPositions) {
-        Position newPos = null;
-        Random random = new Random(randomSeed);
-        while (!(possibleSpawnPositions.isEmpty())) {
-            int posIndex = random.nextInt(possibleSpawnPositions.size());
-            newPos = possibleSpawnPositions.get(posIndex);
-            if (validZombieSpawnPosition(newPos)) {
-                break;
-            } else {
-                possibleSpawnPositions.remove(posIndex);
-            }
-            newPos = null;
-        }
-        return newPos;
-    }
-
-    /**
      * Checks whether a given position is a valid zombie spawn position
      * @param position Position to check
      * @return true if the position giveen is valid, otherwise false
      */
-    private boolean validZombieSpawnPosition(Position position) {
+    public boolean validZombieSpawnPosition(Position position) {
         StaticEntity se = getStaticEntity(position);
         MovingEntity me = getCharacter(position); 
 
@@ -408,7 +327,7 @@ public class World {
      * find number of spiders in world
      * @return number of spiders
      */
-    private int currentSpiders() {
+    public int currentSpiders() {
         int currSpiders = 0;
         for (MovingEntity m : movingEntities.values())  {
             if (m instanceof Spider) {
@@ -821,7 +740,9 @@ public class World {
 
         int entityCount = factory.getEntityCount();
 
-        this.factory = new NewGameFactory(gamemode);
+        Random ran = new Random(randomSeed);
+
+        this.factory = new NewGameFactory(gamemode, ran.nextInt());
         factory.setEntityCount(entityCount);
 
     }
