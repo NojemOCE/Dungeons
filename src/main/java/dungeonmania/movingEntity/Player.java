@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import dungeonmania.Passive;
 import dungeonmania.World;
+import dungeonmania.battle.*;
 import dungeonmania.collectable.CollectableEntity;
 import dungeonmania.gamemode.Gamemode;
 import dungeonmania.staticEntity.StaticEntity;
@@ -128,7 +129,10 @@ public class Player extends MovingEntity {
         if (!enemy.getAlly()) {
             if (Objects.isNull(activePotion) || !activePotion.getType().equals("invisibility_potion")) {
                 notifyObserversForBattle(world); // mercenary speed
-                return new Battle(this, enemy, gamemode.isEnemyAttackEnabled());
+                if (enemy instanceof AssassinDecorator || enemy instanceof Hydra) {
+                    return new Battle(this, enemy, gamemode.isEnemyAttackEnabled(), new BossBattle());
+                }
+                return new Battle(this, enemy, gamemode.isEnemyAttackEnabled(), new NormalBattle());
             }
             // notify observers of battle
         }

@@ -19,8 +19,6 @@ public class Key extends CollectableEntity {
         setDurability(durability);
     }
 
-
-
     public int getKeyColour() {
         return keyColour;
     }

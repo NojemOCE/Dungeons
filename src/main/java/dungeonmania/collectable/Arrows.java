@@ -1,7 +1,5 @@
 package dungeonmania.collectable;
 
-
-
 public class Arrows extends CollectableEntity {
 
     public Arrows(int x, int y, String itemId) {
@@ -17,4 +15,5 @@ public class Arrows extends CollectableEntity {
         this(x, y, itemId);
         setDurability(durability);
     }
+
 }

@@ -88,6 +88,20 @@ public class inventoryTest {
         inv.collect(wood);
         assertEquals(inv.numItem("wood"), 1);
         assertTrue(inv.inInventory("wood10"));
+
+        Anduril anduril = new Anduril(1, 1, "anduril11");
+        assertEquals(inv.numItem("anduril"), 0);
+        assertFalse(inv.inInventory("anduril11"));
+        inv.collect(anduril);
+        assertEquals(inv.numItem("anduril"), 1);
+        assertTrue(inv.inInventory("anduril11"));
+
+        SunStone sunstone = new SunStone(1, 1, "sunstone12");
+        assertEquals(inv.numItem("sun_stone"), 0);
+        assertFalse(inv.inInventory("sun_stone12"));
+        inv.collect(sunstone);
+        assertEquals(inv.numItem("sun_stone"), 1);
+        assertTrue(inv.inInventory("sunstone12"));
     }
 
     /**
@@ -103,15 +117,32 @@ public class inventoryTest {
         assertFalse(inv.inInventory("health_potion1"));
         inv.collect(potion);
         assertTrue(inv.inInventory("health_potion1"));
-        potion.consume();
-        //assertFalse(inv.inInventory("health_potion1"));
+        inv.use(potion.getId());
+        assertFalse(inv.inInventory("health_potion1"));
 
         Bomb bomb = new Bomb(1, 2, "bomb2");
         assertFalse(inv.inInventory("bomb2"));
         inv.collect(bomb);
         assertTrue(inv.inInventory("bomb2"));
-        bomb.consume();
-        //assertFalse(inv.inInventory("bomb2"));
+        inv.use(bomb.getId());
+        assertFalse(inv.inInventory("bomb2"));
+    }
+
+    /**
+     * When consuming a sunstone for opening doors and bribing, the sunstone should remain in the inventory
+     */
+    @Test
+    public void testUseSunStone() {
+
+        Inventory inv = new Inventory();
+
+        SunStone sunstone = new SunStone(1, 1, "sunstone1");
+
+        assertFalse(inv.inInventory("sunstone1"));
+        inv.collect(sunstone);
+        assertTrue(inv.inInventory("sunstone1"));
+        inv.use(sunstone.getId());
+        assertTrue(inv.inInventory("sunstone1"));
     }
 
     /**
@@ -178,5 +209,33 @@ public class inventoryTest {
         assert inv.numItem("wood") == 0;
         assert inv.numItem("treasure") == 0;
         assert inv.numItem("shield") == 1;
+    }
+
+
+/**
+     * When crafting a midnight armour, it should appear in the inventory
+     * The items used to craft it should not appear in the inventory
+     */
+    @Test
+    public void testCraftMidnightArmour() {
+
+        Inventory inv = new Inventory();
+        assert inv.numItem("sun_stone") == 0;
+        assert inv.numItem("armour") == 0;
+
+        SunStone sunstone = new SunStone(1, 1, "sunstone1");
+        inv.collect(sunstone);
+        assert inv.numItem("sun_stone") == 1;
+
+        Armour armour = new Armour(1, 1, "armour2");
+        inv.collect(armour);
+        assert inv.numItem("armour") == 1;
+
+        assert inv.getBuildable().contains("midnight_armour");
+        inv.craft("midnight_armour", "3");
+
+        assert inv.numItem("sun_stone") == 0;
+        assert inv.numItem("armour") == 0;
+        assert inv.numItem("midnight_armour") == 1;
     }
 }

@@ -14,4 +14,5 @@ public class Treasure extends CollectableEntity {
         this(x, y, itemId);
         setDurability(durability);
     }
+
 }

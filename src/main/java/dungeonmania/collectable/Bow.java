@@ -1,5 +1,8 @@
 package dungeonmania.collectable;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Bow extends CollectableEntity {
 
     private final int DURABILITY = 10;
