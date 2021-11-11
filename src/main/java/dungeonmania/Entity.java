@@ -79,6 +79,9 @@ public abstract class Entity {
         return type;
     }
     
+    public void setType(String type) {
+        this.type = type;
+    }
     /**
      * Gets an EntityResponse for an Entity
      * @return EntityResponse of Entity

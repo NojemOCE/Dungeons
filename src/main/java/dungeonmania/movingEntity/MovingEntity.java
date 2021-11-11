@@ -107,6 +107,10 @@ public abstract class MovingEntity extends Entity {
         return healthPoint;
     }
 
+    public void setHealthPoint(HealthPoint healthPoint) {
+        this.healthPoint = healthPoint;
+    }
+
     /**
      * Adds a given amount to the entity's health
      * @param health health to add

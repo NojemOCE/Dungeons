@@ -2,6 +2,7 @@ package dungeonmania.factory;
 
 import org.json.JSONObject;
 
+import java.util.Random;
 import dungeonmania.Entity;
 import dungeonmania.World;
 import dungeonmania.collectable.*;
@@ -99,8 +100,13 @@ public class NewGameFactory extends Factory {
         } 
         
         else if (type.equals("mercenary")) {
-            Mercenary e = new Mercenary(x, y, id);
+            Random r = new Random();
+            MercenaryComponent e = new Mercenary(x, y, id);
 
+            if (r.nextInt(100) < 30) {
+                e = new AssassinDecorator(e);
+                return e;
+            } 
             return e;
         } 
         
@@ -155,7 +161,7 @@ public class NewGameFactory extends Factory {
         else if (type.equals("one_ring")) {
             OneRing e = new OneRing(x, y, id);
             return e;
-        }
+        } 
         
 
         return null;
