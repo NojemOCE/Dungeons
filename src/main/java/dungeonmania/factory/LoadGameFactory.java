@@ -358,7 +358,11 @@ public class LoadGameFactory extends Factory {
             Shield e = new Shield(id, durability);
             return e;
         }
-        // Bow and arrow and any other buildable objs
+
+        else if (type.equals("sun_stone")) {
+            SunStone e = new SunStone(id, durability);
+            return e;
+        }
         return null;
     }
 
