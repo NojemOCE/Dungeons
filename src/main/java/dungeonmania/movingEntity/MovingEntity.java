@@ -40,6 +40,10 @@ public abstract class MovingEntity extends Entity {
         super(position, id, type);
         this.healthPoint = healthPoint;
         this.attackDamage = attackDamage;
+<<<<<<< HEAD
+=======
+        this.state = new NormalState();
+>>>>>>> 722ac4b730d06098e3d17d1ca72605f10a7686f7
     }
 
     /**
@@ -61,7 +65,15 @@ public abstract class MovingEntity extends Entity {
      * and the old position (no movement) if not
      */
     public Position validMove(Position position, World world) {
-        
+
+        if (position.getX() < world.getXBoundN() || position.getX() > world.getXBound()) {
+            return getPosition();
+        }
+
+        if (position.getY() < world.getYBoundN() || position.getY() > world.getYBound()) {
+            return getPosition();
+        }
+
         // check if there is a static entity in the way
         StaticEntity se = world.getStaticEntity(position);
         if (!Objects.isNull(se)) {

@@ -8,9 +8,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import dungeonmania.movingEntity.MercenaryComponent;
 import org.json.JSONArray;
 
-import dungeonmania.MindControlled;
 import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.response.models.ItemResponse;
@@ -82,12 +82,12 @@ public class Inventory {
         //consumableItems.remove(idToRemove);
     }
     
-    public void useSceptre(MindControlled m) {
-        for (CollectableEntity c : collectableItems.values()) {
-            if (c instanceof Sceptre) {
-                ((Sceptre) c).useMindControl(m);
-            }
-        }
+    public void useSceptre(MercenaryComponent m) {
+        getSceptre().useMindControl(m);
+    }
+
+    public void useSceptre(MercenaryComponent m, int duration) {
+        getSceptre().useMindControl(m, duration);
     }
 
     /**
@@ -160,8 +160,15 @@ public class Inventory {
         return collectableItems.values().stream().anyMatch(e -> e instanceof Sword);
     }
 
-    public boolean hasSceptre() {
-        return collectableItems.values().stream().anyMatch(e -> e instanceof Sceptre);
+    public Sceptre getSceptre() {
+        for (CollectableEntity c : collectableItems.values()) {
+            if (c instanceof Sceptre) return (Sceptre) c;
+        }
+        return null;
+    }
+
+    public void tickSpectre() {
+        getSceptre().tickMindControlled();
     }
 
     public List<ItemResponse> getInventoryResponse() {
@@ -375,7 +382,7 @@ public class Inventory {
         } else if (buildableType.equalsIgnoreCase("shield")) {
             return numItem("wood") >= 2 && (numItem("treasure") >= 1 || numItem("key") == 1);
         } else if (buildableType.equalsIgnoreCase("sceptre")) {
-            return (numItem("wood") >= 1 || numItem("arrow") >= 2) && (numItem("key") >= 1 || numItem("treasure") >= 1) && numItem("sun_stone") >= 1 && hasSceptre();
+            return (numItem("wood") >= 1 || numItem("arrow") >= 2) && (numItem("key") >= 1 || numItem("treasure") >= 1) && numItem("sun_stone") >= 1;
         } else if (buildableType.equalsIgnoreCase("midnight_armour")) {
             return numItem("armour") >= 1 && numItem("sun_stone") >= 1;
         } else {
@@ -400,13 +407,8 @@ public class Inventory {
      * @param itemType the type of the item to be checked
      * @return true if there is a weapon, otherwise false
      */
-    public boolean hasItem(String type) {
-        for (CollectableEntity e : collectableItems.values()) {
-            if (e.getType().equals("type")) {
-                return true;
-            }
-        }
-        return false;
+    public boolean hasItem(String itemType) {
+        return collectableItems.values().stream().anyMatch(e -> e.getType().equals(itemType));
     }
 
 }
