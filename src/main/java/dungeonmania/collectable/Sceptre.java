@@ -49,16 +49,13 @@ public class Sceptre extends CollectableEntity {
         return !isNull(controlled.get(m));
     }
 
-    /*
-    @Override
-    public JSONObject saveGameJson() {
-        JSONObject sceptreJSON  = super.saveGameJson();
+    public  List<String> getMindControlled() {
+
         List<String> controlledIds = new ArrayList<>();
         for (MercenaryComponent m : controlled.keySet()) {
-
+            controlledIds.add(m.getId());
         }
-        sceptreJSON.put("controlled", controlledIds);
-        return sceptreJSON;
+        return controlledIds;
     }
-    */
+
 }
