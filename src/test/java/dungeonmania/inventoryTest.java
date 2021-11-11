@@ -407,6 +407,17 @@ public class inventoryTest {
         HealthPotion HPPot = new HealthPotion(1, 2, "health_potion1");
         inv.collect(HPPot);
         assertEquals(HPPot, inv.tick("health_potion1"));
+        assert inv.numItem("health_potion") == 0;
+
+        InvincibilityPotion InvincPot = new InvincibilityPotion(1, 2, "invincibility_potion2", false);
+        inv.collect(InvincPot);
+        assertEquals(InvincPot, inv.tick("invincibility_potion2"));
+        assert inv.numItem("invincibility_potion") == 0;
+
+        InvisibilityPotion InvisPot = new InvisibilityPotion(1, 2, "invisibility_potion3");
+        inv.collect(InvisPot);
+        assertEquals(InvisPot, inv.tick("invisibility_potion3"));
+        assert inv.numItem("invisibility_potion") == 0;
     }
 
 
