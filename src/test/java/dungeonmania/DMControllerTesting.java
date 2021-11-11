@@ -224,7 +224,7 @@ public class DMControllerTesting {
         DungeonResponse d = controller.newGame("zombieSpawner+sword", "Standard");
 
         // test zombie spawn rate
-        for (int i = 0; i < 20; i++) {
+        for (int i = 1; i < 20; i++) {
             if (i % 2 == 0) {
                 d = controller.tick(null, Direction.DOWN);
             } else {

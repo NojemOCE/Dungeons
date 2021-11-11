@@ -35,7 +35,7 @@ public class PlacedBombTest {
     @Test
     public void testPlaceBomb() {
         // Create a new world
-        World world = new World("player-bomb", "Standard");
+        World world = new World("player-bomb", "Standard", 1);
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "player-bomb" + ".json");
             JSONObject game = new JSONObject(file);
@@ -58,7 +58,7 @@ public class PlacedBombTest {
         }
 
         // place the bomb down
-        d = world.tick(bombId, null);
+        d = world.tick(bombId, Direction.NONE);
 
         // now if we move away, it will act like a wall
         d = world.tick(null, Direction.LEFT);

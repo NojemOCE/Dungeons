@@ -63,22 +63,7 @@ public class Player extends MovingEntity {
         if (!Objects.isNull(se)) {
             // interact with static entitity
             return se.interact(world, this); 
-        } 
-        if (!Objects.isNull(world.getBattle())) {
-            // check if this objects position is same as players (for players if there is a battle)
-            // they cannot move anyways
-            if (getPosition().equals(world.getPlayer().getPosition())) {
-                // cannot move into battle, wait outside
-                return getPosition();
-            }
         }
-        // also check if another moving entity in the position already
-        MovingEntity c = world.getCharacter(position);
-        if (!this.getType().equals("player") && !Objects.isNull(c)) {
-            // two characters cant be in same place, dont move this object
-            return getPosition();
-        } 
-        
 
         return position;
     }

@@ -1,5 +1,9 @@
 package dungeonmania.factory;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -7,19 +11,29 @@ import dungeonmania.Entity;
 import dungeonmania.World;
 import dungeonmania.gamemode.Gamemode;
 import dungeonmania.goal.*;
+import dungeonmania.staticEntity.StaticEntity;
+import dungeonmania.staticEntity.ZombieToastSpawn;
+import dungeonmania.util.Position;
 
 public abstract class Factory {
     Gamemode gamemode;
-    int entityCount = 0;
-    int highestX = 5;
-    int highestY = 5;
+    protected int randomSeed;
+    private int entityCount = 0;
+    private int highestX = 5;
+    private int highestY = 5;
+    static final int MAX_SPIDERS = 6;
+    static final int SPIDER_SPAWN = 20;
+    private int tickCount = 1;
 
     /**
      * Constructor for Factory taking in a GameMode
      * @param gamemode gamemode of factory
+     * @param randomSeed
      */
-    public Factory(Gamemode gamemode) {
+    public Factory(Gamemode gamemode, int randomSeed) {
         this.gamemode = gamemode;
+        this.randomSeed = randomSeed;
+
     }
 
     /**
@@ -63,6 +77,121 @@ public abstract class Factory {
         updateBounds(x, y);
 
         return createEntity(newEntityObj, world);
+    }
+
+    /**
+     * Taking the world, it returns a list of new entities that have spawned on that tick
+     * @param world current world
+     * @return list of new entities
+     */
+    public List<Entity> tick(World world) {
+        List<Entity> newEntities =  new ArrayList<>();
+        Entity spider = tickSpiderSpawn(world);
+        if (!(spider == null)) {
+            newEntities.add(spider);
+        }
+
+        List<Entity> newZombies = tickZombieToastSpawn(world);
+        newEntities.addAll(newZombies);
+        tickCount++;
+
+        return newEntities;
+    }
+
+    /**
+     * Helper function to create a new spider at relevant ticks
+     */
+    private Entity tickSpiderSpawn(World world) {
+        if (!(tickCount % SPIDER_SPAWN == 0) || world.currentSpiders() == MAX_SPIDERS) {
+            return null;
+            
+        }
+
+        Random ran1 = new Random(randomSeed);
+        Random ran2 = new Random(randomSeed);
+
+        int x = ran1.nextInt(highestX);
+        int y = ran2.nextInt(highestY);
+        
+        int numChecks = 0;
+        while (!world.validSpiderSpawnPosition(new Position(x,y)) && numChecks < 10) {
+            x = ran1.nextInt(highestX);
+            y = ran2.nextInt(highestY);
+            numChecks++;
+        }
+
+        // no valid positions found in reasonable time
+        if (numChecks == 10) {
+            return null;
+        }
+
+        Entity e = createEntity(x, y, "spider", world);
+        return e;
+
+    }
+
+    /**
+     * Updates zombie toast spawners
+     */
+    private List<Entity> tickZombieToastSpawn(World world) {
+        List <Entity> newZombies = new ArrayList<>();
+
+        for (StaticEntity s : world.getStaticEntities().values()) {
+            if (s instanceof ZombieToastSpawn) {
+                ZombieToastSpawn spawner = (ZombieToastSpawn) s;
+                // update interactable state
+                spawner.update(world.getPlayer());
+                Entity e = spawnZombie(spawner, world);
+                if (!(e == null)) {
+                    newZombies.add(e);
+                }
+            }
+        }
+        return newZombies;
+    }
+
+    /**
+     * Helper function to create a new zombie at relevant ticks
+     * @param spawner Zombie spawner to spawn from
+     */
+    private Entity spawnZombie(ZombieToastSpawn spawner, World world) {
+
+        if (!(tickCount % gamemode.getSpawnRate() == 0)) {
+            return null;
+        }
+        List<Position> possibleSpawnPositions = spawner.spawn();
+        Position newPos = getSpawnPosition(possibleSpawnPositions, world);
+        if (newPos == null) {
+            // no valid spawn positions
+            return null;
+        }
+
+        Entity e = createEntity(newPos.getX(), newPos.getY(), "zombie_toast", world);
+        //Zombie newZombie = new Zombie(newPos.getX(), newPos.getY(), "zombie_toast" + String.valueOf(incrementEntityCount()));
+        //movingEntities.put(newZombie.getId(), newZombie);
+        //player.subscribePassiveObserver((PlayerPassiveObserver) newZombie);
+        return e;
+    }
+    
+    /**
+     * Get a random spawn position for new zombie
+     * @param possibleSpawnPositions List of possible cardinally adjacent positions to a spawner
+     * @return position to spawn, or null if no valid positions
+     */
+    private Position getSpawnPosition(List<Position> possibleSpawnPositions, World world) {
+        Position newPos = null;
+        Random random = new Random(randomSeed);
+        while (!(possibleSpawnPositions.isEmpty())) {
+            int posIndex = random.nextInt(possibleSpawnPositions.size());
+            newPos = possibleSpawnPositions.get(posIndex);
+            if (world.validZombieSpawnPosition(newPos)) {
+                break;
+            } else {
+                possibleSpawnPositions.remove(posIndex);
+            }
+            newPos = null;
+        }
+        return newPos;
     }
 
     /**

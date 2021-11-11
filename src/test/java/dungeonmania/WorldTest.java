@@ -39,14 +39,14 @@ public class WorldTest {
         World world;
 
         for (String mode : controller.getGameModes()) {
-            world = new World(dungeon, mode);
+            world = new World(dungeon, mode, 1);
             assertEquals(dungeon, world.worldDungeonResponse().getDungeonName());
         }
     }
 
     @Test
     public void testDungeonResponse() {
-        World world = new World("portals", "Standard");
+        World world = new World("portals", "Standard", 1);
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "portals" + ".json");
             JSONObject game = new JSONObject(file);
@@ -76,7 +76,7 @@ public class WorldTest {
 
     @Test
     public void testBuildable() {
-        World world = new World("advanced", "Standard");
+        World world = new World("advanced", "Standard", 1);
         assertThrows(IllegalArgumentException.class, () -> world.build("invalid buildable"));
 
         assertThrows(InvalidActionException.class, () -> world.build("bow"));

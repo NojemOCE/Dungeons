@@ -85,7 +85,7 @@ public class ZombieToastSpawnTest {
     @Test
     public void testInteract() {
         // Create a new world
-        World world = new World("zombieSpawner+sword", "Standard");
+        World world = new World("zombieSpawner+sword", "Standard", 1);
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "zombieSpawner+sword" + ".json");
             JSONObject game = new JSONObject(file);
@@ -148,7 +148,7 @@ public class ZombieToastSpawnTest {
     @Test
     public void testWalkingInto() {
         // Create a new world
-        World world = new World("zombieSpawner+sword", "Standard");
+        World world = new World("zombieSpawner+sword", "Standard", 1);
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "zombieSpawner+sword" + ".json");
             JSONObject game = new JSONObject(file);

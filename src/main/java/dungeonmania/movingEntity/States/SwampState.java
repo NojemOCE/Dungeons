@@ -18,21 +18,26 @@ public class SwampState implements State {
 
     @Override
     public void move(MovingEntity e, World world) {
-        remTicks--;
-
         if (remTicks == 0)  {
             e.setState(new NormalState());
+            e.move(world);
+            return;
         }
+
+        remTicks--;
+
         
     }
 
     @Override
     public Position move(Boulder e, Player p, World world) {
-        remTicks--;
-
         if (remTicks == 0)  {
             e.setState(new NormalState());
+            return e.move(p);
         }
+
+        remTicks--;
+        
         return e.getPosition();        
     }
 
@@ -40,7 +45,7 @@ public class SwampState implements State {
     public JSONObject getStateJson() {
         JSONObject obj = new JSONObject();
         obj.put("state", "swampState");
-        obj.put("remTicks", remTicks);
+        obj.put("remTicks", remTicks+1);
         return obj;
     }
 

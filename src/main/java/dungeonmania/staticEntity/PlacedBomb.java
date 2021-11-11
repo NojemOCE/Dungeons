@@ -17,7 +17,7 @@ public class PlacedBomb extends StaticEntity {
      * @param id id of bomb
      */
     public PlacedBomb(int x, int y, String id) {
-        super(new Position(x, y, Position.STATIC_LAYER), id, "placed_bomb");
+        super(new Position(x, y, Position.STATIC_LAYER), id, "bomb_placed");
     }
 
     // Placed bombs act like walls, they cannot be walked over
