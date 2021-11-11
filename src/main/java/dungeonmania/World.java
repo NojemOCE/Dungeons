@@ -267,7 +267,7 @@ public class World {
         // spawn relevant enemies at the specified tick intervals
         tickSpiderSpawn();
         tickZombieToastSpawn();
-        inventory.tickSpectre();
+        if (inventory.hasItem("spectre")) inventory.tickSpectre();
 
         // Now evaluate goals. Goal should never be null, but add a check incase there is an error in the input file
 
