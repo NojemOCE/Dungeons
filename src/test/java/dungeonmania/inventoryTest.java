@@ -1,6 +1,7 @@
 package dungeonmania;
 
 import dungeonmania.collectable.*;
+import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.inventory.Inventory;
 
 import org.junit.jupiter.api.Test;
@@ -374,5 +375,39 @@ public class inventoryTest {
 
         assertNull(inv.getType("wood2"));
     }
+
+    /**
+     * Check if an invalidActionException is thrown when the provided item id 
+     * isn't present within the inventory
+     */
+    @Test
+    public void testInvalidActionInventorytick() {
+        Inventory inv = new Inventory();
+        assertThrows(InvalidActionException.class, () -> inv.tick("wood1"));
+    }
+
+    /**
+     * Check if an IllegalArgumentException is thrown when the provided item id 
+     * doesn't correspond to a usable item
+     */
+    @Test
+    public void testIllegalArgumentInventorytick() {
+        Inventory inv = new Inventory();
+        inv.collect(new Wood(1, 2, "wood1"));
+        assertThrows(IllegalArgumentException.class, () -> inv.tick("wood1"));
+    }
+
+    /**
+     * Checks if a valid usable item is consumed and removed from the inventory 
+     * when tick is called with its corresponding item id
+     */
+    @Test
+    public void testUsabletick() {
+        Inventory inv = new Inventory();
+        HealthPotion HPPot = new HealthPotion(1, 2, "health_potion1");
+        inv.collect(HPPot);
+        assertEquals(HPPot, inv.tick("health_potion1"));
+    }
+
 
 }
