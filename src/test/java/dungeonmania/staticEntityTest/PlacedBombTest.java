@@ -35,7 +35,7 @@ public class PlacedBombTest {
     @Test
     public void testPlaceBomb() {
         // Create a new world
-        World world = new World("player-bomb", "Standard");
+        World world = new World("player-bomb", "Standard", 1);
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "player-bomb" + ".json");
             JSONObject game = new JSONObject(file);
