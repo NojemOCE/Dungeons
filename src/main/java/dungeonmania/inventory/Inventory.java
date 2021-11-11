@@ -382,7 +382,7 @@ public class Inventory {
         } else if (buildableType.equalsIgnoreCase("shield")) {
             return numItem("wood") >= 2 && (numItem("treasure") >= 1 || numItem("key") == 1);
         } else if (buildableType.equalsIgnoreCase("sceptre")) {
-            return (numItem("wood") >= 1 || numItem("arrow") >= 2) && (numItem("key") >= 1 || numItem("treasure") >= 1) && numItem("sun_stone") >= 1 && hasSceptre();
+            return (numItem("wood") >= 1 || numItem("arrow") >= 2) && (numItem("key") >= 1 || numItem("treasure") >= 1) && numItem("sun_stone") >= 1;
         } else if (buildableType.equalsIgnoreCase("midnight_armour")) {
             return numItem("armour") >= 1 && numItem("sun_stone") >= 1;
         } else {
