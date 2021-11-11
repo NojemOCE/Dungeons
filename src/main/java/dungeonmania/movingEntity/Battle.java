@@ -45,19 +45,19 @@ public class Battle {
 
 
         // Base attack modified by inventory weapons
-        double playerAttack = inventory.attackModifier(player.getAttackDamage());
+        //double playerAttack = inventory.attackModifier(player.getAttackDamage());
         // Character attack modified by players defence weapons
-        double characterAttack = inventory.defenceModifier(character.getAttackDamage());
+        //double characterAttack = inventory.defenceModifier(character.getAttackDamage());
 
         double currentPlayerHealth = player.getHealthPoint().getHealth();
         double currentEnemyHealth = character.getHealthPoint().getHealth();
 
-        character.defend((currentPlayerHealth * playerAttack)/10);
+        //character.defend((currentPlayerHealth * playerAttack)/10);
         //System.out.println("Player attacks with " + (currentPlayerHealth * playerAttack)/10);
-        if (enemyAttackEnabled) {
-            player.defend((currentEnemyHealth * characterAttack)/10);
+        // if (enemyAttackEnabled) {
+        //     player.defend((currentEnemyHealth * characterAttack)/10);
 
-        }
+        // }
         //System.out.println("Enemy attacks with " + (currentEnemyHealth * characterAttack)/10);
 
         // ally help
