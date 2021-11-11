@@ -63,9 +63,6 @@ public class LoadGameFactory extends Factory {
             else if (activePotionType.equals("invisibility_potion")) {
                 e = new InvisibilityPotion(activePotionDuration);
             }
-            else if (activePotionType.equals("health_potion")) {
-                e = new HealthPotion(activePotionDuration);
-            }
 
             Player player = new Player(x, y, id, playerHP, e);
             return player;
@@ -143,7 +140,6 @@ public class LoadGameFactory extends Factory {
         } 
         return null;
 
-        // "assassin", "hydra");
     }
 
     /**

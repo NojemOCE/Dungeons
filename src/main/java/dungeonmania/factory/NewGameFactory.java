@@ -88,6 +88,12 @@ public class NewGameFactory extends Factory {
            
             return e;
         } 
+
+        else if (type.equals("hydra")) {
+            Hydra e = new Hydra(x, y, id);
+           
+            return e;
+        } 
         
         else if (type.equals("spider")) {
             Spider e = new Spider(x, y, id);
