@@ -115,6 +115,10 @@ public class World {
         movingEntities.forEach((id, me) -> {
             player.subscribePassiveObserver((PlayerPassiveObserver)me);
         });
+
+        if (!(goals == null)) {
+            goals.evaluate(this);
+        }
         return worldDungeonResponse();
     }
 
@@ -736,7 +740,11 @@ public class World {
 
         movingEntities.forEach( (id, me) -> {
             this.player.subscribePassiveObserver((PlayerPassiveObserver)me);
-        });        
+        });
+
+        if (!(goals == null)) {
+            goals.evaluate(this);
+        }
 
         int entityCount = factory.getEntityCount();
 

@@ -246,7 +246,8 @@ public class LoadGameFactory extends Factory {
         } 
         
         else if (type.equals("boulder")) {
-            Boulder e = new Boulder(x, y, id);
+            JSONObject stateJSON = obj.getJSONObject("state");
+            Boulder e = new Boulder(x, y, id, getStateFromJSON(stateJSON));
             return e;
         } 
         
