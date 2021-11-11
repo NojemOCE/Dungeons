@@ -40,10 +40,6 @@ public abstract class MovingEntity extends Entity {
         super(position, id, type);
         this.healthPoint = healthPoint;
         this.attackDamage = attackDamage;
-<<<<<<< HEAD
-=======
-        this.state = new NormalState();
->>>>>>> 722ac4b730d06098e3d17d1ca72605f10a7686f7
     }
 
     /**
