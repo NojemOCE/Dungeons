@@ -397,7 +397,7 @@ public class FileLoadTest {
             else if (e.getType().contains("portal")) {
                 assert(e.getPosition().equals(new Position(2, 1)) || e.getPosition().equals(new Position(3, 3)));
             }
-            else if (e.getType().equals("open_door")) {
+            else if (e.getType().equals("door_open")) {
                 assert(e.getPosition().equals(new Position(3, 4)));
             }
             else if (e.getType().equals("switch")) {

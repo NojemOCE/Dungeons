@@ -84,7 +84,7 @@ public class Door extends StaticEntity {
     @Override
     public EntityResponse getEntityResponse() {
         if (isOpen) {
-            return new EntityResponse(getId(), "open_door", getPosition(), false);
+            return new EntityResponse(getId(), "door_open", getPosition(), false);
         } else {
             return super.getEntityResponse();
         }
