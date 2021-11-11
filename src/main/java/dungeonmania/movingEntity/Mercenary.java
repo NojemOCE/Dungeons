@@ -9,10 +9,7 @@ import org.json.JSONObject;
 import dungeonmania.World;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.movingEntity.MovementStrategies.FollowPlayer;
-<<<<<<< HEAD
-=======
 import dungeonmania.movingEntity.States.State;
->>>>>>> master
 
 public class Mercenary extends MercenaryComponent {
 
@@ -33,22 +30,11 @@ public class Mercenary extends MercenaryComponent {
         setAlly(false);
     }
 
-<<<<<<< HEAD
-    public Mercenary(int x, int y, String id, HealthPoint hp, String defaultMovement, String currentMovement, Boolean isAlly) {
-        super(x, y, id, "mercenary", hp, MERC_ATTACK);
-        setMovement(getMovementFromString(currentMovement));
-        setDefaultMovementStrategy(getMovementFromString(defaultMovement));
-        setAlly(isAlly);
-        setState(state);
-    }
-
-=======
     public Mercenary(int x, int y, String id, HealthPoint hp, MovementStrategy defaultMovement, MovementStrategy currentMovement, Boolean isAlly, State state) {
         super(x,y,id,"mercenary", hp, MERC_ATTACK, defaultMovement,currentMovement,isAlly,state);
 
     }
 
->>>>>>> master
     /**
      * The character can bribe a mercenary if they are within 2 cardinal tiles
      * to the mercenary. Player requires minimum amount of gold to bribe.
@@ -81,12 +67,4 @@ public class Mercenary extends MercenaryComponent {
 
         return mercJSON;
     }
-<<<<<<< HEAD
-
-    @Override
-    public void update(Sceptre s) {
-        setAlly(s.isMindControlled(this));
-    }
-=======
->>>>>>> master
 }
