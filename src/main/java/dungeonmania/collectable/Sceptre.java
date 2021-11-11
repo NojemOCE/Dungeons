@@ -2,6 +2,7 @@ package dungeonmania.collectable;
 
 import dungeonmania.movingEntity.MercenaryComponent;
 import dungeonmania.movingEntity.MovingEntity;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -45,17 +46,24 @@ public class Sceptre extends CollectableEntity {
         }
     }
 
+    public int getDuration(MercenaryComponent m) {
+        return controlled.get(m);
+    }
+
     public boolean isMindControlled(MercenaryComponent m) {
         return !isNull(controlled.get(m));
     }
 
-    public  List<String> getMindControlled() {
+    public JSONArray getMindControlled() {
 
-        List<String> controlledIds = new ArrayList<>();
+        JSONArray controlledJSON = new JSONArray();
         for (MercenaryComponent m : controlled.keySet()) {
-            controlledIds.add(m.getId());
+            JSONObject entity = new JSONObject();
+            entity.put("id", m.getId());
+            entity.put("duration", getDuration(m));
         }
-        return controlledIds;
+
+        return controlledJSON;
     }
 
 }

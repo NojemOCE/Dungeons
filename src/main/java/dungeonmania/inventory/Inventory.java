@@ -86,6 +86,10 @@ public class Inventory {
         getSceptre().useMindControl(m);
     }
 
+    public void useSceptre(MercenaryComponent m, int duration) {
+        getSceptre().useMindControl(m, duration);
+    }
+
     /**
      * Checks if the provided item type is able to be crafted with the items currently within the inventory.
      * If the item is able to be crafted, the crafting material are consumed and the crafted item is added to the inventory
