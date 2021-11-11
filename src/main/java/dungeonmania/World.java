@@ -311,6 +311,7 @@ public class World {
         }
         return true;
     }
+    
     /*
      * Checks whether a given position is a valid zombie spawn position
      * @param position Position to check
