@@ -212,7 +212,7 @@ public class SwampTileTest {
 
         // move spider into swamp tile
         DungeonResponse d = world.tick(null, Direction.NONE);
-        d = world.tick(null, null);
+        d = world.tick(null, Direction.NONE);
         List<EntityResponse> entities = d.getEntities();
 
         // get the current positions
@@ -313,6 +313,8 @@ public class SwampTileTest {
 
         // check it is still on the same spot after one tick
         d = world.tick(null, Direction.LEFT);
+        entities = d.getEntities();
+
         // get the current positions
         Position mercPos2 = null;
 
@@ -330,6 +332,7 @@ public class SwampTileTest {
 
         // now after one tick the merc will move right
         d = world.tick(null, Direction.RIGHT);
+        entities = d.getEntities();
         // get the current positions
         //mercPos2 = null;
 
@@ -343,9 +346,6 @@ public class SwampTileTest {
 
         // check that we got the positions
         assertNotNull(mercPos3);
-        System.out.println(mercPos);
-        System.out.println(mercPos2);
-        System.out.println(mercPos3);
 
         assertEquals(mercPos2.translateBy(Direction.RIGHT), mercPos3);
     }

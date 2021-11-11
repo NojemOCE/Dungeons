@@ -58,7 +58,7 @@ public class PlacedBombTest {
         }
 
         // place the bomb down
-        d = world.tick(bombId, null);
+        d = world.tick(bombId, Direction.NONE);
 
         // now if we move away, it will act like a wall
         d = world.tick(null, Direction.LEFT);

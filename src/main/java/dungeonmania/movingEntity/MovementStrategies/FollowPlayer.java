@@ -30,9 +30,17 @@ public class FollowPlayer implements MovementStrategy {
         // use path.get(1)
         if (path.size() < 1) return;
         if (path.get(1).equals(world.getPlayer().getPosition())) {
-            if (!Objects.isNull(world.getBattle()) || me.getAlly()) me.setPosition(path.get(0));
-            else me.setPosition(me.validMove(path.get(1), world));
-        } else me.setPosition(me.validMove(path.get(1), world));
+
+            if (!Objects.isNull(world.getBattle()) || me.getAlly()) {
+                me.setPosition(path.get(0));
+            }
+            else {
+                me.setPosition(me.validMove(path.get(1), world));
+            }
+        } 
+        else {
+            me.setPosition(me.validMove(path.get(1), world));
+        }
 
 
        

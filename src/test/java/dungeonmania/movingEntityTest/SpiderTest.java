@@ -172,7 +172,7 @@ public class SpiderTest {
                 spiderCount++;
             }
         }
-        assertEquals(4, spiderCount);
+        assertEquals(5, spiderCount);
 
         for (int i=0; i < 18; i++) {
             assertDoesNotThrow(()-> world.tick(null, Direction.UP));
@@ -201,7 +201,7 @@ public class SpiderTest {
         assertEquals(true, newSpider);
         assertEquals(1, newSpiderCount);
         assertEquals(true, isSpider);
-        assertEquals(5, spiderCount);
+        assertEquals(6, spiderCount);
 
     }
 
@@ -566,7 +566,7 @@ public class SpiderTest {
         d = world.tick(null, Direction.DOWN);
         for (EntityResponse e : d.getEntities()) {
             if (e.getType().equals("player")) {
-                assertEquals(new Position(1, 3), e.getPosition());
+                assertEquals(new Position(2, 2), e.getPosition());
             }
             else {
                 assertEquals("wall", e.getType());

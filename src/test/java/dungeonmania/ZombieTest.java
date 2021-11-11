@@ -97,7 +97,7 @@ public class ZombieTest {
         }
 
         // if we tick the zombie should be ON the portal
-        DungeonResponse d = world.tick(null, null);
+        DungeonResponse d = world.tick(null, Direction.NONE);
         List<EntityResponse> es = d.getEntities();
 
         Position zombiePos = null;

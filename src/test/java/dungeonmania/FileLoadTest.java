@@ -520,7 +520,7 @@ public class FileLoadTest {
         }
         assertNotNull(bombId);
 
-        controller.tick(bombId, null);
+        controller.tick(bombId, Direction.NONE);
         controller.tick(null, Direction.DOWN);
 
         controller.saveGame("placing-bomb1");
@@ -673,7 +673,7 @@ public class FileLoadTest {
             }
         }
 
-        controller.tick(invincID, null);
+        controller.tick(invincID, Direction.NONE);
         controller.tick(null, Direction.LEFT);
 
         assertDoesNotThrow(()-> controller.saveGame("invinc-potion1"));

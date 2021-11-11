@@ -41,8 +41,9 @@ public class GoalsTest {
         assertEquals("(:enemies OR :exit)", d.getGoals());
 
         //Mercenary and player are currently in battle
+        //Battle ended, goal achieved
         d = c.tick(null, Direction.DOWN);
-        assertEquals("(:enemies OR :exit)", d.getGoals());
+        assertEquals("", d.getGoals());
 
         /*d = c.tick(null, Direction.DOWN);
         assertEquals("(:enemies OR :exit)", d.getGoals());
@@ -51,8 +52,8 @@ public class GoalsTest {
         assertEquals("(:enemies OR :exit)", d.getGoals());*/
 
         //Battle ended, goal achieved
-        d = c.tick(null, Direction.DOWN);
-        assertEquals("", d.getGoals());
+        //d = c.tick(null, Direction.DOWN);
+        //assertEquals("", d.getGoals());
     }
     @Test
     public void simpleAndTest1(){
@@ -67,7 +68,7 @@ public class GoalsTest {
 
         //Mercenary and player meet on the same square and battle
         d = c.tick(null, Direction.RIGHT);
-        assertEquals("(:enemies AND :exit)", d.getGoals());
+        assertEquals(":exit", d.getGoals());
 
         //Battle ended, enemies goal achieved
         d = c.tick(null, Direction.UP);
@@ -96,7 +97,7 @@ public class GoalsTest {
         
         // Mercenary and player meet on the same square and battle
         d = c.tick(null, Direction.UP);
-        assertEquals("(:enemies AND :exit)", d.getGoals());
+        assertEquals(":exit", d.getGoals());
 
         //Battle ended, enemies goal achieved
         d = c.tick(null, Direction.UP);
