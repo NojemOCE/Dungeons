@@ -12,6 +12,7 @@ import dungeonmania.inventory.Inventory;
 
 public class BossBattle implements BattleStrategy {
 
+    @Override
     public double attackModifier(Inventory inventory, double playerAttack) {
         List<String> idToRemove = new ArrayList<>();
         for (CollectableEntity item : inventory.getCollectableItems().values()) {
@@ -36,10 +37,10 @@ public class BossBattle implements BattleStrategy {
         
         inventory.removeItem(idToRemove);
         
-        return playerAttack;
+        return -1 * playerAttack;
     }
 
-
+    @Override
     public double defenceModifier(Inventory inventory, double enemyAttack) {
         List<String> idToRemove = new ArrayList<>();
         for (CollectableEntity item : inventory.getCollectableItems().values()) {
@@ -67,7 +68,7 @@ public class BossBattle implements BattleStrategy {
         }
 
         inventory.removeItem(idToRemove);
-        
+
         return enemyAttack;
     }
 }

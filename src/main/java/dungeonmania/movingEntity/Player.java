@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import dungeonmania.Passive;
 import dungeonmania.World;
+import dungeonmania.battle.*;
 import dungeonmania.collectable.CollectableEntity;
 import dungeonmania.gamemode.Gamemode;
 import dungeonmania.staticEntity.StaticEntity;
@@ -48,7 +49,6 @@ public class Player extends MovingEntity {
     @Override
     public void move(World world) {
         return;
-    
     }
 
     /**
@@ -63,22 +63,7 @@ public class Player extends MovingEntity {
         if (!Objects.isNull(se)) {
             // interact with static entitity
             return se.interact(world, this); 
-        } 
-        if (!Objects.isNull(world.getBattle())) {
-            // check if this objects position is same as players (for players if there is a battle)
-            // they cannot move anyways
-            if (getPosition().equals(world.getPlayer().getPosition())) {
-                // cannot move into battle, wait outside
-                return getPosition();
-            }
         }
-        // also check if another moving entity in the position already
-        MovingEntity c = world.getCharacter(position);
-        if (!this.getType().equals("player") && !Objects.isNull(c)) {
-            // two characters cant be in same place, dont move this object
-            return getPosition();
-        } 
-        
 
         return position;
     }
@@ -129,7 +114,10 @@ public class Player extends MovingEntity {
         if (!enemy.getAlly()) {
             if (Objects.isNull(activePotion) || !activePotion.getType().equals("invisibility_potion")) {
                 notifyObserversForBattle(world); // mercenary speed
-                return new Battle(this, enemy, gamemode.isEnemyAttackEnabled());
+                if (enemy instanceof AssassinDecorator || enemy instanceof Hydra) {
+                    return new Battle(this, enemy, gamemode.isEnemyAttackEnabled(), new BossBattle());
+                }
+                return new Battle(this, enemy, gamemode.isEnemyAttackEnabled(), new NormalBattle());
             }
             // notify observers of battle
         }

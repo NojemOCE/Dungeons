@@ -32,7 +32,7 @@ public class ExitTest {
      */
     @Test
     public void playerInteract(){
-        World world = new World("exit+boulder", "Standard");
+        World world = new World("exit+boulder", "Standard", 1);
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "exit+boulder" + ".json");
             JSONObject game = new JSONObject(file);
@@ -79,7 +79,7 @@ public class ExitTest {
      */
     @Test
     public void boulderInteract(){
-        World world = new World("exit+boulder", "Standard");
+        World world = new World("exit+boulder", "Standard", 1);
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "exit+boulder" + ".json");
             JSONObject game = new JSONObject(file);

@@ -114,5 +114,20 @@ public class PlayerTest {
 
     }
 
+    @Test
+    public void testPlayerMoveMethode(){
+        //Assert that the move method and move entity in player do nothing as this is not what is used to move the player
+
+        Player p = new Player(1, 1, "player1", new HealthPoint(20));
+
+        World w = new World("test", "standard", "test", 1);
+        
+        p.move(w);
+        assertEquals(new Position(1, 1), p.getPosition());
+
+        p.moveEntity(w);
+        assertEquals(new Position(1, 1), p.getPosition());
+    }
+
 
 }

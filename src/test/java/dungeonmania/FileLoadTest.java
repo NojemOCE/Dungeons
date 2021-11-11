@@ -397,7 +397,7 @@ public class FileLoadTest {
             else if (e.getType().contains("portal")) {
                 assert(e.getPosition().equals(new Position(2, 1)) || e.getPosition().equals(new Position(3, 3)));
             }
-            else if (e.getType().equals("open_door")) {
+            else if (e.getType().equals("door_open")) {
                 assert(e.getPosition().equals(new Position(3, 4)));
             }
             else if (e.getType().equals("switch")) {
@@ -520,7 +520,7 @@ public class FileLoadTest {
         }
         assertNotNull(bombId);
 
-        controller.tick(bombId, null);
+        controller.tick(bombId, Direction.NONE);
         controller.tick(null, Direction.DOWN);
 
         controller.saveGame("placing-bomb1");
@@ -538,7 +538,7 @@ public class FileLoadTest {
             if (e.getType().equals("player")) {
                 assert(e.getPosition().equals(new Position(1, 3)));
             }
-            else if (e.getType().equals("placed_bomb")) {
+            else if (e.getType().equals("bomb_placed")) {
                 assert(e.getPosition().equals(new Position(1, 2)));
             }
             else if (e.getType().equals("treasure")) {
@@ -673,7 +673,7 @@ public class FileLoadTest {
             }
         }
 
-        controller.tick(invincID, null);
+        controller.tick(invincID, Direction.NONE);
         controller.tick(null, Direction.LEFT);
 
         assertDoesNotThrow(()-> controller.saveGame("invinc-potion1"));
@@ -711,6 +711,119 @@ public class FileLoadTest {
 
 
     }
+
+    /**
+     * MAP:
+     * P  H
+     * I
+     */
+    @Test
+    public void activeInvisibilityPotionLoadTest() {
+        clearSavedFilesFolder();
+        DungeonManiaController c = new DungeonManiaController();
+
+        c.newGame("health-invis", "standard");
+
+        //collect invis potion
+        DungeonResponse d = c.tick(null, Direction.DOWN);
+
+        //Check invis potion is in inventory
+        assertEquals(1, d.getInventory().size());
+        String potionID = "";
+        for (ItemResponse i : d.getInventory()) {
+            assertEquals("invisibility_potion", i.getType());
+            potionID = i.getId();
+        }
+
+        // save game with invis potion in inventory
+        c.saveGame("health-invis1");
+
+        //use the invisibility potion
+        d = c.tick(potionID, Direction.NONE);
+        assertEquals(0, d.getInventory().size());
+
+        //load the saved game (before the potion was used)
+        d = c.loadGame("health-invis1");
+        assertEquals(1, d.getInventory().size());
+        potionID = "";
+        for (ItemResponse i : d.getInventory()) {
+            assertEquals("invisibility_potion", i.getType());
+            potionID = i.getId();
+        }
+
+        //use the invis potion
+        d = c.tick(potionID, Direction.NONE);
+        assertEquals(0, d.getInventory().size());
+
+        // save game with invis potion active
+        c.saveGame("health-invis2");
+
+        // move down
+        d = c.tick(null, Direction.DOWN);
+
+        //load game to right after invis potion was used
+        d  = c.loadGame("health-invis2");
+        assertEquals(0, d.getInventory().size());
+
+        clearSavedFilesFolder();
+    }
+
+    /**
+     * MAP:
+     * P  H
+     * I
+     */
+    @Test
+    public void activeHealthPotionLoadTest() {
+        clearSavedFilesFolder();
+        DungeonManiaController c = new DungeonManiaController();
+
+        c.newGame("health-invis", "standard");
+
+        //collect health potion
+        DungeonResponse d = c.tick(null, Direction.RIGHT);
+
+        //Check health potion is in inventory
+        assertEquals(1, d.getInventory().size());
+        String potionID = "";
+        for (ItemResponse i : d.getInventory()) {
+            assertEquals("health_potion", i.getType());
+            potionID = i.getId();
+        }
+
+        // save game with health potion in inventory
+        c.saveGame("health-invis1");
+
+        //use the health potion
+        d = c.tick(potionID, Direction.NONE);
+        assertEquals(0, d.getInventory().size());
+
+        //load the saved game (before the potion was used)
+        d = c.loadGame("health-invis1");
+        assertEquals(1, d.getInventory().size());
+        potionID = "";
+        for (ItemResponse i : d.getInventory()) {
+            assertEquals("health_potion", i.getType());
+            potionID = i.getId();
+        }
+
+        //use the invis potion
+        d = c.tick(potionID, Direction.NONE);
+        assertEquals(0, d.getInventory().size());
+
+        // save game with invis potion active
+        c.saveGame("health-invis2");
+
+        // move down
+        d = c.tick(null, Direction.DOWN);
+
+        //load game to right after invis potion was used
+        d  = c.loadGame("health-invis2");
+        assertEquals(0, d.getInventory().size());
+        
+        clearSavedFilesFolder();
+    }
+
 
     /**
      * Clears the saved files folder after each test

@@ -168,7 +168,7 @@ public class Inventory {
     }
 
     public void tickSpectre() {
-        getSceptre().tickMindControlled();
+        //getSceptre().tickMindControlled();
     }
 
     public List<ItemResponse> getInventoryResponse() {

@@ -14,6 +14,7 @@ import org.junit.jupiter.params.shadow.com.univocity.parsers.common.processor.In
 
 import dungeonmania.DungeonManiaController;
 import dungeonmania.World;
+import dungeonmania.battle.NormalBattle;
 import dungeonmania.exceptions.*;
 import dungeonmania.gamemode.Standard;
 import dungeonmania.collectable.CollectableEntity;
@@ -51,7 +52,7 @@ public class CharacterTest {
 
     @Test
     public void testPlayerMovement() {
-        World world = new World("test", "Standard");
+        World world = new World("test", "Standard", 1);
         
         HealthPoint playerHealth = new HealthPoint(100);
 
@@ -68,7 +69,7 @@ public class CharacterTest {
 
     @Test
     public void testCharacterMovement() {
-        World world = new World("key+door-noMatch", "Standard");
+        World world = new World("key+door-noMatch", "Standard", 1);
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "key+door-noMatch" + ".json");
             JSONObject game = new JSONObject(file);
@@ -110,7 +111,7 @@ public class CharacterTest {
         Player player = new Player(1, 1, "player", playerHealth);
         Mercenary mercenary =  new Mercenary(1,1,"merc");
         Inventory inventory = new Inventory();
-        Battle battle = new Battle(player, mercenary, true);
+        Battle battle = new Battle(player, mercenary, true, new NormalBattle());
 
         // on same cell, battle should be created
 
@@ -132,7 +133,7 @@ public class CharacterTest {
 
     @Test
     public void testMercenaryDjikstras() {
-        World world = new World("merc", "Standard");
+        World world = new World("merc", "Standard", 1);
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "advanced" + ".json");
             JSONObject game = new JSONObject(file);
@@ -157,7 +158,7 @@ public class CharacterTest {
 
     @Test
     public void testRunAway() {
-        World world = new World("merc", "Standard");
+        World world = new World("merc", "Standard", 1);
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "advanced" + ".json");
             JSONObject game = new JSONObject(file);
@@ -167,6 +168,9 @@ public class CharacterTest {
             e.printStackTrace();
         }
 
+
+
+        
         Mercenary merc = (Mercenary) world.getCharacter(new Position(3,5));
         CollectableEntity potion = world.getCollectableEntity(new Position(11,10));
         for (int i = 0; i < 4; i++) {
@@ -263,7 +267,7 @@ public class CharacterTest {
 
     @Test
     public void testMercOutofRange() {
-        World world = new World("merc", "Standard");
+        World world = new World("merc", "Standard", 1);
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "advanced" + ".json");
             JSONObject game = new JSONObject(file);
@@ -322,7 +326,7 @@ public class CharacterTest {
 
     @Test
     public void testBribe() {
-        World world = new World("merc", "Standard");
+        World world = new World("merc", "Standard", 1);
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "advanced" + ".json");
             JSONObject game = new JSONObject(file);
@@ -387,7 +391,7 @@ public class CharacterTest {
      */
     @Test
     public void testGameOver() {
-        World world = new World("player-gameOver-test", "Peaceful");
+        World world = new World("player-gameOver-test", "Peaceful", 1);
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "player-gameOver-test" + ".json");
             JSONObject game = new JSONObject(file);
@@ -421,7 +425,7 @@ public class CharacterTest {
      */
     @Test
     public void testInvalidSpiderSpawn() {
-        World world = new World("a-lot-of-boulders", "Peaceful");
+        World world = new World("a-lot-of-boulders", "Peaceful", 1);
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "a-lot-of-boulders" + ".json");
             JSONObject game = new JSONObject(file);

@@ -1,10 +1,13 @@
 package dungeonmania.movingEntity;
 
+import dungeonmania.battle.BattleStrategy;
 import dungeonmania.inventory.Inventory;
 
 public class Battle {
     private Player player;
     private MovingEntity character;
+    private BattleStrategy battleStrat;
+    
     
     private boolean enemyAttackEnabled;
     private boolean playerWins;
@@ -15,11 +18,12 @@ public class Battle {
      * @param player Player that is engaged in battle
      * @param character enemy that the player is fighting in battle
      */
-    public Battle(Player player, MovingEntity character, Boolean enemyAttack) {
+    public Battle(Player player, MovingEntity character, Boolean enemyAttack, BattleStrategy bs) {
         this.player = player;
         this.character = character;
         this.activeBattle = true;
         this.enemyAttackEnabled = enemyAttack;
+        this.battleStrat = bs;
     }
 
     /**
@@ -48,6 +52,9 @@ public class Battle {
         //double playerAttack = inventory.attackModifier(player.getAttackDamage());
         // Character attack modified by players defence weapons
         //double characterAttack = inventory.defenceModifier(character.getAttackDamage());
+        double playerAttack = battleStrat.attackModifier(inventory, player.getAttackDamage());
+        // Character attack modified by players defence weapons
+        double characterAttack = battleStrat.defenceModifier(inventory, player.getAttackDamage());
 
         double currentPlayerHealth = player.getHealthPoint().getHealth();
         double currentEnemyHealth = character.getHealthPoint().getHealth();
@@ -60,6 +67,13 @@ public class Battle {
         // }
         //System.out.println("Enemy attacks with " + (currentEnemyHealth * characterAttack)/10);
 
+        System.out.println("Player attacks with " + (currentPlayerHealth * playerAttack)/10);
+        character.defend((currentPlayerHealth * playerAttack)/10);
+        if (enemyAttackEnabled) {
+            System.out.println("Enemy attacks with " + (currentEnemyHealth * characterAttack)/10);
+
+            player.defend((currentEnemyHealth * characterAttack)/10);
+        }
         // ally help
         player.alliesInRange().forEach(ally -> {
             character.defend((ally.getHealthPoint().getHealth() * ally.getAttackDamage()) / 10);

@@ -28,7 +28,7 @@ public class LoadGameFactory extends Factory {
      * @param gamemode gamemode of the factory
      */
     public LoadGameFactory(Gamemode gamemode) {
-        super(gamemode);
+        super(gamemode, 1);
     }
 
     /**
@@ -62,9 +62,6 @@ public class LoadGameFactory extends Factory {
             }
             else if (activePotionType.equals("invisibility_potion")) {
                 e = new InvisibilityPotion(activePotionDuration);
-            }
-            else if (activePotionType.equals("health_potion")) {
-                e = new HealthPotion(activePotionDuration);
             }
 
             Player player = new Player(x, y, id, playerHP, e);
@@ -123,12 +120,26 @@ public class LoadGameFactory extends Factory {
             Zombie e = new Zombie(x, y, id, entityHP, defaultMovement, currentMovement, state);
             return e;
         } 
+
         else if (type.equals("mercenary")) {
             boolean isAlly = obj.getBoolean("ally");
             Mercenary e = new Mercenary(x, y, id, entityHP, defaultMovement, currentMovement, isAlly, state);
             return e;
+        }
+
+        else if (type.equals("assassin")) {
+            boolean isAlly = obj.getBoolean("ally");
+            MercenaryComponent m = new Mercenary(x, y, id, entityHP, defaultMovement, currentMovement, isAlly, state);
+            AssassinDecorator e = new AssassinDecorator(m);
+            return e;
+        } 
+
+        else if (type.equals("hydra")) {
+            Hydra e = new Hydra(x,y, id, entityHP,  defaultMovement, currentMovement, state);
+            return e;
         } 
         return null;
+
     }
 
     /**
@@ -207,7 +218,6 @@ public class LoadGameFactory extends Factory {
      * @return static entity
      */
     private StaticEntity createStaticEntityFromJSON(JSONObject obj, World world) {
-        //TODO update constructors
         int x = obj.getInt("x");
         int y = obj.getInt("y");
 
@@ -232,7 +242,8 @@ public class LoadGameFactory extends Factory {
         } 
         
         else if (type.equals("boulder")) {
-            Boulder e = new Boulder(x, y, id);
+            JSONObject stateJSON = obj.getJSONObject("state");
+            Boulder e = new Boulder(x, y, id, getStateFromJSON(stateJSON));
             return e;
         } 
         
@@ -267,7 +278,7 @@ public class LoadGameFactory extends Factory {
             return e;   
         } 
         
-        else if (type.equals("placed_bomb")) {
+        else if (type.equals("bomb_placed")) {
             PlacedBomb e = new PlacedBomb(x, y, id);
             return e; 
         }
@@ -358,11 +369,26 @@ public class LoadGameFactory extends Factory {
             Shield e = new Shield(id, durability);
             return e;
         }
+        /*else if (type.equals("sceptre")) {
+            Anduril e = new Anduril(id, durability);
+            return e;
+        }
+
+        else if (type.equals("anduril")) {
+            Sceptre e = new Sceptre(id, durability);
+            return e;
+        }
+
+        else if (type.equals("midnight_armour")) {
+            MidnightArmour e = new MidnightArmour(id, durability);
+            return e;
+        }
 
         else if (type.equals("sun_stone")) {
             SunStone e = new SunStone(id, durability);
             return e;
         }
+        }*/
         return null;
     }
 
@@ -396,7 +422,7 @@ public class LoadGameFactory extends Factory {
      */
     private List<String> collectablesList() {
         // TODO add additional entities
-        return Arrays.asList("arrow", "armour", "bomb", "bow", "health_potion", "invisibility_potion", "invincibility_potion", "key", "one_ring", "shield", "sword", "treasure", "wood");
+        return Arrays.asList("arrow", "armour", "bomb", "bow", "health_potion", "invisibility_potion", "invincibility_potion", "key", "one_ring", "shield", "sword", "treasure", "wood",  "anduril", "sceptre", "midnight_armour", "sun_stone");
     }
 
     /**
@@ -405,7 +431,7 @@ public class LoadGameFactory extends Factory {
      */
     private List<String> staticsList() {
         // TODO add additional entities
-        return Arrays.asList("boulder", "door", "exit", "switch", "placed_bomb", "portal", "wall", "zombie_toast_spawner");
+        return Arrays.asList("boulder", "door", "exit", "switch", "bomb_placed", "portal", "wall", "zombie_toast_spawner", "swamp_tile");
     }
 
     /**
@@ -414,6 +440,6 @@ public class LoadGameFactory extends Factory {
      */
     private List<String> movingEntitiesList() {
         // TODO add additional entities
-        return Arrays.asList("zombie_toast", "mercenary", "spider");
+        return Arrays.asList("zombie_toast", "mercenary", "spider", "assassin", "hydra");
     }
 }

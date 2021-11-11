@@ -3,6 +3,8 @@ package dungeonmania.staticEntity;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.json.JSONObject;
+
 import dungeonmania.Entity;
 import dungeonmania.World;
 import dungeonmania.movingEntity.Player;
@@ -22,6 +24,11 @@ public class Boulder extends StaticEntity {
     public Boulder(int x, int y, String id) {
         super(new Position(x, y, Position.STATIC_LAYER), id, "boulder");
         this.state = new NormalState();
+    }
+
+    public Boulder(int x, int y, String id, State state) {
+        this(x, y, id);
+        this.state = state;
     }
 
     /**
@@ -160,4 +167,11 @@ public class Boulder extends StaticEntity {
     public void setState(State state) {
         this.state = state;
     }
+
+    @Override
+	public JSONObject saveGameJson() {
+		JSONObject obj = super.saveGameJson();
+        obj.put("state", state.getStateJson());
+		return obj;
+	}
 }

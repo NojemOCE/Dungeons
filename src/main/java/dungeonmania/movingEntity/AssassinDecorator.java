@@ -25,4 +25,10 @@ public class AssassinDecorator extends MercenaryComponent {
 
         }
     }
+
+    @Override 
+    public void defend(double attack) {
+        if (attack < 0) attack = Math.abs(attack);
+        getHealthPoint().loseHealth(attack);
+    }
 }

@@ -25,7 +25,7 @@ public class ZombieTest {
 
     @Test
     public void zombieSpawnTest(){
-        World world = new World("zombie-spawn-test", "Standard");
+        World world = new World("zombie-spawn-test", "Standard", 1);
         
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "zombie-spawn-test" + ".json");
@@ -39,7 +39,7 @@ public class ZombieTest {
         }
 
 
-        for (int i=0; i < 20; i++) {
+        for (int i=1; i < 20; i++) {
             assertDoesNotThrow(()-> world.tick(null, Direction.UP));
         }
 
@@ -62,7 +62,7 @@ public class ZombieTest {
 
     @Test
     public void zombieInteractTest(){
-        World world = new World("invalid-interact", "Standard");
+        World world = new World("invalid-interact", "Standard", 1);
         
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "invalid-interact" + ".json");
@@ -83,7 +83,7 @@ public class ZombieTest {
 
     @Test
     public void zombieWalkOnPortal() {
-        World world = new World("zombie-portal-test", "Standard");
+        World world = new World("zombie-portal-test", "Standard", 1);
         
         try {
             String file = FileLoader.loadResourceFile("/dungeons/" + "zombie-portal-test" + ".json");
@@ -97,7 +97,7 @@ public class ZombieTest {
         }
 
         // if we tick the zombie should be ON the portal
-        DungeonResponse d = world.tick(null, null);
+        DungeonResponse d = world.tick(null, Direction.NONE);
         List<EntityResponse> es = d.getEntities();
 
         Position zombiePos = null;
