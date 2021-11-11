@@ -167,6 +167,9 @@ public class CharacterTest {
             e.printStackTrace();
         }
 
+
+
+        
         Mercenary merc = (Mercenary) world.getCharacter(new Position(3,5));
         CollectableEntity potion = world.getCollectableEntity(new Position(11,10));
         for (int i = 0; i < 4; i++) {
