@@ -51,13 +51,8 @@ public class World {
     static final double MERCENARY_ARMOUR_DROP = 0.4;
     static final double ZOMBIE_ARMOUR_DROP = 0.2;
     static final double ONE_RING_DROP = 0.1;
-<<<<<<< src/main/java/dungeonmania/World.java
     private int tickCount = 1;
     
-=======
-    private int tickCount = 0;
-
->>>>>>> src/main/java/dungeonmania/World.java
     /**
      * Constructor for world that takes the string of the dungeon name to build
      * and a string for the gamemode (Standard, Peaceful, Hard)
@@ -284,7 +279,7 @@ public class World {
                 player.subscribePassiveObserver((PlayerPassiveObserver)e);
             }
         }
-        inventory.tickSpectre();
+        //inventory.tickSpectre();
 
         // Now evaluate goals. Goal should never be null, but add a check incase there is an error in the input file
 
@@ -316,7 +311,7 @@ public class World {
         }
         return true;
     }
-
+    /**
      * Checks whether a given position is a valid zombie spawn position
      * @param position Position to check
      * @return true if the position giveen is valid, otherwise false
