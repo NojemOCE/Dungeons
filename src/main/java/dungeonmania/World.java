@@ -1,16 +1,12 @@
 package dungeonmania;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
-
-import javax.xml.crypto.AlgorithmMethod;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -22,7 +18,6 @@ import dungeonmania.staticEntity.*;
 import dungeonmania.util.*;
 import dungeonmania.gamemode.*;
 import dungeonmania.movingEntity.*;
-import dungeonmania.movingEntity.States.SwampState;
 import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.factory.*;
@@ -271,7 +266,7 @@ public class World {
         }
 
         // spawn relevant enemies at the specified tick intervals
-        if (inventory.hasItem("spectre")) inventory.tickSpectre();
+        if (inventory.hasItem("sceptre")) inventory.tickSceptre();
         List<Entity> newEntities = factory.tick(this);
 
         for (Entity e: newEntities) {
@@ -626,7 +621,7 @@ public class World {
             worldJSON.put("goal-condition", goals.saveGameJson());
         }
 
-        if (inventory.hasItem("spectre")) {
+        if (inventory.hasItem("sceptre")) {
             worldJSON.put("controlled", inventory.getSceptre().getMindControlled());
         }
 

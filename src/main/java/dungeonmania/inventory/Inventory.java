@@ -169,7 +169,7 @@ public class Inventory {
         return null;
     }
 
-    public void tickSpectre() {
+    public void tickSceptre() {
         //getSceptre().tickMindControlled();
     }
 

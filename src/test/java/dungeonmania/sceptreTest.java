@@ -3,30 +3,40 @@ package dungeonmania;
 import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.inventory.Inventory;
+import dungeonmania.util.Direction;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class sceptreTest {
 
     @Test
-    public void testCraftSpectre() {
+    public void testCraftSceptre() {
         DungeonManiaController controller = new DungeonManiaController();
-        controller.newGame("spectreWorld", "standard");
-        // Check that we can't craft spectre
+        controller.newGame("sceptreWorld", "standard");
 
-        assertThrows(InvalidActionException.class, () -> controller.build("spectre"));
+        // Check that we can't craft sceptre
+        assertThrows(InvalidActionException.class, () -> controller.build("sceptre"));
+
         // Walk around and collect everything
-        // Try craft Spectre
-        controller.build("spectre");
+        controller.tick(null, Direction.RIGHT);
+        controller.tick(null, Direction.RIGHT);
+        controller.tick(null, Direction.RIGHT);
+        controller.tick(null, Direction.DOWN);
+        controller.tick(null, Direction.LEFT);
+        controller.tick(null, Direction.LEFT);
+        controller.tick(null, Direction.LEFT);
+
+        // Try craft Sceptre
+        assertDoesNotThrow(() -> controller.build("sceptre"));
     }
 
     @Test
     public void testMindControl() {
         DungeonManiaController controller = new DungeonManiaController();
-        controller.newGame("spectreWorld", "standard");
-        // Craft spectre
+        controller.newGame("sceptreWorld", "standard");
+
+        // Craft sceptre
         // Bribe mercenary
         // Bribe assassin
         // Make sure they are controlled
