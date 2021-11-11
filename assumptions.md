@@ -113,6 +113,17 @@ Note: static entities marked with ^ are considered to be on the floor layer, whi
     * Attack power: 3
 * Armour 
     * Durability: 7
+* Sceptre
+    * Infinite durability
+* Anduril
+    * Infinite durability
+    * Attack damage is additive
+    * Bonus boss battle damage only affects the attack of the sword
+    * Defence is additive
+* Midnight Armour
+    * Infinite durability
+    * Attack damage is additive
+    * Defence is additive
 * For all
     * Once the character has collected an item, the item is removed from the list of game entities and added to the characters inventory
     * Health potions “can only be consumed once” - we understand this as meaning that once a health potion has been consumed, it is “discarded”,  the character is able to pick up additional health potions later on and consume them

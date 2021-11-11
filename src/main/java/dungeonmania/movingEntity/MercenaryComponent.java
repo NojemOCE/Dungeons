@@ -1,5 +1,6 @@
 package dungeonmania.movingEntity;
 
+import dungeonmania.collectable.Sceptre;
 import org.json.JSONObject;
 
 import dungeonmania.World;
