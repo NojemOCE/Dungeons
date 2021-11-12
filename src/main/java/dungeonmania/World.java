@@ -10,19 +10,18 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import javax.xml.crypto.AlgorithmMethod;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import dungeonmania.goal.*;
 import dungeonmania.inventory.Inventory;
+import dungeonmania.logic.Logic;
+import dungeonmania.logic.LogicComponent;
 import dungeonmania.response.models.*;
 import dungeonmania.staticEntity.*;
 import dungeonmania.util.*;
 import dungeonmania.gamemode.*;
 import dungeonmania.movingEntity.*;
-import dungeonmania.movingEntity.States.SwampState;
 import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.factory.*;
@@ -33,7 +32,7 @@ public class World {
     private Inventory inventory;
     private Gamemode gamemode;
     private Player player;
-    private String id; //TODO only ever set if game is saved?
+    private String id;
     private GoalComponent goals;
     private Map<String, CollectableEntity> collectableEntities = new HashMap<>();
     private Map<String, StaticEntity> staticEntities = new HashMap<>();
@@ -72,8 +71,6 @@ public class World {
         }
         this.inventory = new Inventory();
         this.factory = new NewGameFactory(gamemode, (new Random(randomSeed)).nextInt());
-
-
     }
 
     public World(String dungeonName, String gameMode, String id, int randomSeed) {
@@ -111,7 +108,10 @@ public class World {
             setGoals(null);
         }
 
+        // set up logic observer pattern and trigger any switches
+        setUpLogicObservers();
         triggerSwitches();
+
         movingEntities.forEach((id, me) -> {
             player.subscribePassiveObserver((PlayerPassiveObserver)me);
         });
@@ -120,6 +120,35 @@ public class World {
             goals.evaluate(this);
         }
         return worldDungeonResponse();
+    }
+
+    /**
+     * Helper method to set up the logic component observer pattern
+     */
+    private void setUpLogicObservers() {
+        for (StaticEntity se : staticEntities.values()) {
+            if (se instanceof Logic) {
+                observeAdjacentLogicComponents(se);
+            }
+        }
+    }
+
+    /**
+     * Add entity to relevant logic component observer lists
+     * @param e entity to make observer
+     */
+    private void observeAdjacentLogicComponents(StaticEntity e) {
+        List<Position> adjPositions = e.getPosition().getCardinallyAdjacentPositions();
+
+        for (Position p : adjPositions) {
+            List<StaticEntity> statics = getStaticEntitiesAtPosition(p);
+            for (StaticEntity se : statics) {
+                // all logic components should observe switches and wires
+                if (se instanceof FloorSwitch || se instanceof Wire) {
+                    ((Logic) se).addObserver(((Logic) e).getLogic());
+                }
+            }
+        }
     }
 
 
@@ -211,8 +240,10 @@ public class World {
 
         if (!Objects.isNull(itemUsed) ) {
             if (!(inventory.getType(itemUsed) == null) && inventory.getType(itemUsed).equals("bomb")) {
+                Bomb b = inventory.getBomb(itemUsed);
+                LogicComponent logic = factory.createLogicComponent(b.logicString());
                 inventory.use(itemUsed);
-                PlacedBomb newBomb = new PlacedBomb(player.getX(), player.getY(), "bomb" + String.valueOf(incrementEntityCount()));
+                PlacedBomb newBomb = new PlacedBomb(player.getX(), player.getY(), "bomb" + String.valueOf(incrementEntityCount()), logic);
                 staticEntities.put(newBomb.getId(), newBomb);
             } else {
                 CollectableEntity potion = inventory.tick(itemUsed);
@@ -281,6 +312,8 @@ public class World {
         }
         inventory.tickSpectre();
 
+        tickBombs();
+
         // Now evaluate goals. Goal should never be null, but add a check incase there is an error in the input file
 
         if (!Objects.isNull(currentBattle)) {
@@ -296,6 +329,17 @@ public class World {
         return worldDungeonResponse();
     }
     
+    private void tickBombs() {
+        for (StaticEntity se : staticEntities.values()) {
+            if (se instanceof PlacedBomb) {
+                PlacedBomb b = (PlacedBomb) se;
+                if (b.isActivated()) {
+                    b.detonate(this);
+                }
+            }
+        }
+    }
+
     /**
      * Find a valid spider spawn
      * @param position position we are checking

@@ -1,44 +1,52 @@
 package dungeonmania.logic;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONObject;
-
-import dungeonmania.staticEntity.StaticEntity;
-
 
 public abstract class LogicComponent {
-    protected Map<LogicComponent, Boolean> observing;
+    protected Map<LogicComponent, Boolean> observing = new HashMap<>();
     protected List<LogicComponent> observers = new ArrayList<LogicComponent>();
 
     public abstract boolean isActivated();
-    public abstract JSONObject saveGameJson();
 
-    public void addObserver(LogicComponent e) {
-        observers.add(e);
+    public void addObserver(LogicComponent lc) {
+        observers.add(lc);
     }
 
-    public void removeObserver(LogicComponent e) {
-        observers.remove(e);
+    public void removeObserver(LogicComponent lc) {
+        observers.remove(lc);
     }
 
     /**
-     * Update the activation status in our observing map
-     * @param e
-     * @param status
+     * Update the activation status in our observing map.
+     * If activation state changes, we notify observers
+     * @param lc The logic component that has updated
+     * @param status The current activation status, or null if entity has been destroyed
      */
-    public void update(LogicComponent e, boolean status) {
-        observing.put(e, status);
-    }
+    public void update(LogicComponent lc, Boolean status) {
+        boolean initialState = isActivated();
 
+        if (status.equals(null)) {
+            observing.remove(lc);
+        } else {
+            observing.put(lc, status);
+        }
 
-    protected void notifyObservers() {
-        for (LogicComponent lc : observers) {
-            lc.update(this, this.isActivated());
+        // if state has changed
+        if (!(isActivated() == initialState)) {
+            notifyObservers(isActivated());
         }
     }
 
-    // protected Map<LogicComponent, Boolean> getObserving
+
+    public void notifyObservers(boolean status) {
+        for (LogicComponent lc : observers) {
+            lc.update(this, status);
+        }
+    }
+
+    public abstract String logicString();
 }

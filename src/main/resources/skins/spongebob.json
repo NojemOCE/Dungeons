@@ -21,6 +21,8 @@
         "switch": "images/tileset/floor_switch.png",
         "door": "images/tileset/walls/wooden/door_locked_silver.png",
         "door_open": "images/tileset/walls/wooden/door_unlocked.png",
+        "switch_door": "images/tileset/walls/wooden/door_locked_silver.png",
+        "switch_door_open": "images/tileset/walls/wooden/door_unlocked.png",
         "portal": "images/tileset/entities/portal_00.png",
         "portal_BLUE": "images/tileset/entities/portal_00.png",
         "portal_RED": "images/tileset/entities/portal_07.png",

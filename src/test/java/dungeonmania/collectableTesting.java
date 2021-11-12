@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import dungeonmania.collectable.*;
+import dungeonmania.logic.OrLogic;
 
 public class collectableTesting {
      /**
@@ -21,7 +22,7 @@ public class collectableTesting {
          arrows.collect();
          assertTrue(arrows.isCollected());
 
-         Bomb bomb = new Bomb(1, 1, "bomb3");
+         Bomb bomb = new Bomb(1, 1, "bomb3", new OrLogic());
          bomb.collect();
          assertTrue(bomb.isCollected());
 
