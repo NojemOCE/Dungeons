@@ -22,10 +22,6 @@ public class sceptreTest {
         controller.tick(null, Direction.RIGHT);
         controller.tick(null, Direction.RIGHT);
         controller.tick(null, Direction.RIGHT);
-        controller.tick(null, Direction.DOWN);
-        controller.tick(null, Direction.LEFT);
-        controller.tick(null, Direction.LEFT);
-        controller.tick(null, Direction.LEFT);
 
         // Try craft Sceptre
         assertDoesNotThrow(() -> controller.build("sceptre"));
@@ -35,7 +31,14 @@ public class sceptreTest {
     public void testMindControl() {
         DungeonManiaController controller = new DungeonManiaController();
         controller.newGame("sceptreWorld", "standard");
+        controller.tick(null, Direction.RIGHT);
+        controller.tick(null, Direction.RIGHT);
+        controller.tick(null, Direction.RIGHT);
+        controller.build("sceptre");
 
+        // Mind control the mercenary
+        assertDoesNotThrow(() -> controller.interact("mercenary5"));
+        assertDoesNotThrow(() -> controller.interact("mercenary6"));
         // Craft sceptre
         // Bribe mercenary
         // Bribe assassin

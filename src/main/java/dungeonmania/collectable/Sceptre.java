@@ -75,4 +75,6 @@ public class Sceptre extends CollectableEntity {
         return controlledJSON;
     }
 
+    @Override
+    public CollectableEntity consume() {return null;};
 }
