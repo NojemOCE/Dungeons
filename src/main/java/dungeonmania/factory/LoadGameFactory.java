@@ -369,13 +369,14 @@ public class LoadGameFactory extends Factory {
             Shield e = new Shield(id, durability);
             return e;
         }
-        /*else if (type.equals("sceptre")) {
-            Anduril e = new Anduril(id, durability);
+
+        else if (type.equals("sceptre")) {
+            Sceptre e = new Sceptre(id, durability);
             return e;
         }
 
         else if (type.equals("anduril")) {
-            Sceptre e = new Sceptre(id, durability);
+            Anduril e = new Anduril(id, durability);
             return e;
         }
 
@@ -388,7 +389,7 @@ public class LoadGameFactory extends Factory {
             SunStone e = new SunStone(id, durability);
             return e;
         }
-        }*/
+
         return null;
     }
 

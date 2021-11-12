@@ -21,6 +21,15 @@ public class Sceptre extends CollectableEntity {
         controlled = new HashMap<>();
     }
 
+    public Sceptre(String itemId, int durability) {
+        this(0, 0, itemId, durability);
+    }
+
+    public Sceptre(int x, int y, String itemId, int durability) {
+        this(x, y, itemId);
+        setDurability(durability);
+    }
+
     public void useMindControl(MercenaryComponent m) {
         useMindControl(m, DURATION);
     }
