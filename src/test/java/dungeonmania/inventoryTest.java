@@ -1,12 +1,18 @@
 package dungeonmania;
 
 import dungeonmania.collectable.*;
+import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.inventory.Inventory;
 import dungeonmania.logic.OrLogic;
 
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class inventoryTest {
 
@@ -213,7 +219,7 @@ public class inventoryTest {
     }
 
 
-/**
+    /**
      * When crafting a midnight armour, it should appear in the inventory
      * The items used to craft it should not appear in the inventory
      */
@@ -239,4 +245,181 @@ public class inventoryTest {
         assert inv.numItem("armour") == 0;
         assert inv.numItem("midnight_armour") == 1;
     }
+    /**
+     * Inventory doesn't allow the collecting of a key when one already exists within the inventory
+     */
+    @Test
+    public void testMultipleKey() {
+        Inventory inv = new Inventory();
+
+        Key key1 = new Key(1, 1, "key1", 1);
+        assertEquals(inv.numItem("key"), 0);
+        assertFalse(inv.inInventory("key1"));
+        inv.collect(key1);
+        assertEquals(inv.numItem("key"), 1);
+        assertTrue(inv.inInventory("key1"));
+
+        Key key2 = new Key(1, 1, "key2", 1);
+        assertFalse(inv.inInventory("key2"));
+        inv.collect(key2);
+        assertEquals(inv.numItem("key"), 1);
+        assertFalse(inv.inInventory("key2"));
+
+    }
+
+    /**
+     * When getCollectableItems is called, a map containing all collectable items within the inventory 
+     * is returned 
+     */
+    @Test
+    public void testGetCollectable() {
+        Inventory inv = new Inventory();
+
+        Map<String, CollectableEntity> expected = new HashMap<>();
+        assertEquals(expected, inv.getCollectableItems());
+
+        Key key = new Key(1, 1, "key1", 1);
+        assertEquals(inv.numItem("key"), 0);
+        assertFalse(inv.inInventory("key1"));
+        inv.collect(key);
+        assertEquals(inv.numItem("key"), 1);
+        assertTrue(inv.inInventory("key1"));
+
+        expected.put("key1", key);
+        assertEquals(expected, inv.getCollectableItems());
+    }
+
+    /**
+     * When crafting a shield, it should appear in the inventory
+     * The items used to craft it should not appear in the inventory
+     * Using wood and treasure to craft the shield in this test
+     */
+    @Test
+    public void testCraftShieldWithTreasure() {
+
+        Inventory inv = new Inventory();
+        assert inv.numItem("wood") == 0;
+        assert inv.numItem("key") == 0;
+
+        Wood wood1 = new Wood(1, 2, "wood1");
+        inv.collect(wood1);
+        assert inv.numItem("wood") == 1;
+
+        Wood wood2 = new Wood(1, 3, "wood2");
+        inv.collect(wood2);
+        assert inv.numItem("wood") == 2;
+
+        Key key = new Key(1, 3, "key3", 1);
+        inv.collect(key);
+        assert inv.numItem("key") == 1;
+
+        assert inv.getBuildable().contains("shield");
+        inv.craft("shield", "4");
+
+        assert inv.numItem("wood") == 0;
+        assert inv.numItem("key") == 0;
+        assert inv.numItem("shield") == 1;
+
+    }
+
+    /**
+     * Removing a list of items within the inventory
+     */
+    @Test
+    public void testRemoveMultipleItems() {
+        Inventory inv = new Inventory();
+        assert inv.numItem("wood") == 0;
+        assert inv.numItem("key") == 0;
+
+        Wood wood1 = new Wood(1, 2, "wood1");
+        inv.collect(wood1);
+        assert inv.numItem("wood") == 1;
+
+        Wood wood2 = new Wood(1, 3, "wood2");
+        inv.collect(wood2);
+        assert inv.numItem("wood") == 2;
+
+        Key key = new Key(1, 3, "key3", 1);
+        inv.collect(key);
+        assert inv.numItem("key") == 1;
+
+        List<String> removeItems = new ArrayList<>();
+        removeItems.add("wood1");
+        removeItems.add("wood2");
+        removeItems.add("key3");
+        inv.removeItem(removeItems);
+
+        assert inv.numItem("wood") == 0;
+        assert inv.numItem("key") == 0;
+    }
+
+    /**
+     * hasItem returns false when the provided item type doesn't exist within the inventory
+     */
+    @Test
+    public void testNotHasItem() {
+        Inventory inv = new Inventory();
+        assertFalse(inv.hasItem("wood"));
+    }
+
+    /**
+     * Check if getType provides the type of the item that corresponds with the provided item id
+     */
+    @Test
+    public void testIsUsable() {
+        Inventory inv = new Inventory();
+
+        Wood wood1 = new Wood(1, 2, "wood1");
+        inv.collect(wood1);
+        assert inv.numItem("wood") == 1;
+        assertEquals("wood", inv.getType(wood1.getId()));
+
+        assertNull(inv.getType("wood2"));
+    }
+
+    /**
+     * Check if an invalidActionException is thrown when the provided item id 
+     * isn't present within the inventory
+     */
+    @Test
+    public void testInvalidActionInventorytick() {
+        Inventory inv = new Inventory();
+        assertThrows(InvalidActionException.class, () -> inv.tick("wood1"));
+    }
+
+    /**
+     * Check if an IllegalArgumentException is thrown when the provided item id 
+     * doesn't correspond to a usable item
+     */
+    @Test
+    public void testIllegalArgumentInventorytick() {
+        Inventory inv = new Inventory();
+        inv.collect(new Wood(1, 2, "wood1"));
+        assertThrows(IllegalArgumentException.class, () -> inv.tick("wood1"));
+    }
+
+    /**
+     * Checks if a valid usable item is consumed and removed from the inventory 
+     * when tick is called with its corresponding item id
+     */
+    @Test
+    public void testUsabletick() {
+        Inventory inv = new Inventory();
+        HealthPotion HPPot = new HealthPotion(1, 2, "health_potion1");
+        inv.collect(HPPot);
+        assertEquals(HPPot, inv.tick("health_potion1"));
+        assert inv.numItem("health_potion") == 0;
+
+        InvincibilityPotion InvincPot = new InvincibilityPotion(1, 2, "invincibility_potion2", false);
+        inv.collect(InvincPot);
+        assertEquals(InvincPot, inv.tick("invincibility_potion2"));
+        assert inv.numItem("invincibility_potion") == 0;
+
+        InvisibilityPotion InvisPot = new InvisibilityPotion(1, 2, "invisibility_potion3");
+        inv.collect(InvisPot);
+        assertEquals(InvisPot, inv.tick("invisibility_potion3"));
+        assert inv.numItem("invisibility_potion") == 0;
+    }
+
+
 }

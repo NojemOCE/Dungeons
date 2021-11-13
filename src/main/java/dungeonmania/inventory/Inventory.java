@@ -111,6 +111,7 @@ public class Inventory {
         } else if (itemType.equalsIgnoreCase("midnight_armour")) {
             IntStream.range(0, 1).mapToObj(i -> "armour").forEach(this::useByType);
             IntStream.range(0, 1).mapToObj(i -> "sun_stone").forEach(this::useByType);
+            collectableItems.put(itemType + itemNum, new MidnightArmour(0, 0, itemType + itemNum));
         } else if (itemType.equalsIgnoreCase("sceptre")) {
             if (numItem("wood") != 0) {
                 useByType("wood");
@@ -119,6 +120,7 @@ public class Inventory {
             }
             useByType(numItem("treasure") != 0 ? "treasure" : "key");
             useByType("sun_stone");
+            collectableItems.put(itemType + itemNum, new Sceptre(0, 0, itemType + itemNum));
         }
         numCollected.putIfAbsent(itemType, 0);
         numCollected.put(itemType, numCollected.get(itemType) + 1);
@@ -167,8 +169,8 @@ public class Inventory {
         return null;
     }
 
-    public void tickSpectre() {
-        //getSceptre().tickMindControlled();
+    public void tickSceptre() {
+        getSceptre().tickMindControlled();
     }
 
 
@@ -269,108 +271,7 @@ public class Inventory {
         }
         
     }
-
-    /**
-     * Provides the attack provided to the player from the inventory
-     * @param playerAttack the players attack before the modification
-     * @return the attack of the player after all attack modifications of the inventory have been included
-     */
-    public double attackModifier(double playerAttack) {
-        List<String> idToRemove = new ArrayList<>();
-        for (CollectableEntity item : collectableItems.values()) {
-            if (item instanceof Weapon ) {
-                playerAttack += ((Weapon)item).attackModifier();
-                ((CollectableEntity)item).consume();
-                if (item.getDurability() == 0) {
-                    idToRemove.add(item.getId());
-                }
-            }
-        }
-
-        for (CollectableEntity item : collectableItems.values()) {
-            if (item instanceof Bow ) {
-                playerAttack *= ((Bow)item).attackModifier();
-                ((Bow)item).consume();
-                if (item.getDurability() == 0) {
-                    idToRemove.add(item.getId());
-                }
-            }
-        }
-
-        for (String itemId : idToRemove) {
-            collectableItems.remove(itemId);
-        }
-
-        return playerAttack;
-    }
-
-    public double bossAttackModifier(double playerAttack) {
-        List<String> idToRemove = new ArrayList<>();
-        for (CollectableEntity item : collectableItems.values()) {
-            if (item instanceof Weapon) {
-                playerAttack += ((Weapon)item).bossAttackModifier();
-                ((CollectableEntity)item).consume();
-                if (item.getDurability() == 0) {
-                    idToRemove.add(item.getId());
-                }
-            }
-        }
-
-        for (CollectableEntity item : collectableItems.values()) {
-            if (item instanceof Bow ) {
-                playerAttack *= ((Bow)item).attackModifier();
-                ((Bow)item).consume();
-                if (item.getDurability() == 0) {
-                    idToRemove.add(item.getId());
-                }
-            }
-        }
-
-        for (String itemId : idToRemove) {
-            collectableItems.remove(itemId);
-        }
-
-        return playerAttack;
-    }
-
-    /**
-     * Provides the modified attack of the enemy when the defense modifier of the inventory has been applied
-     * @param enemyAttack the enemy attack before the modification
-     * @return the attack of the enemy after all defence modifications of the inventory have been included
-     */
-    public double defenceModifier(double enemyAttack) {
-        List<String> idToRemove = new ArrayList<>();
-        for (CollectableEntity item : collectableItems.values()) {
-            if (item instanceof Shield ) {
-                enemyAttack -= ((Shield)item).defenceModifier();
-                ((Shield)item).consume();
-                if (item.getDurability() == 0) {
-                    idToRemove.add(item.getId());
-                }
-            }
-        }
-
-        if (enemyAttack < 0) {
-            enemyAttack = 0;
-        }
-
-        for (CollectableEntity item : collectableItems.values()) {
-            if (item instanceof Armour ) {
-                enemyAttack *= ((Armour)item).defenceModifier();
-                ((Armour)item).consume();
-                if (item.getDurability() == 0) {
-                    idToRemove.add(item.getId());
-                }
-            }
-        }
-
-        for (String itemId : idToRemove) {
-            collectableItems.remove(itemId);
-        }
-
-        return enemyAttack;
-    }
-    
+   
     public List<String> getBuildable() {
         ArrayList<String> buildable = new ArrayList<>();
         for (String item : buildables) {
@@ -421,4 +322,7 @@ public class Inventory {
         return collectableItems.values().stream().anyMatch(e -> e.getType().equals(itemType));
     }
 
+    public boolean usableSceptre() {
+        return getSceptre().ready();
+    }
 }

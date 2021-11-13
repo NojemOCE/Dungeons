@@ -142,9 +142,9 @@ public class NewGameFactory extends Factory {
             // There is a 30% chance that a new mercenary will be an assassin.
             if (r.nextInt(100) < 30) {
                 e = new AssassinDecorator(e);
-                return (AssassinDecorator)e;
+                return e;
             } 
-            return (Mercenary)e;
+            return e;
         } 
         
         else if (type.equals("treasure")) {
@@ -206,15 +206,26 @@ public class NewGameFactory extends Factory {
             OneRing e = new OneRing(x, y, id);
             return e;
         }
-        /*else if (type.equals("anduril")) {
-            Anduril e = new Anduril(x, y, id);
+
+        else if (type.equals("sceptre")) {
+            Sceptre e = new Sceptre(x, y ,id);
             return e;
         }
-        else if (type.equals("sun_stone")) {
-            SunStone e = new SunStone(x, y, id);
+
+        else if (type.equals("anduril")) {
+            Anduril e = new Anduril(x, y ,id);
             return e;
-        } */
-        
+        }
+
+        else if (type.equals("midnight_armour")) {
+            MidnightArmour e = new MidnightArmour(x, y ,id);
+            return e;
+        }
+
+        else if (type.equals("sun_stone")) {
+            SunStone e = new SunStone(x, y ,id);
+            return e;
+        }
 
         return null;
     }

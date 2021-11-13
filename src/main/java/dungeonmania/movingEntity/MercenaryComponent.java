@@ -107,13 +107,12 @@ public abstract class MercenaryComponent extends MovingEntity implements PlayerP
     @Override
     public JSONObject saveGameJson() {
         JSONObject mercJSON = super.saveGameJson();
-        JSONObject movement = new JSONObject();
 
-        movement.put("default-strategy", defaultMovementStrategy.getMovementType());
-        movement.put("movement-strategy", movementStrategy.getMovementType());
-        
-        mercJSON.put("movement", movement);
+        mercJSON.put("default-strategy", defaultMovementStrategy.getMovementJson());
+        mercJSON.put("movement-strategy", movementStrategy.getMovementJson());
+
         mercJSON.put("ally", getAlly());
+        mercJSON.put("state", getState().getStateJson());
 
         return mercJSON;
     }

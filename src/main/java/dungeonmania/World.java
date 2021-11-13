@@ -1,8 +1,6 @@
 package dungeonmania;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -275,6 +273,7 @@ public class World {
         }
 
         // spawn relevant enemies at the specified tick intervals
+        if (inventory.hasItem("sceptre")) inventory.tickSceptre();
         List<Entity> newEntities = factory.tick(this);
 
         for (Entity e: newEntities) {
@@ -283,7 +282,6 @@ public class World {
                 player.subscribePassiveObserver((PlayerPassiveObserver)e);
             }
         }
-        inventory.tickSpectre();
 
         // reset logic circuits then trigger
         tickLogic();
@@ -701,7 +699,7 @@ public class World {
             worldJSON.put("goal-condition", goals.saveGameJson());
         }
 
-        if (inventory.hasItem("spectre")) {
+        if (inventory.getSceptre() != null) {
             worldJSON.put("controlled", inventory.getSceptre().getMindControlled());
         }
 
@@ -850,9 +848,9 @@ public class World {
         if (gameData.has("controlled")) {
             JSONArray mindControlledEntities = gameData.getJSONArray("controlled");
             for (int i = 0; i < mindControlledEntities.length(); i++) {
-                JSONObject obj = collectableEntitiesItems.getJSONObject(i);
+                JSONObject obj = mindControlledEntities.getJSONObject(i);
                 MercenaryComponent m = (MercenaryComponent) movingEntities.get(obj.getString("id"));
-                int duration = Integer.parseInt(obj.getString("duration"));
+                int duration = obj.getInt("duration");
                 useSceptre(m, duration);
             }
         }
@@ -921,6 +919,10 @@ public class World {
 
     public int getYBoundN() {
         return Math.min(player.getY(), 0);
+    }
+
+    public boolean useableSceptre() {
+        return inventory.usableSceptre();
     }
     
 }
