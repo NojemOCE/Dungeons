@@ -1,16 +1,11 @@
 package dungeonmania.collectable;
 
 import dungeonmania.movingEntity.MercenaryComponent;
-import dungeonmania.movingEntity.MovingEntity;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import static java.util.Objects.isNull;
 
 public class Sceptre extends CollectableEntity {
     final int DURATION = 10;
@@ -51,19 +46,31 @@ public class Sceptre extends CollectableEntity {
         if (getCooldown() > 0) setCooldown(getCooldown() - 1);
     }
 
+    /**
+     * Mind control a particular MercenaryComponent (Mercenary/Assassin)
+     * Sets the sceptre cooldown to 15 ticks
+     * Sets the effect to 10 ticks
+     * @param m given MercenaryComponent (Mercenary/Assassin)
+     */
     public void useMindControl(MercenaryComponent m) {
         setCooldown(15);
         useMindControl(m, DURATION);
     }
 
-    // For when loading, setting a duration
+    /**
+     * Overloaded method used when loading from a file
+     * @param m given MercenaryComponent (Mercenary/Assassin)
+     * @param duration remaining ticks from saved file
+     */
     public void useMindControl(MercenaryComponent m, int duration) {
         controlled.put(m, duration);
         m.setAlly(true);
     }
 
+    /**
+     * Removes the MercenaryComponent from observer map when the effect duration is finished
+     */
     public void notifyMindControlled() {
-
         for (MercenaryComponent m : controlled.keySet()) {
             if (controlled.get(m) == 0) {
                 m.setAlly(false);
