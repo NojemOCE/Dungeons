@@ -3,6 +3,8 @@ package dungeonmania;
 import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.inventory.Inventory;
+import dungeonmania.response.models.DungeonResponse;
+import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Direction;
 import org.junit.jupiter.api.Test;
 
@@ -38,12 +40,23 @@ public class sceptreTest {
 
         // Mind control the mercenary
         assertDoesNotThrow(() -> controller.interact("mercenary5"));
-        assertDoesNotThrow(() -> controller.interact("mercenary6"));
-        // Craft sceptre
-        // Bribe mercenary
-        // Bribe assassin
-        // Make sure they are controlled
-        // Tick 10 times
-        // Make sure they are both not controlled
+
+        // For 10 ticks, the mercenary is uncontrolled
+        for (int i = 0; i < 10; i++) {
+            DungeonResponse d = controller.tick(null, Direction.DOWN);
+            for (EntityResponse e : d.getEntities()) {
+                if (e.getId().equals("mercenary5")) {
+                    assertFalse(e.isInteractable());
+                }
+            }
+        }
+
+        // After 10 ticks, the mercenary is no longer mind controlled
+        DungeonResponse notControlled = controller.tick(null, Direction.RIGHT);
+        for (EntityResponse e : notControlled.getEntities()) {
+            if (e.getId().equals("mercenary5")) {
+                assertTrue(e.isInteractable());
+            }
+        }
     }
 }
