@@ -83,7 +83,6 @@ public class PlacedBombTest {
             }
         }
         assertNotNull(playerPos2);
-
         assert(playerPos.equals(playerPos2));
 
 

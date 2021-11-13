@@ -245,6 +245,8 @@ public class World {
                 inventory.use(itemUsed);
                 PlacedBomb newBomb = new PlacedBomb(player.getX(), player.getY(), "bomb" + String.valueOf(incrementEntityCount()), logic);
                 staticEntities.put(newBomb.getId(), newBomb);
+                // set up observers for this new entity
+                setUpLogicObservers();
             } else {
                 CollectableEntity potion = inventory.tick(itemUsed);
                 if (!Objects.isNull(potion)) {
@@ -330,13 +332,17 @@ public class World {
     }
     
     private void tickBombs() {
+        List<PlacedBomb> bombs = new ArrayList<>();
         for (StaticEntity se : staticEntities.values()) {
             if (se instanceof PlacedBomb) {
                 PlacedBomb b = (PlacedBomb) se;
                 if (b.isActivated()) {
-                    b.detonate(this);
+                    bombs.add(b);
                 }
             }
+        }
+        for (PlacedBomb b : bombs) {
+            b.detonate(this);
         }
     }
 

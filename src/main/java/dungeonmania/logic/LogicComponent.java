@@ -29,7 +29,7 @@ public abstract class LogicComponent {
     public void update(LogicComponent lc, Boolean status) {
         boolean initialState = isActivated();
 
-        if (status.equals(null)) {
+        if (status == null) {
             observing.remove(lc);
         } else {
             observing.put(lc, status);
@@ -42,7 +42,7 @@ public abstract class LogicComponent {
     }
 
 
-    public void notifyObservers(boolean status) {
+    public void notifyObservers(Boolean status) {
         for (LogicComponent lc : observers) {
             lc.update(this, status);
         }

@@ -3,6 +3,8 @@ package dungeonmania.staticEntity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONObject;
+
 import dungeonmania.Entity;
 import dungeonmania.World;
 import dungeonmania.logic.Logic;
@@ -68,4 +70,11 @@ public class PlacedBomb extends StaticEntity implements Logic {
     public LogicComponent getLogic() {
         return logic;
     }
+
+    @Override
+	public JSONObject saveGameJson() {
+		JSONObject save = super.saveGameJson();
+        save.put("logic", logic.logicString());
+		return save;
+	}
 }

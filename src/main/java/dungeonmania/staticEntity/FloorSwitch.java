@@ -3,6 +3,8 @@ package dungeonmania.staticEntity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONObject;
+
 import dungeonmania.World;
 import dungeonmania.logic.Logic;
 import dungeonmania.logic.LogicComponent;
@@ -75,5 +77,10 @@ public class FloorSwitch extends StaticEntity implements Logic {
         return logic;
     }
 
-
+    @Override
+	public JSONObject saveGameJson() {
+		JSONObject save = super.saveGameJson();
+        save.put("logic", logic.logicString());
+		return save;
+	}
 }
