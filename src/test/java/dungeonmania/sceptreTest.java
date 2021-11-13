@@ -59,4 +59,9 @@ public class sceptreTest {
             }
         }
     }
+
+    @Test
+    public void testCooldown() {
+
+    }
 }
