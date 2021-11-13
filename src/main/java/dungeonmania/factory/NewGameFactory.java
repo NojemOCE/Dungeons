@@ -169,15 +169,26 @@ public class NewGameFactory extends Factory {
             OneRing e = new OneRing(x, y, id);
             return e;
         }
-        /*else if (type.equals("anduril")) {
-            Anduril e = new Anduril(x, y, id);
+
+        else if (type.equals("sceptre")) {
+            Sceptre e = new Sceptre(x, y ,id);
             return e;
         }
-        else if (type.equals("sun_stone")) {
-            SunStone e = new SunStone(x, y, id);
+
+        else if (type.equals("anduril")) {
+            Anduril e = new Anduril(x, y ,id);
             return e;
-        } */
-        
+        }
+
+        else if (type.equals("midnight_armour")) {
+            MidnightArmour e = new MidnightArmour(x, y ,id);
+            return e;
+        }
+
+        else if (type.equals("sun_stone")) {
+            SunStone e = new SunStone(x, y ,id);
+            return e;
+        }
 
         return null;
     }
