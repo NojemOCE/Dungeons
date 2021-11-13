@@ -204,8 +204,8 @@ public class World {
         // IllegalArgumentException if itemUsed is not a bomb, invincibility_potion or an invisibility_potion
         // InvalidActionException if itemUsed is not in the player's inventory
 
-        if (!Objects.isNull(itemUsed) ) {
-            if (!(inventory.getType(itemUsed) == null) && inventory.getType(itemUsed).equals("bomb")) {
+        if (!Objects.isNull(itemUsed) && !(inventory.getType(itemUsed) == null)) {
+            if (inventory.getType(itemUsed).equals("bomb")) {
                 inventory.use(itemUsed);
                 PlacedBomb newBomb = new PlacedBomb(player.getX(), player.getY(), "bomb" + String.valueOf(incrementEntityCount()));
                 staticEntities.put(newBomb.getId(), newBomb);
@@ -669,7 +669,7 @@ public class World {
     }
 
     /**
-     * Uses an item in the inventoryof the given type (if it exists)
+     * Uses an item in the inventory of the given type (if it exists)
      * @param type type of the item we want to use
      */
     public void useByType(String type) {
