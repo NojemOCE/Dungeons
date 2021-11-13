@@ -3,6 +3,7 @@ package dungeonmania;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
+import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import org.junit.jupiter.api.Test;
 
@@ -163,5 +164,39 @@ public class sceptreTest {
                 assertFalse(e.isInteractable());
             }
         }
+
+        // Cooldown of sceptre should be on 4 ticks
+        // Move down 3 more times - during this, we shouldn't be able to mind control the mercenary
+        for (int i = 0; i < 3; i++) {
+            controller.tick(null, Direction.DOWN);
+            assertThrows(InvalidActionException.class, () -> controller.interact("mercenary5"));
+        }
+
+        // After the last tick, the sceptre should be off cooldown
+        controller.tick(null, Direction.DOWN);
+        assertDoesNotThrow(() -> controller.interact("mercenary5"));
+    }
+
+    @Test
+    public void testPriority() {
+        DungeonManiaController controller = new DungeonManiaController();
+        controller.newGame("sceptreMindControl", "standard");
+        controller.tick(null, Direction.RIGHT);
+        controller.tick(null, Direction.RIGHT);
+        controller.tick(null, Direction.RIGHT);
+        assertDoesNotThrow(() -> controller.build("sceptre"));
+
+        // Move down for 3 ticks
+        IntStream.range(0, 3).forEach(i -> controller.tick(null, Direction.DOWN));
+
+        // Collect coin
+        controller.tick(null, Direction.DOWN);
+
+        // Assert that sceptre has priority over bribing
+        assertDoesNotThrow(() -> controller.interact("mercenary5"));
+
+        // Coin should still be in the inventory
+        DungeonResponse hasTreasure = controller.tick(null, Direction.DOWN);
+        assertTrue(hasTreasure.getInventory().stream().anyMatch(i -> i.getType().equals("treasure")));
     }
 }
