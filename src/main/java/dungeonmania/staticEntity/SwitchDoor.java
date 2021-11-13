@@ -38,11 +38,6 @@ public class SwitchDoor extends StaticEntity implements Logic {
             if (isActivated()) {
                 return new Position(getX(), getY(), entity.getLayer());
             }
-            // TODO: to check if we want this 
-            // if (world.inInventory("sun_stone")) {
-            //     open();
-            //     return new Position(getX(), getY(), entity.getLayer());
-            // }
         } else if (entity instanceof Spider) {
             return new Position(getX(), getY(), entity.getLayer());
         }
