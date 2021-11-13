@@ -371,7 +371,10 @@ public class LoadGameFactory extends Factory {
         }
 
         else if (type.equals("sceptre")) {
-            Sceptre e = new Sceptre(id, durability);
+
+            int cooldown = Integer.parseInt((String) obj.get("cooldown"));
+            Sceptre e = new Sceptre(id, cooldown, durability);
+
             return e;
         }
 

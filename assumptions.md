@@ -114,7 +114,11 @@ Note: static entities marked with ^ are considered to be on the floor layer, whi
 * Armour 
     * Durability: 7
 * Sceptre
+    * Triggered through interact
     * Infinite durability
+    * When using the mind control ability, the world does not tick (similar to bribing)
+    * Has a cooldown of 15 ticks after use
+    * Has priority over bribing the mercenary (bribing is only performed if sceptre is on cooldown)
 * Anduril
     * Infinite durability
     * Attack damage is additive

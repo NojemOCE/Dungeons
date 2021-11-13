@@ -621,7 +621,7 @@ public class World {
             worldJSON.put("goal-condition", goals.saveGameJson());
         }
 
-        if (inventory.hasItem("sceptre")) {
+        if (inventory.getSceptre() != null) {
             worldJSON.put("controlled", inventory.getSceptre().getMindControlled());
         }
 
@@ -770,9 +770,9 @@ public class World {
         if (gameData.has("controlled")) {
             JSONArray mindControlledEntities = gameData.getJSONArray("controlled");
             for (int i = 0; i < mindControlledEntities.length(); i++) {
-                JSONObject obj = collectableEntitiesItems.getJSONObject(i);
+                JSONObject obj = mindControlledEntities.getJSONObject(i);
                 MercenaryComponent m = (MercenaryComponent) movingEntities.get(obj.getString("id"));
-                int duration = Integer.parseInt(obj.getString("duration"));
+                int duration = obj.getInt("duration");
                 useSceptre(m, duration);
             }
         }
@@ -841,6 +841,10 @@ public class World {
 
     public int getYBoundN() {
         return Math.min(player.getY(), 0);
+    }
+
+    public boolean useableSceptre() {
+        return inventory.usableSceptre();
     }
     
 }
