@@ -26,3 +26,41 @@ Test 2-3
 SUCCESS
 DONE
 Test 2-4
+
+ZombieTest > ZombieSpawnerTest > Testing zombie spawners spawn zombies every 20 ticks FAILED
+    org.opentest4j.AssertionFailedError: expected: <1> but was: <0>
+        at org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:55)
+        at org.junit.jupiter.api.AssertionUtils.failNotEqual(AssertionUtils.java:62)
+        at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:166)
+        at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:161)
+        at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:628)
+        at dungeonmania.controllerTest.ZombieTest$ZombieSpawnerTest.testZombieSpawning(ZombieTest.java:99)
+FAILURE
+DONE
+Test 2-5
+SUCCESS
+DONE
+Test 3-1
+
+MercenaryTest > 3-1 Test mercenary spawning FAILED
+    org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
+        at org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:55)
+        at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:40)
+        at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:35)
+        at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:179)
+        at dungeonmania.controllerTest.MercenaryTest.testMercenarySpawning(MercenaryTest.java:40)
+FAILURE
+DONE
+Test 3-2
+
+MercenaryTest > 3-2 Testing mercenaries cannot move through boulders and walls FAILED
+    org.opentest4j.AssertionFailedError: expected: <Position [x=4, y=2, z=0]> but was: <Position [x=4, y=1, z=2]>
+        at org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:55)
+        at org.junit.jupiter.api.AssertionUtils.failNotEqual(AssertionUtils.java:62)
+        at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182)
+        at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:177)
+        at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1141)
+        at dungeonmania.controllerTest.MercenaryTest.testMercenaryNotMovingThroughBlockingEntities(MercenaryTest.java:57)
+FAILURE
+DONE
+Test 3-3
