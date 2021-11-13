@@ -79,10 +79,19 @@ public class Sceptre extends CollectableEntity {
         }
     }
 
+    /**
+     * Get remaining duration of mind control effect
+     * @param m given MercenaryComponent (Mercenary/Assassin)
+     * @return remaining duration of effect
+     */
     public int getDuration(MercenaryComponent m) {
         return controlled.get(m);
     }
 
+    /**
+     * Get JSONArray of mind controlled entities
+     * @return JSONArray of mind controlled entities
+     */
     public JSONArray getMindControlled() {
 
         JSONArray controlledJSON = new JSONArray();
@@ -95,6 +104,10 @@ public class Sceptre extends CollectableEntity {
         return controlledJSON;
     }
 
+    /**
+     * Determine if the sceptre is ready
+     * @return true if sceptre is ready
+     */
     public boolean ready() {
         return cooldown == 0;
     }
