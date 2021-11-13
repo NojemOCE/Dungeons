@@ -312,4 +312,7 @@ public class Inventory {
         return collectableItems.values().stream().anyMatch(e -> e.getType().equals(itemType));
     }
 
+    public boolean useableSceptre() {
+        return getSceptre().ready();
+    }
 }

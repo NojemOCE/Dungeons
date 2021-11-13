@@ -91,7 +91,7 @@ public class Sceptre extends CollectableEntity {
         return controlledJSON;
     }
 
-    public boolean onCD() {
+    public boolean ready() {
         return cooldown == 0;
     }
 

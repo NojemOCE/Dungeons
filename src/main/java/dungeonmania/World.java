@@ -844,7 +844,7 @@ public class World {
     }
 
     public boolean useableSceptre() {
-        return !inventory.getSceptre().onCD();
+        return inventory.useableSceptre();
     }
     
 }
