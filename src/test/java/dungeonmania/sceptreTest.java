@@ -3,7 +3,6 @@ package dungeonmania;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
-import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import org.junit.jupiter.api.Test;
 

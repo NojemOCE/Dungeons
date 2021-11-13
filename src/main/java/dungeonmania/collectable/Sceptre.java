@@ -32,14 +32,21 @@ public class Sceptre extends CollectableEntity {
         setDurability(durability);
     }
 
-    public int getCooldown() {
-        return cooldown;
-    }
-
     public void setCooldown(int cooldown) {
         this.cooldown = cooldown;
     }
 
+    /**
+     * Provide the current cooldown of the sceptre
+     * @return current cooldown of the sceptre
+     */
+    public int getCooldown() {
+        return cooldown;
+    }
+
+    /**
+     * Decrement the sceptre cooldown every tick
+     */
     public void tickCooldown() {
         if (getCooldown() > 0) setCooldown(getCooldown() - 1);
     }
@@ -53,12 +60,6 @@ public class Sceptre extends CollectableEntity {
     public void useMindControl(MercenaryComponent m, int duration) {
         controlled.put(m, duration);
         m.setAlly(true);
-    }
-
-    public void tickMindControlled() {
-        tickCooldown();
-        controlled.replaceAll((m, v) -> v - 1);
-        notifyMindControlled();
     }
 
     public void notifyMindControlled() {
@@ -100,6 +101,9 @@ public class Sceptre extends CollectableEntity {
 
     @Override
     public CollectableEntity consume() {
+        tickCooldown();
+        controlled.replaceAll((m, v) -> v - 1);
+        notifyMindControlled();
         return null;
     }
 }

@@ -170,7 +170,7 @@ public class Inventory {
     }
 
     public void tickSceptre() {
-        getSceptre().tickMindControlled();
+        getSceptre().consume();
     }
 
     public List<ItemResponse> getInventoryResponse() {
