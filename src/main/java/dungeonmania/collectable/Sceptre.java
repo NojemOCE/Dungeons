@@ -75,10 +75,6 @@ public class Sceptre extends CollectableEntity {
         return controlled.get(m);
     }
 
-    public boolean isMindControlled(MercenaryComponent m) {
-        return !isNull(controlled.get(m));
-    }
-
     public JSONArray getMindControlled() {
 
         JSONArray controlledJSON = new JSONArray();
@@ -103,5 +99,7 @@ public class Sceptre extends CollectableEntity {
     }
 
     @Override
-    public CollectableEntity consume() {return null;};
+    public CollectableEntity consume() {
+        return null;
+    }
 }

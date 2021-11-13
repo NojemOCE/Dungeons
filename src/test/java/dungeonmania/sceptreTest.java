@@ -8,6 +8,8 @@ import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Direction;
 import org.junit.jupiter.api.Test;
 
+import java.util.stream.IntStream;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class sceptreTest {
@@ -30,13 +32,51 @@ public class sceptreTest {
     }
 
     @Test
+    public void saveSceptre() {
+        DungeonManiaController controller = new DungeonManiaController();
+        controller.newGame("sceptreWorld", "standard");
+
+        controller.tick(null, Direction.RIGHT);
+        controller.tick(null, Direction.RIGHT);
+        controller.tick(null, Direction.RIGHT);
+
+        assertDoesNotThrow(() -> controller.build("sceptre"));
+        assertDoesNotThrow(() -> controller.interact("mercenary5"));
+
+        // Walk down for 2 ticks and save
+        IntStream.range(0, 2).forEach(i -> controller.tick(null, Direction.DOWN));
+        controller.saveGame("saveSceptreWorld");
+
+        // Load game
+        controller.loadGame("saveSceptreWorld");
+
+        // Walk down for 8 ticks, mercenary should still be controlled
+        for (int i = 0; i < 8; i++) {
+            DungeonResponse d = controller.tick(null, Direction.DOWN);
+            for (EntityResponse e : d.getEntities()) {
+                if (e.getId().equals("mercenary5")) {
+                    assertFalse(e.isInteractable());
+                }
+            }
+        }
+
+        // After 10 ticks, the mercenary is no longer mind controlled
+        DungeonResponse notControlled = controller.tick(null, Direction.DOWN);
+        for (EntityResponse e : notControlled.getEntities()) {
+            if (e.getId().equals("mercenary5")) {
+                assertTrue(e.isInteractable());
+            }
+        }
+    }
+
+    @Test
     public void testMindControl() {
         DungeonManiaController controller = new DungeonManiaController();
         controller.newGame("sceptreWorld", "standard");
         controller.tick(null, Direction.RIGHT);
         controller.tick(null, Direction.RIGHT);
         controller.tick(null, Direction.RIGHT);
-        controller.build("sceptre");
+        assertDoesNotThrow(() -> controller.build("sceptre"));
 
         // Mind control the mercenary
         assertDoesNotThrow(() -> controller.interact("mercenary5"));
@@ -67,7 +107,7 @@ public class sceptreTest {
         controller.tick(null, Direction.RIGHT);
         controller.tick(null, Direction.RIGHT);
         controller.tick(null, Direction.RIGHT);
-        controller.build("sceptre");
+        assertDoesNotThrow(() -> controller.build("sceptre"));
 
         // Mind control the mercenary
         assertDoesNotThrow(() -> controller.interact("mercenary5"));
