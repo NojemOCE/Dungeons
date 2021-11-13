@@ -621,7 +621,7 @@ public class World {
             worldJSON.put("goal-condition", goals.saveGameJson());
         }
 
-        if (inventory.hasItem("sceptre")) {
+        if (inventory.getSceptre() != null) {
             worldJSON.put("controlled", inventory.getSceptre().getMindControlled());
         }
 
@@ -844,7 +844,7 @@ public class World {
     }
 
     public boolean useableSceptre() {
-        return inventory.useableSceptre();
+        return inventory.usableSceptre();
     }
     
 }

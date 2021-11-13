@@ -1,8 +1,6 @@
 package dungeonmania;
 
-import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
-import dungeonmania.inventory.Inventory;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Direction;
@@ -26,6 +24,24 @@ public class sceptreTest {
         controller.tick(null, Direction.RIGHT);
         controller.tick(null, Direction.RIGHT);
         controller.tick(null, Direction.RIGHT);
+
+        // Try craft Sceptre
+        assertDoesNotThrow(() -> controller.build("sceptre"));
+    }
+
+    @Test
+    public void testAltRecipe() {
+        DungeonManiaController controller = new DungeonManiaController();
+        controller.newGame("sceptreWorld", "standard");
+
+        // Check that we can't craft sceptre
+        assertThrows(InvalidActionException.class, () -> controller.build("sceptre"));
+
+        // Walk around and collect everything
+        controller.tick(null, Direction.DOWN);
+        controller.tick(null, Direction.DOWN);
+        controller.tick(null, Direction.DOWN);
+        controller.tick(null, Direction.DOWN);
 
         // Try craft Sceptre
         assertDoesNotThrow(() -> controller.build("sceptre"));
