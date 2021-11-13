@@ -56,10 +56,10 @@ public class Battle {
         double currentPlayerHealth = player.getHealthPoint().getHealth();
         double currentEnemyHealth = character.getHealthPoint().getHealth();
 
-        System.out.println("Player attacks with " + (currentPlayerHealth * playerAttack)/10);
+        //System.out.println("Player attacks with " + (currentPlayerHealth * playerAttack)/10);
         character.defend((currentPlayerHealth * playerAttack)/10);
         if (enemyAttackEnabled) {
-            System.out.println("Enemy attacks with " + (currentEnemyHealth * characterAttack)/10);
+            //System.out.println("Enemy attacks with " + (currentEnemyHealth * characterAttack)/10);
 
             player.defend((currentEnemyHealth * characterAttack)/10);
         }
