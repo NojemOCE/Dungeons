@@ -19,7 +19,7 @@ public class SwitchDoor extends StaticEntity implements Logic {
      * @param x x coordinate of the door
      * @param y y coordinate of the door
      * @param id id of the door
-     * @param keyColour unique key pair
+     * @param logic logic of the door
      */
     public SwitchDoor(int x, int y, String id, LogicComponent logic) {
         super(new Position(x, y, Position.STATIC_LAYER), id, "switch_door");
@@ -27,9 +27,7 @@ public class SwitchDoor extends StaticEntity implements Logic {
     }
 
     /**
-     * - Players can only walk through doors if they hold the matching key
-     *      - If they have the key, the door will open and they will move onto the door
-     *      - Else, they stay in the same spot
+     * - Players can only walk through doors if it is open
      * - Spiders are able to walk through doors
      * - All other characters cannot walk through doors at any point
      */

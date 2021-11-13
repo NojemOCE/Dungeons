@@ -88,7 +88,7 @@ public class NewGameFactory extends Factory {
             return e;   
         } 
 
-        else if (type.equals("light_bulb")) {
+        else if (type.contains("light_bulb")) {
             // no logic is equivalent to "or" logic
             String logic = "or";
             if (obj.has("logic")) {

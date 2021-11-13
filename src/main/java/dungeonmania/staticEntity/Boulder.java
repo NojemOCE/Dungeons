@@ -92,7 +92,7 @@ public class Boulder extends StaticEntity {
         
         return entity.getPosition();
     }
-    
+    // TODO: do we check for switch AFTER portal?!?!?
     private void updatePosition(Position toMoveTo, World world, List<StaticEntity> entities) {
         this.setPosition(new Position(toMoveTo.getX(), toMoveTo.getY(), getLayer()));
         // update state (if we move to a swamp tile)

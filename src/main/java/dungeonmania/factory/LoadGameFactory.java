@@ -290,7 +290,7 @@ public class LoadGameFactory extends Factory {
             return e; 
         }
 
-        else if (type.equals("light_bulb")) {
+        else if (type.contains("light_bulb")) {
             // no logic is equivalent to "or" logic
             String logic = "or";
             if (obj.has("logic")) {
@@ -465,7 +465,7 @@ public class LoadGameFactory extends Factory {
      */
     private List<String> staticsList() {
         // TODO add additional entities
-        return Arrays.asList("boulder", "door", "exit", "switch", "bomb_placed", "portal", "wall", "zombie_toast_spawner", "swamp_tile", "switch_door", "light_bulb", "wire");
+        return Arrays.asList("boulder", "door", "exit", "switch", "bomb_placed", "portal", "wall", "zombie_toast_spawner", "swamp_tile", "switch_door", "wire", "light_bulb","light_bulb_on","light_bulb_off");
     }
 
     /**

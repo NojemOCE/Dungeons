@@ -45,4 +45,11 @@ public interface Logic {
         LogicComponent logic = getLogic();
         logic.update(logic, isActivated());
     }
+
+    /**
+     * Reset the state of logic
+     */
+    default public void reset() {
+        getLogic().reset();
+    }
 }

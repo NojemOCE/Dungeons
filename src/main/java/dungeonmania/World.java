@@ -122,36 +122,7 @@ public class World {
         return worldDungeonResponse();
     }
 
-    /**
-     * Helper method to set up the logic component observer pattern
-     */
-    private void setUpLogicObservers() {
-        for (StaticEntity se : staticEntities.values()) {
-            if (se instanceof Logic) {
-                observeAdjacentLogicComponents(se);
-            }
-        }
-    }
-
-    /**
-     * Add entity to relevant logic component observer lists
-     * @param e entity to make observer
-     */
-    private void observeAdjacentLogicComponents(StaticEntity e) {
-        List<Position> adjPositions = e.getPosition().getCardinallyAdjacentPositions();
-
-        for (Position p : adjPositions) {
-            List<StaticEntity> statics = getStaticEntitiesAtPosition(p);
-            for (StaticEntity se : statics) {
-                // all logic components should observe switches and wires
-                if (se instanceof FloorSwitch || se instanceof Wire) {
-                    ((Logic) se).addObserver(((Logic) e).getLogic());
-                }
-            }
-        }
-    }
-
-
+    
     private void addEntity(Entity e) {
         if (e instanceof Player) {
             this.player = (Player) e;
@@ -314,6 +285,8 @@ public class World {
         }
         inventory.tickSpectre();
 
+        // reset logic circuits then trigger
+        tickLogic();
         tickBombs();
 
         // Now evaluate goals. Goal should never be null, but add a check incase there is an error in the input file
@@ -331,6 +304,9 @@ public class World {
         return worldDungeonResponse();
     }
     
+    /**
+     * Triggers any bombs
+     */
     private void tickBombs() {
         List<PlacedBomb> bombs = new ArrayList<>();
         for (StaticEntity se : staticEntities.values()) {
@@ -345,6 +321,55 @@ public class World {
             b.detonate(this);
         }
     }
+
+    /**
+     * Resets and triggers logic circuits for this tick
+     */
+    private void tickLogic() {
+        for (StaticEntity se : staticEntities.values()) {
+            if (se instanceof Logic) {
+                ((Logic) se).reset();
+            }
+        }
+        triggerSwitches();
+    }
+
+
+    /**
+     * Helper method to set up the logic component observer pattern
+     */
+    private void setUpLogicObservers() {
+        for (StaticEntity se : staticEntities.values()) {
+            if (se instanceof Logic) {
+                observeAdjacentLogicComponents(se);
+            }
+        }
+    }
+
+    /**
+     * Add entity to relevant logic component observer lists
+     * @param e entity to make observer
+     */
+    private void observeAdjacentLogicComponents(StaticEntity e) {
+        List<Position> adjPositions = e.getPosition().getCardinallyAdjacentPositions();
+
+        for (Position p : adjPositions) {
+            List<StaticEntity> statics = getStaticEntitiesAtPosition(p);
+            for (StaticEntity se : statics) {
+                // if (se.equals(e)) {
+                if (se.getId().equals(e.getId())) {
+
+                    // make sure to not observe itself
+                }
+                // all logic components should observe switches and wires
+                else if (se instanceof FloorSwitch || se instanceof Wire) {
+                    ((Logic) se).addObserver(((Logic) e).getLogic());
+                    System.out.println(e.getType() + " observes "+ se.getType());
+                }
+            }
+        }
+    }
+
 
     /**
      * Find a valid spider spawn

@@ -15,13 +15,14 @@ public class PlacedBomb extends StaticEntity implements Logic {
     private int BLAST_RADIUS = 1;
     private LogicComponent logic;
 
-
     /**
      * Constructor for placed bomb 
      * @param x x coordinate of bomb
      * @param y y coordinate of bomb
      * @param id id of bomb
+     * @param logic logic of the bomb
      */
+
     public PlacedBomb(int x, int y, String id, LogicComponent logic) {
         super(new Position(x, y, Position.STATIC_LAYER), id, "bomb_placed");
         this.logic = logic;

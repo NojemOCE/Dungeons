@@ -12,6 +12,13 @@ import dungeonmania.util.Position;
 public class LightBulb extends StaticEntity implements Logic {
     private LogicComponent logic;
 
+    /**
+     * Constructor for light bulb
+     * @param x x coordinate of light bulb
+     * @param y y coordinate of light bulb
+     * @param id id of light bulb
+     * @param logic logic of the light bulb
+     */
     public LightBulb(int x, int y, String id, LogicComponent logic) {
         super(new Position(x, y, Position.STATIC_LAYER), id, "light_bulb");
         this.logic = logic;
