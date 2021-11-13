@@ -13,6 +13,7 @@ public class Armour extends CollectableEntity {
     public Armour(String itemId, int durability) {
         this(0, 0, itemId, durability);
     }
+
     public Armour(int x, int y, String itemId, int durability) {
         this(x, y, itemId);
         setDurability(durability);

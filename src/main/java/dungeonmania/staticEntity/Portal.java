@@ -134,6 +134,6 @@ public class Portal extends StaticEntity {
 
     @Override
     public EntityResponse getEntityResponse() {
-        return new EntityResponse(getId(), getColour() + getType(), getPosition(), false);
+        return new EntityResponse(getId(), getType() + "_" + getColour(), getPosition(), false);
     }
 }
