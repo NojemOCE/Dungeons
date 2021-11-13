@@ -9,15 +9,22 @@ import dungeonmania.collectable.*;
 import dungeonmania.gamemode.Gamemode;
 import dungeonmania.movingEntity.*;
 import dungeonmania.staticEntity.*;
+import dungeonmania.util.Position;
 
 public class NewGameFactory extends Factory {
     private int randomSeed;
+    
+    public NewGameFactory(Gamemode gamemode, int randomSeed) {
+        super(gamemode, randomSeed);
+    }
+    
     /**
      * Constructor for a NewGameFactory taking in a gamemode
      * @param gamemode gamemode of factory
      */
-    public NewGameFactory(Gamemode gamemode, int randomSeed) {
+    public NewGameFactory(Gamemode gamemode, int randomSeed, Position position) {
         super(gamemode, randomSeed);
+        setPlayerStartingPos(position);
     }
 
     @Override
@@ -84,6 +91,7 @@ public class NewGameFactory extends Factory {
         } 
         
         else if (type.equals("player")) {
+            setPlayerStartingPos(new Position(x, y));
             Player e = new Player(x, y, id, new HealthPoint(gamemode.getStartingHP()));
            
             return e;

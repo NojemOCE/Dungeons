@@ -17,6 +17,7 @@ import dungeonmania.util.Position;
 
 public abstract class Factory {
     Gamemode gamemode;
+    private Position playerStartingPos;
     protected int randomSeed;
     private int entityCount = 0;
     private int highestX = 5;
@@ -24,6 +25,7 @@ public abstract class Factory {
     static final int MAX_SPIDERS = 6;
     static final int SPIDER_SPAWN = 20;
     private int tickCount = 1;
+    static final int MERC_SPAWN_RATE = 40;
 
     /**
      * Constructor for Factory taking in a GameMode
@@ -35,6 +37,17 @@ public abstract class Factory {
         this.randomSeed = randomSeed;
 
     }
+    
+
+    public Position getPlayerStartingPos() {
+        return playerStartingPos;
+    }
+
+
+    public void setPlayerStartingPos(Position playerStartingPos) {
+        this.playerStartingPos = playerStartingPos;
+    }
+
 
     /**
      * Increments and returns the next entity coutn
@@ -94,6 +107,10 @@ public abstract class Factory {
         List<Entity> newZombies = tickZombieToastSpawn(world);
         newEntities.addAll(newZombies);
         tickCount++;
+
+        if (tickCount%40 == 0) {
+            newEntities.add(createEntity(playerStartingPos.getX(), playerStartingPos.getY(), "mercenary", world));
+        }
 
         return newEntities;
     }
