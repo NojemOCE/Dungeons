@@ -383,8 +383,9 @@ public class World {
         // InvalidActionException if the player does not have sufficient items to craft the buildable
         if (buildable == "midnight_armour" && numMovingEntity("zombie_toast") != 0) {
             throw new InvalidActionException("There are zombies alive");
+        } else {
+            inventory.craft(buildable, String.valueOf(incrementEntityCount()));
         }
-        inventory.craft(buildable, String.valueOf(incrementEntityCount()));
         return worldDungeonResponse();
     }
 
