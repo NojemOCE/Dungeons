@@ -327,5 +327,160 @@ public class RandomnessTest {
         }
         assertEquals(true, mercenary);
     }
-    
+    @Test
+    public void randomHydraSpawn() {
+
+        World w = new World("simple-spider-spawning-world", "hard", 8);
+
+        try {
+            String file = FileLoader.loadResourceFile("/dungeons/" + "simple-spider-spawning-world" + ".json");
+            
+            JSONObject game = new JSONObject(file);
+            
+            w.buildWorld(game);
+        }
+        catch (Exception e) {
+            e.printStackTrace
+            ();
+        }
+        DungeonResponse d = null;
+        for (int i =0; i<50; i++) {
+            d = w.tick(null, Direction.UP);
+        }
+
+        boolean hydra = false;
+        Position hydraPos = null;
+        for (EntityResponse e: d.getEntities()) {
+            if (e.getType().equals("hydra")) {
+                hydra = true;
+                hydraPos = e.getPosition();
+            }
+        }
+
+        assertEquals(true, hydra);
+        assertNotNull(hydraPos);
+        assertEquals(new Position(1, 1), hydraPos);
+    }
+
+    @Test
+    public void randomHydraNoSpawn1() {
+
+        World w = new World("simple-spider-spawning-world", "standard", 8);
+
+        try {
+            String file = FileLoader.loadResourceFile("/dungeons/" + "simple-spider-spawning-world" + ".json");
+            
+            JSONObject game = new JSONObject(file);
+            
+            w.buildWorld(game);
+        }
+        catch (Exception e) {
+            e.printStackTrace
+            ();
+        }
+        DungeonResponse d = null;
+        for (int i =0; i<50; i++) {
+            d = w.tick(null, Direction.UP);
+        }
+
+        boolean hydra = false;
+        Position hydraPos = null;
+        for (EntityResponse e: d.getEntities()) {
+            if (e.getType().equals("hydra")) {
+                hydra = true;
+                hydraPos = e.getPosition();
+            }
+        }
+
+        assertEquals(false, hydra);
+        assertEquals(null, hydraPos);
+    }
+
+    @Test
+    public void randomHydraNoSpawn2() {
+
+        World w = new World("a-lot-of-boulders", "hard", 8);
+
+        try {
+            String file = FileLoader.loadResourceFile("/dungeons/" + "a-lot-of-boulders" + ".json");
+            
+            JSONObject game = new JSONObject(file);
+            
+            w.buildWorld(game);
+        }
+        catch (Exception e) {
+            e.printStackTrace
+            ();
+        }
+        DungeonResponse d = null;
+        for (int i =0; i<20; i++) {
+            d = w.tick(null, Direction.DOWN);
+        }
+
+        boolean hydra = false;
+        Position hydraPos = null;
+        for (EntityResponse e: d.getEntities()) {
+            if (e.getType().equals("hydra")) {
+                hydra = true;
+                hydraPos = e.getPosition();
+            }
+        }
+
+        assertEquals(false, hydra);
+        assertEquals(null, hydraPos);
+    }
+
+    @Test
+    public void randomHydraAndurilSpawn() {
+
+        World w = new World("simple-hydra-world", "hard", 8);
+
+        try {
+            String file = FileLoader.loadResourceFile("/dungeons/" + "simple-hydra-world" + ".json");
+            
+            JSONObject game = new JSONObject(file);
+            
+            w.buildWorld(game);
+        }
+        catch (Exception e) {
+            e.printStackTrace
+            ();
+        }
+        //Player moves down and collects the anduril
+        DungeonResponse d = w.tick(null, Direction.DOWN);
+
+        boolean anduril = false;
+        for (ItemResponse i: d.getInventory()) {
+            if (i.getType().equals("anduril")) {
+                anduril = true;
+            }
+        }
+
+        assertEquals(true, anduril);
+
+        //Player moves down and battles with the hydra
+        d = w.tick(null, Direction.DOWN);
+        
+
+        boolean hydra = false;
+        boolean player = false;
+        Position playerPos = null;
+        Position hydraPos = null;
+        for (EntityResponse e: d.getEntities()) {
+            if (e.getType().equals("hydra")) {
+                hydra = true;
+                hydraPos = e.getPosition();
+            }
+            if (e.getType().equals("player")) {
+                player = true;
+                playerPos = e.getPosition();
+            }
+        }
+        if(hydraPos == null) {
+            assertEquals(true, player);
+        }
+        if (playerPos == null) {
+            assertEquals(true, hydra);
+        }
+    }
 }
