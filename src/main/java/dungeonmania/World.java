@@ -971,6 +971,11 @@ public class World {
         factory.setTickCount(tickCount);
     }
 
+    /**
+     * Returns the amount of the provided enitity type currently present within the world
+     * @param entityType the entity type to be checked
+     * @return the amount of the provided entity type
+     */
     public int numMovingEntity(String entityType) {
         int count = 0;
         System.out.println(entityType);
