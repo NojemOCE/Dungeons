@@ -26,8 +26,8 @@ public abstract class Factory {
     private Position playerStartingPos;
     protected int randomSeed;
     private int entityCount = 0;
-    private int highestX = 5;
-    private int highestY = 5;
+    private int highestX = 50;
+    private int highestY = 50;
     static final int MAX_SPIDERS = 6;
     static final int SPIDER_SPAWN = 20;
     private int tickCount = 1;
