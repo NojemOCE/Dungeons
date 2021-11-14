@@ -17,7 +17,7 @@
 * Standard
     * Standard HP = 30
 * Hard
-    * Hard HP = 15
+    * Hard HP = 16
 
 ## Moving Entity
 * Spider

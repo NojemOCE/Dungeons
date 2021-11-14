@@ -19,7 +19,9 @@ abstract public class StaticEntity extends Entity {
     }
 
     /**
-     * Checks how the given entity interacts with this entity.
+     * Allows an entity to interact with this entity.
+     * @param world current world
+     * @param entity entity that is attempting to move
      * @return the position the given entity should move to
      */
     public Position interact(World world, Entity entity){

@@ -31,10 +31,12 @@ public class ZombieToastSpawn extends StaticEntity {
         return entity.getPosition();
     }
 
+    
     /**
-     *  
      * The character can destroy a zombie spawner if they have a 
      * weapon and are cardinally adjacent to the spawner.
+     * @param world current world
+     * @throws InvalidActionException if the player does not have a weapon to destroy the spawner, or if the character is not cardinally adjacent to the spawner
      */
     public void interact(World world) throws InvalidActionException {
         if (interactable) {
@@ -53,7 +55,8 @@ public class ZombieToastSpawn extends StaticEntity {
     }
 
     /**
-     * Subscribes to the world to get updates on the player's position
+     * Subscribes to the player to get updates on the player's position
+     * @param player current player
      */
     public void update(Player player) {
         if (Position.isAdjacent(player.getPosition(), getPosition())) {

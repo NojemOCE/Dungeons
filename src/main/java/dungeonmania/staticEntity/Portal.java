@@ -103,7 +103,7 @@ public class Portal extends StaticEntity {
 
     /**
      * Getter for the pair portal for this portal
-     * @return
+     * @return twin portal
      */
     public Portal getTwinPortal() {
         return twinPortal;
@@ -119,7 +119,7 @@ public class Portal extends StaticEntity {
 
     /**
      * Geter for the colour of the portal
-     * @return the colour of the portal
+     * @return string for the colour of the portal
      */
     public String getColour() {
         return colour;

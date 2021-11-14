@@ -37,7 +37,7 @@ public class PlacedBomb extends StaticEntity implements Logic {
     /**
      * Detonates the bomb and destroys entities in radius.
      * Also deals with logic components as required.
-     * @param world
+     * @param world current world
      */
     public void detonate(World world) {
         List<Position> toDetonate = new ArrayList<>();

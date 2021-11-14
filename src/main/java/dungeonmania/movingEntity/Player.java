@@ -3,7 +3,6 @@ package dungeonmania.movingEntity;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.Objects;
 import java.util.Set;
 
@@ -39,6 +38,14 @@ public class Player extends MovingEntity {
         this.activePotion = null;
     }
 
+    /**
+     * Constructor for player taking an x coordinate, a y coordinate, an id, a HealthPoint and a passive potion
+     * @param x x coordinate of the player
+     * @param y y coordinate of the player
+     * @param id unique entity id of the player
+     * @param healthPoint healthpoint of the player
+     * @param activePotion active potion of the player
+     */
     public Player(int x, int y, String id, HealthPoint healthPoint, Passive activePotion) {
         this(x, y, id, healthPoint);
         setAlly(true);
@@ -51,10 +58,7 @@ public class Player extends MovingEntity {
         return;
     }
 
-    /**
-     * Returns the new position if posible
-     * and the old position (no movement) if not
-     */
+    
     @Override
     public Position validMove(Position position, World world) {
 
@@ -108,7 +112,9 @@ public class Player extends MovingEntity {
     /**
      * Creates a new battle between a player and an enemy
      * @param enemy enemy that the player fights in the battle
-     * @return new Battle
+     * @param world current world
+     * @param gamemode current gamemode
+     * @return a new battle
      */
     public Battle battle(MovingEntity enemy, World world, Gamemode gamemode) {
         if (!enemy.getAlly()) {
@@ -124,27 +130,43 @@ public class Player extends MovingEntity {
         return null;
     }
 
+    /**
+     * Adds mercenary component to the players list of mercenaries in range
+     * @param mercenaryComponent mercenary component to add
+     */
     public void addInRange(MercenaryComponent mercenaryComponent) {
         mercenariesInRange.add(mercenaryComponent);
     
     }
     
+    /**
+     * Removes a given mercenary component from the players list of mercenaries in range
+     * @param mercenaryComponent mercenary component to remove
+     */
     public void removeInRange(MercenaryComponent mercenaryComponent) {
         mercenariesInRange.remove(mercenaryComponent);
     }
 
+    /**
+     * Subscribes a PlayerPassiveObserver (another moving entity) to the player
+     * @param me moving entity to subscribe to player
+     */
     public void subscribePassiveObserver(PlayerPassiveObserver me) {
         passiveObservers.add(me);
     
     }
 
+    /**
+     * Unsubscribes a PlayerPassiveObserver (another moving entity) from the player
+     * @param me moving entity to unsubscribe from the player
+     */
     public void unsubscribePassiveObserver(PlayerPassiveObserver me) {
         passiveObservers.remove(me);
     }
     
     /**
-     * get a list of allies in range
-     * @return list of allies
+     * Get a list of allies in range
+     * @return list of allies that are in range
      */
     public List<MovingEntity> alliesInRange() {
     
@@ -157,15 +179,13 @@ public class Player extends MovingEntity {
     
     /**
      * Notifies mercenaries of battle for battle advantage
-     * @param speed movement speed
+     * @param world current world
      */
     public void notifyObserversForBattle(World world) { // notify observers for battle
         mercenariesInRange.forEach( mercenary -> {
             if (!world.getPlayerPosition().equals(mercenary.getPosition())) {
                 mercenary.move(world);
-
             }
-
         });
     }
 
@@ -180,8 +200,8 @@ public class Player extends MovingEntity {
     }
 
     /**
-     * add active potion
-     * @param potion
+     * Adds active potion
+     * @param potion collectable entity that is the current passive potion
      */
     public void addPotion(CollectableEntity potion) {
         activePotion = (Passive) potion;

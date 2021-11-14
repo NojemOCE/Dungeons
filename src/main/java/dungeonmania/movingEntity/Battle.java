@@ -13,10 +13,13 @@ public class Battle {
     private boolean playerWins;
     private boolean activeBattle;
 
+    
     /**
-     * Constructor for Battle taking a player and a character that are engaged in battle
+     * Constructor for Battle taking a player and a character that are engaged in battle, enemy attack and battle strategy
      * @param player Player that is engaged in battle
      * @param character enemy that the player is fighting in battle
+     * @param enemyAttack boolean for whether enemy attack is enabled
+     * @param bs battle strategy
      */
     public Battle(Player player, MovingEntity character, Boolean enemyAttack, BattleStrategy bs) {
         this.player = player;
@@ -31,8 +34,6 @@ public class Battle {
      * @param inventory takes in the inventory to determine the attack and defence modifiers of the player
      */
     public void battleTick(Inventory inventory) {
-
-        
         if (character.getHealthPoint().getHealth() == 0) {
             endBattle(true);
             return;

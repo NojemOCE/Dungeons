@@ -5,13 +5,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import dungeonmania.World;
-import dungeonmania.movingEntity.MovingEntity;
 import dungeonmania.staticEntity.StaticEntity;
 import dungeonmania.util.Position;
 
 
 public class BoulderGoals extends GoalLeaf {
 
+    /**
+     * Constructor for boulder goal taking a goal string
+     * @param goal should always be "boulder"
+     */
     public BoulderGoals(String goal) {
         super(goal);
     }
