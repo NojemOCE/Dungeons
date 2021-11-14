@@ -192,6 +192,10 @@ public class World {
         // IllegalArgumentException if itemUsed is not a bomb, invincibility_potion or an invisibility_potion
         // InvalidActionException if itemUsed is not in the player's inventory
 
+
+        // reset logic circuits then trigger
+        tickLogic();
+        
         if (!Objects.isNull(itemUsed) && !(inventory.getType(itemUsed) == null)) {
             if (inventory.getType(itemUsed).equals("bomb")) {
                 Bomb b = inventory.getBomb(itemUsed);
@@ -269,8 +273,7 @@ public class World {
             }
         }
 
-        // reset logic circuits then trigger
-        tickLogic();
+        
         tickBombs();
 
         // Now evaluate goals. Goal should never be null, but add a check incase there is an error in the input file

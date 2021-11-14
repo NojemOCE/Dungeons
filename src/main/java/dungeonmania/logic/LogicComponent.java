@@ -55,9 +55,6 @@ public abstract class LogicComponent {
             observing.remove(lc);
         } else {
             observing.put(lc, status);
-            // if (observers.contains(lc)) {
-
-            // }
         }
 
         // if state has changed
