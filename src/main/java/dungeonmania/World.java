@@ -193,8 +193,6 @@ public class World {
         // InvalidActionException if itemUsed is not in the player's inventory
 
 
-        // reset logic circuits then trigger
-        tickLogic();
         
         if (!Objects.isNull(itemUsed) && !(inventory.getType(itemUsed) == null)) {
             if (inventory.getType(itemUsed).equals("bomb")) {
@@ -212,8 +210,8 @@ public class World {
                 }
             }
         }
-
-
+        
+        
         player.tick(movementDirection, this);
         for (MovingEntity me : movingEntities.values()) {
             if (me.getPosition().equals(player.getPosition())) {
@@ -222,17 +220,17 @@ public class World {
                     currentBattle.battleTick(inventory);
                     if (currentBattle.getPlayerWins()) {
                         collectBattleRewards(this);
-
+                        
                     } else {
                         this.player = null; // will end game in dungeon response
                         // needs to return early
                         return worldDungeonResponse();
                     } // if invisible it will add null
                 }
-
+                
             }
         }
-
+        
         // collecting the collectable entity if it exists on the current position
         CollectableEntity collectable = getCollectableEntity(player.getPosition());
         if(!Objects.isNull(collectable)) {
@@ -241,7 +239,7 @@ public class World {
             }
         }
         if (inventory.hasItem("sceptre")) inventory.tickSceptre();
-
+        
         // now move all entities
         for (MovingEntity me: movingEntities.values()) {
             if (!Objects.isNull(currentBattle) && currentBattle.getCharacter().equals(me)) continue;
@@ -252,7 +250,7 @@ public class World {
                     currentBattle.battleTick(inventory);
                     if (currentBattle.getPlayerWins()) {
                         collectBattleRewards(this);
-
+                        
                     } else {
                         this.player = null; // will end game in dungeon response
                         // needs to return early
@@ -261,23 +259,25 @@ public class World {
                 }
             }
         }
-
+        
         // spawn relevant enemies at the specified tick intervals
         List<Entity> newEntities = factory.tick(this);
         
-
+        
         for (Entity e: newEntities) {
             addEntity(e);
             if (e instanceof MovingEntity) {
                 player.subscribePassiveObserver((PlayerPassiveObserver)e);
             }
         }
-
         
+        
+        // reset logic circuits then trigger
+        tickLogic();
         tickBombs();
-
+        
         // Now evaluate goals. Goal should never be null, but add a check incase there is an error in the input file
-
+        
         if (!Objects.isNull(currentBattle)) {
             movingEntities.remove(currentBattle.getCharacter().getId());
             player.unsubscribePassiveObserver((PlayerPassiveObserver)currentBattle.getCharacter());
