@@ -1,7 +1,6 @@
 package dungeonmania;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -17,7 +16,6 @@ import org.json.JSONObject;
 import dungeonmania.goal.*;
 import dungeonmania.inventory.Inventory;
 import dungeonmania.logic.Logic;
-import dungeonmania.logic.LogicComponent;
 import dungeonmania.response.models.*;
 import dungeonmania.staticEntity.*;
 import dungeonmania.util.*;
@@ -103,8 +101,6 @@ public class World {
             addEntity(e);
         }
 
-
-        // TODO can we put this in a shared method
         if (worldData.has("goal-condition")) {
             JSONObject g = worldData.getJSONObject("goal-condition");
             GoalComponent goal = factory.createGoal(g);
@@ -470,7 +466,10 @@ public class World {
         return worldDungeonResponse();
     }
 
-    // Return a dungeon response for the current world
+    /**
+     * Return a dungeon response for the current world
+     * @return
+     */
     public DungeonResponse worldDungeonResponse() {
         return new DungeonResponse(id, dungeonName, getEntityResponses(), getInventoryResponse(), inventory.getBuildable(), getGoalsResponse());
     }
@@ -553,6 +552,11 @@ public class World {
         return inventory.inInventory(item.getId());
     }
 
+    /**
+     * Checks if item of given type is in inventory
+     * @param itemType type of the item to check for
+     * @return true if item type exists, else false
+     */
     public boolean inInventory(String itemType) {
         return inventory.hasItem(itemType);
     }

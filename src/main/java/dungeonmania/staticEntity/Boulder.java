@@ -99,7 +99,6 @@ public class Boulder extends StaticEntity {
         
         return entity.getPosition();
     }
-    // TODO: do we check for switch AFTER portal?!?!?
 
     /**
      * Update the position and state of the boulder
