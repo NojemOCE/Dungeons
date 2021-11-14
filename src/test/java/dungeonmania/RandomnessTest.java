@@ -287,16 +287,6 @@ public class RandomnessTest {
     @Test
     public void randomMercPeriodicSpawn() {
 
-        Random ran1 = new Random(8);
-        System.out.println("spider pos x ran1 " + ran1.nextInt(5));
-        System.out.println("spider pos y ran1 " + ran1.nextInt(5));
-        System.out.println("spider pos x2 ran1 " + ran1.nextInt(5));
-        System.out.println("spider pos y2 ran1 " + ran1.nextInt(5));
-        System.out.println("mercenary or assassin ran1 " + ran1.nextInt(100));
-        //System.out.println("merc pos x ran1 " + ran1.nextInt(5));
-        //System.out.println("merc pos y ran1 " + ran1.nextInt(5));
-
-
         World w = new World("simple-spider-spawning-world", "standard", 8);
 
         try {
@@ -343,7 +333,9 @@ public class RandomnessTest {
             e.printStackTrace
             ();
         }
+
         DungeonResponse d = null;
+
         for (int i =0; i<50; i++) {
             d = w.tick(null, Direction.UP);
         }
@@ -359,7 +351,7 @@ public class RandomnessTest {
 
         assertEquals(true, hydra);
         assertNotNull(hydraPos);
-        assertEquals(new Position(1, 1), hydraPos);
+        assertEquals(new Position(0, 4), hydraPos);
     }
 
     @Test
