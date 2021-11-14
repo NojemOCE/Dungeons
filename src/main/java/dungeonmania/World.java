@@ -41,9 +41,7 @@ public class World {
     private Factory factory;
     private int randomSeed;
 
-
-    static final int MAX_SPIDERS = 6;
-    static final int SPIDER_SPAWN = 20;
+    // TODO: check if these are required (might be in factory)
     static final int MECERNARY_SPAWN = 25;
     static final double MERCENARY_ARMOUR_DROP = 0.4;
     static final double ZOMBIE_ARMOUR_DROP = 0.2;
@@ -120,7 +118,10 @@ public class World {
         return worldDungeonResponse();
     }
 
-    
+    /**
+     * Add new entity to correct storage list
+     * @param e Entity to add
+     */
     private void addEntity(Entity e) {
         if (e instanceof Player) {
             this.player = (Player) e;
@@ -146,6 +147,10 @@ public class World {
         }
         else return null;
     }
+
+    /**
+     * Set goals
+     */
     private void setGoals(GoalComponent goals) {
         this.goals = goals;
     }
@@ -562,6 +567,7 @@ public class World {
         return inventory.keyInInventory(keyColour);
     }
 
+    // TODO: check if we can remove this
     /**
      * Increments entity count for entity id
      * @return int id
@@ -595,17 +601,6 @@ public class World {
     public List<ItemResponse> getInventoryResponse(){
         return inventory.getInventoryResponse();
     }
-
-    /**
-     * Check if co-ordinates are in bounds
-     * @param x x co-ord
-     * @param y y co-ord
-     * @return true if in bound
-     */
-    // public boolean inBounds(int x, int y) {
-    //     return !(x < 0 || x >= highestX || y < 0 || y >= highestY);
-    // }
-
 
     /**
      * Remove all entities from the given positions (except the player)
@@ -742,6 +737,11 @@ public class World {
         return collectableEntitiesJSON;
     }
 
+    /**
+     * Get the number of items of given type in inventory
+     * @param itemType Type of the item
+     * @return the number of itemType available
+     */
     public int numItemInInventory(String itemType) {
         return inventory.numItem(itemType);
     }
@@ -762,16 +762,34 @@ public class World {
         inventory.useSceptre(m, duration);
     }
 
+    /**
+     * Get the current tick count
+     * @return tickcount
+     */
     public int getTickCount() {
         return tickCount;
     }
 
+    /**
+     * Get the name of the dungeon
+     * @return dungeonName
+     */
     public String getDungeonName() {
         return dungeonName;
     }
+
+    /**
+     * Set the id of the world
+     * @param id the id to set
+     */
     public void setId(String id) {
         this.id  = id;
     }
+
+    /**
+     * Get the id of the world
+     * @return id
+     */
     public String getId() {
         return id;
     }
@@ -879,6 +897,7 @@ public class World {
         this.tickCount = tickCount;
     }
 
+    // TODO: here or factory??
     public void setEntityCount(int entityCount) {
         this.entityCount = entityCount;
     }
