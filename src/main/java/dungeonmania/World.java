@@ -1,11 +1,14 @@
 package dungeonmania;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.json.JSONArray;
@@ -46,6 +49,9 @@ public class World {
     static final double MERCENARY_ARMOUR_DROP = 0.4;
     static final double ZOMBIE_ARMOUR_DROP = 0.2;
     static final double ONE_RING_DROP = 0.1;
+    static final int DEFAULT_WIDTH = 50;
+    static final int DEFAULT_HEIGHT = 50;
+
     private int tickCount = 1;
     
 
@@ -219,8 +225,8 @@ public class World {
         // IllegalArgumentException if itemUsed is not a bomb, invincibility_potion or an invisibility_potion
         // InvalidActionException if itemUsed is not in the player's inventory
 
-        if (!Objects.isNull(itemUsed) ) {
-            if (!(inventory.getType(itemUsed) == null) && inventory.getType(itemUsed).equals("bomb")) {
+        if (!Objects.isNull(itemUsed) && !(inventory.getType(itemUsed) == null)) {
+            if (inventory.getType(itemUsed).equals("bomb")) {
                 Bomb b = inventory.getBomb(itemUsed);
                 String logic = b.logicString();
                 inventory.use(itemUsed);
@@ -472,7 +478,7 @@ public class World {
     public DungeonResponse build(String buildable) throws IllegalArgumentException, InvalidActionException {
         // IllegalArgumentException if buildable is not one of bow or shield
         // InvalidActionException if the player does not have sufficient items to craft the buildable
-        if (buildable == "midnight_armour" && numMovingEntity("zombie_toast") != 0) {
+        if (buildable.equals("midnight_armour") && numMovingEntity("zombie_toast") != 0) {
             throw new InvalidActionException("There are zombies alive");
         }
         inventory.craft(buildable, String.valueOf(incrementEntityCount()));
@@ -765,7 +771,7 @@ public class World {
     }
 
     /**
-     * Uses an item in the inventoryof the given type (if it exists)
+     * Uses an item in the inventory of the given type (if it exists)
      * @param type type of the item we want to use
      */
     public void useByType(String type) {
@@ -883,8 +889,7 @@ public class World {
 
         Random ran = new Random(randomSeed);
 
-        // change factory and set entity count accordingly
-        this.factory = new NewGameFactory(gamemode, ran.nextInt());
+        this.factory = new NewGameFactory(gamemode, ran.nextInt(), player.getPosition());
         factory.setEntityCount(entityCount);
         factory.setTickCount(tickCount);
 
@@ -933,12 +938,13 @@ public class World {
 
     public int numMovingEntity(String entityType) {
         int count = 0;
+        System.out.println(entityType);
         for (MovingEntity entity : movingEntities.values()) {
             if (entity.getType() == entityType) {
                 count++;
             }
         }
-        
+        System.out.println("count is " + count);
         return count;
     }
  
@@ -972,5 +978,143 @@ public class World {
     public boolean useableSceptre() {
         return inventory.usableSceptre();
     }
+
+    public DungeonResponse generateDungeon(int xStart, int yStart, int xEnd, int yEnd) {
+
+        JSONObject generateMaze = RandomizedPrims(xStart, yStart, xEnd, yEnd);
+        JSONObject goalCondition = new JSONObject();
+        goalCondition.put("goal", "exit");
+        generateMaze.put("goal-condition", goalCondition);
+        
+        return buildWorld(generateMaze);
+        
+    }
     
+    public JSONObject RandomizedPrims(int xStart, int yStart, int xEnd, int yEnd) {
+        Boolean[][] maze = new Boolean[DEFAULT_HEIGHT][DEFAULT_WIDTH];
+        for(int i = 0; i < DEFAULT_HEIGHT; i++) {
+            for(int j = 0; j < DEFAULT_WIDTH; j++){
+                maze[i][j] = false;
+            }
+        }
+
+        maze[xStart][yStart] = true;
+        List<Position> options = new ArrayList<>();
+        Position start = new Position(xStart, yStart);
+
+        List<Position> adjacents = start.get2AdjacentPosition();
+
+        adjacents.removeIf( pos -> isBoundary(pos.getX(), pos.getY()));
+        adjacents.removeIf( pos -> maze[pos.getX()][pos.getY()]);
+        options.addAll(adjacents);
+
+        while (!options.isEmpty()) {
+            Random rand = new Random();
+            Position next = options.remove(rand.nextInt(options.size()));
+
+            List<Position> neighbours = next.get2AdjacentPosition();
+            neighbours.removeIf( pos -> isBoundary(pos.getX(), pos.getY()));
+            neighbours.removeIf( pos -> !maze[pos.getX()][pos.getY()]);
+
+            if (!neighbours.isEmpty()) { // may need to also remove
+                Position neighbour = neighbours.get(rand.nextInt(neighbours.size()));
+                maze[next.getX()][next.getY()] = true;
+                Position inbetween = positionInbetween(next.getX(), next.getY(), neighbour.getX(), neighbour.getY());
+                maze[inbetween.getX()][inbetween.getY()] = true;
+                maze[neighbour.getX()][neighbour.getY()] = true;
+            }
+
+            List<Position> neighbours2 = next.get2AdjacentPosition();
+            neighbours2.removeIf( pos -> isBoundary(pos.getX(), pos.getY()));
+            neighbours2.removeIf( pos -> maze[pos.getX()][pos.getY()]);
+            Set<Position> set = new HashSet<>(options);
+            set.addAll(neighbours2);
+            options.clear();
+            options.addAll(set);
+        }
+
+        if (!maze[xEnd][yEnd]) {
+            maze[xEnd][yEnd] = true;
+            Position mazeEnd = new Position(xEnd, yEnd);
+            List<Position> neighbours = mazeEnd.getAdjacentPositions();
+            neighbours.removeIf( pos -> isBoundary(pos.getX(), pos.getY()));
+            if (!neighbourCellEmpty(neighbours, maze)) {
+                Random rand = new Random();
+                Position neighbour = neighbours.get(rand.nextInt(neighbours.size()));
+                maze[neighbour.getX()][neighbour.getY()] = true;
+            }
+        }
+
+        return createJSONfromMaze(maze, xStart, yStart, xEnd, yEnd);
+    }
+
+    private boolean isBoundary(int x, int y) {
+        if (x <= 0 || x >= DEFAULT_HEIGHT - 1) {
+            return true;
+        }
+        if (y <= 0 || y >= DEFAULT_WIDTH - 1) {
+            return true;
+        }
+        return false;
+    }
+
+    private Position positionInbetween(int xNext, int yNext, int xNeigh, int yNeigh) {
+        if (xNext == xNeigh) {
+            if (yNext > yNeigh) {
+                return new Position(xNext, yNext - 1);
+            } else {
+                return new Position(xNext, yNext + 1);
+            }
+        } else {
+            if (xNext > xNeigh) {
+                return new Position(xNext - 1, yNext);
+            } else {
+                return new Position(xNext + 1, yNext);
+            }
+        }
+    }
+    
+    private boolean neighbourCellEmpty(List<Position> neighbours, Boolean[][] maze) {
+        for (Position neighbour : neighbours) {
+            if (maze[neighbour.getX()][neighbour.getY()]) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private JSONObject createJSONfromMaze(Boolean[][] maze, int xStart, int yStart, int xEnd, int yEnd ) {
+        JSONObject mazeJSON = new JSONObject();
+        mazeJSON.put("width", DEFAULT_WIDTH);
+        mazeJSON.put("height", DEFAULT_HEIGHT);
+        JSONArray entities = new JSONArray();
+        for(int i = 0; i < DEFAULT_HEIGHT; i++) {
+            for(int j = 0; j < DEFAULT_WIDTH; j++){
+                if(!maze[i][j]) {
+                    JSONObject wall = new JSONObject();
+                    wall.put("x", j);
+                    wall.put("y", i);
+                    wall.put("type", "wall");
+                    entities.put(wall);
+                }
+            }
+        }
+        JSONObject playerJSON = new JSONObject();
+        playerJSON.put("x", xStart);
+        playerJSON.put("y", yStart);
+        playerJSON.put("type", "player");
+        entities.put(playerJSON);
+
+        JSONObject exitJSON = new JSONObject();
+        exitJSON.put("x", xEnd);
+        exitJSON.put("y", yEnd);
+        exitJSON.put("type", "exit");
+        entities.put(exitJSON);
+
+        mazeJSON.put("entities", entities);
+
+    
+        return mazeJSON;
+    }
+
 }

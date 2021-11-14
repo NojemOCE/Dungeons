@@ -255,4 +255,20 @@ public class DungeonManiaController {
 
     }
 
+    public DungeonResponse generateDungeon(int xStart, int yStart, int xEnd, int yEnd, String gameMode) throws IllegalArgumentException {
+        
+        gameMode = gameMode.toLowerCase();
+
+        Random ran = new Random();
+
+        World newGame = new World("primsRandom", gameMode, ran.nextInt());
+
+        newGame.generateDungeon(xStart, yStart, xEnd, yEnd);
+
+        this.current = newGame;
+        
+        return current.worldDungeonResponse();
+    }
+
+
 }
