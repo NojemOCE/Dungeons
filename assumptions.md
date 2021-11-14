@@ -122,6 +122,7 @@ Note: static entities marked with ^ are considered to be on the floor layer, whi
 ## Collectable Entities
 * Treasure
     * Is equivalent to “gold” required to bribe the mercenary
+    * Takes priority over keys in crafting
 * Key
     * Has a matching “keyColour” to a door which unique
 * Health potion
