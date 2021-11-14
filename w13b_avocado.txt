@@ -85,3 +85,54 @@ Test 5-1
 SUCCESS
 DONE
 Test 5-2
+SUCCESS
+DONE
+Test 6-1
+SUCCESS
+DONE
+Test 6-2
+SUCCESS
+DONE
+Test 6-3
+SUCCESS
+DONE
+Test 6-4
+SUCCESS
+DONE
+Test 6-5
+SUCCESS
+DONE
+Test 6-6
+SUCCESS
+DONE
+Test 7-1
+SUCCESS
+DONE
+Test 7-2
+SUCCESS
+DONE
+Test 7-3
+
+BasicGoalsTest > 7-3 Testing achieving an enemies goal with a single spider on the map FAILED
+    org.opentest4j.AssertionFailedError: expected: <> but was: <:enemies>
+        at org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:55)
+        at org.junit.jupiter.api.AssertionUtils.failNotEqual(AssertionUtils.java:62)
+        at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182)
+        at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:177)
+        at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1141)
+        at dungeonmania.controllerTest.BasicGoalsTest.testEnemyGoalSpider(BasicGoalsTest.java:73)
+FAILURE
+DONE
+Test 7-4
+SUCCESS
+DONE
+Test 7-5
+SUCCESS
+DONE
+Test 7-6
+SUCCESS
+DONE
+Test 7-7
+SUCCESS
+DONE
+Test 7-8
