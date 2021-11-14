@@ -2,7 +2,7 @@ package dungeonmania.collectable;
 
 public class Anduril extends CollectableEntity implements Weapon {
 
-    private final double ATTACK_POWER = 3;
+    private final double ATTACK_POWER = 5;
 
     public Anduril(int x, int y, String itemId) {
         super(x, y, itemId, "anduril");

@@ -2,8 +2,8 @@ package dungeonmania.collectable;
 
 public class MidnightArmour extends CollectableEntity implements Protection, Weapon {
     
-    private final int DEFENCE = 10;
-    private final double ATTACK = 5;
+    private final int DEFENCE = 12;
+    private final double ATTACK = 2;
 
     public MidnightArmour(int x, int y, String itemId) {
         super(x, y, itemId, "midnight_armour");

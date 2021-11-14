@@ -131,26 +131,43 @@ Note: static entities marked with ^ are considered to be on the floor layer, whi
     * Attack power: 3
 * Armour 
     * Durability: 7
+    * Halves the damage received after all defence from the inventory has been summed
+    * 40% drop rate when defeating a mercenary/assassin
+    * 20% drop rate when defeating a zombie toast
+    * Able to drop both armour and an one ring from a single tick
+* Anduril
+    * Infinite durability
+    * Attack power: 5
+    * Attack damage is additive
+    * Bonus boss battle damage only affects the attack of the sword
+    * Defence is additive
+* Sunstone
+    * Only able to be used to open doors that can be opened with keys
+    * Is used when used as a crafting material
+    * The sunstone takes priority over treasure 
+* For all
+    * Once the character has collected an item, the item is removed from the list of game entities and added to the characters inventory
+    * Health potions “can only be consumed once” - we understand this as meaning that once a health potion has been consumed, it is “discarded”,  the character is able to pick up additional health potions later on and consume them
+
+## Buildable Entities
+* There can be only one of each buildable item present within the inventory at a time
+* Bow
+    * Doubles the damage after all damage within the inventory has been summed
+    * Durability: 10
+    * When attacking with bow, weapons only lose one durability
 * Sceptre
     * Triggered through interact
     * Infinite durability
     * When using the mind control ability, the world does not tick (similar to bribing)
     * Has a cooldown of 15 ticks after use
     * Has priority over bribing the mercenary (bribing is only performed if sceptre is on cooldown)
-* Anduril
-    * Infinite durability
-    * Attack damage is additive
-    * Bonus boss battle damage only affects the attack of the sword
-    * Defence is additive
 * Midnight Armour
     * Infinite durability
+    * Attack power: 2
+    * Defence: 12
     * Attack damage is additive
     * Defence is additive
     * Is able to destroy a zombie toast spawner
-* For all
-    * Once the character has collected an item, the item is removed from the list of game entities and added to the characters inventory
-    * Health potions “can only be consumed once” - we understand this as meaning that once a health potion has been consumed, it is “discarded”,  the character is able to pick up additional health potions later on and consume them
-
 ## Rare Collectable Entities
 * The One Ring: has a 10% spawn rate
 
