@@ -14,8 +14,8 @@
         },
         "game_mode": "Game Mode",
         "on_exit": {
-            "title": "Computer Shutting down in 5...",
-            "message": "What did you expect to happen, this is a web app?  You can reload the page to start the game up again."
+            "title": "Please watch our satisfying coding livestream with lofi :)",
+            "message": "https://youtu.be/dQw4w9WgXcQ"
         },
         "text_color": "black"
     },
