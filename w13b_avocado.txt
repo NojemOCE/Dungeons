@@ -64,3 +64,6 @@ MercenaryTest > 3-2 Testing mercenaries cannot move through boulders and walls F
 FAILURE
 DONE
 Test 3-3
+FAILURE
+DONE
+Test 3-4
