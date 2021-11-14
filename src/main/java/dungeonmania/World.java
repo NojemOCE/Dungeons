@@ -594,6 +594,7 @@ public class World {
      */
     public void setEntityCount(int entityCount) {
         this.entityCount = entityCount;
+        factory.setEntityCount(entityCount);
     }
     /**
      * Gets all entities entity responses
@@ -914,12 +915,21 @@ public class World {
 
     }
 
+    /**
+     * Get the players position
+     * @return Players position
+     */
     public Position getPlayerPosition() {
         return player.getPosition();
     }
 
+    /**
+     * Set the tickcount of the world and the factory
+     * @param tickCount tickcount to set
+     */
     public void setTickCount(int tickCount) {
         this.tickCount = tickCount;
+        factory.setTickCount(tickCount);
     }
 
     public int numMovingEntity(String entityType) {

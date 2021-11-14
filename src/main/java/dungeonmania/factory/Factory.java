@@ -68,14 +68,6 @@ public abstract class Factory {
     }
 
     /**
-     * Getter for tickcount
-     * @return tickcount
-     */
-    public int getTickCount() {
-        return tickCount;
-    }
-
-    /**
      * Setter for tickcount
      * @param tickCount tickcount to set
      */

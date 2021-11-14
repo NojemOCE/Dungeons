@@ -72,7 +72,9 @@ public class sceptreTest {
             DungeonResponse d = controller.tick(null, Direction.DOWN);
             for (EntityResponse e : d.getEntities()) {
                 if (e.getId().equals("mercenary5")) {
-                    assertFalse(e.isInteractable());
+                    // assertFalse(e.isInteractable());
+                    // check that we can't interact with merc
+                    assertThrows(InvalidActionException.class, () -> controller.interact("mercenary5"));
                 }
             }
         }
@@ -136,7 +138,9 @@ public class sceptreTest {
             DungeonResponse d = controller.tick(null, Direction.DOWN);
             for (EntityResponse e : d.getEntities()) {
                 if (e.getId().equals("mercenary5")) {
-                    assertFalse(e.isInteractable());
+                    // assertFalse(e.isInteractable());
+                    // check that we can't interact with merc
+                    assertThrows(InvalidActionException.class, () -> controller.interact("mercenary5"));
                 }
                 assertThrows(InvalidActionException.class, () -> controller.interact("mercenary6"));
             }
@@ -151,7 +155,9 @@ public class sceptreTest {
             DungeonResponse d = controller.tick(null, Direction.DOWN);
             for (EntityResponse e : d.getEntities()) {
                 if (e.getId().equals("mercenary5") || e.getId().equals("mercenary6")) {
-                    assertFalse(e.isInteractable());
+                    // assertFalse(e.isInteractable());
+                    // check that we can't interact with merc
+                    assertThrows(InvalidActionException.class, () -> controller.interact(e.getId()));
                 }
             }
         }
@@ -163,7 +169,8 @@ public class sceptreTest {
             if (e.getId().equals("mercenary5")) {
                 assertTrue(e.isInteractable());
             } else if (e.getId().equals("mercenary6")) {
-                assertFalse(e.isInteractable());
+                // assertFalse(e.isInteractable());
+                assertThrows(InvalidActionException.class, () -> controller.interact(e.getId()));
             }
         }
 
