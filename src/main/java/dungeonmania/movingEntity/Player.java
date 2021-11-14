@@ -113,7 +113,7 @@ public class Player extends MovingEntity {
     public Battle battle(MovingEntity enemy, World world, Gamemode gamemode) {
         if (!enemy.getAlly()) {
             if (Objects.isNull(activePotion) || !activePotion.getType().equals("invisibility_potion")) {
-                notifyObserversForBattle(world); // mercenary speed
+                notifyObserversForBattle(world); 
                 if (enemy instanceof AssassinDecorator || enemy instanceof Hydra) {
                     return new Battle(this, enemy, gamemode.isEnemyAttackEnabled(), new BossBattle());
                 }
@@ -161,7 +161,10 @@ public class Player extends MovingEntity {
      */
     public void notifyObserversForBattle(World world) { // notify observers for battle
         mercenariesInRange.forEach( mercenary -> {
-            mercenary.move(world);
+            if (!world.getPlayerPosition().equals(mercenary.getPosition())) {
+                mercenary.move(world);
+
+            }
 
         });
     }
