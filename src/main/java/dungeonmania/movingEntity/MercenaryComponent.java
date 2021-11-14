@@ -105,7 +105,7 @@ public abstract class MercenaryComponent extends MovingEntity implements PlayerP
 
     @Override
     public EntityResponse getEntityResponse() {
-        return new EntityResponse(getId(), getType(), getPosition(), true);
+        return new EntityResponse(getId(), getType(), getPosition(), interactable);
     }
 
     @Override
