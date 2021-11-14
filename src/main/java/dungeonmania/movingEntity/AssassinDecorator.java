@@ -29,8 +29,8 @@ public class AssassinDecorator extends MercenaryComponent {
             world.useByType("one_ring");
         } else {
             throw new InvalidActionException("Need the one ring to bribe Assassin!");
-
         }
+        setInteractable(world.getPlayer());
     }
 
     @Override 

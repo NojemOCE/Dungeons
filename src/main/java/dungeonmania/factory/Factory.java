@@ -25,18 +25,20 @@ import dungeonmania.staticEntity.ZombieToastSpawn;
 import dungeonmania.util.Position;
 
 public abstract class Factory {
-    Gamemode gamemode;
+    protected Gamemode gamemode;
+    private Position playerStartingPos;
     protected int randomSeed;
     private int entityCount = 0;
     private int highestX = 5;
     private int highestY = 5;
-    static final int MAX_SPIDERS = 6;
-    static final int SPIDER_SPAWN = 20;
+    private static final int MAX_SPIDERS = 6;
+    private static final int SPIDER_SPAWN = 20;
     private int tickCount = 1;
     static final double MERCENARY_ARMOUR_DROP = 0.4;
     static final double ZOMBIE_ARMOUR_DROP = 0.2;
     static final double ONE_RING_DROP = 0.1;
     protected Random ran;
+    static final int MERC_SPAWN_RATE = 40;
 
     static final int HYDRA_SPAWN = 50;
 
@@ -53,11 +55,35 @@ public abstract class Factory {
     }
 
     /**
+     * Gets the players starting position
+     * @return players starting position
+     */
+    public Position getPlayerStartingPos() {
+        return playerStartingPos;
+    }
+
+    /**
+     * Sets the players starting position as a given input
+     * @param playerStartingPos position to set players starting position as
+     */
+    public void setPlayerStartingPos(Position playerStartingPos) {
+        this.playerStartingPos = playerStartingPos;
+    }
+
+    /**
      * Increments and returns the next entity coutn
      * @return new entity count
      */
     protected int incrementEntityCount() {
         entityCount +=1;
+        return entityCount;
+    }
+
+    /**
+     * Gets the total entity count
+     * @return current entity count
+     */
+    public int getEntityCount() {
         return entityCount;
     }
 
@@ -69,6 +95,13 @@ public abstract class Factory {
         this.entityCount = entityCount;
     }
 
+    /**
+     * Setter for tickcount
+     * @param tickCount tickcount to set
+     */
+    public void setTickCount(int tickCount) {
+        this.tickCount = tickCount;
+    }
     /**
      * Creates and returns an entity from a given JSON object, taking in the world
      * @param jsonObject JSON oject to create entity from
@@ -96,6 +129,26 @@ public abstract class Factory {
     }
 
     /**
+     * Creates and returns an entity from x,y coordinates, string type, and current world
+     * @param x x coordinate of the entity
+     * @param y y coordinate of the entity
+     * @param type string type of the entity
+     * @param world world that the entity will be built into
+     * @param logic the type of logic component
+     * @return entity
+     */
+    public Entity createEntity(int x, int y, String type, World world, String logic) {
+        JSONObject newEntityObj = new JSONObject();
+        newEntityObj.put("x", x);
+        newEntityObj.put("y", y);
+        newEntityObj.put("type", type);
+        newEntityObj.put("logic", logic);
+        updateBounds(x, y);
+
+        return createEntity(newEntityObj, world);
+    }    
+
+    /**
      * Taking the world, it returns a list of new entities that have spawned on that tick
      * @param world current world
      * @return list of new entities
@@ -115,6 +168,10 @@ public abstract class Factory {
         if (!(hydra == null)) {
             newEntities.add(hydra);
         }
+        if (tickCount%MERC_SPAWN_RATE == 0) {
+            newEntities.add(createEntity(playerStartingPos.getX(), playerStartingPos.getY(), "mercenary", world));
+        }
+
         tickCount++;
 
         return newEntities;
@@ -245,13 +302,6 @@ public abstract class Factory {
         return newPos;
     }
 
-    /**
-     * Gets the total entity count
-     * @return current entity count
-     */
-    public int getEntityCount() {
-        return entityCount;
-    }
 
     /**
      * Sets the largest bounds of the map
@@ -267,10 +317,18 @@ public abstract class Factory {
         }
     }
 
+    /**
+     * Get the highest X
+     * @return highest X
+     */
     public int getHighestX() {
         return highestX;
     }
 
+    /**
+     * Get the highest Y
+     * @return highest Y
+     */
     public int getHighestY() {
         return highestY;
     }

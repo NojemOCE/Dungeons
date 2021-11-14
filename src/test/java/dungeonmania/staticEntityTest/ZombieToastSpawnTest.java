@@ -72,11 +72,11 @@ public class ZombieToastSpawnTest {
         EntityResponse er = zombieSpawn.getEntityResponse();
         assertTrue(er.isInteractable());
 
-        // check is not interactable if far away
+        // even if we are far away, the toaster should still be interactable
         Player playerFar = new Player(10, 0, "p2", hp);
         zombieSpawn.update(playerFar);
         er = zombieSpawn.getEntityResponse();
-        assertFalse(er.isInteractable());
+        assert(er.isInteractable());
     }
 
     /**
@@ -99,9 +99,10 @@ public class ZombieToastSpawnTest {
         List<EntityResponse> entities = d.getEntities();
 
         // check that the spawner is not interactable when we start (2 spots away)
+        // should be "iteractable" but throws exception when interacted with
         for (EntityResponse er : entities) {
             if (er.getType().equals("zombie_toast_spawner")) {
-                assertFalse(er.isInteractable());
+                assert(er.isInteractable());
                 assertThrows(InvalidActionException.class, () -> world.interact(er.getId()));
                 break;
             }

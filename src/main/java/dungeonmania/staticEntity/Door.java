@@ -85,6 +85,8 @@ public class Door extends StaticEntity {
     public EntityResponse getEntityResponse() {
         if (isOpen) {
             return new EntityResponse(getId(), "door_open", getPosition(), false);
+        } else if (keyColour % 2 == 0) {
+            return new EntityResponse(getId(), "door2", getPosition(), false);
         } else {
             return super.getEntityResponse();
         }
