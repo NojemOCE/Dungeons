@@ -51,10 +51,8 @@ public class Mercenary extends MercenaryComponent {
         if (getInteractable()) {
             if (world.inInventory("sceptre") && world.useableSceptre()) {
                 world.useSceptre(this);
-            } else if (world.numItemInInventory("treasure") >= GOLD_TO_BRIBE) {
-                for (int i = 0; i < GOLD_TO_BRIBE; i++) {
-                    world.useByType("treasure");
-                }
+            } else if (canBribe(world)) {
+                bribe(world);
                 setAlly(true);
             } else {
                 throw new InvalidActionException("Not enough gold to bribe Mercenary!");
@@ -63,6 +61,32 @@ public class Mercenary extends MercenaryComponent {
             throw new InvalidActionException("Must be within 2 cardinal tiles to bribe Mercenary!");
         }
         setInteractable(world.getPlayer());
+    }
+    
+    /**
+     * Checks whether there are resources to bribe the mercenary
+     * @param world The current world
+     * @return true if tthere are enough resources, else false
+     */
+    private boolean canBribe(World world) {
+        int numTreasure = world.numItemInInventory("treasure");
+        int numSunstone = world.numItemInInventory("sun_stone");
+        return ((numTreasure + numSunstone) >= GOLD_TO_BRIBE);
+    }
+    
+    /**
+     * Carry out required changes to make a bribe.
+     * Sun stones are used before treasure.
+     * @param world
+     */
+    private void bribe(World world) {
+        for (int i = 0; i < GOLD_TO_BRIBE; i++) {
+            if (world.numItemInInventory("sun_stone") >= 1) {
+                world.useByType("sun_stone");
+            } else {
+                world.useByType("treasure");
+            }
+        }
     }
 
     @Override
