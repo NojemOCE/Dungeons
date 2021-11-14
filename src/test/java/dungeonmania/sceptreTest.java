@@ -86,11 +86,11 @@ public class sceptreTest {
         controller.loadGame("saveSceptreWorld");
 
         // Walk down for 8 ticks, mercenary should still be controlled
-        for (int i = 0; i < 8; i++) {
-            DungeonResponse d = controller.tick(null, Direction.DOWN);
-            for (EntityResponse e : d.getEntities()) {
+        for (int i = 0; i < 7; i++) {
+            DungeonResponse controlled = controller.tick(null, Direction.DOWN);
+            for (EntityResponse e : controlled.getEntities()) {
                 if (e.getId().equals("mercenary5")) {
-                    assertThrows(InvalidActionException.class, () -> controller.interact("mercenary5"));
+                    assertFalse(e.isInteractable());
                 }
             }
         }
@@ -99,7 +99,7 @@ public class sceptreTest {
         DungeonResponse notControlled = controller.tick(null, Direction.DOWN);
         for (EntityResponse e : notControlled.getEntities()) {
             if (e.getId().equals("mercenary5")) {
-                assertDoesNotThrow(() -> controller.interact("mercenary5"));
+                assertTrue(e.isInteractable());
             }
         }
     }
@@ -117,11 +117,11 @@ public class sceptreTest {
         assertDoesNotThrow(() -> controller.interact("mercenary5"));
 
         // For 10 ticks, the mercenary is uncontrolled
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 9; i++) {
             DungeonResponse d = controller.tick(null, Direction.DOWN);
             for (EntityResponse e : d.getEntities()) {
                 if (e.getId().equals("mercenary5")) {
-                    assertThrows(InvalidActionException.class, () -> controller.interact("mercenary5"));
+                    assertFalse(e.isInteractable());
                 }
             }
         }
@@ -133,6 +133,9 @@ public class sceptreTest {
                 assertTrue(e.isInteractable());
             }
         }
+
+        // Because sceptre is on cooldown, we shouldn't be able to bribe the mercenary
+        assertThrows(InvalidActionException.class, () -> controller.interact("mercenary5"));
     }
 
     @Test
@@ -151,8 +154,11 @@ public class sceptreTest {
         for (int i = 0; i < 3; i++) {
             DungeonResponse d = controller.tick(null, Direction.DOWN);
             for (EntityResponse e : d.getEntities()) {
-                assertThrows(InvalidActionException.class, () -> controller.interact("mercenary5"));
-                assertThrows(InvalidActionException.class, () -> controller.interact("mercenary6"));
+                if (e.getId().equals("mercenary5")) {
+                    assertFalse(e.isInteractable());
+                } else if (e.getId().equals("mercenary6")) {
+                    assertTrue(e.isInteractable());
+                }
             }
         }
 
@@ -163,12 +169,12 @@ public class sceptreTest {
 
         assertDoesNotThrow(() -> controller.interact("mercenary6"));
 
-        // Move down for 5 ticks
-        for (int i = 0; i < 5; i++) {
+        // Move down for 4 ticks
+        for (int i = 0; i < 4; i++) {
             DungeonResponse d = controller.tick(null, Direction.DOWN);
             for (EntityResponse e : d.getEntities()) {
                 if (e.getId().equals("mercenary5") || e.getId().equals("mercenary6")) {
-                    assertThrows(InvalidActionException.class, () -> controller.interact(e.getId()));
+                    assertFalse(e.isInteractable());
                 }
             }
         }
@@ -180,13 +186,13 @@ public class sceptreTest {
             if (e.getId().equals("mercenary5")) {
                 assertTrue(e.isInteractable());
             } else if (e.getId().equals("mercenary6")) {
-                assertThrows(InvalidActionException.class, () -> controller.interact(e.getId()));
+                assertFalse(e.isInteractable());
             }
         }
 
-        // Cooldown of sceptre should be on 4 ticks
-        // Move down 3 more times - during this, we shouldn't be able to mind control the mercenary
-        for (int i = 0; i < 3; i++) {
+        // Cooldown of sceptre should be on 5 ticks
+        // Move down 4 more times - during this, we shouldn't be able to mind control the mercenary
+        for (int i = 0; i < 5; i++) {
             controller.tick(null, Direction.DOWN);
             assertThrows(InvalidActionException.class, () -> controller.interact("mercenary5"));
         }
