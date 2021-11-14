@@ -18,8 +18,8 @@ import dungeonmania.response.models.ItemResponse;
 public class Inventory {
     private Map<String, CollectableEntity> collectableItems = new HashMap<>();
     private Map<String, Integer> numCollected = new HashMap<>();
-    private List<String> usable = new ArrayList<>();
-    private List<String> buildables = new ArrayList<>();
+    private List<String> usable;
+    private List<String> buildables;
 
     /**
      * Constructor for inventory
@@ -52,13 +52,13 @@ public class Inventory {
     /**
      * Consumes the item which corresponds with the itemId provided if it exists within the inventory
      * Removes the item if its durability becomes zero after being consumed
-     * @param itemId 
+     * @param itemId
      */
     public void use(String itemId) {
         collectableItems.get(itemId).consume();
         if (collectableItems.get(itemId).getDurability() == 0) {
             removeItem(collectableItems.get(itemId));
-            }
+        }
     }
 
     /**
@@ -67,22 +67,30 @@ public class Inventory {
      * @param type type of the item we want to use
      */
     public void useByType(String type) {
-        
+
         numCollected.put(type, numCollected.get(type) - 1);
-        // remove the first instance in collectable and consumable
+        // remove the first instance in collectable
         List<CollectableEntity> collectable = collectableItems.values()
-                                                              .stream()
-                                                              .filter(e -> e.getType().equals(type))
-                                                              .collect(Collectors.toList());
+                .stream()
+                .filter(e -> e.getType().equals(type))
+                .collect(Collectors.toList());
         String idToRemove =collectable.get(0).getId();
         collectableItems.remove(idToRemove);
-        //consumableItems.remove(idToRemove);
     }
     
+    /**
+     * Use mind control on a MercenaryComponent
+     * @param m given MercenaryComponent to be mind controlled
+     */
     public void useSceptre(MercenaryComponent m) {
         getSceptre().useMindControl(m);
     }
 
+    /**
+     * Overloaded method for when loading from a file
+     * @param m given MercenaryComponent that has been mind controlled
+     * @param duration remaining duration of the effect
+     */
     public void useSceptre(MercenaryComponent m, int duration) {
         getSceptre().useMindControl(m, duration);
     }
@@ -103,11 +111,17 @@ public class Inventory {
             collectableItems.put(itemType + itemNum, new Bow(0, 0, itemType + itemNum));
         } else if (itemType.equalsIgnoreCase("shield")) {
             IntStream.range(0, 2).mapToObj(i -> "wood").forEach(this::useByType);
-            useByType(numItem("treasure") != 0 ? "treasure" : "key");
+            if (numItem("sun_stone") != 0) {
+                useByType("sun_stone");
+            } else if (numItem("treasure") != 0) {
+                useByType("treasure");
+            } else {
+                useByType("key");
+            }
             collectableItems.put(itemType + itemNum, new Shield(0, 0, itemType + itemNum));
         } else if (itemType.equalsIgnoreCase("midnight_armour")) {
-            IntStream.range(0, 1).mapToObj(i -> "armour").forEach(this::useByType);
-            IntStream.range(0, 1).mapToObj(i -> "sun_stone").forEach(this::useByType);
+            useByType("armour");
+            useByType("sun_stone");
             collectableItems.put(itemType + itemNum, new MidnightArmour(0, 0, itemType + itemNum));
         } else if (itemType.equalsIgnoreCase("sceptre")) {
             if (numItem("wood") != 0) {
@@ -115,7 +129,15 @@ public class Inventory {
             } else {
                 IntStream.range(0, 2).mapToObj(i -> "arrow").forEach(this::useByType);
             }
-            useByType(numItem("treasure") != 0 ? "treasure" : "key");
+
+            if (numItem("sun_stone") >= 2) {
+                useByType("sun_stone");
+            } else if (numItem("treasure") != 0) {
+                useByType("treasure");
+            } else {
+                useByType("key");
+            }
+
             useByType("sun_stone");
             collectableItems.put(itemType + itemNum, new Sceptre(0, 0, itemType + itemNum));
         }
@@ -139,10 +161,10 @@ public class Inventory {
      */
     public Key keyInInventory(int keyColour) {
         List<Key> keys = collectableItems.values().stream()
-                                        .filter(x -> x instanceof Key)
-                                        .map(Key.class::cast)
-                                        .filter(x -> x.getKeyColour() == keyColour)
-                                        .collect(Collectors.toList());
+                .filter(x -> x instanceof Key)
+                .map(Key.class::cast)
+                .filter(x -> x.getKeyColour() == keyColour)
+                .collect(Collectors.toList());
 
         if (keys.isEmpty()) {
             return null;
@@ -166,10 +188,12 @@ public class Inventory {
         return null;
     }
 
+    /**
+     * Tick the duration of the sceptre effects and cool down
+     */
     public void tickSceptre() {
         getSceptre().consume();
     }
-
 
     public Bomb getBomb(String id) {
         for (CollectableEntity c : collectableItems.values()) {
@@ -192,7 +216,7 @@ public class Inventory {
      * @throws IllegalArgumentException when the item id provided doesn't correspond to a useable item
      */
     public CollectableEntity tick(String itemUsedId) {
-        CollectableEntity collectable = null;
+        CollectableEntity collectable;
         if (!inInventory(itemUsedId)) {
             throw new InvalidActionException("Item not in Inventory");
         } else if (isUsable(itemUsedId)) {
@@ -204,8 +228,6 @@ public class Inventory {
         } else {
             throw new IllegalArgumentException("Wrong usable type");
         }
-
-        
     }
 
     /**
@@ -239,14 +261,7 @@ public class Inventory {
      * @return true if the item is useable, false otherwise
      */
     private boolean isUsable(String itemUsedId) {
-        
-        for ( String item : usable) {
-            if (itemUsedId.contains(item)) {
-                return true;
-            }
-        }
-        return false;
-        
+        return usable.stream().anyMatch(itemUsedId::contains);
     }
 
     /**
@@ -260,18 +275,16 @@ public class Inventory {
 
     /**
      * Removes items with the id corresponding to the list provided, from the inventory
-     * @param item the list of item ids to be removed
+     * @param itemIdToRemove the list of item ids to be removed
      */
     public void removeItem(List<String> itemIdToRemove) {
         for (String itemId : itemIdToRemove) {
             String type = collectableItems.get(itemId).getType();
             numCollected.put(type, numCollected.get(type) - 1);
-
             collectableItems.remove(itemId);
         }
-        
     }
-   
+
     public List<String> getBuildable() {
         ArrayList<String> buildable = new ArrayList<>();
         for (String item : buildables) {
@@ -287,15 +300,20 @@ public class Inventory {
      * @throws IllegalArgumentExeption if the type provided isn't able to be built
      */
     public boolean isBuildable(String buildableType) {
-    
-        if (buildableType.equalsIgnoreCase("bow")) {
+
+        if (hasItem(buildableType)) {
+            return false;
+        } else if (buildableType.equalsIgnoreCase("bow")) {
             return numItem("wood") >= 1 && numItem("arrow") >= 3;
         } else if (buildableType.equalsIgnoreCase("shield")) {
-            return numItem("wood") >= 2 && (numItem("treasure") >= 1 || numItem("key") == 1);
+            if (numItem("wood") < 2) return false;
+            return numItem("key") >= 1 || (numItem("treasure") >= 1 || numItem("sun_stone") >= 1);
         } else if (buildableType.equalsIgnoreCase("sceptre")) {
-            return (numItem("wood") >= 1 || numItem("arrow") >= 2) && (numItem("key") >= 1 || numItem("treasure") >= 1) && numItem("sun_stone") >= 1;
-        } else if (buildableType.equalsIgnoreCase("midnight_armour")) {
-            return numItem("armour") >= 1 && numItem("sun_stone") >= 1;
+            if (numItem("wood") < 1 && numItem("arrow") < 2) return false;
+            if (numItem("key") < 1 && numItem("treasure") < 1) return (numItem("sun_stone") >= 2);
+            return (numItem("sun_stone") >= 1);
+        } else if (buildableType.equalsIgnoreCase("midnight_armour")) {;
+            return (numItem("armour") >= 1 && numItem("sun_stone") >= 1);
         } else {
             throw new IllegalArgumentException("Wrong buildable type");
         }
@@ -322,6 +340,10 @@ public class Inventory {
         return collectableItems.values().stream().anyMatch(e -> e.getType().equals(itemType));
     }
 
+    /**
+     * Check if the sceptre is ready to be used (off cool down)
+     * @return true if sceptre is ready to be used
+     */
     public boolean usableSceptre() {
         return getSceptre().ready();
     }

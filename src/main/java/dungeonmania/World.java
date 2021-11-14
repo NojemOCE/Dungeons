@@ -44,8 +44,6 @@ public class World {
     private Factory factory;
     private int randomSeed;
 
-    // TODO: check if these are required (might be in factory)
-    static final int MECERNARY_SPAWN = 25;
     static final double MERCENARY_ARMOUR_DROP = 0.4;
     static final double ZOMBIE_ARMOUR_DROP = 0.2;
     static final double ONE_RING_DROP = 0.1;
@@ -391,7 +389,7 @@ public class World {
         return true;
     }
     
-    /*
+    /** 
      * Checks whether a given position is a valid zombie spawn position
      * @param position Position to check
      * @return true if the position giveen is valid, otherwise false
@@ -666,7 +664,10 @@ public class World {
         return this.collectableEntities;
     }
 
-
+    /**
+     * Calls use for thr specified item id in inventory
+     * @param itemId the item to be used
+     */
     public void use(String itemId) {
         inventory.use(itemId);
     }
