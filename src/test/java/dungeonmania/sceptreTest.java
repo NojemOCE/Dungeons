@@ -192,7 +192,7 @@ public class sceptreTest {
 
         // Cooldown of sceptre should be on 5 ticks
         // Move down 4 more times - during this, we shouldn't be able to mind control the mercenary
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 4; i++) {
             controller.tick(null, Direction.DOWN);
             assertThrows(InvalidActionException.class, () -> controller.interact("mercenary5"));
         }
