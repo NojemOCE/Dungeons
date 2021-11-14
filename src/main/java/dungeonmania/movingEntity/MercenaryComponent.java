@@ -12,6 +12,7 @@ import dungeonmania.util.Position;
 public abstract class MercenaryComponent extends MovingEntity implements PlayerPassiveObserver {
 
     private static final double BATTLE_RADIUS = 8;
+    private static final int BRIBE_DISTANCE = 2;
     private boolean interactable = false;
 
     /**
@@ -68,7 +69,7 @@ public abstract class MercenaryComponent extends MovingEntity implements PlayerP
         Position relativePos = Position.calculatePositionBetween(player.getPosition(), this.getPosition());
         if (getAlly()) {
             interactable = false;
-        } else if ((relativePos.getX() + relativePos.getY()) <= 2) {
+        } else if ((Math.abs(relativePos.getX()) + (Math.abs(relativePos.getY()))) <= BRIBE_DISTANCE) {
             interactable = true;
         } else {
             interactable = false;
