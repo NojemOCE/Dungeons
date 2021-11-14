@@ -24,7 +24,9 @@ public class AssassinDecorator extends MercenaryComponent {
     
     @Override
     public void interact(World world) throws InvalidActionException {
-        if (world.numItemInInventory("one_ring") < ONE_RING) {
+        if (world.inInventory("sceptre") && world.useableSceptre()) {
+            world.useSceptre(this);
+        } else if (world.numItemInInventory("one_ring") < ONE_RING) {
             decorated.interact(world);
             world.useByType("one_ring");
         } else {
