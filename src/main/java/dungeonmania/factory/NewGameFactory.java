@@ -245,6 +245,10 @@ public class NewGameFactory extends Factory {
             Armour e = new Armour(x, y ,id);
             return e;
         }
+        else if (type.equals("bow")) {
+            Bow e = new Bow(x, y ,id);
+            return e;
+        }
 
         return null;
     }
