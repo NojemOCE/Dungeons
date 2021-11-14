@@ -18,13 +18,17 @@ public class Anduril extends CollectableEntity implements Weapon {
     }
 
     /**
-     * Provides the attack modifier of the sword
+     * Provides the attack modifier of anduril in normal battle
      * @return ATTACK_POWER
      */
     public double attackModifier() {
         return ATTACK_POWER;
     }
 
+    /**
+     * Provides the attack modifier of anduril in boss battle
+     * @return ATTACK_POWER * 3
+     */
     public double bossAttackModifier() {
         return 3 * attackModifier();
     }

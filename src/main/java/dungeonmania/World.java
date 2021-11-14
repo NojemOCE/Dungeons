@@ -213,8 +213,8 @@ public class World {
         // IllegalArgumentException if itemUsed is not a bomb, invincibility_potion or an invisibility_potion
         // InvalidActionException if itemUsed is not in the player's inventory
 
-        if (!Objects.isNull(itemUsed) ) {
-            if (!(inventory.getType(itemUsed) == null) && inventory.getType(itemUsed).equals("bomb")) {
+        if (!Objects.isNull(itemUsed) && !(inventory.getType(itemUsed) == null)) {
+            if (inventory.getType(itemUsed).equals("bomb")) {
                 Bomb b = inventory.getBomb(itemUsed);
                 LogicComponent logic = factory.createLogicComponent(b.logicString());
                 inventory.use(itemUsed);
@@ -465,7 +465,7 @@ public class World {
     public DungeonResponse build(String buildable) throws IllegalArgumentException, InvalidActionException {
         // IllegalArgumentException if buildable is not one of bow or shield
         // InvalidActionException if the player does not have sufficient items to craft the buildable
-        if (buildable == "midnight_armour" && numMovingEntity("zombie_toast") != 0) {
+        if (buildable.equals("midnight_armour") && numMovingEntity("zombie_toast") != 0) {
             throw new InvalidActionException("There are zombies alive");
         }
         inventory.craft(buildable, String.valueOf(incrementEntityCount()));
@@ -753,7 +753,7 @@ public class World {
     }
 
     /**
-     * Uses an item in the inventoryof the given type (if it exists)
+     * Uses an item in the inventory of the given type (if it exists)
      * @param type type of the item we want to use
      */
     public void useByType(String type) {
@@ -848,7 +848,7 @@ public class World {
 
         Random ran = new Random(randomSeed);
 
-        this.factory = new NewGameFactory(gamemode, ran.nextInt());
+        this.factory = new NewGameFactory(gamemode, ran.nextInt(), player.getPosition());
         factory.setEntityCount(entityCount);
 
         if (gameData.has("controlled")) {
@@ -891,12 +891,13 @@ public class World {
 
     public int numMovingEntity(String entityType) {
         int count = 0;
+        System.out.println(entityType);
         for (MovingEntity entity : movingEntities.values()) {
             if (entity.getType() == entityType) {
                 count++;
             }
         }
-        
+        System.out.println("count is " + count);
         return count;
     }
  
