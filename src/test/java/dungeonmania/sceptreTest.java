@@ -49,6 +49,24 @@ public class sceptreTest {
     }
 
     @Test
+    public void testKeyRecipe() {
+        DungeonManiaController controller = new DungeonManiaController();
+        controller.newGame("sceptreWorld", "standard");
+
+        // Check that we can't craft sceptre
+        assertThrows(InvalidActionException.class, () -> controller.build("sceptre"));
+
+        // Walk around and collect everything
+        controller.tick(null, Direction.DOWN);
+        controller.tick(null, Direction.DOWN);
+        controller.tick(null, Direction.RIGHT);
+        controller.tick(null, Direction.RIGHT);
+
+        // Try craft Sceptre
+        assertDoesNotThrow(() -> controller.build("sceptre"));
+    }
+
+    @Test
     public void saveSceptre() {
         DungeonManiaController controller = new DungeonManiaController();
         controller.newGame("sceptreWorld", "standard");
@@ -72,8 +90,6 @@ public class sceptreTest {
             DungeonResponse d = controller.tick(null, Direction.DOWN);
             for (EntityResponse e : d.getEntities()) {
                 if (e.getId().equals("mercenary5")) {
-                    // assertFalse(e.isInteractable());
-                    // check that we can't interact with merc
                     assertThrows(InvalidActionException.class, () -> controller.interact("mercenary5"));
                 }
             }
@@ -105,8 +121,6 @@ public class sceptreTest {
             DungeonResponse d = controller.tick(null, Direction.DOWN);
             for (EntityResponse e : d.getEntities()) {
                 if (e.getId().equals("mercenary5")) {
-                    //assertFalse(e.isInteractable());
-                    // check that we can't interact with merc
                     assertThrows(InvalidActionException.class, () -> controller.interact("mercenary5"));
                 }
             }
