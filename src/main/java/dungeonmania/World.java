@@ -405,6 +405,21 @@ public class World {
         }
         return true;
     }
+    /**
+     * Find a valid hydra spawn
+     * @param position position we are checking
+     * @return boolean true if found
+     */
+    public boolean validHydraSpawnPosition(Position position) {
+        StaticEntity se = getStaticEntity(position);
+        MovingEntity me = getCharacter(position);
+
+        // if there is a static entity OR there is already a moving entity OR player is there, NOT VALID
+        if (!(se == null) || !(me == null) || (player.getPosition().equals(position))) {
+            return false;
+        }
+        return true;
+    }
     
     /*
      * Checks whether a given position is a valid zombie spawn position
