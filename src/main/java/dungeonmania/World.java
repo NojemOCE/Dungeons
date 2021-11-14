@@ -168,52 +168,6 @@ public class World {
     }
 
     /**
-     * Drops armour:
-     * 20% of the time if the player has beaten a zombie
-     * 40% of the time if the player has beaten a mercenary
-     *
-     * Drops the one ring:
-     * 10% of the time
-     *
-     * If an item is dropped, it is automatically added to the players inventory
-     */
-    /*private void dropBattleReward(){
-        Position characterPos = currentBattle.getCharacter().getPosition();
-        int charX = characterPos.getX();
-        int charY = characterPos.getY();
-
-
-        if (currentBattle.getCharacter() instanceof Mercenary) {
-            Random ran = new Random(randomSeed);
-            int next = ran.nextInt(10);
-            if (10 * MERCENARY_ARMOUR_DROP > next)  {
-                // return an armour
-                Armour armour = (Armour) (factory.createEntity(charX, charY, "armour", this));
-
-                inventory.collect(armour);
-            }
-        }
-
-        else if (currentBattle.getCharacter() instanceof Zombie) {
-            Random ran = new Random(randomSeed);
-            int next = ran.nextInt(10);
-            if (10 * ZOMBIE_ARMOUR_DROP > next)  {
-                // return an armour
-                Armour armour = (Armour) (factory.createEntity(charX, charY, "armour", this));
-                inventory.collect(armour);
-            }
-        }
-
-        Random ran = new Random(randomSeed);
-        int next = ran.nextInt(10);
-        if (10 * ONE_RING_DROP > next)  {
-            // return the one ring
-            OneRing oneRing = (OneRing) (factory.createEntity(charX, charY, "one_ring", this));
-            inventory.collect(oneRing);
-        }
-    }*/
-    
-    /**
      * Gets the current character that the player has just battled with
      * @return current battle character
      */
