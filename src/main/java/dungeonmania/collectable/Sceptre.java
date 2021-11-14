@@ -55,7 +55,7 @@ public class Sceptre extends CollectableEntity {
      */
     public void useMindControl(MercenaryComponent m) {
         setCooldown(15);
-        useMindControl(m, DURATION + 1);
+        useMindControl(m, DURATION);
         notifyMindControlled();
     }
 
@@ -114,7 +114,7 @@ public class Sceptre extends CollectableEntity {
     @Override
     public JSONObject saveGameJson() {
         JSONObject sceptreJSON  = super.saveGameJson();
-        sceptreJSON.put("cooldown", "0");
+        sceptreJSON.put("cooldown", cooldown);
         return sceptreJSON;
     }
 

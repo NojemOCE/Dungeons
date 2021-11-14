@@ -132,5 +132,4 @@ public abstract class MercenaryComponent extends MovingEntity implements PlayerP
         return mercJSON;
     }
 
-
 }
