@@ -49,8 +49,20 @@
     * Attack = 3
     * A player is able to attack without a weapon with the above attack stat
     * However, they cannot destroy a zombie toast spawner (as they require a weapon)
+* Assassin
+    * Moves the same as Mercenary
+    * HP = 20
+    * Attack = 6
+    * Only requires one one_ring on top of the mercenary treasure requirements
+    * 30% chance of spawning
+* Hydra
+    * Moves like a zombie, see above
+    * HP = 25
+    * Can exceed it's HP as it grows a head
+    * Attack = 4
 * For all:
     * Only two moving entities can be on one cell at any time
+    * Moving Entities can block each other from player (mercenary algorithm will therefore avoid other mercenaries if they are in the way)
     * This implies that the character can only battle one enemy at the time
     * Once a battle starts, it cannot end until one of the characters is defeated. To continue going through ticks, the player should just just click any direction to continue onto the next attack in battle
 * Given:
@@ -120,6 +132,7 @@ Note: static entities marked with ^ are considered to be on the floor layer, whi
 * Invisibility potion
     * Lasts for 10 ticks
     * Player cannot be invincible at the same time as being invisible
+    * Cannot battle if invisible
 * Bomb
     * We cannot pick these up again
     * Blast radius =  1
