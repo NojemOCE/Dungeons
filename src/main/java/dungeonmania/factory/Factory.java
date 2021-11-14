@@ -40,6 +40,8 @@ public abstract class Factory {
     protected Random ran;
     static final int MERC_SPAWN_RATE = 40;
 
+    static final int HYDRA_SPAWN = 50;
+
     /**
      * Constructor for Factory taking in a GameMode
      * @param gamemode gamemode of factory
@@ -161,6 +163,11 @@ public abstract class Factory {
         List<Entity> newZombies = tickZombieToastSpawn(world);
         newEntities.addAll(newZombies);
 
+
+        Entity hydra = tickHydraSpawn(world);
+        if (!(hydra == null)) {
+            newEntities.add(hydra);
+        }
         if (tickCount%MERC_SPAWN_RATE == 0) {
             newEntities.add(createEntity(playerStartingPos.getX(), playerStartingPos.getY(), "mercenary", world));
         }
@@ -168,6 +175,35 @@ public abstract class Factory {
         tickCount++;
 
         return newEntities;
+    }
+
+    /**
+     * Helper function to create a new hydra at relevant ticks
+     */
+    private Entity tickHydraSpawn(World world) {
+        if (!(tickCount % HYDRA_SPAWN == 0) || !(gamemode.getGameModeType().equals("hard"))) {
+            return null;
+            
+        }
+
+        int x = ran.nextInt(highestX);
+        int y = ran.nextInt(highestY);
+        
+        int numChecks = 0;
+        while (!world.validHydraSpawnPosition(new Position(x,y)) && numChecks < 10) {
+            x = ran.nextInt(highestX);
+            y = ran.nextInt(highestY);
+            numChecks++;
+        }
+
+        // no valid positions found in reasonable time
+        if (numChecks == 10) {
+            return null;
+        }
+
+        Entity e = createEntity(x, y, "hydra", world);
+        return e;
+
     }
 
     /**
