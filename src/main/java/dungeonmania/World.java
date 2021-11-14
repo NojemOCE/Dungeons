@@ -473,7 +473,7 @@ public class World {
     }
 
     // Return a dungeon response for the current world
-    public DungeonResponse worldDungeonResponse(){
+    public DungeonResponse worldDungeonResponse() {
         return new DungeonResponse(id, dungeonName, getEntityResponses(), getInventoryResponse(), inventory.getBuildable(), getGoalsResponse());
     }
 

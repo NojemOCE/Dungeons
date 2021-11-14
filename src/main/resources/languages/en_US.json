@@ -1,10 +1,12 @@
 {
     "main_menu": {
-        "font": "alagard.ttf",
+        "font": "wii.ttf",
         "title": "Dungeon Mania",
+        "background_image": "images/backgrounds/wii.png",
         "subtitle_1": "Frontend created by:\n Braedon Wooding, George Litsas, Nick Patrikeos, Noa Challis",
         "subtitle_2": "Backend created by: \nVincent Le, Claire Hua, Jeffrey Meng, Nicholas Lam and Mia Dobell",
         "buttons": {
+            "generate_game": "Generate Random Maze",
             "new_game": "Start New Game",
             "load_game": "Load Game",
             "quit_game": "Quit Game",
@@ -14,10 +16,11 @@
         "on_exit": {
             "title": "Computer Shutting down in 5...",
             "message": "What did you expect to happen, this is a web app?  You can reload the page to start the game up again."
-        }
+        },
+        "text_color": "black"
     },
     "game": {
-        "font": "alagard.ttf",
+        "font": "ghibli.otf",
         "build": "Build",
         "inventory": "Inventory",
         "main_menu": "Main Menu",

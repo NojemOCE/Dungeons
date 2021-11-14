@@ -1,15 +1,18 @@
 {
     "main_menu": {
-        "background_image": "images/backgrounds/main_menu.png",
-        "text_color": "white"
+        "background_music": "audio/uncomfortable_mii.mp3",
+        "background_image": "images/backgrounds/wii.png",
+        "text_color": "black"
     },
     "game": {
+        "background_music": "audio/lava.mp3",
         "background_image": {
             "images/tileset/lava/lava_top_right.png": 1,
             "images/tileset/lava/lava_bottom.png": 4,
             "images/tileset/lava/lava_middle.png": 7,
             "images/tileset/lava/lava_top_left.png": 5
         },
+        "font": "fire.ttf",
         "resolution_px": 16,
         "item_box": "images/ui/box.png",
         "text_color": "white"
