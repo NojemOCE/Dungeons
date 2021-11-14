@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 
@@ -84,6 +83,14 @@ public class FollowPlayer implements MovementStrategy {
         return new ArrayList<>(visited);
     }
 
+    /**
+     * Dijkstras algorithm that returns a map of potential potions
+     * @param me moving entity
+     * @param player player 
+     * @param visited list of visited positions
+     * @param world current world
+     * @return Map<Position, Position>
+     */
     private Map<Position, Position> dijkstras(MovingEntity me, Player player, List<Position> visited, World world) {
         Map<Position, Position> prev = new HashMap<>();
         Map<Position, Double> dist = new HashMap<>();
@@ -108,6 +115,12 @@ public class FollowPlayer implements MovementStrategy {
         return prev;
     }
 
+    /**
+     * Gets a position with the smalled travel distance
+     * @param dist Map<Position, Double>
+     * @param visited List of visited positions
+     * @return position
+     */
     private Position getSmallestDistance(Map<Position, Double> dist, List<Position> visited) {
         Position smallest = new Position(0, 0);
         double currDistance = 9999.0;
@@ -120,6 +133,12 @@ public class FollowPlayer implements MovementStrategy {
         return smallest;
     }
 
+    /**
+     * Gets a path between positions
+     * @param prev Map<Position, Position>
+     * @param player current player
+     * @return list of positions
+     */
     private List<Position> getPath(Map<Position, Position> prev,Player player) {
         List<Position> path = new ArrayList<>();
 
