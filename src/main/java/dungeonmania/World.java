@@ -224,7 +224,6 @@ public class World {
                     currentBattle.battleTick(inventory);
                     if (currentBattle.getPlayerWins()) {
                         collectBattleRewards(this);
-                        //dropBattleReward();
 
                     } else {
                         this.player = null; // will end game in dungeon response
@@ -255,7 +254,6 @@ public class World {
                     currentBattle.battleTick(inventory);
                     if (currentBattle.getPlayerWins()) {
                         collectBattleRewards(this);
-                        //dropBattleReward();
 
                     } else {
                         this.player = null; // will end game in dungeon response
@@ -767,10 +765,19 @@ public class World {
         inventory.useByType(type);
     }
 
+    /**
+     * Uses the sceptre in the inventory 
+     * @param m the MercenaryComponent to be mind controlled
+     */
     public void useSceptre(MercenaryComponent m) {
         inventory.useSceptre(m);
     }
 
+    /**
+     * Uses the sceptre in the inventory 
+     * @param m the MercenaryComponent to be mind controlled
+     * @param duration the duration left for the mind control effect
+     */
     public void useSceptre(MercenaryComponent m, int duration) {
         inventory.useSceptre(m, duration);
     }
@@ -823,7 +830,6 @@ public class World {
         factory.setTickCount(tickNo);
 
 
-        // TODO can we put this in a shared method
         if (gameData.has("goal-condition")) {
             JSONObject g = gameData.getJSONObject("goal-condition");
             GoalComponent goal = factory.createGoal(g);
@@ -840,7 +846,6 @@ public class World {
         }
 
         JSONObject playerObj = gameData.getJSONObject("player");
-        //TODO get merc list
         Entity player = factory.createEntity(playerObj, this);
         this.player = (Player) player;
 
@@ -875,8 +880,6 @@ public class World {
         }
 
         int entityCount = factory.getEntityCount();
-
-        //Random ran = new Random(randomSeed);
 
         this.factory = new NewGameFactory(gamemode, randomSeed, player.getPosition());
         factory.setEntityCount(entityCount);
@@ -969,10 +972,22 @@ public class World {
         return Math.min(player.getY(), 0);
     }
 
+    /**
+     * Checks if the sceptre is useable (off cooldown)
+     * @return true if off cooldown, false otherwise
+     */
     public boolean useableSceptre() {
         return inventory.usableSceptre();
     }
 
+    /**
+     * Generates a maze dungeon with the specified start and end point using the randomized prims algorithm
+     * @param xStart the x coordinate of the start position
+     * @param yStart the y coordinate of the start position
+     * @param xEnd the x coordinate of the end position
+     * @param yEnd the y coordinate of the end position
+     * @return the DungeonResponse corresponding to the generated dungeon
+     */
     public DungeonResponse generateDungeon(int xStart, int yStart, int xEnd, int yEnd) {
 
         JSONObject generateMaze = RandomizedPrims(xStart, yStart, xEnd, yEnd);
@@ -984,6 +999,14 @@ public class World {
         
     }
     
+    /**
+     * Generates a maze with the randomizes prims algorithm
+     * @param xStart the x coordinate of the start position
+     * @param yStart the y coordinate of the start position
+     * @param xEnd the x coordinate of the end position
+     * @param yEnd the y coordinate of the end position
+     * @return the JSONObject containing all walls of the maze
+     */
     public JSONObject RandomizedPrims(int xStart, int yStart, int xEnd, int yEnd) {
         Boolean[][] maze = new Boolean[DEFAULT_HEIGHT][DEFAULT_WIDTH];
         for(int i = 0; i < DEFAULT_HEIGHT; i++) {
@@ -1042,6 +1065,12 @@ public class World {
         return createJSONfromMaze(maze, xStart, yStart, xEnd, yEnd);
     }
 
+    /**
+     * Checks if the provided position is a boundary
+     * @param x coordinate of the position to be checked
+     * @param y coordinate of the position to be checked
+     * @return true if the position is a boundary, false otherwise
+     */
     private boolean isBoundary(int x, int y) {
         if (x <= 0 || x >= DEFAULT_HEIGHT - 1) {
             return true;
@@ -1052,6 +1081,14 @@ public class World {
         return false;
     }
 
+    /**
+     * Provides the position between the two provided locations
+     * @param xNext the x coordinate of the next position
+     * @param yNext the y coordinate of the next position
+     * @param xNeigh the x coordinate of the neighbour position
+     * @param yNeigh the y coordinate of the neighbour position
+     * @return the position between the two provided locations
+     */
     private Position positionInbetween(int xNext, int yNext, int xNeigh, int yNeigh) {
         if (xNext == xNeigh) {
             if (yNext > yNeigh) {
@@ -1068,6 +1105,12 @@ public class World {
         }
     }
     
+    /**
+     * Checks if a neighbour cell is empty
+     * @param neighbours list of all positions that are neighbours
+     * @param maze the maze containing all walls and empty spaces
+     * @return true if there is an empty neighbour, false otherwise
+     */
     private boolean neighbourCellEmpty(List<Position> neighbours, Boolean[][] maze) {
         for (Position neighbour : neighbours) {
             if (maze[neighbour.getX()][neighbour.getY()]) {
@@ -1077,6 +1120,15 @@ public class World {
         return false;
     }
 
+    /**
+     * Creates a JSONObject of the generated maze
+     * @param maze the maze containing all walls and empty spaces denoted by a boolean
+     * @param xStart the x coordinate of the start position
+     * @param yStart the y coordinate of the start position
+     * @param xEnd the x coordinate of the end position
+     * @param yEnd the y coordinate of the end position
+     * @return the JSONObject containing all walls of the maze
+     */
     private JSONObject createJSONfromMaze(Boolean[][] maze, int xStart, int yStart, int xEnd, int yEnd ) {
         JSONObject mazeJSON = new JSONObject();
         mazeJSON.put("width", DEFAULT_WIDTH);
