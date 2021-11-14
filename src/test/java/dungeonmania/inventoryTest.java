@@ -3,6 +3,9 @@ package dungeonmania;
 import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.inventory.Inventory;
+import dungeonmania.response.models.DungeonResponse;
+import dungeonmania.response.models.ItemResponse;
+import dungeonmania.util.Direction;
 
 import org.junit.jupiter.api.Test;
 
@@ -420,5 +423,74 @@ public class inventoryTest {
         assert inv.numItem("invisibility_potion") == 0;
     }
 
+    /**
+     * When crafting a midnight armour, it should appear in the inventory when there are no zombies within the world
+     */
+    @Test
+    public void testCraftMidnightArmourWithoutZombie() {
+
+        DungeonManiaController controller = new DungeonManiaController();
+        controller.newGame("midnightArmourTest", "standard");
+
+        // check that the midnight armour can't be crafted without the right materials
+        assertThrows(InvalidActionException.class, () -> controller.build("midnight_armour"));
+
+        // collecting the armour and sun stone used to craft the midnight armour
+        controller.tick(null, Direction.RIGHT);
+        controller.tick(null, Direction.RIGHT);
+
+        // crafting the midnight armour
+        assertDoesNotThrow(() -> controller.build("midnight_armour"));
+        DungeonResponse d = controller.tick(null, Direction.RIGHT);
+
+        boolean MidnightArmourExists = false; 
+        
+        // checking if the midnight armour appears within the inventory
+        for (ItemResponse item : d.getInventory()) {
+            if (item.getType().equals("midnight_armour")) {
+                MidnightArmourExists = true;
+            }
+        }
+
+        assertTrue(MidnightArmourExists);
+    }
+
+    /**
+     * When crafting a midnight armour, it should throw a InvalidActionException when there is a zombie
+     * within the world
+     */
+    @Test
+    public void testCraftMidnightArmourWithZombie() {
+
+        DungeonManiaController controller = new DungeonManiaController();
+        controller.newGame("midnightArmourTest", "standard");
+
+        // check that the midnight armour can't be crafted without the right materials
+        assertThrows(InvalidActionException.class, () -> controller.build("midnight_armour"));
+
+        // collecting the armour and sun stone used to craft the midnight armour
+        controller.tick(null, Direction.RIGHT);
+        controller.tick(null, Direction.RIGHT);
+
+        // tick 20 times to spawn a zombie
+        for (int i = 0; i <= 20; i++) {
+            controller.tick(null, Direction.RIGHT);
+        }
+
+        // crafting the midnight armour when theres a zombie in the world
+        assertThrows(InvalidActionException.class, () -> controller.build("midnight_armour"));
+        DungeonResponse d = controller.tick(null, Direction.RIGHT);
+
+        boolean MidnightArmourExists = false; 
+        
+        // checking if the midnight armour doesn't appear within the inventory
+        for (ItemResponse item : d.getInventory()) {
+            if (item.getType().equals("midnight_armour")) {
+                MidnightArmourExists = true;
+            }
+        }
+
+        assertFalse(MidnightArmourExists);
+    }
 
 }
