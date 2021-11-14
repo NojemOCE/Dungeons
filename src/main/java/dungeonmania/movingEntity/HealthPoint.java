@@ -14,6 +14,11 @@ public class HealthPoint {
         this.maxHealth = health;
     }
 
+    /**
+     * Constuctor for health point taking a double for health and a double for max health
+     * @param health double to set health to
+     * @param maxHealthdouble to set maxHealth to
+     */
     public HealthPoint(double health, double maxHealth) {
         this.health = health;
         this.maxHealth = maxHealth;
@@ -26,21 +31,33 @@ public class HealthPoint {
         return health;
     }
 
+    /**
+     * Gets the max health
+     * @return max health
+     */
     public double getMaxHealth() {
         return maxHealth;
     }
 
+    /**
+     * Sets the health to a given double
+     * @param health double to set health to
+     */
     public void setHealth(double health) {
         this.health = health;
     }
 
+    /**
+     * Sets max health to a given double
+     * @param health double to set max health to
+     */
     public void setMaxHealth(double health) {
         this.maxHealth = health;
     }
 
     /**
      * Gains health by amount
-     * @param health health
+     * @param health health amount to gain
      */
     public void gainHealth(double health) {
         this.health += health;

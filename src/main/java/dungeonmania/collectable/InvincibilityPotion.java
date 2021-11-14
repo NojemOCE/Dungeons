@@ -11,22 +11,47 @@ public class InvincibilityPotion extends CollectableEntity implements Passive {
     private final int INVINCIBILITY_ATTACK = 999;
     private boolean enabled;
 
+    /**
+     * Constructor for invincibility potion taking an x and a y coordinate and its unique itemID and boolean for is invincibility enabled
+     * @param x x coordinate of invincibility potion
+     * @param y y coordinate of invincibility potion
+     * @param itemId unique item id of invincibility potion
+     * @param isInvincibilityEnabled boolean for whether invincibility is enabled
+     */
     public InvincibilityPotion(int x, int y, String itemId, boolean isInvincibilityEnabled) {
         super(x, y, itemId, "invincibility_potion");
         this.enabled = isInvincibilityEnabled;
 
     }
 
+    /**
+     * Constructor for invincibility potion taking its unique itemID and durability and boolean for is invincibility enabled
+     * @param itemId unique item id of invincibility potion
+     * @param durability integer value of durability
+     * @param isInvincibilityEnabled boolean for whether invincibility is enabled
+     */
     public InvincibilityPotion(String itemId, int durability, boolean isInvincibilityEnabled) {
         this(0, 0, itemId, isInvincibilityEnabled);
     }
 
+    /**
+     * Constructor for invincibility potion taking an x and a y coordinate and its unique itemID, durability and boolean for is invincibility enabled
+     * @param x x coordinate of invincibility potion
+     * @param y y coordinate of invincibility potion
+     * @param itemId unique item id of invincibility potion
+     * @param durability integer value of durability
+     * @param isInvincibilityEnabled boolean for whether invincibility is enabled
+     */
     public InvincibilityPotion(int x, int y, String itemId, int durability,int duration, boolean isInvincibilityEnabled) {
         this(x, y, itemId, isInvincibilityEnabled);
         setDurability(durability);
         this.duration = duration;
     }
 
+    /**
+     * Constructor for invincibility potion taking in a duration
+     * @param duration duration of invincibility potion
+     */
     public InvincibilityPotion(int duration) {
         super(0, 0, null, "invincibility_potion");
         this.duration = duration;
@@ -48,9 +73,7 @@ public class InvincibilityPotion extends CollectableEntity implements Passive {
         }
     }
 
-    /**
-     * Decrements the duration of the potion by 1
-     */
+    @Override
     public void decreaseDuration() {
         duration--;
     }

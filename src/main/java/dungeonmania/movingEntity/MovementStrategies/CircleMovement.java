@@ -22,6 +22,9 @@ public class CircleMovement implements MovementStrategy {
     
     
 
+    /**
+     * Constructor for circle movement
+     */
     public CircleMovement() {
         this.currentDirection = Direction.UP;
         this.nextDirection = Direction.RIGHT;
@@ -30,6 +33,15 @@ public class CircleMovement implements MovementStrategy {
         this.avoidPlayer = false;
     }
 
+    /**
+     * Constructor for circle movement taking current direction, next direction, remaining moves in current direction,
+     * remaining moves in next direction and a boolean as to whether the player should be avoided
+     * @param currentDirection current direction
+     * @param nextDirection next direction
+     * @param remMovesCurr remaining num of moves in current direction
+     * @param remMovesNext remaining num of moves in next direction
+     * @param avoidPlayer whether the player should be avoided
+     */
     public CircleMovement(Direction currentDirection, Direction nextDirection, int remMovesCurr, int remMovesNext, boolean avoidPlayer) {
         this.currentDirection = currentDirection;
         this.nextDirection = nextDirection;
@@ -103,7 +115,8 @@ public class CircleMovement implements MovementStrategy {
 
 
     /**
-     * Returns the position that the entity would next move to in its circle patternn
+     * Returns the position that the entity would next move to in its circle pattern
+     * @param me entity to move
      * @return entity's next planned position
      */
     private Position plannedNextPosition(MovingEntity me) {
@@ -146,6 +159,7 @@ public class CircleMovement implements MovementStrategy {
 
     /**
      * Takes a Position p and moves the entity to this position
+     * @param me moving entity to move
      * @param p Position to move entity to
      */
     private void moveTo(Position p, MovingEntity me) {
@@ -176,7 +190,6 @@ public class CircleMovement implements MovementStrategy {
     }
 
 
-    // I think this method would be better placed as a public method in the DIRECTION CLASS, but storing it here for now
     /**
      * Takes a Direction d, and returns the direction that is opposite to it
      * @param d Direction to find opposite of
@@ -201,13 +214,6 @@ public class CircleMovement implements MovementStrategy {
     public String getMovementType() {
         return "circleMovement";
     }
-
-    /*public String getCurrentDirection() {
-        return getDirectionString(currentDirection);
-    }
-    public String getNextDirection() {
-        return getDirectionString(nextDirection);
-    }*/
 
 
     /**

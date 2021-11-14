@@ -16,6 +16,10 @@ public class AndGoal implements GoalComponent {
     private Boolean completed;
     
 
+    /**
+     * Construtor for and goal taking an operator
+     * @param operator should always be "and"
+     */
     public AndGoal(String operator) {
         this.operator = operator;
         completed = false;
@@ -27,7 +31,6 @@ public class AndGoal implements GoalComponent {
             g.evaluate(world);
         }
 
-        //To be honest I have no idea why the above for loop needs to occur first, but it won't pass the tests without it
         if (subGoals.stream().allMatch(x -> x.evaluate(world).equals(true))) {
             completed = true;
         }
@@ -55,6 +58,10 @@ public class AndGoal implements GoalComponent {
         
     }
     
+    /**
+     * Adds a subgoal to the and goal
+     * @param subGoal subgoal to add
+     */
     public void addSubGoal(GoalComponent subGoal) {
         subGoals.add(subGoal);
     }

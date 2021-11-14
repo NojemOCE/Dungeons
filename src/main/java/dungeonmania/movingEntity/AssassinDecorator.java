@@ -13,11 +13,27 @@ public class AssassinDecorator extends MercenaryComponent {
 
     private MercenaryComponent decorated;
 
+    /**
+     * Constructor for Assassin Decorator taking in a mercenary component
+     * @param merc mercenary component to decorate
+     */
     public AssassinDecorator(MercenaryComponent merc) {
         super(merc.getX(), merc.getY(), merc.getId(), "assassin", new HealthPoint(ASSASSIN_HEALTH), ASSASSIN_ATTACK);
         this.decorated = merc;
     }
 
+    /**
+     * Constructor for assassin decoration taking, x and y coords, unique id, healthpoint, default movement strategy, current movement strategy, boolean for is ally and movement state
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param id unique ID
+     * @param hp healthpoint of entity
+     * @param defaultMovement default movement of entity
+     * @param currentMovement current movement of entity
+     * @param isAlly boolean for whether the entity is ally
+     * @param state movement state of entity (swamp or normal)
+     * @param merc Mercenary component of assassin decorator
+     */
     public AssassinDecorator(int x, int y, String id, HealthPoint hp, MovementStrategy defaultMovement, MovementStrategy currentMovement, Boolean isAlly, State state, MercenaryComponent merc) {
         super(x,y,id,"assassin", hp, ASSASSIN_ATTACK, defaultMovement,currentMovement,isAlly,state);
         this.decorated = merc;

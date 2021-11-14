@@ -16,6 +16,10 @@ public class OrGoal implements GoalComponent{
     private List<GoalComponent> subGoals = new ArrayList<>();
     private Boolean completed;
     
+    /**
+     * Construtor for or goal taking an operator
+     * @param operator should always be "or"
+     */
     public OrGoal(String operator) {
         this.operator = operator;
         completed = false;
@@ -23,7 +27,6 @@ public class OrGoal implements GoalComponent{
 
     @Override
     public Boolean evaluate(World world) {
-        // TODO Auto-generated method stub
         if (subGoals.stream().anyMatch(x -> x.evaluate(world).equals(true))) {
             completed = true;
         }
@@ -49,6 +52,10 @@ public class OrGoal implements GoalComponent{
                                             
     }
 
+    /**
+     * Adds a subgoal to the or goal
+     * @param subGoal subgoal to add
+     */
     public void addSubGoal(GoalComponent subGoal) {
         subGoals.add(subGoal);
     }
