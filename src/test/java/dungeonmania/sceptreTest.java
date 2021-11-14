@@ -3,7 +3,6 @@ package dungeonmania;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
-import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 import org.junit.jupiter.api.Test;
 
@@ -43,6 +42,24 @@ public class sceptreTest {
         controller.tick(null, Direction.DOWN);
         controller.tick(null, Direction.DOWN);
         controller.tick(null, Direction.DOWN);
+
+        // Try craft Sceptre
+        assertDoesNotThrow(() -> controller.build("sceptre"));
+    }
+
+    @Test
+    public void testKeyRecipe() {
+        DungeonManiaController controller = new DungeonManiaController();
+        controller.newGame("sceptreWorld", "standard");
+
+        // Check that we can't craft sceptre
+        assertThrows(InvalidActionException.class, () -> controller.build("sceptre"));
+
+        // Walk around and collect everything
+        controller.tick(null, Direction.DOWN);
+        controller.tick(null, Direction.DOWN);
+        controller.tick(null, Direction.RIGHT);
+        controller.tick(null, Direction.RIGHT);
 
         // Try craft Sceptre
         assertDoesNotThrow(() -> controller.build("sceptre"));

@@ -112,9 +112,9 @@ public class NewGameFactory extends Factory {
             // There is a 30% chance that a new mercenary will be an assassin.
             if (r.nextInt(100) < 30) {
                 e = new AssassinDecorator(e);
-                return (AssassinDecorator)e;
+                return e;
             } 
-            return (Mercenary)e;
+            return e;
         } 
         
         else if (type.equals("treasure")) {

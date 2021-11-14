@@ -53,12 +53,10 @@ public class Inventory {
      * @param itemId 
      */
     public void use(String itemId) {
-        if (collectableItems.containsKey(itemId)) {
-            collectableItems.get(itemId).consume();
-            if (collectableItems.get(itemId).getDurability() == 0) {
-                removeItem(collectableItems.get(itemId));
+        collectableItems.get(itemId).consume();
+        if (collectableItems.get(itemId).getDurability() == 0) {
+            removeItem(collectableItems.get(itemId));
             }
-        }
     }
 
     /**
@@ -67,10 +65,7 @@ public class Inventory {
      * @param type type of the item we want to use
      */
     public void useByType(String type) {
-        // if it doesn't exist we can't use it
-        if (numCollected.get(type).equals(null)) {
-            return;
-        }
+        
         numCollected.put(type, numCollected.get(type) - 1);
         // remove the first instance in collectable and consumable
         List<CollectableEntity> collectable = collectableItems.values()
@@ -170,12 +165,11 @@ public class Inventory {
     }
 
     public void tickSceptre() {
-        getSceptre().tickMindControlled();
+        getSceptre().consume();
     }
 
     public List<ItemResponse> getInventoryResponse() {
-        List<ItemResponse> itemResponses = collectableItems.values().stream().map(CollectableEntity::getItemResponse).collect(Collectors.toList());
-        return itemResponses;
+        return collectableItems.values().stream().map(CollectableEntity::getItemResponse).collect(Collectors.toList());
     }
 
     /**
