@@ -1,8 +1,11 @@
 package dungeonmania.logic;
 
-import org.json.JSONObject;
+public class AndLogic extends LogicComponent {
 
-public class AndLogic extends LogicComponent{
+    /**
+     * Construct for and logic
+     */
+    public AndLogic(){}
 
     /**
      * For "and", the entity will be only activated if there are 2 or 
