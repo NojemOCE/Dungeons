@@ -48,9 +48,13 @@ public class World {
     static final double ONE_RING_DROP = 0.1;
     private int tickCount = 1;
     
+
     /**
      * Constructor for world that takes the string of the dungeon name to build
      * and a string for the gamemode (Standard, Peaceful, Hard)
+     * @param dungeonName Name of dungeon
+     * @param gameMode gamemode, e.g. standard
+     * @param randomSeed seed for game
      */
     public World(String dungeonName, String gameMode, int randomSeed) {
         this.dungeonName = dungeonName;
@@ -69,6 +73,13 @@ public class World {
         this.factory = new NewGameFactory(gamemode, (new Random(randomSeed)).nextInt());
     }
 
+    /**
+     * Constructor for world for a saved game
+     * @param dungeonName Name of dungeon
+     * @param gameMode gamemode, e.g. standard
+     * @param id name of the save game
+     * @param randomSeed seed for game
+     */
     public World(String dungeonName, String gameMode, String id, int randomSeed) {
         this(dungeonName, gameMode, randomSeed);
         this.id = id;
@@ -85,18 +96,13 @@ public class World {
 
         for (int i = 0; i < entities.length(); i++) {
             Entity e = factory.createEntity(entities.getJSONObject(i), this);
-
             addEntity(e);
-
-            // move increment entity count to factory
-            // if collectable, add to colletable etc
         }
 
 
         // TODO can we put this in a shared method
         if (worldData.has("goal-condition")) {
             JSONObject g = worldData.getJSONObject("goal-condition");
-            //GoalComponent goal = createGoal(g);
             GoalComponent goal = factory.createGoal(g);
             setGoals(goal);
         }
@@ -176,7 +182,8 @@ public class World {
             int next = ran.nextInt(10);
             if (10 * MERCENARY_ARMOUR_DROP > next)  {
                 // return an armour
-                Armour armour = new Armour(charX, charY, "armour" + String.valueOf(incrementEntityCount()));
+                Armour armour = (Armour) (factory.createEntity(charX, charY, "armour", this));
+
                 inventory.collect(armour);
             }
         }
@@ -186,7 +193,7 @@ public class World {
             int next = ran.nextInt(10);
             if (10 * ZOMBIE_ARMOUR_DROP > next)  {
                 // return an armour
-                Armour armour = new Armour(charX, charY, "armour" + String.valueOf(incrementEntityCount()));
+                Armour armour = (Armour) (factory.createEntity(charX, charY, "armour", this));
                 inventory.collect(armour);
             }
         }
@@ -195,7 +202,7 @@ public class World {
         int next = ran.nextInt(10);
         if (10 * ONE_RING_DROP > next)  {
             // return the one ring
-            OneRing oneRing = new OneRing(charX, charY, "one_ring" + String.valueOf(incrementEntityCount()));
+            OneRing oneRing = (OneRing) (factory.createEntity(charX, charY, "one_ring", this));
             inventory.collect(oneRing);
         }
     }
@@ -215,9 +222,9 @@ public class World {
         if (!Objects.isNull(itemUsed) ) {
             if (!(inventory.getType(itemUsed) == null) && inventory.getType(itemUsed).equals("bomb")) {
                 Bomb b = inventory.getBomb(itemUsed);
-                LogicComponent logic = factory.createLogicComponent(b.logicString());
+                String logic = b.logicString();
                 inventory.use(itemUsed);
-                PlacedBomb newBomb = new PlacedBomb(player.getX(), player.getY(), "bomb" + String.valueOf(incrementEntityCount()), logic);
+                PlacedBomb newBomb = (PlacedBomb) (factory.createEntity(player.getX(), player.getY(), "bomb_placed", this, logic));
                 staticEntities.put(newBomb.getId(), newBomb);
                 // set up observers for this new entity
                 setUpLogicObservers();
@@ -277,9 +284,11 @@ public class World {
             }
         }
 
-        // spawn relevant enemies at the specified tick intervals
         if (inventory.hasItem("sceptre")) inventory.tickSceptre();
+
+        // spawn relevant enemies at the specified tick intervals
         List<Entity> newEntities = factory.tick(this);
+        
 
         for (Entity e: newEntities) {
             addEntity(e);
@@ -567,16 +576,25 @@ public class World {
         return inventory.keyInInventory(keyColour);
     }
 
-    // TODO: check if we can remove this
     /**
-     * Increments entity count for entity id
+     * Increments entity count and returns count for current entity id
+     * Gets the current entity count from the factory, increments,
+     * and sets factory count accordingly
      * @return int id
      */
     public int incrementEntityCount() {
-        this.entityCount++;
+        this.entityCount = factory.getEntityCount() + 1;
+        factory.setEntityCount(entityCount);
         return this.entityCount;
     }
 
+    /**
+     * Set the current entity count
+     * @param entityCount
+     */
+    public void setEntityCount(int entityCount) {
+        this.entityCount = entityCount;
+    }
     /**
      * Gets all entities entity responses
      * @return list of entity responses
@@ -796,18 +814,23 @@ public class World {
 
     /**
      * Loads a saved game with all entities
+     * @param gameData the data from the save file
      */
     public void buildWorldFromFile(JSONObject gameData) {
         int tickNo = gameData.getInt("tick-count");
         int entityNo = gameData.getInt("entity-count");
 
+        
+        // set the world and factor counters appropriately
         setEntityCount(entityNo);
+        factory.setEntityCount(entityNo);
         setTickCount(tickNo);
+        factory.setTickCount(tickNo);
+
 
         // TODO can we put this in a shared method
         if (gameData.has("goal-condition")) {
             JSONObject g = gameData.getJSONObject("goal-condition");
-            //GoalComponent goal = createGoal(g);
             GoalComponent goal = factory.createGoal(g);
             setGoals(goal);
         }
@@ -860,8 +883,10 @@ public class World {
 
         Random ran = new Random(randomSeed);
 
+        // change factory and set entity count accordingly
         this.factory = new NewGameFactory(gamemode, ran.nextInt());
         factory.setEntityCount(entityCount);
+        factory.setTickCount(tickCount);
 
         if (gameData.has("controlled")) {
             JSONArray mindControlledEntities = gameData.getJSONArray("controlled");
@@ -895,11 +920,6 @@ public class World {
 
     public void setTickCount(int tickCount) {
         this.tickCount = tickCount;
-    }
-
-    // TODO: here or factory??
-    public void setEntityCount(int entityCount) {
-        this.entityCount = entityCount;
     }
 
     public int numMovingEntity(String entityType) {

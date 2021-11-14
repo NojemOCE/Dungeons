@@ -52,6 +52,14 @@ public abstract class Factory {
     }
 
     /**
+     * Gets the total entity count
+     * @return current entity count
+     */
+    public int getEntityCount() {
+        return entityCount;
+    }
+
+    /**
      * Sets the entity count at a given int
      * @param entityCount entity count to set
      */
@@ -59,6 +67,21 @@ public abstract class Factory {
         this.entityCount = entityCount;
     }
 
+    /**
+     * Getter for tickcount
+     * @return tickcount
+     */
+    public int getTickCount() {
+        return tickCount;
+    }
+
+    /**
+     * Setter for tickcount
+     * @param tickCount tickcount to set
+     */
+    public void setTickCount(int tickCount) {
+        this.tickCount = tickCount;
+    }
     /**
      * Creates and returns an entity from a given JSON object, taking in the world
      * @param jsonObject JSON oject to create entity from
@@ -84,6 +107,26 @@ public abstract class Factory {
 
         return createEntity(newEntityObj, world);
     }
+
+    /**
+     * Creates and returns an entity from x,y coordinates, string type, and current world
+     * @param x x coordinate of the entity
+     * @param y y coordinate of the entity
+     * @param type string type of the entity
+     * @param world world that the entity will be built into
+     * @param logic the type of logic component
+     * @return entity
+     */
+    public Entity createEntity(int x, int y, String type, World world, String logic) {
+        JSONObject newEntityObj = new JSONObject();
+        newEntityObj.put("x", x);
+        newEntityObj.put("y", y);
+        newEntityObj.put("type", type);
+        newEntityObj.put("logic", logic);
+        updateBounds(x, y);
+
+        return createEntity(newEntityObj, world);
+    }    
 
     /**
      * Taking the world, it returns a list of new entities that have spawned on that tick
@@ -200,13 +243,6 @@ public abstract class Factory {
         return newPos;
     }
 
-    /**
-     * Gets the total entity count
-     * @return current entity count
-     */
-    public int getEntityCount() {
-        return entityCount;
-    }
 
     /**
      * Sets the largest bounds of the map
