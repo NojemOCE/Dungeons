@@ -8,6 +8,8 @@ import dungeonmania.util.Direction;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.stream.IntStream;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class InventoryControllerTesting {
@@ -109,4 +111,75 @@ public class InventoryControllerTesting {
 
     }
 
+    /**
+     * Test consuming invincibility potion
+     */
+    @Test
+    public void testTickInvincibility() {
+        DungeonManiaController controller = new DungeonManiaController();
+        controller.newGame("collectable-world", "standard");
+
+        // Collect invincibility potion
+        controller.tick(null, Direction.DOWN);
+        controller.tick(null, Direction.RIGHT);
+
+        // Test saving and loading
+        controller.saveGame("saveCollectedInvincibility");
+        controller.loadGame("saveCollectedInvincibility");
+
+        // Take invincibility potion
+        DungeonResponse takeInvincibility = controller.tick("invincibility_potion6", Direction.NONE);
+        assertFalse(takeInvincibility.getInventory().stream().anyMatch(ir -> ir.getType().equals("invincibility_potion")));
+
+        // Walk for 4 ticks
+        IntStream.range(0, 2).forEach(i -> {
+            controller.tick(null, Direction.DOWN);
+            controller.tick(null, Direction.UP);
+        });
+
+        // Test saving and loading
+        controller.saveGame("saveTickingInvincibility");
+        controller.loadGame("saveTickingInvincibility");
+
+        // Test that effect wears off
+        IntStream.range(0, 5).forEach(i -> {
+            controller.tick(null, Direction.DOWN);
+            controller.tick(null, Direction.UP);
+        });
+    }
+
+    /**
+     * Test consuming invisibility potion
+     */
+    @Test
+    public void testTickInvisibility() {
+        DungeonManiaController controller = new DungeonManiaController();
+        controller.newGame("collectable-world", "standard");
+
+        // Collect invisibility potion
+        controller.tick(null, Direction.DOWN);
+        controller.tick(null, Direction.RIGHT);
+        controller.tick(null, Direction.RIGHT);
+
+        // Test saving and loading
+        controller.saveGame("saveCollectedInvisibility");
+        controller.loadGame("saveCollectedInvisibility");
+
+        // Take invisibility potion
+        DungeonResponse takeInvisibility = controller.tick("invisibility_potion7", Direction.NONE);
+        assertFalse(takeInvisibility.getInventory().stream().anyMatch(ir -> ir.getType().equals("invisibility_potion")));
+
+        // Walk for 5 ticks
+        IntStream.range(0, 5).forEach(i -> controller.tick(null, Direction.DOWN));
+
+        // Test saving and loading
+        controller.saveGame("saveTickingInvisibility");
+        controller.loadGame("saveTickingInvisibility");
+
+        // Test that effect wears off
+        IntStream.range(0, 5).forEach(i -> {
+            controller.tick(null, Direction.DOWN);
+            controller.tick(null, Direction.UP);
+        });
+    }
 }
