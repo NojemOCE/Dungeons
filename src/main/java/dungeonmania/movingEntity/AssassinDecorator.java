@@ -24,8 +24,11 @@ public class AssassinDecorator extends MercenaryComponent {
     
     @Override
     public void interact(World world) throws InvalidActionException {
-        if (world.numItemInInventory("one_ring") < ONE_RING) {
+        decorated.setInteractable(world.getPlayer());
+        if (world.numItemInInventory("one_ring") >= ONE_RING) {
             decorated.interact(world);
+            this.setAlly(decorated.getAlly());
+            System.out.println(getAlly());
             world.useByType("one_ring");
         } else {
             throw new InvalidActionException("Need the one ring to bribe Assassin!");
