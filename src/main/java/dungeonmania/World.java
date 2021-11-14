@@ -68,7 +68,7 @@ public class World {
             this.gamemode = new Peaceful();
         }
         this.inventory = new Inventory();
-        this.factory = new NewGameFactory(gamemode, (new Random(randomSeed)).nextInt());
+        this.factory = new NewGameFactory(gamemode, randomSeed);
     }
 
     public World(String dungeonName, String gameMode, String id, int randomSeed) {
@@ -861,9 +861,9 @@ public class World {
 
         int entityCount = factory.getEntityCount();
 
-        Random ran = new Random(randomSeed);
+        //Random ran = new Random(randomSeed);
 
-        this.factory = new NewGameFactory(gamemode, ran.nextInt());
+        this.factory = new NewGameFactory(gamemode, randomSeed);
         factory.setEntityCount(entityCount);
 
         if (gameData.has("controlled")) {

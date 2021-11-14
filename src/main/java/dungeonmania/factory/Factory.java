@@ -36,6 +36,7 @@ public abstract class Factory {
     static final double MERCENARY_ARMOUR_DROP = 0.4;
     static final double ZOMBIE_ARMOUR_DROP = 0.2;
     static final double ONE_RING_DROP = 0.1;
+    protected Random ran;
 
     /**
      * Constructor for Factory taking in a GameMode
@@ -45,6 +46,7 @@ public abstract class Factory {
     public Factory(Gamemode gamemode, int randomSeed) {
         this.gamemode = gamemode;
         this.randomSeed = randomSeed;
+        this.ran = new Random(randomSeed);
 
     }
 
@@ -119,16 +121,16 @@ public abstract class Factory {
             
         }
 
-        Random ran1 = new Random(randomSeed);
-        Random ran2 = new Random(randomSeed);
+        //Random ran1 = new Random(randomSeed);
+        //Random ran2 = new Random(randomSeed);
 
-        int x = ran1.nextInt(highestX);
-        int y = ran2.nextInt(highestY);
+        int x = ran.nextInt(highestX);
+        int y = ran.nextInt(highestY);
         
         int numChecks = 0;
         while (!world.validSpiderSpawnPosition(new Position(x,y)) && numChecks < 10) {
-            x = ran1.nextInt(highestX);
-            y = ran2.nextInt(highestY);
+            x = ran.nextInt(highestX);
+            y = ran.nextInt(highestY);
             numChecks++;
         }
 
@@ -192,9 +194,9 @@ public abstract class Factory {
      */
     private Position getSpawnPosition(List<Position> possibleSpawnPositions, World world) {
         Position newPos = null;
-        Random random = new Random(randomSeed);
+        //Random random = new Random(randomSeed);
         while (!(possibleSpawnPositions.isEmpty())) {
-            int posIndex = random.nextInt(possibleSpawnPositions.size());
+            int posIndex = ran.nextInt(possibleSpawnPositions.size());
             newPos = possibleSpawnPositions.get(posIndex);
             if (world.validZombieSpawnPosition(newPos)) {
                 break;
@@ -325,7 +327,7 @@ public abstract class Factory {
 
 
         if (world.getBattleCharacter() instanceof MercenaryComponent) {
-            Random ran = new Random(randomSeed);
+            //Random ran = new Random(randomSeed);
             int next = ran.nextInt(10);
             if (10 * MERCENARY_ARMOUR_DROP > next)  {
                 // return an armour
@@ -335,7 +337,7 @@ public abstract class Factory {
         }
 
         else if (world.getBattleCharacter() instanceof Zombie) {
-            Random ran = new Random(randomSeed);
+            //Random ran = new Random(randomSeed);
             int next = ran.nextInt(10);
             if (10 * ZOMBIE_ARMOUR_DROP > next)  {
                 // return an armour
@@ -344,7 +346,7 @@ public abstract class Factory {
             }
         }
 
-        Random ran = new Random(randomSeed);
+        //Random ran = new Random(randomSeed);
         int next = ran.nextInt(10);
         if (10 * ONE_RING_DROP > next)  {
             // return the one ring

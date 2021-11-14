@@ -466,7 +466,7 @@ public class FileLoadTest {
             else if (e.getType().equals("bomb")) {
                 assert(e.getPosition().equals(new Position(2, 1)));
             }
-            else if (e.getType().equals("mercenary")) {
+            else if (e.getType().equals("mercenary") || e.getType().equals("assassin")) {
                 assert(e.getPosition().equals(new Position(2, 1)));
             }
             else if (e.getType().equals("sword")) {
