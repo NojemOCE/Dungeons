@@ -1,6 +1,5 @@
 package dungeonmania.logic;
 
-import org.json.JSONObject;
 
 public class XorLogic extends LogicComponent{
 
