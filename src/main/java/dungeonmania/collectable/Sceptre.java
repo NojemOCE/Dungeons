@@ -1,7 +1,6 @@
 package dungeonmania.collectable;
 
 import dungeonmania.movingEntity.MercenaryComponent;
-import dungeonmania.movingEntity.MindControl;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -13,21 +12,44 @@ public class Sceptre extends CollectableEntity {
     private Map<MercenaryComponent, Integer> controlled;
     private int cooldown = 0;
 
+    /**
+     * Constructor for sceptre taking an x and a y coordinate and its unique itemID
+     * @param x x coordinate of sceptre
+     * @param y y coordinate of sceptre
+     * @param itemId unique item id of sceptre
+     */
     public Sceptre(int x, int y, String itemId) {
         super(x, y, itemId, "sceptre");
         controlled = new HashMap<>();
     }
 
+    /**
+     * Constructor for sceptre taking its unique id, cooldown and durability
+     * @param itemId unique item id of sceptre
+     * @param cooldown cooldown of sceptre
+     * @param durability durability of sceptre
+     */
     public Sceptre(String itemId, int cooldown, int durability) {
         this(0, 0, itemId, durability);
         this.cooldown = cooldown;
     }
 
+    /**
+     * Constructor for sceptre taking an x and a y coordinate and its unique itemID
+     * @param x x coordinate of sceptre
+     * @param y y coordinate of sceptre
+     * @param itemId unique item id of sceptre
+     * @param durability integer value of durability
+     */
     public Sceptre(int x, int y, String itemId, int durability) {
         this(x, y, itemId);
         setDurability(durability);
     }
 
+    /**
+     * Sets the cooldown period of the sceptre to a given value
+     * @param cooldown int value of cooldown
+     */
     public void setCooldown(int cooldown) {
         this.cooldown = cooldown;
     }

@@ -2,7 +2,6 @@ package dungeonmania.factory;
 
 import org.json.JSONObject;
 
-import java.util.Random;
 import dungeonmania.Entity;
 import dungeonmania.World;
 import dungeonmania.collectable.*;
@@ -12,7 +11,6 @@ import dungeonmania.staticEntity.*;
 import dungeonmania.util.Position;
 
 public class NewGameFactory extends Factory {
-    private int randomSeed;
     /**
      * Constructor for a NewGameFactory taking in a gamemode and a random seed
      * @param gamemode gamemode of factory
