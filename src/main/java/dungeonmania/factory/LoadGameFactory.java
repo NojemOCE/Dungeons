@@ -81,7 +81,6 @@ public class LoadGameFactory extends Factory {
      * @return moving entity
      */
     private MovingEntity createMovingEntityFromJSON(JSONObject obj) {
-        //TODO update constructors
 
         int x = obj.getInt("x");
         int y = obj.getInt("y");
@@ -321,7 +320,6 @@ public class LoadGameFactory extends Factory {
      * @return collectable entity
      */
     private CollectableEntity createCollectableEntityFromJSON(JSONObject obj) {
-        // TODO update constructors
         int x = obj.getInt("x");
         int y = obj.getInt("y");
 
@@ -356,8 +354,6 @@ public class LoadGameFactory extends Factory {
         } 
         
         else if (type.equals("invisibility_potion")) {
-            //int duration = obj.getInt("duration");
-            //InvisibilityPotion e = new InvisibilityPotion(x, y, id, durability, duration);
             InvisibilityPotion e = new InvisibilityPotion(x, y, id);
             return e;
         } 
@@ -447,7 +443,6 @@ public class LoadGameFactory extends Factory {
             return createStaticEntityFromJSON(jsonObject, world);
         }
 
-        //add moving entities list
         else if (movingEntitiesList().contains(type)) {
             return createMovingEntityFromJSON(jsonObject);
         }
@@ -460,7 +455,6 @@ public class LoadGameFactory extends Factory {
      * @return String list of collectable entity types
      */
     private List<String> collectablesList() {
-        // TODO add additional entities
         return Arrays.asList("arrow", "armour", "bomb", "bow", "health_potion", "invisibility_potion", "invincibility_potion", "key", "one_ring", "shield", "sword", "treasure", "wood",  "anduril", "sceptre", "midnight_armour", "sun_stone");
     }
 
@@ -469,7 +463,6 @@ public class LoadGameFactory extends Factory {
      * @return String list of static entity types
      */
     private List<String> staticsList() {
-        // TODO add additional entities
         return Arrays.asList("boulder", "door", "exit", "switch", "bomb_placed", "portal", "wall", "zombie_toast_spawner", "swamp_tile", "switch_door", "wire", "light_bulb","light_bulb_on","light_bulb_off");
     }
 
@@ -478,7 +471,6 @@ public class LoadGameFactory extends Factory {
      * @return String list of moving entity types
      */
     private List<String> movingEntitiesList() {
-        // TODO add additional entities
         return Arrays.asList("zombie_toast", "mercenary", "spider", "assassin", "hydra");
     }
 }

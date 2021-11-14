@@ -148,7 +148,6 @@ public class NewGameFactory extends Factory {
         } 
         
         else if (type.equals("mercenary")) {
-            //Random r = new Random(randomSeed);
             MercenaryComponent e = new Mercenary(x, y, id);
 
             // There is a 30% chance that a new mercenary will be an assassin.
