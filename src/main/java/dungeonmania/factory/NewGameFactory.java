@@ -190,6 +190,11 @@ public class NewGameFactory extends Factory {
             return e;
         }
 
+        else if (type.equals("armour")) {
+            Armour e = new Armour(x, y ,id);
+            return e;
+        }
+
         return null;
     }
     
