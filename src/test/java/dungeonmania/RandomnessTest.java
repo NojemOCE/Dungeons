@@ -310,7 +310,6 @@ public class RandomnessTest {
 
         boolean mercenary = false;
         for (EntityResponse e: d.getEntities()) {
-            System.out.println(e.getType());
             if (e.getType().equals("mercenary") || e.getType().equals("assassin")) {
                 mercenary = true;
             }
