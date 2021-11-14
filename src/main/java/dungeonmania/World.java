@@ -935,13 +935,11 @@ public class World {
      */
     public int numMovingEntity(String entityType) {
         int count = 0;
-        System.out.println(entityType);
         for (MovingEntity entity : movingEntities.values()) {
             if (entity.getType() == entityType) {
                 count++;
             }
         }
-        System.out.println("count is " + count);
         return count;
     }
  
