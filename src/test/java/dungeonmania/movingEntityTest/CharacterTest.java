@@ -455,10 +455,11 @@ public class CharacterTest {
      */
     @Test
     public void TestAssassinBribe() {
-        World w = new World("simple-and-goal", "standard", 6);
+        // seed with assassin
+        World w = new World("simple-one-ring", "standard", 6);
 
         try {
-            String file = FileLoader.loadResourceFile("/dungeons/" + "simple-and-goal" + ".json");
+            String file = FileLoader.loadResourceFile("/dungeons/" + "simple-one-ring" + ".json");
             
             JSONObject game = new JSONObject(file);
             
@@ -470,6 +471,17 @@ public class CharacterTest {
         }
 
         DungeonResponse d = w.tick(null, Direction.UP);
+        AssassinDecorator merc = (AssassinDecorator)w.getCharacter(new Position(4,4));
+
+        assertThrows(InvalidActionException.class, () -> w.interact(merc.getId()));
+
+        d = w.tick(null, Direction.RIGHT);
+        d = w.tick(null, Direction.DOWN);
+        d = w.tick(null, Direction.RIGHT);
+
+        w.interact(merc.getId());
+        assertEquals(merc.getAlly(), true);
+
         boolean mercenary = false;
         boolean assassin = false;
         for (EntityResponse e: d.getEntities()) {
