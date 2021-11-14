@@ -8,6 +8,12 @@ public class Hydra extends Zombie {
     static final int HYDRA_ATTACK = 4;
     static final int HYDRA_HEALTH = 25;
 
+    /**
+     * Constructor for hydra taking x and y coords, and unique ID
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param id unique ID of hydra
+     */
     public Hydra(int x, int y, String id) {
         super(x, y, id);
         setHealthPoint(new HealthPoint(HYDRA_HEALTH));
@@ -15,13 +21,23 @@ public class Hydra extends Zombie {
         setType("hydra");
     }
 
+    /**
+     * Constructor for hydra taking x and y coords, and unique ID
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param id unique ID of hydra
+     * @param defaultMovement default movement
+     * @param currentMovement current movement
+     * @param state movement state
+     */
     public Hydra(int x, int y, String id, HealthPoint hp, MovementStrategy defaultMovement,
     MovementStrategy currentMovement, State state) {
         super(x, y, id, hp, defaultMovement, currentMovement, state);
         setAttackDamage(HYDRA_ATTACK);
         setType("hydra");
     }
-
+    
+    @Override
     public void defend(double attack) {
         if (attack < 0) {
             getHealthPoint().loseHealth(Math.abs(attack));

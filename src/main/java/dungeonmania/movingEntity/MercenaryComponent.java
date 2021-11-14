@@ -1,6 +1,5 @@
 package dungeonmania.movingEntity;
 
-import dungeonmania.collectable.Sceptre;
 import org.json.JSONObject;
 
 import dungeonmania.World;
@@ -28,6 +27,18 @@ public abstract class MercenaryComponent extends MovingEntity implements PlayerP
         setAlly(false);
     }
 
+    /**
+     * Constructor for mercenary component taking x and y coords, and unique ID
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param id unique ID of mercenary component
+     * @param health health point of mercenary component
+     * @param attack double for attack
+     * @param defaultMovement default movement
+     * @param currentMovement current movement
+     * @param isAlly boolean for whether the mercenary component is an ally
+     * @param state movement state
+     */
     public MercenaryComponent(int x, int y, String id, String type, HealthPoint health, double attack, MovementStrategy defaultMovement, MovementStrategy currentMovement, Boolean isAlly, State state) {
         super(new Position(x, y, Position.MOVING_LAYER), id, type, health, attack);
         setMovement(currentMovement);
@@ -92,6 +103,7 @@ public abstract class MercenaryComponent extends MovingEntity implements PlayerP
      */
     public abstract void interact(World world);
 
+    @Override
     public void updateDuration(int effectDuration) {
         setAlly(effectDuration != 0);
     }

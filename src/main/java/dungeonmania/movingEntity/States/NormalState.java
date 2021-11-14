@@ -11,7 +11,9 @@ import dungeonmania.util.Position;
 
 public class NormalState implements State{
 
-    
+    /**
+     * Constructor for normal movement state
+     */
     public NormalState() {
     }
 

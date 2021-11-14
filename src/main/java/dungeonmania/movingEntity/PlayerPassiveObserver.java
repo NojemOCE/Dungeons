@@ -1,7 +1,16 @@
 package dungeonmania.movingEntity;
 
 public interface PlayerPassiveObserver {
+    /**
+     * Gets the id of the PlayerPassiveObserver
+     * @return PlayerPassiveObserver unique id
+     */
     public String getId();
+
+    /**
+     * Gets the type of the PlayerPassiveObserver
+     * @return PlayerPassiveObserver string type
+     */
     public String getType();
 
     /**
