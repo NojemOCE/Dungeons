@@ -76,7 +76,7 @@ public class World {
             this.gamemode = new Peaceful();
         }
         this.inventory = new Inventory();
-        this.factory = new NewGameFactory(gamemode, (new Random(randomSeed)).nextInt());
+        this.factory = new NewGameFactory(gamemode, randomSeed);
     }
 
     /**
@@ -908,9 +908,9 @@ public class World {
 
         int entityCount = factory.getEntityCount();
 
-        Random ran = new Random(randomSeed);
+        //Random ran = new Random(randomSeed);
 
-        this.factory = new NewGameFactory(gamemode, ran.nextInt(), player.getPosition());
+        this.factory = new NewGameFactory(gamemode, randomSeed, player.getPosition());
         factory.setEntityCount(entityCount);
         factory.setTickCount(tickCount);
 
