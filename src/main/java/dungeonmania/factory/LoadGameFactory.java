@@ -129,8 +129,7 @@ public class LoadGameFactory extends Factory {
         else if (type.equals("assassin")) {
             boolean isAlly = obj.getBoolean("ally");
             MercenaryComponent m = new Mercenary(x, y, id, entityHP, defaultMovement, currentMovement, isAlly, state);
-            AssassinDecorator e = new AssassinDecorator(m);
-            return e;
+            return new AssassinDecorator(x, y, id, entityHP, defaultMovement, currentMovement, isAlly, state, m);
         } 
 
         else if (type.equals("hydra")) {

@@ -156,7 +156,7 @@ public class Inventory {
      * @return true if there is a weapon, otherwise false
      */
     public boolean hasWeapon() {
-        return collectableItems.values().stream().anyMatch(e -> e instanceof Sword);
+        return collectableItems.values().stream().anyMatch(e -> e instanceof Weapon);
     }
 
     public Sceptre getSceptre() {

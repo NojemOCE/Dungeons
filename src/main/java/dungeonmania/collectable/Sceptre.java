@@ -136,7 +136,7 @@ public class Sceptre extends CollectableEntity {
     @Override
     public JSONObject saveGameJson() {
         JSONObject sceptreJSON  = super.saveGameJson();
-        sceptreJSON.put("cooldown", "0");
+        sceptreJSON.put("cooldown", String.valueOf(cooldown));
         return sceptreJSON;
     }
 

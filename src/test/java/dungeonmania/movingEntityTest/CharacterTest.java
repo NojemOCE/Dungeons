@@ -449,4 +449,53 @@ public class CharacterTest {
 
     }
 
+
+    /**
+     * Test Assassin Bribe
+     */
+    @Test
+    public void TestAssassinBribe() {
+        // seed with assassin
+        World w = new World("simple-one-ring", "standard", 6);
+
+        try {
+            String file = FileLoader.loadResourceFile("/dungeons/" + "simple-one-ring" + ".json");
+            
+            JSONObject game = new JSONObject(file);
+            
+            w.buildWorld(game);
+        }
+        catch (Exception e) {
+            e.printStackTrace
+            ();
+        }
+
+        DungeonResponse d = w.tick(null, Direction.UP);
+        AssassinDecorator merc = (AssassinDecorator)w.getCharacter(new Position(4,4));
+
+        assertThrows(InvalidActionException.class, () -> w.interact(merc.getId()));
+
+        d = w.tick(null, Direction.RIGHT);
+        d = w.tick(null, Direction.DOWN);
+        d = w.tick(null, Direction.RIGHT);
+
+        w.interact(merc.getId());
+        assertEquals(merc.getAlly(), true);
+
+        boolean mercenary = false;
+        boolean assassin = false;
+        for (EntityResponse e: d.getEntities()) {
+            if (e.getType().equals("mercenary")) {
+                mercenary = true;
+            }
+            if (e.getType().equals("assassin")) {
+                assassin = true;
+            }
+        }
+
+        assertEquals(false, mercenary);
+        assertEquals(true, assassin);
+
+    }
+
 }
