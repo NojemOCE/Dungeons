@@ -9,7 +9,7 @@ import dungeonmania.movingEntity.States.State;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
 
-public abstract class MercenaryComponent extends MovingEntity implements PlayerPassiveObserver {
+public abstract class MercenaryComponent extends MovingEntity implements PlayerPassiveObserver, MindControl {
 
     private static final double BATTLE_RADIUS = 8;
     private boolean interactable = false;
@@ -80,12 +80,16 @@ public abstract class MercenaryComponent extends MovingEntity implements PlayerP
     }
 
     /**
-     *  
+     *
      * The character can bribe a mercenary if they are within 2 cardinal tiles
      * to the mercenary. Player requires minimum amount of gold to bribe.
      * @param world
      */
     public abstract void interact(World world);
+
+    public void updateDuration(int effectDuration) {
+        setAlly(effectDuration != 0);
+    }
 
     @Override
     public void updateMovement(String passive) {
@@ -96,12 +100,12 @@ public abstract class MercenaryComponent extends MovingEntity implements PlayerP
         } else {
             setMovement(getDefaultMovementStrategy());
         }
-        
+
     }
 
     @Override
     public EntityResponse getEntityResponse() {
-        return new EntityResponse(getId(), getType(), getPosition(), true);
+        return new EntityResponse(getId(), getType(), getPosition(), interactable);
     }
 
     @Override
@@ -116,5 +120,6 @@ public abstract class MercenaryComponent extends MovingEntity implements PlayerP
 
         return mercJSON;
     }
+
 
 }
