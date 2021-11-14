@@ -57,9 +57,13 @@ public abstract class MovingEntity extends Entity {
      */
     public abstract void move(World world);
 
+
     /**
      * Returns the new position if posible
      * and the old position (no movement) if not
+     * @param position new position to check validity of
+     * @param world current world
+     * @return position to move to
      */
     public Position validMove(Position position, World world) {
 
@@ -104,6 +108,10 @@ public abstract class MovingEntity extends Entity {
         return healthPoint;
     }
 
+    /**
+     * Sets the current healthpoint to a given healthpoint
+     * @param healthPoint healthpoint to set to 
+     */
     public void setHealthPoint(HealthPoint healthPoint) {
         this.healthPoint = healthPoint;
     }

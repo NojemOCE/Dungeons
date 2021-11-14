@@ -175,16 +175,16 @@ public class Boulder extends StaticEntity {
     }
 
     /**
-     * Getter for state
-     * @return the state
+     * Getter for movement state
+     * @return the movement state
      */
     public State getState() {
         return state;
     }
 
     /**
-     * Setter for state
-     * @param state current state to set
+     * Setter for movement state
+     * @param state current movement state to set
      */
     public void setState(State state) {
         this.state = state;

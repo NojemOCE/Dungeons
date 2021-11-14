@@ -12,6 +12,10 @@ import dungeonmania.util.Position;
 public class SwampState implements State {
     private int remTicks;
 
+    /**
+     * Constructor for swamp movement state taking remaining ticks on swamp tile
+     * @param remTicks remaining ticks on swamp tile
+     */
     public SwampState(int remTicks) {
         this.remTicks = remTicks - 1;
     }

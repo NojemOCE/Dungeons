@@ -1,7 +1,5 @@
 package dungeonmania.staticEntity;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.json.JSONObject;
 
@@ -22,16 +20,17 @@ public class FloorSwitch extends StaticEntity implements Logic {
      */
     public FloorSwitch(int x, int y, String id, LogicComponent logic) {
         super(new Position(x, y, Position.FLOOR_LAYER), id, "switch");
-        isTriggered = false;
+        this.isTriggered = false;
         this.logic = logic;
     }
 
     /**
      * When a boulder is pushed onto a floor switch, it is triggered.
      * Also check for adjacent bombs
+     * @param world current world
      */
     public void trigger(World world) {
-        isTriggered = true;
+        this.isTriggered = true;
         logic.notifyObservers(true);
         
     }

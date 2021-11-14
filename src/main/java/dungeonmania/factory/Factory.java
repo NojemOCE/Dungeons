@@ -43,9 +43,9 @@ public abstract class Factory {
     static final int HYDRA_SPAWN = 50;
 
     /**
-     * Constructor for Factory taking in a GameMode
+     * Constructor for Factory taking in a GameMode and the random seed for the factory
      * @param gamemode gamemode of factory
-     * @param randomSeed
+     * @param randomSeed random seed for the factory
      */
     public Factory(Gamemode gamemode, int randomSeed) {
         this.gamemode = gamemode;
@@ -179,6 +179,8 @@ public abstract class Factory {
 
     /**
      * Helper function to create a new hydra at relevant ticks
+     * @param world current world
+     * @return new hydra, or null
      */
     private Entity tickHydraSpawn(World world) {
         if (!(tickCount % HYDRA_SPAWN == 0) || !(gamemode.getGameModeType().equals("hard"))) {
@@ -208,15 +210,14 @@ public abstract class Factory {
 
     /**
      * Helper function to create a new spider at relevant ticks
+     * @param world current world
+     * @return new spider, or null
      */
     private Entity tickSpiderSpawn(World world) {
         if (!(tickCount % SPIDER_SPAWN == 0) || world.currentSpiders() == MAX_SPIDERS) {
             return null;
             
         }
-
-        //Random ran1 = new Random(randomSeed);
-        //Random ran2 = new Random(randomSeed);
 
         int x = ran.nextInt(highestX);
         int y = ran.nextInt(highestY);
@@ -239,7 +240,9 @@ public abstract class Factory {
     }
 
     /**
-     * Updates zombie toast spawners
+     * Helper function to spawn multiple zombie toast on relevant ticks
+     * @param world current world
+     * @return a list of new zombies
      */
     private List<Entity> tickZombieToastSpawn(World world) {
         List <Entity> newZombies = new ArrayList<>();
@@ -261,6 +264,7 @@ public abstract class Factory {
     /**
      * Helper function to create a new zombie at relevant ticks
      * @param spawner Zombie spawner to spawn from
+     * @param world current world
      */
     private Entity spawnZombie(ZombieToastSpawn spawner, World world) {
 
@@ -275,15 +279,13 @@ public abstract class Factory {
         }
 
         Entity e = createEntity(newPos.getX(), newPos.getY(), "zombie_toast", world);
-        //Zombie newZombie = new Zombie(newPos.getX(), newPos.getY(), "zombie_toast" + String.valueOf(incrementEntityCount()));
-        //movingEntities.put(newZombie.getId(), newZombie);
-        //player.subscribePassiveObserver((PlayerPassiveObserver) newZombie);
         return e;
     }
     
     /**
      * Get a random spawn position for new zombie
      * @param possibleSpawnPositions List of possible cardinally adjacent positions to a spawner
+     * @param world current world
      * @return position to spawn, or null if no valid positions
      */
     private Position getSpawnPosition(List<Position> possibleSpawnPositions, World world) {
@@ -337,7 +339,7 @@ public abstract class Factory {
     /**
      * Creates and returns a GoalComponent, taking in a JSON object
      * @param goal JSON object to build goal from
-     * @return GoalComponent
+     * @return GoalComponent as loaded from the JSON Object
      */
     public GoalComponent createGoal(JSONObject goal){
         String currGoal = goal.getString("goal");
@@ -411,7 +413,10 @@ public abstract class Factory {
      * Drops the one ring:
      * 10% of the time
      *
-     * If an item is dropped, it is automatically added to the players inventory
+     * If an item is dropped, it will be returned in a list, and world will add it to inventory
+     * 
+     * @param world current world
+     * @return list of collected items in battle
      */
     public List<CollectableEntity> dropBattleReward(World world){
 
@@ -422,7 +427,6 @@ public abstract class Factory {
 
 
         if (world.getBattleCharacter() instanceof MercenaryComponent) {
-            //Random ran = new Random(randomSeed);
             int next = ran.nextInt(10);
             if (10 * MERCENARY_ARMOUR_DROP > next)  {
                 // return an armour
@@ -432,7 +436,6 @@ public abstract class Factory {
         }
 
         else if (world.getBattleCharacter() instanceof Zombie) {
-            //Random ran = new Random(randomSeed);
             int next = ran.nextInt(10);
             if (10 * ZOMBIE_ARMOUR_DROP > next)  {
                 // return an armour
@@ -441,7 +444,6 @@ public abstract class Factory {
             }
         }
 
-        //Random ran = new Random(randomSeed);
         int next = ran.nextInt(10);
         if (10 * ONE_RING_DROP > next)  {
             // return the one ring

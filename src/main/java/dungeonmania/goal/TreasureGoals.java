@@ -8,7 +8,10 @@ import dungeonmania.collectable.*;
 
 public class TreasureGoals extends GoalLeaf{
 
-    
+    /**
+     * Constructor for treasure goal taking a goal string
+     * @param goal goal string, should be "treasure"
+     */
     public TreasureGoals(String goal) {
         super(goal);
     }

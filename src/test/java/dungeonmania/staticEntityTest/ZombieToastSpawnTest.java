@@ -23,6 +23,8 @@ import java.util.List;
 
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 
 
@@ -81,13 +83,16 @@ public class ZombieToastSpawnTest {
 
     /**
      * Test interact requires a weapon
+     * - check that it works with sword, anduril, midnight_armour
+     * 
      */
-    @Test
-    public void testInteract() {
+    @ParameterizedTest
+    @ValueSource(strings = {"zombieSpawner+sword", "zombieSpawner+anduril", "zombieSpawner+midnight"})
+    public void testInteract(String map) {
         // Create a new world
-        World world = new World("zombieSpawner+sword", "Standard", 1);
+        World world = new World(map, "Standard", 1);
         try {
-            String file = FileLoader.loadResourceFile("/dungeons/" + "zombieSpawner+sword" + ".json");
+            String file = FileLoader.loadResourceFile("/dungeons/" + map + ".json");
             JSONObject game = new JSONObject(file);
             world.buildWorld(game);
         }

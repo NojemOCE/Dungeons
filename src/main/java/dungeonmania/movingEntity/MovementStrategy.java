@@ -1,11 +1,9 @@
 package dungeonmania.movingEntity;
 
 import dungeonmania.World;
-import dungeonmania.util.*;
 
 import org.json.JSONObject;
 
-import dungeonmania.*;
 
 public interface MovementStrategy {
 
