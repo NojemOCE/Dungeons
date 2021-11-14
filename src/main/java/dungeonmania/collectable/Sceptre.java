@@ -55,7 +55,7 @@ public class Sceptre extends CollectableEntity {
      */
     public void useMindControl(MercenaryComponent m) {
         setCooldown(15);
-        useMindControl(m, DURATION);
+        useMindControl(m, DURATION + 1);
         notifyMindControlled();
     }
 
