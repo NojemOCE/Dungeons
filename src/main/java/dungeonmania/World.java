@@ -289,8 +289,9 @@ public class World {
                 collectableEntities.remove(collectable.getId());
             }
         }
+        if (inventory.hasItem("sceptre")) inventory.tickSceptre();
 
-        // now move all entities 
+        // now move all entities
         for (MovingEntity me: movingEntities.values()) {
             if (!Objects.isNull(currentBattle) && currentBattle.getCharacter().equals(me)) continue;
             me.move(this);
@@ -310,8 +311,6 @@ public class World {
                 }
             }
         }
-
-        if (inventory.hasItem("sceptre")) inventory.tickSceptre();
 
         // spawn relevant enemies at the specified tick intervals
         List<Entity> newEntities = factory.tick(this);
