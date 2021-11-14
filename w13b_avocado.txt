@@ -279,3 +279,59 @@ Test 10-4
 SUCCESS
 DONE
 Test 10-5
+
+BombsTest > Test placing a bomb on a map cardinally adjacent to an active switch causes the bomb to detonate, removing surrounding entites except for the player FAILED
+    org.opentest4j.AssertionFailedError: expected: <0> but was: <1>
+        at org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:55)
+        at org.junit.jupiter.api.AssertionUtils.failNotEqual(AssertionUtils.java:62)
+        at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:150)
+        at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:145)
+        at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:527)
+        at dungeonmania.controllerTest.BombsTest.testBombPlaceMapCardinallyAdjacentActiveSwitch(BombsTest.java:130)
+FAILURE
+DONE
+Test 10-6
+SUCCESS
+DONE
+Test 10-7
+SUCCESS
+DONE
+Test 10-8
+SUCCESS
+DONE
+Test 11-1
+SUCCESS
+DONE
+Test 11-2
+SUCCESS
+DONE
+Test 11-3
+SUCCESS
+DONE
+Test 12-1
+SUCCESS
+DONE
+Test 12-2
+SUCCESS
+DONE
+Test 12-3
+SUCCESS
+DONE
+Test 12-4
+
+SaveLoadTest > 12-4 Test saving on a map containing all types of entities FAILED
+    org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
+        at org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:55)
+        at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:40)
+        at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:35)
+        at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:179)
+        at dungeonmania.controllerTest.SaveLoadTest.testSaveAllEntities(SaveLoadTest.java:85)
+FAILURE
+DONE
+Test 13-1
+SUCCESS
+DONE
+Test 13-2
+SUCCESS
+DONE
+Test 13-3
