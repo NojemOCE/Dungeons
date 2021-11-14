@@ -77,11 +77,20 @@ public class Inventory {
         String idToRemove =collectable.get(0).getId();
         collectableItems.remove(idToRemove);
     }
-
+    
+    /**
+     * Use mind control on a MercenaryComponent
+     * @param m given MercenaryComponent to be mind controlled
+     */
     public void useSceptre(MercenaryComponent m) {
         getSceptre().useMindControl(m);
     }
 
+    /**
+     * Overloaded method for when loading from a file
+     * @param m given MercenaryComponent that has been mind controlled
+     * @param duration remaining duration of the effect
+     */
     public void useSceptre(MercenaryComponent m, int duration) {
         getSceptre().useMindControl(m, duration);
     }
@@ -179,6 +188,9 @@ public class Inventory {
         return null;
     }
 
+    /**
+     * Tick the duration of the sceptre effects and cool down
+     */
     public void tickSceptre() {
         getSceptre().consume();
     }
@@ -328,6 +340,10 @@ public class Inventory {
         return collectableItems.values().stream().anyMatch(e -> e.getType().equals(itemType));
     }
 
+    /**
+     * Check if the sceptre is ready to be used (off cool down)
+     * @return true if sceptre is ready to be used
+     */
     public boolean usableSceptre() {
         return getSceptre().ready();
     }
