@@ -9,9 +9,10 @@ import dungeonmania.movingEntity.States.State;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.util.Position;
 
-public abstract class MercenaryComponent extends MovingEntity implements PlayerPassiveObserver {
+public abstract class MercenaryComponent extends MovingEntity implements PlayerPassiveObserver, MindControl {
 
     private static final double BATTLE_RADIUS = 8;
+    private static final int BRIBE_DISTANCE = 2;
     private boolean interactable = false;
 
     /**
@@ -68,24 +69,32 @@ public abstract class MercenaryComponent extends MovingEntity implements PlayerP
         Position relativePos = Position.calculatePositionBetween(player.getPosition(), this.getPosition());
         if (getAlly()) {
             interactable = false;
-        } else if ((relativePos.getX() + relativePos.getY()) <= 2) {
+        } else if ((Math.abs(relativePos.getX()) + (Math.abs(relativePos.getY()))) <= BRIBE_DISTANCE) {
             interactable = true;
         } else {
             interactable = false;
         }
     }
 
+    /**
+     * Getter for interactable
+     * @return interactable
+     */
     protected boolean getInteractable() {
         return this.interactable;
     }
 
     /**
-     *  
+     *
      * The character can bribe a mercenary if they are within 2 cardinal tiles
      * to the mercenary. Player requires minimum amount of gold to bribe.
      * @param world
      */
     public abstract void interact(World world);
+
+    public void updateDuration(int effectDuration) {
+        setAlly(effectDuration != 0);
+    }
 
     @Override
     public void updateMovement(String passive) {
@@ -96,11 +105,17 @@ public abstract class MercenaryComponent extends MovingEntity implements PlayerP
         } else {
             setMovement(getDefaultMovementStrategy());
         }
-        
+
     }
 
+    /**
+     * Interactable (flashing) at all times until made ally
+     */
     @Override
     public EntityResponse getEntityResponse() {
+        if (getAlly()) {
+            return new EntityResponse(getId(), getType(), getPosition(), false);
+        }
         return new EntityResponse(getId(), getType(), getPosition(), true);
     }
 
@@ -116,5 +131,6 @@ public abstract class MercenaryComponent extends MovingEntity implements PlayerP
 
         return mercJSON;
     }
+
 
 }

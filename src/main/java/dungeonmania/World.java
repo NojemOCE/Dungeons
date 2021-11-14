@@ -1,11 +1,14 @@
 package dungeonmania;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.json.JSONArray;
@@ -41,18 +44,23 @@ public class World {
     private Factory factory;
     private int randomSeed;
 
-
-    static final int MAX_SPIDERS = 6;
-    static final int SPIDER_SPAWN = 20;
+    // TODO: check if these are required (might be in factory)
     static final int MECERNARY_SPAWN = 25;
     static final double MERCENARY_ARMOUR_DROP = 0.4;
     static final double ZOMBIE_ARMOUR_DROP = 0.2;
     static final double ONE_RING_DROP = 0.1;
+    static final int DEFAULT_WIDTH = 50;
+    static final int DEFAULT_HEIGHT = 50;
+
     private int tickCount = 1;
     
+
     /**
      * Constructor for world that takes the string of the dungeon name to build
      * and a string for the gamemode (Standard, Peaceful, Hard)
+     * @param dungeonName Name of dungeon
+     * @param gameMode gamemode, e.g. standard
+     * @param randomSeed seed for game
      */
     public World(String dungeonName, String gameMode, int randomSeed) {
         this.dungeonName = dungeonName;
@@ -71,6 +79,13 @@ public class World {
         this.factory = new NewGameFactory(gamemode, randomSeed);
     }
 
+    /**
+     * Constructor for world for a saved game
+     * @param dungeonName Name of dungeon
+     * @param gameMode gamemode, e.g. standard
+     * @param id name of the save game
+     * @param randomSeed seed for game
+     */
     public World(String dungeonName, String gameMode, String id, int randomSeed) {
         this(dungeonName, gameMode, randomSeed);
         this.id = id;
@@ -87,18 +102,13 @@ public class World {
 
         for (int i = 0; i < entities.length(); i++) {
             Entity e = factory.createEntity(entities.getJSONObject(i), this);
-
             addEntity(e);
-
-            // move increment entity count to factory
-            // if collectable, add to colletable etc
         }
 
 
         // TODO can we put this in a shared method
         if (worldData.has("goal-condition")) {
             JSONObject g = worldData.getJSONObject("goal-condition");
-            //GoalComponent goal = createGoal(g);
             GoalComponent goal = factory.createGoal(g);
             setGoals(goal);
         }
@@ -120,7 +130,10 @@ public class World {
         return worldDungeonResponse();
     }
 
-    
+    /**
+     * Add new entity to correct storage list
+     * @param e Entity to add
+     */
     private void addEntity(Entity e) {
         if (e instanceof Player) {
             this.player = (Player) e;
@@ -146,6 +159,10 @@ public class World {
         }
         else return null;
     }
+
+    /**
+     * Set goals
+     */
     private void setGoals(GoalComponent goals) {
         this.goals = goals;
     }
@@ -171,7 +188,8 @@ public class World {
             int next = ran.nextInt(10);
             if (10 * MERCENARY_ARMOUR_DROP > next)  {
                 // return an armour
-                Armour armour = new Armour(charX, charY, "armour" + String.valueOf(incrementEntityCount()));
+                Armour armour = (Armour) (factory.createEntity(charX, charY, "armour", this));
+
                 inventory.collect(armour);
             }
         }
@@ -181,7 +199,7 @@ public class World {
             int next = ran.nextInt(10);
             if (10 * ZOMBIE_ARMOUR_DROP > next)  {
                 // return an armour
-                Armour armour = new Armour(charX, charY, "armour" + String.valueOf(incrementEntityCount()));
+                Armour armour = (Armour) (factory.createEntity(charX, charY, "armour", this));
                 inventory.collect(armour);
             }
         }
@@ -190,7 +208,7 @@ public class World {
         int next = ran.nextInt(10);
         if (10 * ONE_RING_DROP > next)  {
             // return the one ring
-            OneRing oneRing = new OneRing(charX, charY, "one_ring" + String.valueOf(incrementEntityCount()));
+            OneRing oneRing = (OneRing) (factory.createEntity(charX, charY, "one_ring", this));
             inventory.collect(oneRing);
         }
     }*/
@@ -226,12 +244,12 @@ public class World {
         // IllegalArgumentException if itemUsed is not a bomb, invincibility_potion or an invisibility_potion
         // InvalidActionException if itemUsed is not in the player's inventory
 
-        if (!Objects.isNull(itemUsed) ) {
-            if (!(inventory.getType(itemUsed) == null) && inventory.getType(itemUsed).equals("bomb")) {
+        if (!Objects.isNull(itemUsed) && !(inventory.getType(itemUsed) == null)) {
+            if (inventory.getType(itemUsed).equals("bomb")) {
                 Bomb b = inventory.getBomb(itemUsed);
-                LogicComponent logic = factory.createLogicComponent(b.logicString());
+                String logic = b.logicString();
                 inventory.use(itemUsed);
-                PlacedBomb newBomb = new PlacedBomb(player.getX(), player.getY(), "bomb" + String.valueOf(incrementEntityCount()), logic);
+                PlacedBomb newBomb = (PlacedBomb) (factory.createEntity(player.getX(), player.getY(), "bomb_placed", this, logic));
                 staticEntities.put(newBomb.getId(), newBomb);
                 // set up observers for this new entity
                 setUpLogicObservers();
@@ -293,9 +311,11 @@ public class World {
             }
         }
 
-        // spawn relevant enemies at the specified tick intervals
         if (inventory.hasItem("sceptre")) inventory.tickSceptre();
+
+        // spawn relevant enemies at the specified tick intervals
         List<Entity> newEntities = factory.tick(this);
+        
 
         for (Entity e: newEntities) {
             addEntity(e);
@@ -383,7 +403,6 @@ public class World {
                 // all logic components should observe switches and wires
                 else if (se instanceof FloorSwitch || se instanceof Wire) {
                     ((Logic) se).addObserver(((Logic) e).getLogic());
-                    System.out.println(e.getType() + " observes "+ se.getType());
                 }
             }
         }
@@ -495,7 +514,7 @@ public class World {
     public DungeonResponse build(String buildable) throws IllegalArgumentException, InvalidActionException {
         // IllegalArgumentException if buildable is not one of bow or shield
         // InvalidActionException if the player does not have sufficient items to craft the buildable
-        if (buildable == "midnight_armour" && numMovingEntity("zombie_toast") != 0) {
+        if (buildable.equals("midnight_armour") && numMovingEntity("zombie_toast") != 0) {
             throw new InvalidActionException("There are zombies alive");
         }
         inventory.craft(buildable, String.valueOf(incrementEntityCount()));
@@ -599,14 +618,25 @@ public class World {
     }
 
     /**
-     * Increments entity count for entity id
+     * Increments entity count and returns count for current entity id
+     * Gets the current entity count from the factory, increments,
+     * and sets factory count accordingly
      * @return int id
      */
     public int incrementEntityCount() {
-        this.entityCount++;
+        this.entityCount = factory.getEntityCount() + 1;
+        factory.setEntityCount(entityCount);
         return this.entityCount;
     }
 
+    /**
+     * Set the current entity count
+     * @param entityCount
+     */
+    public void setEntityCount(int entityCount) {
+        this.entityCount = entityCount;
+        factory.setEntityCount(entityCount);
+    }
     /**
      * Gets all entities entity responses
      * @return list of entity responses
@@ -631,17 +661,6 @@ public class World {
     public List<ItemResponse> getInventoryResponse(){
         return inventory.getInventoryResponse();
     }
-
-    /**
-     * Check if co-ordinates are in bounds
-     * @param x x co-ord
-     * @param y y co-ord
-     * @return true if in bound
-     */
-    // public boolean inBounds(int x, int y) {
-    //     return !(x < 0 || x >= highestX || y < 0 || y >= highestY);
-    // }
-
 
     /**
      * Remove all entities from the given positions (except the player)
@@ -778,12 +797,17 @@ public class World {
         return collectableEntitiesJSON;
     }
 
+    /**
+     * Get the number of items of given type in inventory
+     * @param itemType Type of the item
+     * @return the number of itemType available
+     */
     public int numItemInInventory(String itemType) {
         return inventory.numItem(itemType);
     }
 
     /**
-     * Uses an item in the inventoryof the given type (if it exists)
+     * Uses an item in the inventory of the given type (if it exists)
      * @param type type of the item we want to use
      */
     public void useByType(String type) {
@@ -798,34 +822,57 @@ public class World {
         inventory.useSceptre(m, duration);
     }
 
+    /**
+     * Get the current tick count
+     * @return tickcount
+     */
     public int getTickCount() {
         return tickCount;
     }
 
+    /**
+     * Get the name of the dungeon
+     * @return dungeonName
+     */
     public String getDungeonName() {
         return dungeonName;
     }
+
+    /**
+     * Set the id of the world
+     * @param id the id to set
+     */
     public void setId(String id) {
         this.id  = id;
     }
+
+    /**
+     * Get the id of the world
+     * @return id
+     */
     public String getId() {
         return id;
     }
 
     /**
      * Loads a saved game with all entities
+     * @param gameData the data from the save file
      */
     public void buildWorldFromFile(JSONObject gameData) {
         int tickNo = gameData.getInt("tick-count");
         int entityNo = gameData.getInt("entity-count");
 
+        
+        // set the world and factor counters appropriately
         setEntityCount(entityNo);
+        factory.setEntityCount(entityNo);
         setTickCount(tickNo);
+        factory.setTickCount(tickNo);
+
 
         // TODO can we put this in a shared method
         if (gameData.has("goal-condition")) {
             JSONObject g = gameData.getJSONObject("goal-condition");
-            //GoalComponent goal = createGoal(g);
             GoalComponent goal = factory.createGoal(g);
             setGoals(goal);
         }
@@ -878,8 +925,9 @@ public class World {
 
         //Random ran = new Random(randomSeed);
 
-        this.factory = new NewGameFactory(gamemode, randomSeed);
+        this.factory = new NewGameFactory(gamemode, randomSeed, player.getPosition());
         factory.setEntityCount(entityCount);
+        factory.setTickCount(tickCount);
 
         if (gameData.has("controlled")) {
             JSONArray mindControlledEntities = gameData.getJSONArray("controlled");
@@ -907,26 +955,32 @@ public class World {
 
     }
 
+    /**
+     * Get the players position
+     * @return Players position
+     */
     public Position getPlayerPosition() {
         return player.getPosition();
     }
 
+    /**
+     * Set the tickcount of the world and the factory
+     * @param tickCount tickcount to set
+     */
     public void setTickCount(int tickCount) {
         this.tickCount = tickCount;
-    }
-
-    public void setEntityCount(int entityCount) {
-        this.entityCount = entityCount;
+        factory.setTickCount(tickCount);
     }
 
     public int numMovingEntity(String entityType) {
         int count = 0;
+        System.out.println(entityType);
         for (MovingEntity entity : movingEntities.values()) {
             if (entity.getType() == entityType) {
                 count++;
             }
         }
-        
+        System.out.println("count is " + count);
         return count;
     }
  
@@ -960,5 +1014,143 @@ public class World {
     public boolean useableSceptre() {
         return inventory.usableSceptre();
     }
+
+    public DungeonResponse generateDungeon(int xStart, int yStart, int xEnd, int yEnd) {
+
+        JSONObject generateMaze = RandomizedPrims(xStart, yStart, xEnd, yEnd);
+        JSONObject goalCondition = new JSONObject();
+        goalCondition.put("goal", "exit");
+        generateMaze.put("goal-condition", goalCondition);
+        
+        return buildWorld(generateMaze);
+        
+    }
     
+    public JSONObject RandomizedPrims(int xStart, int yStart, int xEnd, int yEnd) {
+        Boolean[][] maze = new Boolean[DEFAULT_HEIGHT][DEFAULT_WIDTH];
+        for(int i = 0; i < DEFAULT_HEIGHT; i++) {
+            for(int j = 0; j < DEFAULT_WIDTH; j++){
+                maze[i][j] = false;
+            }
+        }
+
+        maze[xStart][yStart] = true;
+        List<Position> options = new ArrayList<>();
+        Position start = new Position(xStart, yStart);
+
+        List<Position> adjacents = start.get2AdjacentPosition();
+
+        adjacents.removeIf( pos -> isBoundary(pos.getX(), pos.getY()));
+        adjacents.removeIf( pos -> maze[pos.getX()][pos.getY()]);
+        options.addAll(adjacents);
+
+        while (!options.isEmpty()) {
+            Random rand = new Random();
+            Position next = options.remove(rand.nextInt(options.size()));
+
+            List<Position> neighbours = next.get2AdjacentPosition();
+            neighbours.removeIf( pos -> isBoundary(pos.getX(), pos.getY()));
+            neighbours.removeIf( pos -> !maze[pos.getX()][pos.getY()]);
+
+            if (!neighbours.isEmpty()) { // may need to also remove
+                Position neighbour = neighbours.get(rand.nextInt(neighbours.size()));
+                maze[next.getX()][next.getY()] = true;
+                Position inbetween = positionInbetween(next.getX(), next.getY(), neighbour.getX(), neighbour.getY());
+                maze[inbetween.getX()][inbetween.getY()] = true;
+                maze[neighbour.getX()][neighbour.getY()] = true;
+            }
+
+            List<Position> neighbours2 = next.get2AdjacentPosition();
+            neighbours2.removeIf( pos -> isBoundary(pos.getX(), pos.getY()));
+            neighbours2.removeIf( pos -> maze[pos.getX()][pos.getY()]);
+            Set<Position> set = new HashSet<>(options);
+            set.addAll(neighbours2);
+            options.clear();
+            options.addAll(set);
+        }
+
+        if (!maze[xEnd][yEnd]) {
+            maze[xEnd][yEnd] = true;
+            Position mazeEnd = new Position(xEnd, yEnd);
+            List<Position> neighbours = mazeEnd.getAdjacentPositions();
+            neighbours.removeIf( pos -> isBoundary(pos.getX(), pos.getY()));
+            if (!neighbourCellEmpty(neighbours, maze)) {
+                Random rand = new Random();
+                Position neighbour = neighbours.get(rand.nextInt(neighbours.size()));
+                maze[neighbour.getX()][neighbour.getY()] = true;
+            }
+        }
+
+        return createJSONfromMaze(maze, xStart, yStart, xEnd, yEnd);
+    }
+
+    private boolean isBoundary(int x, int y) {
+        if (x <= 0 || x >= DEFAULT_HEIGHT - 1) {
+            return true;
+        }
+        if (y <= 0 || y >= DEFAULT_WIDTH - 1) {
+            return true;
+        }
+        return false;
+    }
+
+    private Position positionInbetween(int xNext, int yNext, int xNeigh, int yNeigh) {
+        if (xNext == xNeigh) {
+            if (yNext > yNeigh) {
+                return new Position(xNext, yNext - 1);
+            } else {
+                return new Position(xNext, yNext + 1);
+            }
+        } else {
+            if (xNext > xNeigh) {
+                return new Position(xNext - 1, yNext);
+            } else {
+                return new Position(xNext + 1, yNext);
+            }
+        }
+    }
+    
+    private boolean neighbourCellEmpty(List<Position> neighbours, Boolean[][] maze) {
+        for (Position neighbour : neighbours) {
+            if (maze[neighbour.getX()][neighbour.getY()]) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private JSONObject createJSONfromMaze(Boolean[][] maze, int xStart, int yStart, int xEnd, int yEnd ) {
+        JSONObject mazeJSON = new JSONObject();
+        mazeJSON.put("width", DEFAULT_WIDTH);
+        mazeJSON.put("height", DEFAULT_HEIGHT);
+        JSONArray entities = new JSONArray();
+        for(int i = 0; i < DEFAULT_HEIGHT; i++) {
+            for(int j = 0; j < DEFAULT_WIDTH; j++){
+                if(!maze[i][j]) {
+                    JSONObject wall = new JSONObject();
+                    wall.put("x", j);
+                    wall.put("y", i);
+                    wall.put("type", "wall");
+                    entities.put(wall);
+                }
+            }
+        }
+        JSONObject playerJSON = new JSONObject();
+        playerJSON.put("x", xStart);
+        playerJSON.put("y", yStart);
+        playerJSON.put("type", "player");
+        entities.put(playerJSON);
+
+        JSONObject exitJSON = new JSONObject();
+        exitJSON.put("x", xEnd);
+        exitJSON.put("y", yEnd);
+        exitJSON.put("type", "exit");
+        entities.put(exitJSON);
+
+        mazeJSON.put("entities", entities);
+
+    
+        return mazeJSON;
+    }
+
 }
