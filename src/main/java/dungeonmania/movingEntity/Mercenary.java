@@ -52,6 +52,7 @@ public class Mercenary extends MercenaryComponent {
         } else {
             throw new InvalidActionException("Must be within 2 cardinal tiles to bribe Mercenary!");
         }
+        setInteractable(world.getPlayer());
     }
 
     @Override

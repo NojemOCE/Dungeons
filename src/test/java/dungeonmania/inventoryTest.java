@@ -7,6 +7,8 @@ import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
 
+import dungeonmania.response.models.DungeonResponse;
+import dungeonmania.util.Direction;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -493,4 +495,19 @@ public class inventoryTest {
         assertFalse(MidnightArmourExists);
     }
 
+    /**
+     * Test consuming invincibility potion
+     */
+    @Test
+    public void testTickInvincibility() {
+
+    }
+
+    /**
+     * Test consuming invisibility potion
+     */
+    @Test
+    public void testTickInvisibility() {
+
+    }
 }
