@@ -64,7 +64,7 @@
     * Only two moving entities can be on one cell at any time
     * Moving Entities can block each other from player (mercenary algorithm will therefore avoid other mercenaries if they are in the way)
     * This implies that the character can only battle one enemy at the time
-    * Once a battle starts, it cannot end until one of the characters is defeated. To continue going through ticks, the player should just just click any direction to continue onto the next attack in battle
+    * Once a battle starts, it cannot end until one of the characters is defeated. To continue going through rounds, recursion until an entity reaches zero health
 * Given:
     * Character Health = Character Health - ((Enemy Health * Enemy Attack Damage) / 10)
     * Enemy Health = Enemy Health - ((Character Health * Character Attack Damage) / 5)
