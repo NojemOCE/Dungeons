@@ -25,7 +25,8 @@ import dungeonmania.staticEntity.ZombieToastSpawn;
 import dungeonmania.util.Position;
 
 public abstract class Factory {
-    Gamemode gamemode;
+    protected Gamemode gamemode;
+    private Position playerStartingPos;
     protected int randomSeed;
     private int entityCount = 0;
     private int highestX = 5;
@@ -36,6 +37,7 @@ public abstract class Factory {
     static final double MERCENARY_ARMOUR_DROP = 0.4;
     static final double ZOMBIE_ARMOUR_DROP = 0.2;
     static final double ONE_RING_DROP = 0.1;
+    static final int MERC_SPAWN_RATE = 40;
 
     /**
      * Constructor for Factory taking in a GameMode
@@ -46,6 +48,22 @@ public abstract class Factory {
         this.gamemode = gamemode;
         this.randomSeed = randomSeed;
 
+    }
+
+    /**
+     * Gets the players starting position
+     * @return players starting position
+     */
+    public Position getPlayerStartingPos() {
+        return playerStartingPos;
+    }
+
+    /**
+     * Sets the players starting position as a given input
+     * @param playerStartingPos position to set players starting position as
+     */
+    public void setPlayerStartingPos(Position playerStartingPos) {
+        this.playerStartingPos = playerStartingPos;
     }
 
     /**
@@ -105,6 +123,11 @@ public abstract class Factory {
 
         List<Entity> newZombies = tickZombieToastSpawn(world);
         newEntities.addAll(newZombies);
+
+        if (tickCount%MERC_SPAWN_RATE == 0) {
+            newEntities.add(createEntity(playerStartingPos.getX(), playerStartingPos.getY(), "mercenary", world));
+        }
+
         tickCount++;
 
         return newEntities;

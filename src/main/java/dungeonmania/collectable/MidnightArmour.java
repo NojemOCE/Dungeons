@@ -19,17 +19,25 @@ public class MidnightArmour extends CollectableEntity implements Protection, Wea
     }
 
     /**
-     * provides the defence modifier of shield
+     * provides the defence modifier of the midnight Armour
      * @return DEFENCE
      */
     public int defenceModifier() { 
         return DEFENCE;
     }
 
+    /**
+     * Provides the attack modifier of the midnight armour in normal battle
+     * @return ATTACK_POWER
+     */
     public double attackModifier() {
         return ATTACK;
     }
 
+    /**
+     * Provides the attack modifier of the midnight armour in boss battle
+     * @return ATTACK_POWER
+     */
     public double bossAttackModifier() {
         return attackModifier();
     }
