@@ -9,15 +9,28 @@ import dungeonmania.collectable.*;
 import dungeonmania.gamemode.Gamemode;
 import dungeonmania.movingEntity.*;
 import dungeonmania.staticEntity.*;
+import dungeonmania.util.Position;
 
 public class NewGameFactory extends Factory {
     private int randomSeed;
     /**
-     * Constructor for a NewGameFactory taking in a gamemode
+     * Constructor for a NewGameFactory taking in a gamemode and a random seed
      * @param gamemode gamemode of factory
+     * @param randomSeed random seed used for spawns
      */
     public NewGameFactory(Gamemode gamemode, int randomSeed) {
         super(gamemode, randomSeed);
+    }
+
+    /**
+     * Construtor for a NewGameFactory taking in a gamemode, a random seed and a position which is the players starting position
+     * @param gamemode gamemode of factory
+     * @param randomSeed random seed used for spawns
+     * @param position players starting position
+     */
+    public NewGameFactory(Gamemode gamemode, int randomSeed, Position position) {
+        super(gamemode, randomSeed);
+        setPlayerStartingPos(position);
     }
 
     @Override
@@ -114,6 +127,7 @@ public class NewGameFactory extends Factory {
         }
         
         else if (type.equals("player")) {
+            setPlayerStartingPos(new Position(x, y));
             Player e = new Player(x, y, id, new HealthPoint(gamemode.getStartingHP()));
            
             return e;
@@ -136,11 +150,11 @@ public class NewGameFactory extends Factory {
         } 
         
         else if (type.equals("mercenary")) {
-            Random r = new Random(randomSeed);
+            //Random r = new Random(randomSeed);
             MercenaryComponent e = new Mercenary(x, y, id);
 
             // There is a 30% chance that a new mercenary will be an assassin.
-            if (r.nextInt(100) < 30) {
+            if (ran.nextInt(100) < 30) {
                 e = new AssassinDecorator(e);
                 return e;
             } 
@@ -229,6 +243,10 @@ public class NewGameFactory extends Factory {
 
         else if (type.equals("armour")) {
             Armour e = new Armour(x, y ,id);
+            return e;
+        }
+        else if (type.equals("bow")) {
+            Bow e = new Bow(x, y ,id);
             return e;
         }
 

@@ -77,8 +77,6 @@ public class FollowPlayer implements MovementStrategy {
                     // for the neighbours that havent been visited
                     queue.add(p);
                     visited.add(p);
-                    //prev.put(p, node);
-                    //if (p.equals(player.getPosition())) break;
 
                 }
             }
@@ -91,7 +89,7 @@ public class FollowPlayer implements MovementStrategy {
         Map<Position, Double> dist = new HashMap<>();
 
         visited.forEach(position -> {
-            dist.put(position, 99.0);
+            dist.put(position, 9999.0);
             prev.put(position, null);
         });
 
@@ -101,7 +99,7 @@ public class FollowPlayer implements MovementStrategy {
             Position u = getSmallestDistance(dist, visited);
             visited.remove(u);
             for (Position v: getNeighbours(me, u, world)) {
-                if (dist.get(u) + world.getDistance(v) < dist.get(v)) { // TODO CHANGE 1.0 to actual cost
+                if (dist.get(u) + world.getDistance(v) < dist.get(v)) { 
                     dist.put(v, dist.get(u) + world.getDistance(v));
                     prev.put(v,u);
                 } 
@@ -112,7 +110,7 @@ public class FollowPlayer implements MovementStrategy {
 
     private Position getSmallestDistance(Map<Position, Double> dist, List<Position> visited) {
         Position smallest = new Position(0, 0);
-        double currDistance = 99.0;
+        double currDistance = 9999.0;
         for (Position p : dist.keySet()) {
             if (visited.contains(p) && dist.get(p) <= currDistance){
                 currDistance = dist.get(p);
