@@ -14,3 +14,4 @@ bin/
 .settings
 yarn.lock
 /Environment.java
+src/main/savedGames
