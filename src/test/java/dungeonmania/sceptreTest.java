@@ -103,7 +103,9 @@ public class sceptreTest {
             DungeonResponse d = controller.tick(null, Direction.DOWN);
             for (EntityResponse e : d.getEntities()) {
                 if (e.getId().equals("mercenary5")) {
-                    assertFalse(e.isInteractable());
+                    //assertFalse(e.isInteractable());
+                    // check that we can't interact with merc
+                    assertThrows(InvalidActionException.class, () -> controller.interact("mercenary5"));
                 }
             }
         }
