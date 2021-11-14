@@ -10,6 +10,9 @@ public abstract class LogicComponent {
     protected Map<LogicComponent, Boolean> observing = new HashMap<>();
     protected List<LogicComponent> observers = new ArrayList<LogicComponent>();
 
+    /**
+     * Check if the Logic Component is activated
+     */
     public abstract boolean isActivated();
 
     /**
