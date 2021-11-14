@@ -246,6 +246,10 @@ public class Inventory {
         numCollected.put(item.getType(), numCollected.get(item.getType()) - 1);
     }
 
+    /**
+     * Removes items with the id corresponding to the list provided, from the inventory
+     * @param item the list of item ids to be removed
+     */
     public void removeItem(List<String> itemIdToRemove) {
         for (String itemId : itemIdToRemove) {
             String type = collectableItems.get(itemId).getType();
