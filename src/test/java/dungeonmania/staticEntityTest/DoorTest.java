@@ -184,4 +184,79 @@ public class DoorTest {
         // make sure player doesn't move (can't open door)
         assert(playerPos2.equals(playerPos));
     }
+
+    /**
+     * Test that door can be opened with sun_stone
+     * MAP
+     *  player door sun_stone
+     */
+    @Test
+    public void sunstoneOpenTest(){
+        World world = new World("door+sun_stone", "Standard", 1);
+        try {
+            String file = FileLoader.loadResourceFile("/dungeons/" + "door+sun_stone" + ".json");
+            JSONObject game = new JSONObject(file);
+            world.buildWorld(game);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // get the initial position
+        DungeonResponse d = world.worldDungeonResponse();
+        List<EntityResponse> entities = d.getEntities();
+
+        Position playerPos = null;
+        for (EntityResponse er : entities) {
+            if (er.getType().equals("player")) {
+                playerPos = er.getPosition();
+                break;
+            }
+        }
+        // make sure we find it
+        assertNotNull(playerPos);
+
+        // now try to walk right (into the door)
+        // should not change spots because we dont have the stone
+        d = world.tick(null, Direction.RIGHT);
+        entities = d.getEntities();
+
+        Position playerPos2 = null;
+        for (EntityResponse er : entities) {
+            if (er.getType().equals("player")) {
+                playerPos2 = er.getPosition();
+                break;
+            }
+        }
+        assertNotNull(playerPos2);
+
+        // check that player doesn't move
+        assert(playerPos.equals(playerPos2));
+
+        // now go collect key and try again
+        world.tick(null, Direction.DOWN);
+        world.tick(null, Direction.RIGHT);
+        world.tick(null, Direction.RIGHT);
+        d = world.tick(null, Direction.UP);
+        entities = d.getEntities();
+
+        // check we have the sun stone
+        assertNotNull(world.inInventory("sun_stone"));
+
+        // now check that we can walk into the door
+        d = world.tick(null, Direction.LEFT);
+        entities = d.getEntities();
+
+        playerPos2 = null;
+        for (EntityResponse er : entities) {
+            if (er.getType().equals("player")) {
+                playerPos2 = er.getPosition();
+                break;
+            }
+        }
+        assertNotNull(playerPos2);
+
+        // make sure they are on door (i.e. it is opened)
+        assert(playerPos2.equals(playerPos.translateBy(Direction.RIGHT)));
+    }
 }
