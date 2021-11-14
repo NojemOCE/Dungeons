@@ -177,7 +177,7 @@ public class World {
      *
      * If an item is dropped, it is automatically added to the players inventory
      */
-    private void dropBattleReward(){
+    /*private void dropBattleReward(){
         Position characterPos = currentBattle.getCharacter().getPosition();
         int charX = characterPos.getX();
         int charY = characterPos.getY();
@@ -210,6 +210,25 @@ public class World {
             // return the one ring
             OneRing oneRing = (OneRing) (factory.createEntity(charX, charY, "one_ring", this));
             inventory.collect(oneRing);
+        }
+    }*/
+    
+    /**
+     * Gets the current character that the player has just battled with
+     * @return current battle character
+     */
+    public MovingEntity getBattleCharacter() {
+        return currentBattle.getCharacter();
+    }
+
+    /**
+     * Obtains and collects the battle rewards from that round of battle
+     * @param world current world that the battle occurs in
+     */
+    private void collectBattleRewards(World world) {
+        List<CollectableEntity> battleRewards = factory.dropBattleReward(this);
+        for (CollectableEntity e: battleRewards) {
+            inventory.collect(e);
         }
     }
 
@@ -250,7 +269,8 @@ public class World {
                 if (!Objects.isNull(currentBattle)) {
                     currentBattle.battleTick(inventory);
                     if (currentBattle.getPlayerWins()) {
-                        dropBattleReward();
+                        collectBattleRewards(this);
+                        //dropBattleReward();
 
                     } else {
                         this.player = null; // will end game in dungeon response
@@ -279,7 +299,8 @@ public class World {
                 if (!Objects.isNull(currentBattle)) {
                     currentBattle.battleTick(inventory);
                     if (currentBattle.getPlayerWins()) {
-                        dropBattleReward();
+                        collectBattleRewards(this);
+                        //dropBattleReward();
 
                     } else {
                         this.player = null; // will end game in dungeon response

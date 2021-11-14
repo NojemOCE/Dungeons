@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import dungeonmania.Entity;
 import dungeonmania.World;
+import dungeonmania.collectable.CollectableEntity;
 import dungeonmania.gamemode.Gamemode;
 import dungeonmania.goal.*;
 import dungeonmania.logic.AndLogic;
@@ -17,6 +18,8 @@ import dungeonmania.logic.NoLogic;
 import dungeonmania.logic.NotLogic;
 import dungeonmania.logic.OrLogic;
 import dungeonmania.logic.XorLogic;
+import dungeonmania.movingEntity.MercenaryComponent;
+import dungeonmania.movingEntity.Zombie;
 import dungeonmania.staticEntity.StaticEntity;
 import dungeonmania.staticEntity.ZombieToastSpawn;
 import dungeonmania.util.Position;
@@ -31,6 +34,9 @@ public abstract class Factory {
     private static final int MAX_SPIDERS = 6;
     private static final int SPIDER_SPAWN = 20;
     private int tickCount = 1;
+    static final double MERCENARY_ARMOUR_DROP = 0.4;
+    static final double ZOMBIE_ARMOUR_DROP = 0.2;
+    static final double ONE_RING_DROP = 0.1;
     static final int MERC_SPAWN_RATE = 40;
 
     /**
@@ -357,6 +363,55 @@ public abstract class Factory {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Drops armour:
+     * 20% of the time if the player has beaten a zombie
+     * 40% of the time if the player has beaten a mercenary/assassin
+     *
+     * Drops the one ring:
+     * 10% of the time
+     *
+     * If an item is dropped, it is automatically added to the players inventory
+     */
+    public List<CollectableEntity> dropBattleReward(World world){
+
+        List<CollectableEntity> battleRewards = new ArrayList<>();
+        Position characterPos = world.getBattleCharacter().getPosition();
+        int charX = characterPos.getX();
+        int charY = characterPos.getY();
+
+
+        if (world.getBattleCharacter() instanceof MercenaryComponent) {
+            Random ran = new Random(randomSeed);
+            int next = ran.nextInt(10);
+            if (10 * MERCENARY_ARMOUR_DROP > next)  {
+                // return an armour
+                Entity armour = createEntity(charX, charY, "armour", world);
+                battleRewards.add((CollectableEntity) armour);
+            }
+        }
+
+        else if (world.getBattleCharacter() instanceof Zombie) {
+            Random ran = new Random(randomSeed);
+            int next = ran.nextInt(10);
+            if (10 * ZOMBIE_ARMOUR_DROP > next)  {
+                // return an armour
+                Entity armour = createEntity(charX, charY, "armour", world);
+                battleRewards.add((CollectableEntity) armour);
+            }
+        }
+
+        Random ran = new Random(randomSeed);
+        int next = ran.nextInt(10);
+        if (10 * ONE_RING_DROP > next)  {
+            // return the one ring
+            Entity oneRing = createEntity(charX, charY, "one_ring", world);
+            battleRewards.add((CollectableEntity) oneRing);
+        }
+
+        return battleRewards;
     }
 
 }
