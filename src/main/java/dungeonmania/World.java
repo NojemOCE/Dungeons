@@ -391,7 +391,7 @@ public class World {
         return true;
     }
     
-    /*
+    /** 
      * Checks whether a given position is a valid zombie spawn position
      * @param position Position to check
      * @return true if the position giveen is valid, otherwise false
@@ -666,7 +666,10 @@ public class World {
         return this.collectableEntities;
     }
 
-
+    /**
+     * Calls use for thr specified item id in inventory
+     * @param itemId the item to be used
+     */
     public void use(String itemId) {
         inventory.use(itemId);
     }
