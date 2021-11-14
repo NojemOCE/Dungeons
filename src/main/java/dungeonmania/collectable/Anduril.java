@@ -2,7 +2,7 @@ package dungeonmania.collectable;
 
 public class Anduril extends CollectableEntity implements Weapon {
 
-    private final double ATTACK_POWER = 3;
+    private final double ATTACK_POWER = 5;
 
     /**
      * Constructor for anduril taking an x and a y coordinate and its unique itemID
