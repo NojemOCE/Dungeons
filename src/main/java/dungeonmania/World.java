@@ -44,8 +44,6 @@ public class World {
     private Factory factory;
     private int randomSeed;
 
-    // TODO: check if these are required (might be in factory)
-    static final int MECERNARY_SPAWN = 25;
     static final double MERCENARY_ARMOUR_DROP = 0.4;
     static final double ZOMBIE_ARMOUR_DROP = 0.2;
     static final double ONE_RING_DROP = 0.1;
