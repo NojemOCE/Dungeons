@@ -137,6 +137,7 @@ Note: static entities marked with ^ are considered to be on the floor layer, whi
     * Infinite durability
     * Attack damage is additive
     * Defence is additive
+    * Is able to destroy a zombie toast spawner
 * For all
     * Once the character has collected an item, the item is removed from the list of game entities and added to the characters inventory
     * Health potions “can only be consumed once” - we understand this as meaning that once a health potion has been consumed, it is “discarded”,  the character is able to pick up additional health potions later on and consume them
