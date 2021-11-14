@@ -15,3 +15,4 @@ bin/
 yarn.lock
 /Environment.java
 src/main/savedGames
+src/main/savedGames/advanced.json
