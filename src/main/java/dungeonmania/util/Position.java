@@ -7,9 +7,9 @@ import java.util.Objects;
 public final class Position {
     private final int x, y, layer;
 
-    public static int MOVING_LAYER = 2;
-    public static int STATIC_LAYER = 1;
-    public static int FLOOR_LAYER = 0;
+    public final static int MOVING_LAYER = 2;
+    public final static int STATIC_LAYER = 1;
+    public final static int FLOOR_LAYER = 0;
 
 
     public Position(int x, int y, int layer) {
@@ -121,6 +121,10 @@ public final class Position {
         return adjacentPositions;
     }
 
+    /**
+     * Returns all positions that are cardinally 2 tiles from the current position
+     * @return a list of positions of all the 2 tile adjacent positions
+     */
     public List<Position> get2AdjacentPosition() {
         List<Position> adjacentPositions = new ArrayList<>();
 
@@ -145,11 +149,5 @@ public final class Position {
         }
 
         return cardinalPositions;
-        // List<Position> adjacentPositions = new ArrayList<>();
-        // adjacentPositions.add(new Position(x  , y-1));
-        // adjacentPositions.add(new Position(x+1, y));
-        // adjacentPositions.add(new Position(x  , y+1));
-        // adjacentPositions.add(new Position(x-1, y));
-        // return adjacentPositions;
     }
 }

@@ -112,7 +112,6 @@ public class DungeonManiaController {
         }
         catch (Exception e) {
             e.printStackTrace();
-            // TODO discard world if exception thrown?
         }
 
         this.current = newGame;
@@ -205,7 +204,6 @@ public class DungeonManiaController {
 
         try{
             savedGames = FileLoader.listFileNamesInDirectoryOutsideOfResources("src/main/savedGames");
-            //savedGames = FileLoader.listFileNamesInResourceDirectory("/savedGames");
         }
         catch(Exception e) {
             e.printStackTrace();
@@ -255,6 +253,16 @@ public class DungeonManiaController {
 
     }
 
+    /**
+     * Generates the maze dungeon with the randomized prims algorithm
+     * @param xStart the x coordinate of the start position
+     * @param yStart the y coordinate of the start position
+     * @param xEnd the x coordinate of the end position
+     * @param yEnd the y coordinate of the end position
+     * @param gameMode the gamemode of the generated world
+     * @return the DungeonResponse corresponding to the generated maze
+     * @throws IllegalArgumentException
+     */
     public DungeonResponse generateDungeon(int xStart, int yStart, int xEnd, int yEnd, String gameMode) throws IllegalArgumentException {
         
         gameMode = gameMode.toLowerCase();
