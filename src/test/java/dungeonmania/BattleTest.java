@@ -1,24 +1,15 @@
 package dungeonmania;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.nio.file.DirectoryNotEmptyException;
-import java.util.List;
-import java.util.Random;
 
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
-import dungeonmania.World;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
-import dungeonmania.response.models.ItemResponse;
-import dungeonmania.staticEntity.SwampTile;
 import dungeonmania.util.Direction;
 import dungeonmania.util.FileLoader;
-import dungeonmania.util.Position;
 
 
 public class BattleTest {
