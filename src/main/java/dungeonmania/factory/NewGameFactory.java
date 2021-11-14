@@ -150,11 +150,11 @@ public class NewGameFactory extends Factory {
         } 
         
         else if (type.equals("mercenary")) {
-            Random r = new Random(randomSeed);
+            //Random r = new Random(randomSeed);
             MercenaryComponent e = new Mercenary(x, y, id);
 
             // There is a 30% chance that a new mercenary will be an assassin.
-            if (r.nextInt(100) < 30) {
+            if (ran.nextInt(100) < 30) {
                 e = new AssassinDecorator(e);
                 return e;
             } 
@@ -243,6 +243,10 @@ public class NewGameFactory extends Factory {
 
         else if (type.equals("armour")) {
             Armour e = new Armour(x, y ,id);
+            return e;
+        }
+        else if (type.equals("bow")) {
+            Bow e = new Bow(x, y ,id);
             return e;
         }
 

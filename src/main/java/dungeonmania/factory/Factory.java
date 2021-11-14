@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import dungeonmania.Entity;
 import dungeonmania.World;
+import dungeonmania.collectable.CollectableEntity;
 import dungeonmania.gamemode.Gamemode;
 import dungeonmania.goal.*;
 import dungeonmania.logic.AndLogic;
@@ -17,6 +18,8 @@ import dungeonmania.logic.NoLogic;
 import dungeonmania.logic.NotLogic;
 import dungeonmania.logic.OrLogic;
 import dungeonmania.logic.XorLogic;
+import dungeonmania.movingEntity.MercenaryComponent;
+import dungeonmania.movingEntity.Zombie;
 import dungeonmania.staticEntity.StaticEntity;
 import dungeonmania.staticEntity.ZombieToastSpawn;
 import dungeonmania.util.Position;
@@ -31,7 +34,13 @@ public abstract class Factory {
     private static final int MAX_SPIDERS = 6;
     private static final int SPIDER_SPAWN = 20;
     private int tickCount = 1;
+    static final double MERCENARY_ARMOUR_DROP = 0.4;
+    static final double ZOMBIE_ARMOUR_DROP = 0.2;
+    static final double ONE_RING_DROP = 0.1;
+    protected Random ran;
     static final int MERC_SPAWN_RATE = 40;
+
+    static final int HYDRA_SPAWN = 50;
 
     /**
      * Constructor for Factory taking in a GameMode
@@ -41,6 +50,7 @@ public abstract class Factory {
     public Factory(Gamemode gamemode, int randomSeed) {
         this.gamemode = gamemode;
         this.randomSeed = randomSeed;
+        this.ran = new Random(randomSeed);
 
     }
 
@@ -153,6 +163,11 @@ public abstract class Factory {
         List<Entity> newZombies = tickZombieToastSpawn(world);
         newEntities.addAll(newZombies);
 
+
+        Entity hydra = tickHydraSpawn(world);
+        if (!(hydra == null)) {
+            newEntities.add(hydra);
+        }
         if (tickCount%MERC_SPAWN_RATE == 0) {
             newEntities.add(createEntity(playerStartingPos.getX(), playerStartingPos.getY(), "mercenary", world));
         }
@@ -160,6 +175,35 @@ public abstract class Factory {
         tickCount++;
 
         return newEntities;
+    }
+
+    /**
+     * Helper function to create a new hydra at relevant ticks
+     */
+    private Entity tickHydraSpawn(World world) {
+        if (!(tickCount % HYDRA_SPAWN == 0) || !(gamemode.getGameModeType().equals("hard"))) {
+            return null;
+            
+        }
+
+        int x = ran.nextInt(highestX);
+        int y = ran.nextInt(highestY);
+        
+        int numChecks = 0;
+        while (!world.validHydraSpawnPosition(new Position(x,y)) && numChecks < 10) {
+            x = ran.nextInt(highestX);
+            y = ran.nextInt(highestY);
+            numChecks++;
+        }
+
+        // no valid positions found in reasonable time
+        if (numChecks == 10) {
+            return null;
+        }
+
+        Entity e = createEntity(x, y, "hydra", world);
+        return e;
+
     }
 
     /**
@@ -171,16 +215,16 @@ public abstract class Factory {
             
         }
 
-        Random ran1 = new Random(randomSeed);
-        Random ran2 = new Random(randomSeed);
+        //Random ran1 = new Random(randomSeed);
+        //Random ran2 = new Random(randomSeed);
 
-        int x = ran1.nextInt(highestX);
-        int y = ran2.nextInt(highestY);
+        int x = ran.nextInt(highestX);
+        int y = ran.nextInt(highestY);
         
         int numChecks = 0;
         while (!world.validSpiderSpawnPosition(new Position(x,y)) && numChecks < 10) {
-            x = ran1.nextInt(highestX);
-            y = ran2.nextInt(highestY);
+            x = ran.nextInt(highestX);
+            y = ran.nextInt(highestY);
             numChecks++;
         }
 
@@ -244,9 +288,9 @@ public abstract class Factory {
      */
     private Position getSpawnPosition(List<Position> possibleSpawnPositions, World world) {
         Position newPos = null;
-        Random random = new Random(randomSeed);
+        //Random random = new Random(randomSeed);
         while (!(possibleSpawnPositions.isEmpty())) {
-            int posIndex = random.nextInt(possibleSpawnPositions.size());
+            int posIndex = ran.nextInt(possibleSpawnPositions.size());
             newPos = possibleSpawnPositions.get(posIndex);
             if (world.validZombieSpawnPosition(newPos)) {
                 break;
@@ -357,6 +401,55 @@ public abstract class Factory {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Drops armour:
+     * 20% of the time if the player has beaten a zombie
+     * 40% of the time if the player has beaten a mercenary/assassin
+     *
+     * Drops the one ring:
+     * 10% of the time
+     *
+     * If an item is dropped, it is automatically added to the players inventory
+     */
+    public List<CollectableEntity> dropBattleReward(World world){
+
+        List<CollectableEntity> battleRewards = new ArrayList<>();
+        Position characterPos = world.getBattleCharacter().getPosition();
+        int charX = characterPos.getX();
+        int charY = characterPos.getY();
+
+
+        if (world.getBattleCharacter() instanceof MercenaryComponent) {
+            //Random ran = new Random(randomSeed);
+            int next = ran.nextInt(10);
+            if (10 * MERCENARY_ARMOUR_DROP > next)  {
+                // return an armour
+                Entity armour = createEntity(charX, charY, "armour", world);
+                battleRewards.add((CollectableEntity) armour);
+            }
+        }
+
+        else if (world.getBattleCharacter() instanceof Zombie) {
+            //Random ran = new Random(randomSeed);
+            int next = ran.nextInt(10);
+            if (10 * ZOMBIE_ARMOUR_DROP > next)  {
+                // return an armour
+                Entity armour = createEntity(charX, charY, "armour", world);
+                battleRewards.add((CollectableEntity) armour);
+            }
+        }
+
+        //Random ran = new Random(randomSeed);
+        int next = ran.nextInt(10);
+        if (10 * ONE_RING_DROP > next)  {
+            // return the one ring
+            Entity oneRing = createEntity(charX, charY, "one_ring", world);
+            battleRewards.add((CollectableEntity) oneRing);
+        }
+
+        return battleRewards;
     }
 
 }
