@@ -2,6 +2,7 @@ package dungeonmania.staticEntityTest;
 
 
 import dungeonmania.World;
+import dungeonmania.logic.OrLogic;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.response.models.ItemResponse;
@@ -24,7 +25,7 @@ public class PlacedBombTest {
     public void constructionTest(){
         // Constructing a boulder
         Position bombPos = new Position(1, 1);
-        PlacedBomb bomb = new PlacedBomb(bombPos.getX(), bombPos.getY(), "bomb1");
+        PlacedBomb bomb = new PlacedBomb(bombPos.getX(), bombPos.getY(), "bomb1", new OrLogic());
         assertNotNull(bomb);
         assert(bombPos.equals(bomb.getPosition()));
     }
@@ -82,7 +83,6 @@ public class PlacedBombTest {
             }
         }
         assertNotNull(playerPos2);
-
         assert(playerPos.equals(playerPos2));
 
 

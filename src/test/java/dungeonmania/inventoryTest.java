@@ -6,9 +6,8 @@ import dungeonmania.inventory.Inventory;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.ItemResponse;
 import dungeonmania.util.Direction;
+import dungeonmania.logic.OrLogic;
 
-import dungeonmania.response.models.DungeonResponse;
-import dungeonmania.util.Direction;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -42,7 +41,7 @@ public class inventoryTest {
         assertEquals(inv.numItem("arrow"), 1);
         assertTrue(inv.inInventory("arrows2"));
 
-        Bomb bomb = new Bomb(1, 1, "bomb3");
+        Bomb bomb = new Bomb(1, 1, "bomb3", new OrLogic());
         assertEquals(inv.numItem("bomb"), 0);
         assertFalse(inv.inInventory("bomb3"));
         inv.collect(bomb);
@@ -131,7 +130,7 @@ public class inventoryTest {
         inv.use(potion.getId());
         assertFalse(inv.inInventory("health_potion1"));
 
-        Bomb bomb = new Bomb(1, 2, "bomb2");
+        Bomb bomb = new Bomb(1, 2, "bomb2", new OrLogic());
         assertFalse(inv.inInventory("bomb2"));
         inv.collect(bomb);
         assertTrue(inv.inInventory("bomb2"));

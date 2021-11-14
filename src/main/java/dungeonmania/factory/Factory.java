@@ -11,6 +11,12 @@ import dungeonmania.Entity;
 import dungeonmania.World;
 import dungeonmania.gamemode.Gamemode;
 import dungeonmania.goal.*;
+import dungeonmania.logic.AndLogic;
+import dungeonmania.logic.LogicComponent;
+import dungeonmania.logic.NoLogic;
+import dungeonmania.logic.NotLogic;
+import dungeonmania.logic.OrLogic;
+import dungeonmania.logic.XorLogic;
 import dungeonmania.staticEntity.StaticEntity;
 import dungeonmania.staticEntity.ZombieToastSpawn;
 import dungeonmania.util.Position;
@@ -270,4 +276,28 @@ public abstract class Factory {
         return null;
     }
     
+
+    /**
+     * Creates a logic component given a logic string
+     * @param logic String form of the logic
+     * @return LogicComponent
+     */
+    public LogicComponent createLogicComponent(String logic) {
+        if (logic.equals("and")) {
+            return new AndLogic();
+        } else if (logic.equals("or")) {
+            return new OrLogic();
+        } else if (logic.equals("xor")) {
+            return new XorLogic();
+        } else if (logic.equals("not")) {
+            return new NotLogic();
+        } else if (logic.equals("co_and")) {
+            return null;
+        } else if (logic.equals("no")) {
+            return new NoLogic();
+        } else {
+            return null;
+        }
+    }
+
 }

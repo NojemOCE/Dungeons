@@ -168,6 +168,16 @@ public class Inventory {
         getSceptre().consume();
     }
 
+
+    public Bomb getBomb(String id) {
+        for (CollectableEntity c : collectableItems.values()) {
+            if (c.getId().equals(id)) {
+                return (Bomb) c;
+            }
+        }
+        return null;
+    }
+
     public List<ItemResponse> getInventoryResponse() {
         return collectableItems.values().stream().map(CollectableEntity::getItemResponse).collect(Collectors.toList());
     }

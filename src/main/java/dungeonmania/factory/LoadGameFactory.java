@@ -237,7 +237,12 @@ public class LoadGameFactory extends Factory {
         } 
         
         else if (type.equals("switch")) {
-            FloorSwitch e = new FloorSwitch(x, y, id);
+            // switches may have no logic
+            String logic = "no";
+            if (obj.has("logic")) {
+                logic = obj.getString("logic");
+            }
+            FloorSwitch e = new FloorSwitch(x, y, id, createLogicComponent(logic));
             return e;
         } 
         
@@ -279,7 +284,32 @@ public class LoadGameFactory extends Factory {
         } 
         
         else if (type.equals("bomb_placed")) {
-            PlacedBomb e = new PlacedBomb(x, y, id);
+            // placed bombs will always have a logic
+            String logic = obj.getString("logic");
+            PlacedBomb e = new PlacedBomb(x, y, id, createLogicComponent(logic));
+            return e; 
+        }
+
+        else if (type.contains("light_bulb")) {
+            // no logic is equivalent to "or" logic
+            String logic = "or";
+            if (obj.has("logic")) {
+                logic = obj.getString("logic");
+            }
+            LightBulb e = new LightBulb(x, y, id, createLogicComponent(logic));
+            return e; 
+        }
+        else if (type.equals("wire")) {
+            Wire e = new Wire(x, y, id);
+            return e; 
+        }
+        else if (type.equals("switch_door")) {
+            // no logic is equivalent to "or" logic
+            String logic = "or";
+            if (obj.has("logic")) {
+                logic = obj.getString("logic");
+            }
+            SwitchDoor e = new SwitchDoor(x, y, id, createLogicComponent(logic));
             return e; 
         }
         return null;
@@ -343,7 +373,12 @@ public class LoadGameFactory extends Factory {
         } 
         
         else if (type.equals("bomb")) {
-            Bomb e = new Bomb(x, y, id, durability);
+            // bombs with no given logic are equivalent to "or logic"
+            String logic = "or";
+            if (obj.has("logic")) {
+                logic = obj.getString("logic");
+            }
+            Bomb e = new Bomb(x, y, id, durability, createLogicComponent(logic));
             return e;
         } 
         
@@ -435,7 +470,7 @@ public class LoadGameFactory extends Factory {
      */
     private List<String> staticsList() {
         // TODO add additional entities
-        return Arrays.asList("boulder", "door", "exit", "switch", "bomb_placed", "portal", "wall", "zombie_toast_spawner", "swamp_tile");
+        return Arrays.asList("boulder", "door", "exit", "switch", "bomb_placed", "portal", "wall", "zombie_toast_spawner", "swamp_tile", "switch_door", "wire", "light_bulb","light_bulb_on","light_bulb_off");
     }
 
     /**
