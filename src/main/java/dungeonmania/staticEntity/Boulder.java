@@ -26,6 +26,13 @@ public class Boulder extends StaticEntity {
         this.state = new NormalState();
     }
 
+    /**
+     * Constructor for boulder from save state
+     * @param x x coordinate of the boulder
+     * @param y y coordinate of the boulder
+     * @param id id of the boulder
+     * @param state state of the boulder (swamp state or normal)
+     */
     public Boulder(int x, int y, String id, State state) {
         this(x, y, id);
         this.state = state;
@@ -93,6 +100,13 @@ public class Boulder extends StaticEntity {
         return entity.getPosition();
     }
     // TODO: do we check for switch AFTER portal?!?!?
+
+    /**
+     * Update the position and state of the boulder
+     * @param toMoveTo position to move boulder to
+     * @param world instance of current world
+     * @param entities entities at position to move to
+     */
     private void updatePosition(Position toMoveTo, World world, List<StaticEntity> entities) {
         this.setPosition(new Position(toMoveTo.getX(), toMoveTo.getY(), getLayer()));
         // update state (if we move to a swamp tile)
@@ -160,10 +174,18 @@ public class Boulder extends StaticEntity {
         }
     }
 
+    /**
+     * Getter for state
+     * @return the state
+     */
     public State getState() {
         return state;
     }
 
+    /**
+     * Setter for state
+     * @param state current state to set
+     */
     public void setState(State state) {
         this.state = state;
     }

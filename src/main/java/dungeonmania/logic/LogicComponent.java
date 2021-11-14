@@ -12,6 +12,9 @@ public abstract class LogicComponent {
 
     public abstract boolean isActivated();
 
+    /**
+     * Reset the status of observing
+     */
     public void reset() {
         observing = new HashMap<>();
     }

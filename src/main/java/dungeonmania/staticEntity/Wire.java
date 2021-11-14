@@ -19,6 +19,7 @@ public class Wire extends StaticEntity implements Logic {
         super(new Position(x, y, Position.FLOOR_LAYER), id, "wire");
     }
     
+    @Override
     public LogicComponent getLogic() {
         return logic;
     }

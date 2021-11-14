@@ -12,7 +12,7 @@ import dungeonmania.logic.LogicComponent;
 import dungeonmania.util.Position;
 
 public class PlacedBomb extends StaticEntity implements Logic {
-    private int BLAST_RADIUS = 1;
+    private static int BLAST_RADIUS = 1;
     private LogicComponent logic;
 
     /**
