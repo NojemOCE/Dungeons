@@ -449,4 +449,41 @@ public class CharacterTest {
 
     }
 
+
+    /**
+     * Test Assassin Bribe
+     */
+    @Test
+    public void TestAssassinBribe() {
+        World w = new World("simple-and-goal", "standard", 6);
+
+        try {
+            String file = FileLoader.loadResourceFile("/dungeons/" + "simple-and-goal" + ".json");
+            
+            JSONObject game = new JSONObject(file);
+            
+            w.buildWorld(game);
+        }
+        catch (Exception e) {
+            e.printStackTrace
+            ();
+        }
+
+        DungeonResponse d = w.tick(null, Direction.UP);
+        boolean mercenary = false;
+        boolean assassin = false;
+        for (EntityResponse e: d.getEntities()) {
+            if (e.getType().equals("mercenary")) {
+                mercenary = true;
+            }
+            if (e.getType().equals("assassin")) {
+                assassin = true;
+            }
+        }
+
+        assertEquals(false, mercenary);
+        assertEquals(true, assassin);
+
+    }
+
 }
