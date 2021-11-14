@@ -28,6 +28,14 @@ public class Door extends StaticEntity {
         this.keyColour = keyColour;
     }
 
+    /**
+     * Constructor for door
+     * @param x x coordinate of the door
+     * @param y y coordinate of the door
+     * @param id id of the door
+     * @param keyColour unique key pair
+     * @param opened boolean for whether the door is opened
+     */
     public Door(int x, int y, String id, int keyColour, boolean opened) {
         super(new Position(x, y, Position.STATIC_LAYER), id, "door");
         this.keyColour = keyColour;

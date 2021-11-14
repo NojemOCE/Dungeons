@@ -28,7 +28,7 @@ public class SwampTile extends StaticEntity {
 
     /**
      * Getter for the movement factor of the tile
-     * @return the movement factor
+     * @return integer the movement factor
      */
     public int getMovementFactor() {
         return movementFactor;
