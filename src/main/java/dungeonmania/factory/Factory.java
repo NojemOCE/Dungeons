@@ -22,13 +22,13 @@ import dungeonmania.staticEntity.ZombieToastSpawn;
 import dungeonmania.util.Position;
 
 public abstract class Factory {
-    Gamemode gamemode;
+    protected Gamemode gamemode;
     protected int randomSeed;
     private int entityCount = 0;
     private int highestX = 5;
     private int highestY = 5;
-    static final int MAX_SPIDERS = 6;
-    static final int SPIDER_SPAWN = 20;
+    private static final int MAX_SPIDERS = 6;
+    private static final int SPIDER_SPAWN = 20;
     private int tickCount = 1;
 
     /**
@@ -222,10 +222,18 @@ public abstract class Factory {
         }
     }
 
+    /**
+     * Get the highest X
+     * @return highest X
+     */
     public int getHighestX() {
         return highestX;
     }
 
+    /**
+     * Get the highest Y
+     * @return highest Y
+     */
     public int getHighestY() {
         return highestY;
     }

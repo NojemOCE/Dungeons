@@ -76,6 +76,10 @@ public abstract class MercenaryComponent extends MovingEntity implements PlayerP
         }
     }
 
+    /**
+     * Getter for interactable
+     * @return interactable
+     */
     protected boolean getInteractable() {
         return this.interactable;
     }
@@ -100,8 +104,14 @@ public abstract class MercenaryComponent extends MovingEntity implements PlayerP
         
     }
 
+    /**
+     * Interactable (flashing) at all times until made ally
+     */
     @Override
     public EntityResponse getEntityResponse() {
+        if (getAlly()) {
+            return new EntityResponse(getId(), getType(), getPosition(), false);
+        }
         return new EntityResponse(getId(), getType(), getPosition(), true);
     }
 
