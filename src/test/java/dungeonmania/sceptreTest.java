@@ -99,7 +99,7 @@ public class sceptreTest {
         DungeonResponse notControlled = controller.tick(null, Direction.DOWN);
         for (EntityResponse e : notControlled.getEntities()) {
             if (e.getId().equals("mercenary5")) {
-                assertTrue(e.isInteractable());
+                assertDoesNotThrow(() -> controller.interact("mercenary5"));
             }
         }
     }

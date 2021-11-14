@@ -3,6 +3,7 @@ package dungeonmania.movingEntity;
 import dungeonmania.World;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.movingEntity.States.State;
+import org.json.JSONObject;
 
 public class AssassinDecorator extends MercenaryComponent {
 
@@ -17,9 +18,9 @@ public class AssassinDecorator extends MercenaryComponent {
         this.decorated = merc;
     }
 
-    public AssassinDecorator(int x, int y, String id, HealthPoint hp, MovementStrategy defaultMovement, MovementStrategy currentMovement, Boolean isAlly, State state) {
+    public AssassinDecorator(int x, int y, String id, HealthPoint hp, MovementStrategy defaultMovement, MovementStrategy currentMovement, Boolean isAlly, State state, MercenaryComponent merc) {
         super(x,y,id,"assassin", hp, ASSASSIN_ATTACK, defaultMovement,currentMovement,isAlly,state);
-
+        this.decorated = merc;
     }
     
     @Override
@@ -38,8 +39,6 @@ public class AssassinDecorator extends MercenaryComponent {
         }
         setInteractable(world.getPlayer());
     }
-
-    
 
     @Override 
     public void defend(double attack) {
