@@ -1,6 +1,7 @@
 package dungeonmania.collectable;
 
 import dungeonmania.movingEntity.MercenaryComponent;
+import dungeonmania.movingEntity.MindControl;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -55,6 +56,7 @@ public class Sceptre extends CollectableEntity {
     public void useMindControl(MercenaryComponent m) {
         setCooldown(15);
         useMindControl(m, DURATION);
+        notifyMindControlled();
     }
 
     /**
@@ -64,7 +66,6 @@ public class Sceptre extends CollectableEntity {
      */
     public void useMindControl(MercenaryComponent m, int duration) {
         controlled.put(m, duration);
-        m.setAlly(true);
     }
 
     /**
@@ -72,10 +73,8 @@ public class Sceptre extends CollectableEntity {
      */
     public void notifyMindControlled() {
         for (MercenaryComponent m : controlled.keySet()) {
-            if (controlled.get(m) == 0) {
-                m.setAlly(false);
-                controlled.remove(m);
-            }
+            m.updateDuration(controlled.get(m));
+            if (controlled.get(m) == 0) controlled.remove(m);
         }
     }
 
