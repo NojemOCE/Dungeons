@@ -7,7 +7,6 @@ import dungeonmania.collectable.Armour;
 import dungeonmania.collectable.Bow;
 import dungeonmania.collectable.CollectableEntity;
 import dungeonmania.collectable.Protection;
-import dungeonmania.collectable.Shield;
 import dungeonmania.collectable.Weapon;
 import dungeonmania.inventory.Inventory;
 

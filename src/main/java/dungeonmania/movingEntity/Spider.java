@@ -4,7 +4,6 @@ import org.json.JSONObject;
 
 import dungeonmania.World;
 import dungeonmania.movingEntity.MovementStrategies.CircleMovement;
-import dungeonmania.movingEntity.MovementStrategies.RandomMovement;
 import dungeonmania.movingEntity.States.State;
 import dungeonmania.util.*;
 
@@ -20,13 +19,10 @@ public class Spider extends MovingEntity implements PlayerPassiveObserver {
      * @param id unique entity id of the spider
      */
     public Spider(int x, int y, String id) {
-        //Attack damage to 1 and layer to 2 for now
         super(new Position(x, y, Position.MOVING_LAYER), id, "spider", new HealthPoint(SPIDER_HEALTH), SPIDER_ATTACK);
         setMovement(new CircleMovement());
         setDefaultMovementStrategy(new CircleMovement());
         setAlly(false);
-        // Then when character is invincible, udate defaultMovement to currentMovement, and set currentMovement to runAway.
-        // When character is no longer invincible, set currentMovement = defaultMovement
     }
 
     /**
@@ -49,12 +45,6 @@ public class Spider extends MovingEntity implements PlayerPassiveObserver {
 
 
     @Override
-    /**
-     * Simulates 1 ticks worth of movement for the spider. Note: if the spiders
-     * movement is obstructed, then its direction will reverse on this tick,
-     * and movement will recommence the following tick
-     * @param world World in which the spider is a character of
-     */
     public void move(World world) {
         getState().move(this, world);
     }

@@ -1,15 +1,18 @@
 {
     "main_menu": {
-        "background_image": "images/backgrounds/main_menu.png",
-        "text_color": "white"
+        "background_music": "audio/uncomfortable_mii.mp3",
+        "background_image": "images/backgrounds/wii.png",
+        "text_color": "black"
     },
     "game": {
+        "background_music": "audio/ghibli.mp3",
         "background_image": {
             "images/tileset/walls/wooden/wood_floor_0.png": 5,
             "images/tileset/walls/wooden/wood_floor_1.png": 7,
             "images/tileset/walls/wooden/wood_floor_2.png": 10,
             "images/tileset/walls/wooden/wood_floor_3.png": 2
         },
+        "font": "ghibli.otf",
         "resolution_px": 16,
         "item_box": "images/ui/box.png",
         "text_color": "white"

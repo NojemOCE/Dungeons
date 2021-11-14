@@ -26,6 +26,16 @@ public class Mercenary extends MercenaryComponent {
         setAlly(false);
     }
 
+    /**
+     * Constructor for mercenary taking x and y coords, and unique ID
+     * @param x x coordinate
+     * @param y y coordinate
+     * @param id unique ID of mercenary
+     * @param defaultMovement default movement
+     * @param currentMovement current movement
+     * @param isAlly boolean for whether the mercenary is an ally
+     * @param state movement state
+     */
     public Mercenary(int x, int y, String id, HealthPoint hp, MovementStrategy defaultMovement, MovementStrategy currentMovement, Boolean isAlly, State state) {
         super(x,y,id,"mercenary", hp, MERC_ATTACK, defaultMovement,currentMovement,isAlly,state);
 

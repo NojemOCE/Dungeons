@@ -1,15 +1,18 @@
 {
     "main_menu": {
-        "background_image": "images/backgrounds/main_menu.png",
-        "text_color": "white"
+        "background_music": "audio/uncomfortable_mii.mp3",
+        "background_image": "images/backgrounds/wii.png",
+        "text_color": "black"
     },
     "game": {
+        "background_music": "audio/spongebob.mp3",
         "background_image": {
             "images/tileset/ourEntities/spongebob/background-1.jpeg": 3,
             "images/tileset/ourEntities/spongebob/background-5.jpeg": 4,
             "images/tileset/ourEntities/spongebob/background-3.jpeg": 7,
             "images/tileset/ourEntities/spongebob/background-4.jpeg": 5
         },
+        "font": "spongebob.otf",
         "resolution_px": 16,
         "item_box": "images/ui/box.png",
         "text_color": "white"

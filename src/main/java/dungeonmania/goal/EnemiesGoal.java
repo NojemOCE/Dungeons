@@ -10,7 +10,10 @@ import dungeonmania.staticEntity.StaticEntity;
 
 public class EnemiesGoal extends GoalLeaf {
 
-
+    /**
+     * Constructor for enemies goal taking a goal string
+     * @param goal should always be "enemies"
+     */
     public EnemiesGoal(String goal) {
         super(goal);
     }

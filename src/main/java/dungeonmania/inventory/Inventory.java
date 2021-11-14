@@ -21,6 +21,9 @@ public class Inventory {
     private List<String> usable;
     private List<String> buildables;
 
+    /**
+     * Constructor for inventory
+     */
     public Inventory() {
         this.usable = Arrays.asList("bomb", "health_potion", "invincibility_potion", "invisibility_potion");
         this.buildables = Arrays.asList("bow", "shield", "sceptre", "midnight_armour");
@@ -29,8 +32,7 @@ public class Inventory {
     /**
      * Add given item to the inventory
      * @param item item that is collected and to be added to inventory
-     * @return false when there is already a key within the inventory and the item being collected is a key
-     * @return true when the item has been collected
+     * @return false when there is already a key within the inventory and the item being collected is a key, true when the item has been collected
      */
     public boolean collect(CollectableEntity item) {
         if (item instanceof Key && numItem("key") != 0) {
