@@ -36,7 +36,8 @@
     * Attack = 2
     * Armour drop rate = 20%
 * Mercenary
-    * Amount of gold (treasure) required to bribe: 2
+    * Amount of gold (treasure) required to bribe: 1
+        * Sun stones can be used instead of treasure (and will be used first)
     * HP = 9
     * Attack = 3
     * Spawn rate (or spawn strategy) = 25
