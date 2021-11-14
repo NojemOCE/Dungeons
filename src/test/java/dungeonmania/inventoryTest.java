@@ -3,6 +3,7 @@ package dungeonmania;
 import dungeonmania.collectable.*;
 import dungeonmania.exceptions.InvalidActionException;
 import dungeonmania.inventory.Inventory;
+import dungeonmania.logic.OrLogic;
 
 import org.junit.jupiter.api.Test;
 
@@ -37,7 +38,7 @@ public class inventoryTest {
         assertEquals(inv.numItem("arrow"), 1);
         assertTrue(inv.inInventory("arrows2"));
 
-        Bomb bomb = new Bomb(1, 1, "bomb3");
+        Bomb bomb = new Bomb(1, 1, "bomb3", new OrLogic());
         assertEquals(inv.numItem("bomb"), 0);
         assertFalse(inv.inInventory("bomb3"));
         inv.collect(bomb);
@@ -126,7 +127,7 @@ public class inventoryTest {
         inv.use(potion.getId());
         assertFalse(inv.inInventory("health_potion1"));
 
-        Bomb bomb = new Bomb(1, 2, "bomb2");
+        Bomb bomb = new Bomb(1, 2, "bomb2", new OrLogic());
         assertFalse(inv.inInventory("bomb2"));
         inv.collect(bomb);
         assertTrue(inv.inInventory("bomb2"));

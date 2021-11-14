@@ -173,6 +173,16 @@ public class Inventory {
         getSceptre().tickMindControlled();
     }
 
+
+    public Bomb getBomb(String id) {
+        for (CollectableEntity c : collectableItems.values()) {
+            if (c.getId().equals(id)) {
+                return (Bomb) c;
+            }
+        }
+        return null;
+    }
+
     public List<ItemResponse> getInventoryResponse() {
         List<ItemResponse> itemResponses = collectableItems.values().stream().map(CollectableEntity::getItemResponse).collect(Collectors.toList());
         return itemResponses;

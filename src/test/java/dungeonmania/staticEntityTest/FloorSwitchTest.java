@@ -2,6 +2,7 @@ package dungeonmania.staticEntityTest;
 
 
 import dungeonmania.World;
+import dungeonmania.logic.NoLogic;
 import dungeonmania.response.models.DungeonResponse;
 import dungeonmania.response.models.EntityResponse;
 import dungeonmania.staticEntity.*;
@@ -22,7 +23,7 @@ public class FloorSwitchTest {
     @Test
     public void constructionTest(){
         Position floorSwitchPos = new Position(1,1);
-        FloorSwitch floorSwitch = new FloorSwitch(floorSwitchPos.getX(), floorSwitchPos.getY(), "switch1");
+        FloorSwitch floorSwitch = new FloorSwitch(floorSwitchPos.getX(), floorSwitchPos.getY(), "switch1", new NoLogic());
         assertNotNull(floorSwitch);
         assert(floorSwitchPos.equals(floorSwitch.getPosition()));
     }

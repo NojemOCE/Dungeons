@@ -61,6 +61,8 @@ public class DoorTest {
         // now try to walk right (into the door)
         // should not change spots because we dont have a key
         d = world.tick(null, Direction.RIGHT);
+        entities = d.getEntities();
+
         Position playerPos2 = null;
         for (EntityResponse er : entities) {
             if (er.getType().equals("player")) {

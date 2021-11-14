@@ -73,6 +73,6 @@ public class ZombieToastSpawn extends StaticEntity {
 
     @Override
     public EntityResponse getEntityResponse() {
-        return new EntityResponse(getId(), "zombie_toast_spawner", getPosition(), interactable);
+        return new EntityResponse(getId(), "zombie_toast_spawner", getPosition(), true);
     }
 }

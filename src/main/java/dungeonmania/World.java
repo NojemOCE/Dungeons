@@ -13,6 +13,8 @@ import org.json.JSONObject;
 
 import dungeonmania.goal.*;
 import dungeonmania.inventory.Inventory;
+import dungeonmania.logic.Logic;
+import dungeonmania.logic.LogicComponent;
 import dungeonmania.response.models.*;
 import dungeonmania.staticEntity.*;
 import dungeonmania.util.*;
@@ -28,7 +30,7 @@ public class World {
     private Inventory inventory;
     private Gamemode gamemode;
     private Player player;
-    private String id; //TODO only ever set if game is saved?
+    private String id;
     private GoalComponent goals;
     private Map<String, CollectableEntity> collectableEntities = new HashMap<>();
     private Map<String, StaticEntity> staticEntities = new HashMap<>();
@@ -67,8 +69,6 @@ public class World {
         }
         this.inventory = new Inventory();
         this.factory = new NewGameFactory(gamemode, (new Random(randomSeed)).nextInt());
-
-
     }
 
     public World(String dungeonName, String gameMode, String id, int randomSeed) {
@@ -106,7 +106,10 @@ public class World {
             setGoals(null);
         }
 
+        // set up logic observer pattern and trigger any switches
+        setUpLogicObservers();
         triggerSwitches();
+
         movingEntities.forEach((id, me) -> {
             player.subscribePassiveObserver((PlayerPassiveObserver)me);
         });
@@ -117,7 +120,7 @@ public class World {
         return worldDungeonResponse();
     }
 
-
+    
     private void addEntity(Entity e) {
         if (e instanceof Player) {
             this.player = (Player) e;
@@ -206,9 +209,13 @@ public class World {
 
         if (!Objects.isNull(itemUsed) ) {
             if (!(inventory.getType(itemUsed) == null) && inventory.getType(itemUsed).equals("bomb")) {
+                Bomb b = inventory.getBomb(itemUsed);
+                LogicComponent logic = factory.createLogicComponent(b.logicString());
                 inventory.use(itemUsed);
-                PlacedBomb newBomb = new PlacedBomb(player.getX(), player.getY(), "bomb" + String.valueOf(incrementEntityCount()));
+                PlacedBomb newBomb = new PlacedBomb(player.getX(), player.getY(), "bomb" + String.valueOf(incrementEntityCount()), logic);
                 staticEntities.put(newBomb.getId(), newBomb);
+                // set up observers for this new entity
+                setUpLogicObservers();
             } else {
                 CollectableEntity potion = inventory.tick(itemUsed);
                 if (!Objects.isNull(potion)) {
@@ -276,6 +283,10 @@ public class World {
             }
         }
 
+        // reset logic circuits then trigger
+        tickLogic();
+        tickBombs();
+
         // Now evaluate goals. Goal should never be null, but add a check incase there is an error in the input file
 
         if (!Objects.isNull(currentBattle)) {
@@ -291,6 +302,73 @@ public class World {
         return worldDungeonResponse();
     }
     
+    /**
+     * Triggers any bombs
+     */
+    private void tickBombs() {
+        List<PlacedBomb> bombs = new ArrayList<>();
+        for (StaticEntity se : staticEntities.values()) {
+            if (se instanceof PlacedBomb) {
+                PlacedBomb b = (PlacedBomb) se;
+                if (b.isActivated()) {
+                    bombs.add(b);
+                }
+            }
+        }
+        for (PlacedBomb b : bombs) {
+            b.detonate(this);
+        }
+    }
+
+    /**
+     * Resets and triggers logic circuits for this tick
+     */
+    private void tickLogic() {
+        for (StaticEntity se : staticEntities.values()) {
+            if (se instanceof Logic) {
+                ((Logic) se).reset();
+            }
+        }
+        triggerSwitches();
+    }
+
+
+    /**
+     * Helper method to set up the logic component observer pattern
+     */
+    private void setUpLogicObservers() {
+        for (StaticEntity se : staticEntities.values()) {
+            if (se instanceof Logic) {
+                observeAdjacentLogicComponents(se);
+            }
+        }
+    }
+
+    /**
+     * Add entity to relevant logic component observer lists
+     * @param e entity to make observer
+     */
+    private void observeAdjacentLogicComponents(StaticEntity e) {
+        List<Position> adjPositions = e.getPosition().getCardinallyAdjacentPositions();
+
+        for (Position p : adjPositions) {
+            List<StaticEntity> statics = getStaticEntitiesAtPosition(p);
+            for (StaticEntity se : statics) {
+                // if (se.equals(e)) {
+                if (se.getId().equals(e.getId())) {
+
+                    // make sure to not observe itself
+                }
+                // all logic components should observe switches and wires
+                else if (se instanceof FloorSwitch || se instanceof Wire) {
+                    ((Logic) se).addObserver(((Logic) e).getLogic());
+                    System.out.println(e.getType() + " observes "+ se.getType());
+                }
+            }
+        }
+    }
+
+
     /**
      * Find a valid spider spawn
      * @param position position we are checking
