@@ -44,9 +44,7 @@ public class World {
     private Factory factory;
     private int randomSeed;
 
-
-    static final int MAX_SPIDERS = 6;
-    static final int SPIDER_SPAWN = 20;
+    // TODO: check if these are required (might be in factory)
     static final int MECERNARY_SPAWN = 25;
     static final double MERCENARY_ARMOUR_DROP = 0.4;
     static final double ZOMBIE_ARMOUR_DROP = 0.2;
@@ -56,9 +54,13 @@ public class World {
 
     private int tickCount = 1;
     
+
     /**
      * Constructor for world that takes the string of the dungeon name to build
      * and a string for the gamemode (Standard, Peaceful, Hard)
+     * @param dungeonName Name of dungeon
+     * @param gameMode gamemode, e.g. standard
+     * @param randomSeed seed for game
      */
     public World(String dungeonName, String gameMode, int randomSeed) {
         this.dungeonName = dungeonName;
@@ -77,6 +79,13 @@ public class World {
         this.factory = new NewGameFactory(gamemode, (new Random(randomSeed)).nextInt());
     }
 
+    /**
+     * Constructor for world for a saved game
+     * @param dungeonName Name of dungeon
+     * @param gameMode gamemode, e.g. standard
+     * @param id name of the save game
+     * @param randomSeed seed for game
+     */
     public World(String dungeonName, String gameMode, String id, int randomSeed) {
         this(dungeonName, gameMode, randomSeed);
         this.id = id;
@@ -93,18 +102,13 @@ public class World {
 
         for (int i = 0; i < entities.length(); i++) {
             Entity e = factory.createEntity(entities.getJSONObject(i), this);
-
             addEntity(e);
-
-            // move increment entity count to factory
-            // if collectable, add to colletable etc
         }
 
 
         // TODO can we put this in a shared method
         if (worldData.has("goal-condition")) {
             JSONObject g = worldData.getJSONObject("goal-condition");
-            //GoalComponent goal = createGoal(g);
             GoalComponent goal = factory.createGoal(g);
             setGoals(goal);
         }
@@ -126,7 +130,10 @@ public class World {
         return worldDungeonResponse();
     }
 
-    
+    /**
+     * Add new entity to correct storage list
+     * @param e Entity to add
+     */
     private void addEntity(Entity e) {
         if (e instanceof Player) {
             this.player = (Player) e;
@@ -152,6 +159,10 @@ public class World {
         }
         else return null;
     }
+
+    /**
+     * Set goals
+     */
     private void setGoals(GoalComponent goals) {
         this.goals = goals;
     }
@@ -177,7 +188,8 @@ public class World {
             int next = ran.nextInt(10);
             if (10 * MERCENARY_ARMOUR_DROP > next)  {
                 // return an armour
-                Armour armour = new Armour(charX, charY, "armour" + String.valueOf(incrementEntityCount()));
+                Armour armour = (Armour) (factory.createEntity(charX, charY, "armour", this));
+
                 inventory.collect(armour);
             }
         }
@@ -187,7 +199,7 @@ public class World {
             int next = ran.nextInt(10);
             if (10 * ZOMBIE_ARMOUR_DROP > next)  {
                 // return an armour
-                Armour armour = new Armour(charX, charY, "armour" + String.valueOf(incrementEntityCount()));
+                Armour armour = (Armour) (factory.createEntity(charX, charY, "armour", this));
                 inventory.collect(armour);
             }
         }
@@ -196,7 +208,7 @@ public class World {
         int next = ran.nextInt(10);
         if (10 * ONE_RING_DROP > next)  {
             // return the one ring
-            OneRing oneRing = new OneRing(charX, charY, "one_ring" + String.valueOf(incrementEntityCount()));
+            OneRing oneRing = (OneRing) (factory.createEntity(charX, charY, "one_ring", this));
             inventory.collect(oneRing);
         }
     }
@@ -216,9 +228,9 @@ public class World {
         if (!Objects.isNull(itemUsed) && !(inventory.getType(itemUsed) == null)) {
             if (inventory.getType(itemUsed).equals("bomb")) {
                 Bomb b = inventory.getBomb(itemUsed);
-                LogicComponent logic = factory.createLogicComponent(b.logicString());
+                String logic = b.logicString();
                 inventory.use(itemUsed);
-                PlacedBomb newBomb = new PlacedBomb(player.getX(), player.getY(), "bomb" + String.valueOf(incrementEntityCount()), logic);
+                PlacedBomb newBomb = (PlacedBomb) (factory.createEntity(player.getX(), player.getY(), "bomb_placed", this, logic));
                 staticEntities.put(newBomb.getId(), newBomb);
                 // set up observers for this new entity
                 setUpLogicObservers();
@@ -278,9 +290,11 @@ public class World {
             }
         }
 
-        // spawn relevant enemies at the specified tick intervals
         if (inventory.hasItem("sceptre")) inventory.tickSceptre();
+
+        // spawn relevant enemies at the specified tick intervals
         List<Entity> newEntities = factory.tick(this);
+        
 
         for (Entity e: newEntities) {
             addEntity(e);
@@ -368,7 +382,6 @@ public class World {
                 // all logic components should observe switches and wires
                 else if (se instanceof FloorSwitch || se instanceof Wire) {
                     ((Logic) se).addObserver(((Logic) e).getLogic());
-                    System.out.println(e.getType() + " observes "+ se.getType());
                 }
             }
         }
@@ -569,14 +582,25 @@ public class World {
     }
 
     /**
-     * Increments entity count for entity id
+     * Increments entity count and returns count for current entity id
+     * Gets the current entity count from the factory, increments,
+     * and sets factory count accordingly
      * @return int id
      */
     public int incrementEntityCount() {
-        this.entityCount++;
+        this.entityCount = factory.getEntityCount() + 1;
+        factory.setEntityCount(entityCount);
         return this.entityCount;
     }
 
+    /**
+     * Set the current entity count
+     * @param entityCount
+     */
+    public void setEntityCount(int entityCount) {
+        this.entityCount = entityCount;
+        factory.setEntityCount(entityCount);
+    }
     /**
      * Gets all entities entity responses
      * @return list of entity responses
@@ -601,17 +625,6 @@ public class World {
     public List<ItemResponse> getInventoryResponse(){
         return inventory.getInventoryResponse();
     }
-
-    /**
-     * Check if co-ordinates are in bounds
-     * @param x x co-ord
-     * @param y y co-ord
-     * @return true if in bound
-     */
-    // public boolean inBounds(int x, int y) {
-    //     return !(x < 0 || x >= highestX || y < 0 || y >= highestY);
-    // }
-
 
     /**
      * Remove all entities from the given positions (except the player)
@@ -748,6 +761,11 @@ public class World {
         return collectableEntitiesJSON;
     }
 
+    /**
+     * Get the number of items of given type in inventory
+     * @param itemType Type of the item
+     * @return the number of itemType available
+     */
     public int numItemInInventory(String itemType) {
         return inventory.numItem(itemType);
     }
@@ -768,34 +786,57 @@ public class World {
         inventory.useSceptre(m, duration);
     }
 
+    /**
+     * Get the current tick count
+     * @return tickcount
+     */
     public int getTickCount() {
         return tickCount;
     }
 
+    /**
+     * Get the name of the dungeon
+     * @return dungeonName
+     */
     public String getDungeonName() {
         return dungeonName;
     }
+
+    /**
+     * Set the id of the world
+     * @param id the id to set
+     */
     public void setId(String id) {
         this.id  = id;
     }
+
+    /**
+     * Get the id of the world
+     * @return id
+     */
     public String getId() {
         return id;
     }
 
     /**
      * Loads a saved game with all entities
+     * @param gameData the data from the save file
      */
     public void buildWorldFromFile(JSONObject gameData) {
         int tickNo = gameData.getInt("tick-count");
         int entityNo = gameData.getInt("entity-count");
 
+        
+        // set the world and factor counters appropriately
         setEntityCount(entityNo);
+        factory.setEntityCount(entityNo);
         setTickCount(tickNo);
+        factory.setTickCount(tickNo);
+
 
         // TODO can we put this in a shared method
         if (gameData.has("goal-condition")) {
             JSONObject g = gameData.getJSONObject("goal-condition");
-            //GoalComponent goal = createGoal(g);
             GoalComponent goal = factory.createGoal(g);
             setGoals(goal);
         }
@@ -850,6 +891,7 @@ public class World {
 
         this.factory = new NewGameFactory(gamemode, ran.nextInt(), player.getPosition());
         factory.setEntityCount(entityCount);
+        factory.setTickCount(tickCount);
 
         if (gameData.has("controlled")) {
             JSONArray mindControlledEntities = gameData.getJSONArray("controlled");
@@ -877,16 +919,21 @@ public class World {
 
     }
 
+    /**
+     * Get the players position
+     * @return Players position
+     */
     public Position getPlayerPosition() {
         return player.getPosition();
     }
 
+    /**
+     * Set the tickcount of the world and the factory
+     * @param tickCount tickcount to set
+     */
     public void setTickCount(int tickCount) {
         this.tickCount = tickCount;
-    }
-
-    public void setEntityCount(int entityCount) {
-        this.entityCount = entityCount;
+        factory.setTickCount(tickCount);
     }
 
     public int numMovingEntity(String entityType) {

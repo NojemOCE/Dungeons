@@ -2,6 +2,8 @@ package dungeonmania.collectable;
 
 import org.json.JSONObject;
 
+import dungeonmania.response.models.EntityResponse;
+
 public class Key extends CollectableEntity {
     private int keyColour;
 
@@ -21,6 +23,15 @@ public class Key extends CollectableEntity {
 
     public int getKeyColour() {
         return keyColour;
+    }
+
+    @Override
+    public EntityResponse getEntityResponse() {
+        if (keyColour % 2 == 0) {
+            return new EntityResponse(getId(), "key2", getPosition(), false);
+        } else {
+            return super.getEntityResponse();
+        }
     }
 
     @Override

@@ -5,6 +5,11 @@ import org.json.JSONObject;
 public class NotLogic extends LogicComponent{
 
     /**
+     * Construct for not logic
+     */
+    public NotLogic(){}
+
+    /**
      * For "not", the entity will be activated if there are 
      * 0 adjacent activated switches. Bombs cannot be produced 
      * with this logic.
