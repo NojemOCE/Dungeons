@@ -376,7 +376,6 @@ public class World {
                 // all logic components should observe switches and wires
                 else if (se instanceof FloorSwitch || se instanceof Wire) {
                     ((Logic) se).addObserver(((Logic) e).getLogic());
-                    System.out.println(e.getType() + " observes "+ se.getType());
                 }
             }
         }

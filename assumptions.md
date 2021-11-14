@@ -72,11 +72,15 @@
 * Floor Switch ^
     * Is triggered if a boulder is on it, and untriggered if the boulder is pushed off
     * Only triggered by boulder, otherwise acts as a standard ground cell, i.e. characters can just walk over it
+    * Can now have a logic associated with it and can be activated by fulfilling the logic condition
+        * If no logic is specified, it can only be activated with a boulder
 * Door
     * Has a matching “keyColour” to a key which unique
     * Acts like a wall to enemies even when open (referring to reference implementation), except spider which can walk through regardless
     * Can also be opened with a sun stone
     * Does not have logic -- this would make it a switch door
+    * There are only two different coloured sets of doors and keys (as could be observed from the sample implementation) so any further multiple of doors will result in similarly coloured doors and keys
+        * A restriction of 2 doors may be imposed on maps until further specifications are imposed.
 * Portal
     * Portals exist as pairs (A to B and B back to A)
     * This means that each map must have 2 (no less or no more) of each portal colour
@@ -91,11 +95,14 @@
     * Movement factor must be greater than 1.
 * Lightbulb
     * Act as walls when interacted with (cannot be walked into by moving entities)
+    * Will be turned on only when their logic condition is met.
+    * If no logic is specified, it works equivalent to an "or" logic light bulb
 * Wire ^
     * Acts like a standard floor cell (no effect when walked on or when boulder rolls onto it)
 * Switch Door
     * Has the same as the normal door - only the player can walk through if open, spiders can always walk through/over.
     * Only open by switches (key and sun stone do not work)
+    * If no logic is specified, it works equivalent to an "or" logic switch door
 
 Note: static entities marked with ^ are considered to be on the floor layer, which means moving entities and other statics may exist on top of them but two "floor layer" entities may not exist in the same cell, e.g. an exit cannot be on the same cell as a swamp tile.
 
@@ -117,6 +124,8 @@ Note: static entities marked with ^ are considered to be on the floor layer, whi
     * We cannot pick these up again
     * Blast radius =  1
     * Can only be detonated if the boulder triggers the switch AFTER it has been placed (as per spec wording)
+    * Can now have a logic associated with it and can be activated by fulfilling the logic condition
+
 * Sword
     * Durability: 10
     * Attack power: 3
