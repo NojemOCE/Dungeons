@@ -842,7 +842,7 @@ public class World {
 
         Random ran = new Random(randomSeed);
 
-        this.factory = new NewGameFactory(gamemode, ran.nextInt());
+        this.factory = new NewGameFactory(gamemode, ran.nextInt(), player.getPosition());
         factory.setEntityCount(entityCount);
 
         if (gameData.has("controlled")) {
